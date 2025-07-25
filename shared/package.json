@@ -1,0 +1,8 @@
+{
+  "name": "@powered-by-donation/shared",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "echo 'Shared package not implemented yet'"
+  }
+}
