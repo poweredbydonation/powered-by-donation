@@ -5,31 +5,14 @@
   "description": "Donation-powered service marketplace connecting service providers with charitable giving",
   "author": "Mehmet Akif Altundal <contact@poweredbydonation.com>",
   "license": "MIT",
-  "workspaces": [
-    "web",
-    "mobile",
-    "shared"
-  ],
   "scripts": {
-    "dev:web": "pnpm --filter web dev",
-    "dev:mobile": "pnpm --filter mobile start",
-    "build:web": "pnpm --filter web build",
-    "build:mobile": "pnpm --filter mobile build",
-    "build": "turbo run build",
-    "dev": "turbo run dev",
-    "lint": "turbo run lint",
-    "test": "turbo run test",
-    "clean": "turbo run clean",
-    "type-check": "turbo run type-check"
-  },
-  "devDependencies": {
-    "@types/node": "^20.14.10",
-    "turbo": "^2.0.9",
-    "typescript": "^5.5.3"
+    "build": "npm run build --prefix web",
+    "dev": "npm run dev --prefix web",
+    "start": "npm run start --prefix web",
+    "install:all": "npm install --prefix web"
   },
   "engines": {
     "node": ">=18.0.0",
-    "pnpm": ">=8.0.0"
-  },
-  "packageManager": "pnpm@8.15.6"
+    "npm": ">=8.0.0"
+  }
 }
