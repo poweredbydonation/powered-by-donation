@@ -1,5 +1,0 @@
-{
-  "buildCommand": "npm install --prefix web && npm run build --prefix web",
-  "outputDirectory": "web/.next",
-  "installCommand": "echo 'Skipping root install'"
-}
