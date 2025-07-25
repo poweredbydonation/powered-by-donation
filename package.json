@@ -8,8 +8,7 @@
   "scripts": {
     "build": "npm run build --prefix web",
     "dev": "npm run dev --prefix web",
-    "start": "npm run start --prefix web",
-    "install:all": "npm install --prefix web"
+    "start": "npm run start --prefix web"
   },
   "engines": {
     "node": ">=18.0.0",
