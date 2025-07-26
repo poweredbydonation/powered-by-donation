@@ -1,10 +1,16 @@
 import { createClient } from '@/lib/supabase/server'
 import { NextRequest, NextResponse } from 'next/server'
 
-export async function GET(request: NextRequest) {
+async function handleAuthCallback(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url)
-  const code = searchParams.get('code')
+  let code = searchParams.get('code')
   const next = searchParams.get('next') ?? '/dashboard'
+
+  // For POST requests (Apple), extract code from form data
+  if (request.method === 'POST') {
+    const formData = await request.formData()
+    code = formData.get('code') as string
+  }
 
   if (code) {
     const supabase = createClient()
@@ -26,4 +32,12 @@ export async function GET(request: NextRequest) {
 
   // return the user to an error page with instructions
   return NextResponse.redirect(`${origin}/auth/auth-code-error`)
+}
+
+export async function GET(request: NextRequest) {
+  return handleAuthCallback(request)
+}
+
+export async function POST(request: NextRequest) {
+  return handleAuthCallback(request)
 }
