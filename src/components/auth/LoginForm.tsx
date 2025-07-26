@@ -6,6 +6,7 @@ import { useAuth } from '@/hooks/useAuth'
 import GoogleSignInButton from './GoogleSignInButton'
 import MicrosoftSignInButton from './MicrosoftSignInButton'
 import GitHubSignInButton from './GitHubSignInButton'
+import AppleSignInButton from './AppleSignInButton'
 
 export default function LoginForm() {
   const [email, setEmail] = useState('')
@@ -95,6 +96,7 @@ export default function LoginForm() {
           <GoogleSignInButton />
           <MicrosoftSignInButton />
           <GitHubSignInButton />
+          <AppleSignInButton />
         </div>
       </div>
 

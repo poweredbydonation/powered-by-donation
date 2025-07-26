@@ -13,6 +13,7 @@ interface AuthContextType {
   signInWithGoogle: () => Promise<{ error: any }>
   signInWithMicrosoft: () => Promise<{ error: any }>
   signInWithGitHub: () => Promise<{ error: any }>
+  signInWithApple: () => Promise<{ error: any }>
   signOut: () => Promise<{ error: any }>
 }
 
@@ -96,6 +97,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return { error }
   }
 
+  const signInWithApple = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'apple',
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`
+      }
+    })
+    return { error }
+  }
+
   const signOut = async () => {
     const { error } = await supabase.auth.signOut()
     return { error }
@@ -110,6 +121,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     signInWithGoogle,
     signInWithMicrosoft,
     signInWithGitHub,
+    signInWithApple,
     signOut,
   }
 
