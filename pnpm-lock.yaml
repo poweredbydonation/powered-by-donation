@@ -9,13 +9,13 @@ importers:
   .:
     dependencies:
       '@supabase/ssr':
-        specifier: ^0.4.0
+        specifier: ^0.4.1
         version: 0.4.1(@supabase/supabase-js@2.52.1)
       '@supabase/supabase-js':
-        specifier: ^2.45.0
+        specifier: ^2.52.1
         version: 2.52.1
       class-variance-authority:
-        specifier: ^0.7.0
+        specifier: ^0.7.1
         version: 0.7.1
       clsx:
         specifier: ^2.1.1
@@ -27,7 +27,7 @@ importers:
         specifier: ^0.408.0
         version: 0.408.0(react@18.3.1)
       next:
-        specifier: ^14.2.5
+        specifier: ^14.2.30
         version: 14.2.30(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react:
         specifier: ^18.3.1
@@ -36,38 +36,38 @@ importers:
         specifier: ^18.3.1
         version: 18.3.1(react@18.3.1)
       tailwind-merge:
-        specifier: ^2.4.0
+        specifier: ^2.6.0
         version: 2.6.0
       zod:
-        specifier: ^3.23.8
+        specifier: ^3.25.76
         version: 3.25.76
     devDependencies:
       '@types/node':
-        specifier: ^20.14.10
+        specifier: ^20.19.9
         version: 20.19.9
       '@types/react':
-        specifier: ^18.3.3
+        specifier: ^18.3.23
         version: 18.3.23
       '@types/react-dom':
-        specifier: ^18.3.0
+        specifier: ^18.3.7
         version: 18.3.7(@types/react@18.3.23)
       autoprefixer:
-        specifier: ^10.4.19
+        specifier: ^10.4.21
         version: 10.4.21(postcss@8.5.6)
       eslint:
-        specifier: ^8.57.0
+        specifier: ^8.57.1
         version: 8.57.1
       eslint-config-next:
-        specifier: ^14.2.5
+        specifier: ^14.2.30
         version: 14.2.30(eslint@8.57.1)(typescript@5.8.3)
       postcss:
-        specifier: ^8.4.39
+        specifier: ^8.5.6
         version: 8.5.6
       tailwindcss:
-        specifier: ^3.4.6
+        specifier: ^3.4.17
         version: 3.4.17
       typescript:
-        specifier: ^5.5.3
+        specifier: ^5.8.3
         version: 5.8.3
 
 packages:
