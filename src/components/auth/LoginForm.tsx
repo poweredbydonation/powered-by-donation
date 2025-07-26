@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/hooks/useAuth'
 import GoogleSignInButton from './GoogleSignInButton'
+import MicrosoftSignInButton from './MicrosoftSignInButton'
 
 export default function LoginForm() {
   const [email, setEmail] = useState('')
@@ -89,8 +90,9 @@ export default function LoginForm() {
           </div>
         </div>
 
-        <div className="mt-6">
+        <div className="mt-6 space-y-3">
           <GoogleSignInButton />
+          <MicrosoftSignInButton />
         </div>
       </div>
 

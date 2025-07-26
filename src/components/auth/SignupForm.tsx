@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useAuth } from '@/hooks/useAuth'
 import GoogleSignInButton from './GoogleSignInButton'
+import MicrosoftSignInButton from './MicrosoftSignInButton'
 
 export default function SignupForm() {
   const [email, setEmail] = useState('')
@@ -136,8 +137,9 @@ export default function SignupForm() {
           </div>
         </div>
 
-        <div className="mt-6">
+        <div className="mt-6 space-y-3">
           <GoogleSignInButton text="Sign up with Google" />
+          <MicrosoftSignInButton text="Sign up with Microsoft" />
         </div>
       </div>
 
