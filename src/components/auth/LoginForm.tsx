@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useAuth } from '@/hooks/useAuth'
 import GoogleSignInButton from './GoogleSignInButton'
 import MicrosoftSignInButton from './MicrosoftSignInButton'
+import GitHubSignInButton from './GitHubSignInButton'
 
 export default function LoginForm() {
   const [email, setEmail] = useState('')
@@ -93,6 +94,7 @@ export default function LoginForm() {
         <div className="mt-6 space-y-3">
           <GoogleSignInButton />
           <MicrosoftSignInButton />
+          <GitHubSignInButton />
         </div>
       </div>
 
