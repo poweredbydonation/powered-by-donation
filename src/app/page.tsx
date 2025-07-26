@@ -1,9 +1,11 @@
 import Link from 'next/link'
-// Trigger deployment
+import Navbar from '@/components/Navbar'
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+      <Navbar />
+      <div className="flex flex-col items-center justify-center pt-12">
       <div className="max-w-4xl mx-auto px-6 py-12 text-center">
         <h1 className="text-5xl font-bold text-gray-900 mb-6">
           Powered by <span className="text-blue-600">Donation</span>
@@ -51,6 +53,7 @@ export default function HomePage() {
             </p>
           </div>
         </div>
+      </div>
       </div>
     </div>
   )
