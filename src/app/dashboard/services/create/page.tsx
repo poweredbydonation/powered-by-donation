@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import AuthGuard from '@/components/auth/AuthGuard'
 import ServiceCreationForm from '@/components/services/ServiceCreationForm'
+import Navbar from '@/components/Navbar'
 
 export const metadata: Metadata = {
   title: 'Create Service | Powered by Donation',
@@ -10,6 +11,7 @@ export const metadata: Metadata = {
 export default function CreateServicePage() {
   return (
     <AuthGuard>
+      <Navbar />
       <div className="min-h-screen bg-gray-50 py-8">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-white shadow rounded-lg">
