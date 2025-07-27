@@ -311,6 +311,24 @@ CREATE TABLE charity_cache (
   logo_url TEXT,
   last_updated TIMESTAMP DEFAULT NOW()
 );
+
+-- Happiness metrics for reputation system
+ALTER TABLE providers
+ADD COLUMN received_happiness INTEGER,       -- % of supporters who rated them 'happy'
+ADD COLUMN sent_happiness INTEGER;          -- % of supporters this provider rated 'happy'
+
+ALTER TABLE supporters  
+ADD COLUMN received_happiness INTEGER,       -- % of providers who rated them 'happy'
+ADD COLUMN sent_happiness INTEGER;          -- % of providers/services they rated 'happy'
+
+ALTER TABLE services
+ADD COLUMN happiness_rate INTEGER;           -- % supporter satisfaction for this service
+
+-- Enhanced service_requests for mutual feedback
+ALTER TABLE service_requests 
+ADD COLUMN provider_rates_supporter TEXT,    -- 'happy', 'unhappy', null
+ADD COLUMN supporter_rates_provider TEXT,    -- 'happy', 'unhappy', null  
+ADD COLUMN supporter_rates_service TEXT;     -- 'happy', 'unhappy', null
 ```
 
 ### Service Location Structure
@@ -328,13 +346,44 @@ interface ServiceLocation {
 }
 ```
 
-## Service Quality Assurance: Donor-Centric Feedback
+## Service Quality Assurance: Mutual Happiness System
 
 ### Core Philosophy
-- **Donors first, customers second** - Users are charitable donors who receive services as a bonus
-- **Provider experience focus** - "Are you happy with this provider?" not "Did you receive service?"
-- **Quality community** - Maintain high-quality providers through gentle feedback system
+- **Balanced feedback** - Both providers and supporters rate each other's experience
+- **Happiness-based metrics** - Simple happy/unhappy ratings for all interactions
+- **Quality control** - Happiness metrics enable filtering and service access requirements
+- **Donor-centric approach** - Maintains charitable giving focus while ensuring quality experiences
 - **JustGiving trust** - Only registered charities to ensure legitimacy
+
+### Mutual Feedback System
+Both parties provide feedback after each service interaction:
+- **Provider rates supporter**: "How was your experience with this supporter?"
+- **Supporter rates provider**: "How was your experience with this provider?"
+- **Supporter rates service**: "How was your experience with this service?"
+
+### Happiness Metrics Calculated
+#### Provider Metrics:
+- **Received Happiness**: Percentage of supporters who rated them 'happy'
+- **Sent Happiness**: Percentage of supporters this provider rated 'happy'
+
+#### Supporter Metrics:
+- **Received Happiness**: Percentage of providers who rated them 'happy'
+- **Sent Happiness**: Percentage of experiences they rated 'happy'
+
+#### Service Metrics:
+- **Happiness Rate**: Percentage of supporters who rated the service 'happy'
+
+### Quality-Based Filtering & Access Control
+#### Browse Filtering:
+- Filter services by minimum happiness rate (e.g., show only 90%+ rated services)
+- Filter providers by minimum supporter satisfaction
+- Filter by provider selectivity (how happy they are with supporters)
+
+#### Service Access Requirements:
+Providers can set supporter requirements for their services:
+- Minimum supporter reputation (e.g., 85%+ provider satisfaction required)
+- Minimum platform experience (e.g., 5+ completed services required)
+- Combines with existing charity and capacity requirements
 
 ### Service Status Flow
 
@@ -350,35 +399,43 @@ interface ServiceLocation {
 ### Email Strategy
 ```typescript
 const emailStrategy = {
-  // Supporter satisfaction check (donor-friendly language)
-  supporterSatisfaction: {
+  // Mutual feedback collection (balanced approach)
+  mutualFeedback: {
     timing: "24-48 hours after expected service completion",
-    subject: "How was your experience with [Provider Name]?",
-    message: `
-      Hi! Your $${donation_amount} donation to ${charity} helped support ${provider}'s service.
-      
-      How was your experience with this provider?
-      😊 Happy with this provider
-      😞 Not satisfied with this provider
-      
-      Remember: Your donation went to ${charity} regardless - this helps us maintain quality providers.
-    `,
+    
+    // Provider feedback
+    providerEmail: {
+      subject: "How was your experience with your supporter?",
+      message: `
+        Hi ${provider_name}! A supporter donated $${amount} to ${charity} for your ${service_title}.
+        
+        How was your experience with this supporter?
+        😊 Happy - responsive and respectful
+        😞 Unhappy - had some concerns
+        
+        This helps us maintain a positive community for everyone.
+      `
+    },
+    
+    // Supporter feedback  
+    supporterEmail: {
+      subject: "How was your experience with ${provider_name}?",
+      message: `
+        Hi! Your $${amount} donation to ${charity} helped support ${provider_name}'s service.
+        
+        How was your experience with this provider?
+        😊 Happy with this provider
+        😞 Unhappy with this provider
+        
+        How was the service itself?
+        😊 Happy with the service
+        😞 Unhappy with the service
+        
+        Remember: Your donation went to ${charity} regardless - this helps us maintain quality providers.
+      `
+    },
+    
     timeout: "7 days → assume satisfied → mark as SUCCESS"
-  },
-
-  // Provider feedback (only when supporter unhappy)
-  providerFeedback: {
-    trigger: "supporter_unhappy",
-    subject: "Supporter feedback on your recent service",
-    message: `
-      A supporter who donated $${donation_amount} for your service wasn't fully satisfied.
-      This is feedback to help improve our community.
-      
-      Please respond within 48 hours:
-      ✅ Thank you for the feedback, I'll improve
-      ❌ I believe I provided good service
-    `,
-    timeout: "48 hours → mark as UNRESPONSIVE_TO_FEEDBACK"
   }
 }
 ```
@@ -406,6 +463,12 @@ interface ServiceCreation {
   
   // Location options
   service_locations: ServiceLocation[] // At least one location required
+  
+  // NEW: Supporter happiness requirements (optional)
+  supporter_happiness_requirements?: {
+    min_received_happiness?: number     // Supporter must be X% liked by providers
+    min_total_interactions?: number     // Supporter must have X+ completed services
+  }
 }
 ```
 
@@ -418,7 +481,7 @@ interface ServiceCreation {
 - **Providers**: `/provider/[slug]` - Provider profile pages
 - **Supporters**: `/supporter/[slug]` - Supporter profile pages
 - **Browse**: `/browse` - Main browsing page with filters
-- **Search**: `/search?category=X&location=Y&amount=Z` - Filtered search results
+- **Search**: `/search?category=X&location=Y&amount=Z&happiness=90` - Filtered search results with quality filters
 
 ### SEO Implementation Requirements
 - Static Site Generation (SSG) for all service/provider pages
@@ -439,18 +502,19 @@ interface ServiceCreation {
 ### User Flow
 #### Anonymous Browsing
 1. **Browse freely** - No signup required to view services/categories/providers
-2. **Search and filter** - Find services by category, location, donation amount
+2. **Search and filter** - Find services by category, location, donation amount, and quality ratings
 3. **View service details** - See provider info, fixed donation amount, charity requirements
 4. **See anonymous activity** - "Someone donated $50 to Cancer Research"
 
 #### Provider Journey
 1. **Sign up to post** - Required when creating services
-2. **Create services** - Set fixed donation amount, select charity requirements, define availability
+2. **Create services** - Set fixed donation amount, select charity requirements, define availability, set supporter quality requirements
 3. **Manage capacity** - Set maximum supporters if needed
 4. **Define locations** - Physical, remote, or hybrid service delivery
 5. **Receive donations** - Get notified when supporters donate for services
 6. **Connect with supporters** - Access to donor names for thank you messages
-7. **Receive feedback** - Gentle feedback system to maintain quality
+7. **Give and receive feedback** - Mutual happiness rating system for quality control
+8. **Build reputation** - Happiness ratings create provider and supporter reputation
 
 #### Supporter Journey
 1. **Browse services** - Find services to support with clear pricing
@@ -459,8 +523,9 @@ interface ServiceCreation {
 4. **Sign up to donate** - Required for donation tracking and provider connection
 5. **Donate via JustGiving** - External payment processing to registered charities
 6. **Return with confirmation** - Platform tracks donation for provider connection
-7. **Provider satisfaction** - Share experience about provider quality
-8. **Optional sharing** - Social media posts or downloadable certificates
+7. **Give feedback** - Rate provider and service experience with simple happy/unhappy system
+8. **Build reputation** - Happiness ratings create supporter reputation for future service access
+9. **Optional sharing** - Social media posts or downloadable certificates
 
 ## Brand Guidelines
 
