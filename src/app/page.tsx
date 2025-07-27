@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import Navbar from '@/components/Navbar'
+import { Monitor, TrendingUp, Camera } from 'lucide-react'
 
 export default function HomePage() {
   return (
@@ -12,46 +13,73 @@ export default function HomePage() {
         </h1>
         
         <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-          Connect with service providers who donate their earnings to charity. 
-          Find services, support causes, and make a difference in your community.
+          Access the services you need while advancing the causes you value. You select the service, you select the charity.
         </p>
         
-        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
+
+        <div className="grid md:grid-cols-3 gap-8">
+          {/* Web Design Example */}
+          <div className="bg-white p-6 rounded-lg shadow-sm text-center flex flex-col h-full">
+            <div className="flex justify-center mb-4">
+              <div className="bg-blue-100 p-3 rounded-full">
+                <Monitor className="h-8 w-8 text-blue-600" />
+              </div>
+            </div>
+            <p className="text-gray-700 mb-4 leading-relaxed flex-grow">
+              Someone got <span className="font-semibold">Professional Website Design</span> by donating <span className="font-bold text-green-600">$150</span> to <span className="font-semibold text-blue-600">Cancer Research Australia</span>
+            </p>
+            <Link 
+              href="/browse"
+              className="inline-block bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors mt-auto"
+            >
+              Donate & Get
+            </Link>
+          </div>
+          
+          {/* Business Consulting Example */}
+          <div className="bg-white p-6 rounded-lg shadow-sm text-center flex flex-col h-full">
+            <div className="flex justify-center mb-4">
+              <div className="bg-green-100 p-3 rounded-full">
+                <TrendingUp className="h-8 w-8 text-green-600" />
+              </div>
+            </div>
+            <p className="text-gray-700 mb-4 leading-relaxed flex-grow">
+              Someone got <span className="font-semibold">Business Strategy Session</span> by donating <span className="font-bold text-green-600">$75</span> to <span className="font-semibold text-blue-600">Beyond Blue</span>
+            </p>
+            <Link 
+              href="/browse"
+              className="inline-block bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors mt-auto"
+            >
+              Donate & Get
+            </Link>
+          </div>
+          
+          {/* Photography Example */}
+          <div className="bg-white p-6 rounded-lg shadow-sm text-center flex flex-col h-full">
+            <div className="flex justify-center mb-4">
+              <div className="bg-purple-100 p-3 rounded-full">
+                <Camera className="h-8 w-8 text-purple-600" />
+              </div>
+            </div>
+            <p className="text-gray-700 mb-4 leading-relaxed flex-grow">
+              Someone got <span className="font-semibold">Family Photo Session</span> by donating <span className="font-bold text-green-600">$200</span> to <span className="font-semibold text-blue-600">RSPCA NSW</span>
+            </p>
+            <Link 
+              href="/browse"
+              className="inline-block bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors mt-auto"
+            >
+              Donate & Get
+            </Link>
+          </div>
+        </div>
+        
+        <div className="text-center mt-12">
           <Link 
-            href="/services" 
+            href="/browse" 
             className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
           >
             Browse Services
           </Link>
-          <Link 
-            href="/providers" 
-            className="border border-blue-600 text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors"
-          >
-            Become a Provider
-          </Link>
-        </div>
-
-        <div className="grid md:grid-cols-3 gap-8 text-left">
-          <div className="bg-white p-6 rounded-lg shadow-sm">
-            <h3 className="text-lg font-semibold text-gray-900 mb-3">Find Services</h3>
-            <p className="text-gray-600">
-              Browse services offered by providers who donate their earnings to Australian charities.
-            </p>
-          </div>
-          
-          <div className="bg-white p-6 rounded-lg shadow-sm">
-            <h3 className="text-lg font-semibold text-gray-900 mb-3">Support Causes</h3>
-            <p className="text-gray-600">
-              Every service purchase results in a donation to your chosen charity through JustGiving.
-            </p>
-          </div>
-          
-          <div className="bg-white p-6 rounded-lg shadow-sm">
-            <h3 className="text-lg font-semibold text-gray-900 mb-3">Make Impact</h3>
-            <p className="text-gray-600">
-              Get the services you need while making a positive difference in your community.
-            </p>
-          </div>
         </div>
       </div>
       </div>
