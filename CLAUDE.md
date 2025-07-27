@@ -302,14 +302,31 @@ CREATE TYPE service_status AS ENUM (
   'unresponsive_to_feedback'    -- Provider ignored feedback
 );
 
--- Charity information cache
+-- Charity information cache with stats tracking
 CREATE TABLE charity_cache (
   justgiving_charity_id TEXT PRIMARY KEY,
   name TEXT NOT NULL,
   description TEXT,
   category TEXT,
   logo_url TEXT,
-  last_updated TIMESTAMP DEFAULT NOW()
+  slug TEXT UNIQUE NOT NULL,               -- SEO-friendly URL slug
+  
+  -- Anonymous donation statistics
+  total_donations_count INTEGER DEFAULT 0,
+  total_amount_received DECIMAL DEFAULT 0,
+  this_month_count INTEGER DEFAULT 0,
+  this_month_amount DECIMAL DEFAULT 0,
+  
+  -- Service category breakdown (JSONB for flexibility)
+  service_categories JSONB DEFAULT '{}',   -- {"web_design": 15, "tutoring": 8, "consulting": 23}
+  
+  -- Page management
+  is_active BOOLEAN DEFAULT true,
+  is_featured BOOLEAN DEFAULT false,
+  page_views INTEGER DEFAULT 0,
+  
+  last_updated TIMESTAMP DEFAULT NOW(),
+  stats_last_updated TIMESTAMP DEFAULT NOW()
 );
 
 -- Happiness metrics for reputation system
@@ -472,6 +489,134 @@ interface ServiceCreation {
 }
 ```
 
+## Charity Pages: Service-Driven Impact Display
+
+### Charity Page Features
+Charity pages showcase the impact of service-driven donations while maintaining complete anonymity.
+
+#### Page Structure: `/charity/[slug]`
+```typescript
+interface CharityPageData {
+  // Basic charity information (from JustGiving API)
+  justgiving_charity_id: string
+  name: string
+  description: string
+  category: string
+  logo_url: string
+  
+  // Anonymous aggregate statistics
+  stats: {
+    total_donations_count: number        // "127 donations received"
+    total_amount_received: number        // "$6,350 total raised"
+    this_month_count: number            // "23 donations this month"
+    this_month_amount: number           // "$1,150 raised this month"
+  }
+  
+  // Service category breakdown
+  service_categories: {                 // "Services that supported this charity:"
+    [category: string]: number          // "Web Design: 45 donations"
+  }                                     // "Tutoring: 23 donations"
+  
+  // Anonymous recent activity (last 10)
+  recent_activity: Array<{
+    amount: number                      // "Someone donated $50"
+    service_title: string               // "via Web Design service"
+    created_at: Date                    // "2 hours ago"
+    // NO donor information whatsoever
+  }>
+}
+```
+
+#### Privacy Implementation
+- **Always anonymous**: "Someone donated $50 via Web Design service"
+- **Aggregate only**: Show totals, counts, and categories
+- **No donor tracking**: Zero personally identifiable information
+- **Service connection**: Highlight that donations came through service marketplace
+
+#### Content Strategy
+```typescript
+const charityPageContent = {
+  hero: {
+    title: charity.name,
+    subtitle: `${stats.total_donations_count} service-driven donations • $${stats.total_amount_received} total impact`,
+    cta: "Find services supporting this charity"
+  },
+  
+  stats_section: {
+    title: "Community Impact",
+    metrics: [
+      `${stats.this_month_count} donations this month`,
+      `$${stats.this_month_amount} raised this month`,
+      `${Object.keys(service_categories).length} service categories`,
+      `${stats.total_donations_count} total supporters`
+    ]
+  },
+  
+  services_section: {
+    title: "Services Supporting This Charity",
+    description: "Browse services where providers have chosen to support this charity",
+    categories: service_categories,
+    cta_link: `/search?charity=${charity.slug}`
+  },
+  
+  activity_section: {
+    title: "Recent Anonymous Activity",
+    activities: recent_activity.map(activity => 
+      `Someone donated $${activity.amount} via ${activity.service_title} • ${timeAgo(activity.created_at)}`
+    )
+  }
+}
+```
+
+#### SEO Optimization
+- **Static generation**: Pre-render all charity pages
+- **Structured data**: Schema.org Organization + charitable work markup
+- **Meta tags**: Optimized for charity name + "service donations"
+- **Internal linking**: Link to services that support each charity
+- **Social sharing**: OG tags for charity impact statistics
+
+#### JustGiving Integration
+```typescript
+interface JustGivingSync {
+  // Periodic sync (daily) to update charity information
+  sync_charity_data: () => Promise<void>
+  
+  // Fetch charity details for new charities
+  fetch_charity_info: (charity_id: string) => Promise<CharityData>
+  
+  // Generate SEO-friendly slug from charity name
+  generate_slug: (charity_name: string) => string
+  
+  // Validate charity exists and is active
+  validate_charity: (charity_id: string) => Promise<boolean>
+}
+```
+
+### Stats Update Strategy
+Statistics are updated in real-time when service requests complete:
+
+```typescript
+// When a service request reaches 'success' status
+const updateCharityStats = async (service_request: ServiceRequest) => {
+  await supabase.rpc('increment_charity_stats', {
+    charity_id: service_request.justgiving_charity_id,
+    amount: service_request.donation_amount,
+    service_category: service_request.service.category
+  })
+}
+
+// Monthly stats reset (keep historical totals)
+const resetMonthlyStats = async () => {
+  await supabase
+    .from('charity_cache')
+    .update({
+      this_month_count: 0,
+      this_month_amount: 0,
+      stats_last_updated: new Date()
+    })
+}
+```
+
 ## SEO Strategy (CRITICAL)
 
 ### Page Structure for Maximum SEO
@@ -480,6 +625,7 @@ interface ServiceCreation {
 - **Locations**: `/services/location/[location]` - Location-based services
 - **Providers**: `/provider/[slug]` - Provider profile pages
 - **Supporters**: `/supporter/[slug]` - Supporter profile pages
+- **Charities**: `/charity/[slug]` - Charity impact pages showing service-driven donations (SSG)
 - **Browse**: `/browse` - Main browsing page with filters
 - **Search**: `/search?category=X&location=Y&amount=Z&happiness=90` - Filtered search results with quality filters
 
