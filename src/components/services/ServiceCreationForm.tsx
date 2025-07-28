@@ -5,12 +5,21 @@ import { useRouter } from 'next/navigation'
 import { useAuth } from '@/hooks/useAuth'
 import { createClient } from '@/lib/supabase/client'
 import { CharityRequirementType, ServiceLocation } from '@/types/database'
+import CharitySelector from './CharitySelector'
+
+interface SelectedCharity {
+  justgiving_charity_id: string
+  name: string
+  description?: string
+  logo_url?: string
+}
 
 export default function ServiceCreationForm() {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [donationAmount, setDonationAmount] = useState('')
   const [charityRequirementType, setCharityRequirementType] = useState<CharityRequirementType>('any_charity')
+  const [selectedCharities, setSelectedCharities] = useState<SelectedCharity[]>([])
   const [availableFrom, setAvailableFrom] = useState('')
   const [availableUntil, setAvailableUntil] = useState('')
   const [maxSupporters, setMaxSupporters] = useState('')
@@ -36,6 +45,11 @@ export default function ServiceCreationForm() {
     setError(null)
 
     try {
+      // Validate charity requirements
+      if (charityRequirementType === 'specific_charities' && selectedCharities.length === 0) {
+        throw new Error('Please select at least one charity when using specific charity requirements.')
+      }
+
       // Get user's provider profile
       const { data: providerData, error: providerError } = await supabase
         .from('providers')
@@ -55,6 +69,16 @@ export default function ServiceCreationForm() {
         ...(locationType !== 'remote' && radius && { radius: parseInt(radius) }),
       }
 
+      // Prepare preferred charities data
+      const preferredCharities = charityRequirementType === 'specific_charities' 
+        ? selectedCharities.map(charity => ({
+            charity_id: charity.justgiving_charity_id,
+            name: charity.name,
+            description: charity.description,
+            logo_url: charity.logo_url
+          }))
+        : []
+
       // Prepare service data
       const serviceData = {
         provider_id: user.id,
@@ -62,6 +86,7 @@ export default function ServiceCreationForm() {
         description: description.trim() || null,
         donation_amount: parseFloat(donationAmount),
         charity_requirement_type: charityRequirementType,
+        preferred_charities: preferredCharities.length > 0 ? preferredCharities : null,
         available_from: availableFrom,
         available_until: availableUntil || null,
         max_supporters: maxSupporters ? parseInt(maxSupporters) : null,
@@ -164,7 +189,12 @@ export default function ServiceCreationForm() {
               name="charityRequirement"
               value="any_charity"
               checked={charityRequirementType === 'any_charity'}
-              onChange={(e) => setCharityRequirementType(e.target.value as CharityRequirementType)}
+              onChange={(e) => {
+                setCharityRequirementType(e.target.value as CharityRequirementType)
+                if (e.target.value === 'any_charity') {
+                  setSelectedCharities([])
+                }
+              }}
               className="mr-3"
             />
             <div>
@@ -184,10 +214,38 @@ export default function ServiceCreationForm() {
             />
             <div>
               <div className="font-medium">Specific Charities</div>
-              <div className="text-sm text-gray-500">Choose which charities supporters can donate to (coming soon)</div>
+              <div className="text-sm text-gray-500">Choose which charities supporters can donate to</div>
             </div>
           </label>
         </div>
+
+        {/* Charity Selector */}
+        {charityRequirementType === 'specific_charities' && (
+          <div className="pl-6 border-l-2 border-gray-200 space-y-4">
+            <div>
+              <h4 className="text-md font-medium text-gray-900 mb-2">Select Preferred Charities</h4>
+              <p className="text-sm text-gray-600 mb-4">
+                Search and select up to 5 charities that supporters can choose from. 
+                All charities are verified JustGiving registered charities.
+              </p>
+              
+              <CharitySelector
+                selectedCharities={selectedCharities}
+                onCharitiesChange={setSelectedCharities}
+                maxCharities={5}
+                disabled={loading}
+              />
+              
+              {charityRequirementType === 'specific_charities' && selectedCharities.length === 0 && (
+                <div className="mt-3 p-3 bg-yellow-50 border border-yellow-200 rounded-md">
+                  <p className="text-sm text-yellow-800">
+                    Please select at least one charity for supporters to donate to.
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Location Options */}

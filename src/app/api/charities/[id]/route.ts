@@ -7,6 +7,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getOrSyncCharity, validateAndSyncCharity } from '@/lib/justgiving/sync'
 import { justGivingAPI } from '@/lib/justgiving/client'
 
+// Force dynamic rendering for this API route
+export const dynamic = 'force-dynamic'
+
 interface RouteParams {
   params: {
     id: string
