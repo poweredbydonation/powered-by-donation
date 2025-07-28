@@ -6,7 +6,7 @@ interface ServiceListProps {
     provider: {
       name: string
       show_bio: boolean
-    }
+    } | null
   })[]
   loading?: boolean
   error?: string | null

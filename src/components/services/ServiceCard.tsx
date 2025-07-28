@@ -7,11 +7,16 @@ interface ServiceCardProps {
     provider: {
       name: string
       show_bio: boolean
-    }
+    } | null
   }
 }
 
-export default function ServiceCard({ service }: ServiceCardProps) {
+export default function ServiceCard({ service }: ServiceCardProps) {  
+  // Safety check - if no provider data, don't render the card
+  if (!service.provider) {
+    return null
+  }
+
   // Parse service locations from JSONB
   const locations = Array.isArray(service.service_locations) 
     ? service.service_locations as ServiceLocation[]
@@ -37,6 +42,9 @@ export default function ServiceCard({ service }: ServiceCardProps) {
   const charityRequirement = service.charity_requirement_type === 'any_charity' 
     ? 'Any registered charity'
     : 'Specific charities'
+
+  // Provider name with fallback
+  const providerName = service.provider?.name || 'Unknown Provider'
 
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md hover:border-gray-300 transition-all duration-200">
@@ -87,7 +95,7 @@ export default function ServiceCard({ service }: ServiceCardProps) {
             <div className="text-sm">
               <span className="text-gray-500">by </span>
               <span className="font-medium text-gray-900">
-                {service.provider.name}
+                {providerName}
               </span>
             </div>
           </div>

@@ -13,7 +13,7 @@ type ServiceWithProvider = Service & {
   provider: {
     name: string
     show_bio: boolean
-  }
+  } | null
 }
 
 export default function BrowsePage() {
@@ -52,7 +52,9 @@ export default function BrowsePage() {
           throw fetchError
         }
 
-        setServices(data || [])
+        // Filter out services without provider data to prevent crashes
+        const validServices = (data || []).filter(service => service.provider !== null)
+        setServices(validServices)
       } catch (err) {
         console.error('Error fetching services:', err)
         setError('Failed to load services. Please try again later.')
