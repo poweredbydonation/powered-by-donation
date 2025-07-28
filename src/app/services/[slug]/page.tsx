@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { Service, ServiceLocation } from '@/types/database'
 import Navbar from '@/components/Navbar'
+import ServiceDonationFlow from '@/components/services/ServiceDonationFlow'
 
 interface ServicePageProps {
   params: {
@@ -207,46 +208,30 @@ export default async function ServicePage({ params }: ServicePageProps) {
                   </div>
                 </div>
 
-                {/* Right Column - Donation Card */}
+                {/* Right Column - Donation Flow */}
                 <div className="lg:w-96">
-                  <div className="bg-gradient-to-br from-green-50 to-blue-50 rounded-lg border border-green-200 p-6 sticky top-8">
-                    <div className="text-center mb-6">
-                      <div className="text-3xl font-bold text-green-600 mb-2">
-                        {donationAmount}
-                      </div>
-                      <div className="text-sm text-gray-600">
-                        Fixed donation amount
-                      </div>
-                    </div>
-
-                    <div className="space-y-4 mb-6">
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-gray-600">Charity choice:</span>
-                        <span className="font-medium">
-                          {service.charity_requirement_type === 'any_charity' ? 'Your choice' : 'Provider selected'}
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-gray-600">Payment via:</span>
-                        <span className="font-medium">JustGiving</span>
-                      </div>
-                    </div>
-
-                    <button 
-                      className={`w-full py-3 px-4 rounded-md font-medium text-white ${
-                        isAvailable && !isFull 
-                          ? 'bg-green-600 hover:bg-green-700' 
-                          : 'bg-gray-400 cursor-not-allowed'
-                      } transition-colors`}
-                      disabled={!isAvailable || isFull}
-                    >
-                      {!isAvailable ? 'Not Yet Available' : isFull ? 'Currently Full' : 'Support This Service'}
-                    </button>
-
-                    <p className="text-xs text-gray-500 text-center mt-4">
-                      100% of your donation goes directly to charity via JustGiving
-                    </p>
-                  </div>
+                  <ServiceDonationFlow
+                    service={{
+                      id: service.id,
+                      title: service.title,
+                      donation_amount: service.donation_amount,
+                      charity_requirement_type: service.charity_requirement_type,
+                      preferred_charities: service.preferred_charities ? 
+                        (Array.isArray(service.preferred_charities) ? 
+                          service.preferred_charities as Array<{
+                            charity_id: string
+                            name: string
+                            description?: string
+                            logo_url?: string
+                          }> : null) : null,
+                      provider: {
+                        id: service.provider.id,
+                        name: service.provider.name
+                      }
+                    }}
+                    isAvailable={isAvailable}
+                    isFull={isFull}
+                  />
                 </div>
               </div>
             </div>

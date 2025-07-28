@@ -162,6 +162,8 @@ class JustGivingAPI {
    */
   getCharityDonationUrl(charityId: number, amount?: number, reference?: string): string {
     const baseUrl = process.env.NEXT_PUBLIC_JUSTGIVING_CHARITY_CHECKOUT_URL || 'https://www.justgiving.com'
+    
+    // JustGiving URL format: https://www.justgiving.com/donation/direct/charity/{charityId}?amount={amount}&reference={reference}
     let url = `${baseUrl}/donation/direct/charity/${charityId}`
     
     const params = new URLSearchParams()
@@ -176,6 +178,7 @@ class JustGivingAPI {
       url += `?${params.toString()}`
     }
     
+    console.log('🔗 Generated JustGiving URL:', url)
     return url
   }
 }
