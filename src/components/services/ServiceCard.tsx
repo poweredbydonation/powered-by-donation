@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { Service, ServiceLocation } from '@/types/database'
+import { formatCurrency } from '@/lib/currency'
 
 interface ServiceCardProps {
   service: Service & {
@@ -27,12 +28,7 @@ export default function ServiceCard({ service }: ServiceCardProps) {
     : 'Location TBD'
 
   // Format donation amount
-  const donationAmount = new Intl.NumberFormat('en-AU', {
-    style: 'currency',
-    currency: 'AUD',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(service.donation_amount)
+  const donationAmount = formatCurrency(service.donation_amount)
 
   // Generate service slug from title
   const serviceSlug = service.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')

@@ -6,8 +6,8 @@ import { Service } from '@/types/database'
 import ServiceList from '@/components/services/ServiceList'
 import ServiceFilter, { ServiceFilters } from '@/components/services/ServiceFilter'
 import ServiceSort, { SortOption, sortServices } from '@/components/services/ServiceSort'
-import { Metadata } from 'next'
 import Navbar from '@/components/Navbar'
+import { formatCurrency } from '@/lib/currency'
 
 type ServiceWithProvider = Service & {
   provider: {
@@ -61,8 +61,10 @@ export default function BrowsePage() {
       }
     }
 
-    fetchServices()
-  }, [supabase])
+    // Add a small delay to prevent hydration mismatch
+    const timeoutId = setTimeout(fetchServices, 100)
+    return () => clearTimeout(timeoutId)
+  }, [])
 
   // Apply filters and sorting
   useEffect(() => {
@@ -184,11 +186,7 @@ export default function BrowsePage() {
                 </div>
                 <div>
                   <div className="text-2xl font-bold text-green-600">
-                    {services.reduce((sum, service) => sum + service.donation_amount, 0).toLocaleString('en-AU', {
-                      style: 'currency',
-                      currency: 'AUD',
-                      minimumFractionDigits: 0,
-                    })}
+                    {formatCurrency(services.reduce((sum, service) => sum + service.donation_amount, 0))}
                   </div>
                   <div className="text-sm text-gray-500">Total Donation Potential</div>
                 </div>
