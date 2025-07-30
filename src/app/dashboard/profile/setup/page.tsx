@@ -43,10 +43,6 @@ export default async function ProfileSetupPage() {
 
           <UnifiedUserProfileForm 
             user={user}
-            onProfileCreated={() => {
-              // Redirect will be handled by the component or we can redirect here
-              window.location.href = '/dashboard'
-            }}
           />
         </div>
       </div>

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { User } from '@/types/database'
 
@@ -29,6 +30,7 @@ export default function UnifiedUserProfileForm({ user, existingProfile, onProfil
   const [success, setSuccess] = useState<string | null>(null)
 
   const supabase = createClient()
+  const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -79,7 +81,15 @@ export default function UnifiedUserProfileForm({ user, existingProfile, onProfil
       }
 
       setSuccess(existingProfile ? 'Profile updated successfully!' : 'Profile created successfully!')
-      onProfileCreated?.()
+      
+      if (onProfileCreated) {
+        onProfileCreated()
+      } else if (!existingProfile) {
+        // If creating a new profile and no callback provided, redirect to dashboard
+        setTimeout(() => {
+          router.push('/dashboard')
+        }, 1500)
+      }
 
     } catch (err: any) {
       console.error('Profile operation error:', err)
