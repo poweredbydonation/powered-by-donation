@@ -20,37 +20,32 @@ export type HappinessRating = 'happy' | 'unhappy';
 
 // Core Database Interfaces
 
-export interface Provider {
+export interface User {
   id: string; // UUID
+  email: string;
   name: string;
+  username?: string;
+  is_provider?: boolean;
+  is_supporter?: boolean;
   bio?: string;
-  photo?: string;
-  contact?: Record<string, unknown>; // JSONB
-  show_bio?: boolean;
-  show_contact?: boolean;
-  show_in_directory?: boolean;
+  location?: string;
+  phone?: string;
+  avatar_url?: string;
   created_at?: Date;
-  received_happiness?: number; // % of supporters who rated them 'happy'
-  sent_happiness?: number; // % of supporters this provider rated 'happy'
 }
 
-export interface Supporter {
-  id: string; // UUID
-  name?: string;
-  bio?: string;
-  photo?: string;
-  contact?: Record<string, unknown>; // JSONB
-  show_bio?: boolean;
-  show_donation_history?: boolean;
-  show_in_directory?: boolean;
-  created_at?: Date;
-  received_happiness?: number; // % of providers who rated them 'happy'
-  sent_happiness?: number; // % of providers/services they rated 'happy'
+// Legacy interfaces for backward compatibility (deprecated - use User instead)
+export interface Provider extends User {
+  is_provider: true;
+}
+
+export interface Supporter extends User {
+  is_supporter: true;
 }
 
 export interface Service {
   id: string; // UUID
-  provider_id: string; // UUID (foreign key to providers)
+  user_id: string; // UUID (foreign key to users table)
   title: string;
   description?: string;
   donation_amount: number; // Fixed amount required
@@ -64,8 +59,6 @@ export interface Service {
   show_in_directory?: boolean;
   is_active?: boolean;
   created_at?: Date;
-  happiness_rate?: number; // % supporter satisfaction for this service
-  supporter_happiness_requirements?: Record<string, unknown>; // JSONB - Quality requirements
 }
 
 export interface CharityCache {
@@ -89,8 +82,8 @@ export interface CharityCache {
 
 export interface ServiceRequest {
   id: string; // UUID
-  supporter_id: string; // UUID (foreign key to supporters)
-  provider_id: string; // UUID (foreign key to providers)
+  supporter_id: string; // UUID (foreign key to users table)
+  provider_id: string; // UUID (foreign key to users table)
   service_id: string; // UUID (foreign key to services)
   justgiving_charity_id: string;
   donation_amount: number;

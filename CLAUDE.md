@@ -771,14 +771,32 @@ supabase db push
 supabase gen types typescript --local > types/database.ts
 ```
 
-### Deployment
+### Development & Production Environments
+
+#### Production Environment
+- **GitHub Branch**: `main` - https://github.com/poweredbydonation/powered-by-donation/tree/main
+- **Vercel Project**: `powered-by-donation` - https://vercel.com/poweredbydonations-projects/powered-by-donation
+- **Supabase Project**: `production` - https://supabase.com/dashboard/project/pdazwmicqrxcvbhmfwmy
+
+#### Development Environment  
+- **GitHub Branch**: `dev` - https://github.com/poweredbydonation/powered-by-donation/tree/dev
+- **Vercel Project**: `dev.powered-by-donation` - https://vercel.com/poweredbydonations-projects/dev.powered-by-donation
+- **Supabase Project**: `dev` - https://supabase.com/dashboard/project/ktwlhjgomcbbjynfefys
+
+### Deployment Workflow
 ```bash
-# GitHub push triggers automatic Vercel deployment
+# Development workflow
+git checkout dev
 git add .
 git commit -m "feature: description"
-git push origin main
+git push origin dev  # Triggers automatic deployment to dev.powered-by-donation
 
-# Environment variables managed via Vercel dashboard
+# Production deployment
+git checkout main
+git merge dev  # or create PR: dev → main
+git push origin main  # Triggers automatic deployment to powered-by-donation
+
+# Environment variables managed via respective Vercel dashboards
 # No manual deployment commands needed
 ```
 
