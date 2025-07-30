@@ -3,9 +3,10 @@ import { Service } from '@/types/database'
 
 interface ServiceListProps {
   services: (Service & {
-    provider: {
+    user: {
       name: string
-      show_bio: boolean
+      bio?: string
+      location?: string
     } | null
   })[]
   loading?: boolean
