@@ -4,9 +4,10 @@ import { formatCurrency } from '@/lib/currency'
 
 interface ServiceCardProps {
   service: Service & {
-    provider: {
+    user: {
       name: string
-      show_bio: boolean
+      bio?: string
+      location?: string
     } | null
   }
 }
