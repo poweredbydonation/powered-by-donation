@@ -14,9 +14,10 @@ interface LocationPageProps {
 }
 
 type ServiceWithProvider = Service & {
-  provider: {
+  user: {
     name: string
-    show_bio: boolean
+    bio?: string
+    location?: string
   } | null
 }
 
