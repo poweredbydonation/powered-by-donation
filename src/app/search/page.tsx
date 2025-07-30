@@ -327,7 +327,7 @@ function SearchResults() {
                 </div>
                 <div>
                   <div className="text-2xl font-bold text-purple-600">
-                    {new Set(filteredServices.map(s => s.provider_id)).size}
+                    {new Set(filteredServices.map(s => s.user_id)).size}
                   </div>
                   <div className="text-sm text-gray-500">Unique Providers</div>
                 </div>

@@ -81,7 +81,7 @@ export default function ServiceCreationForm() {
 
       // Prepare service data
       const serviceData = {
-        provider_id: user.id,
+        user_id: user.id,
         title: title.trim(),
         description: description.trim() || null,
         donation_amount: parseFloat(donationAmount),

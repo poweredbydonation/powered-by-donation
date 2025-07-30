@@ -196,7 +196,7 @@ export default function BrowsePage() {
                 </div>
                 <div>
                   <div className="text-2xl font-bold text-purple-600">
-                    {new Set(services.map(s => s.provider_id)).size}
+                    {new Set(services.map(s => s.user_id)).size}
                   </div>
                   <div className="text-sm text-gray-500">Active Providers</div>
                 </div>

@@ -27,7 +27,7 @@ export default function DeleteProviderProfile({ providerId, providerName }: Dele
       const { data: services, error: servicesError } = await supabase
         .from('services')
         .select('id')
-        .eq('provider_id', providerId)
+        .eq('user_id', providerId)
 
       if (servicesError) throw servicesError
 

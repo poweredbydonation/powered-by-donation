@@ -150,7 +150,7 @@ export default async function LocationPage({ params }: LocationPageProps) {
 
   // Calculate location statistics
   const totalDonationPotential = services.reduce((sum, service) => sum + service.donation_amount, 0)
-  const activeProviders = new Set(services.map(s => s.provider_id)).size
+  const activeProviders = new Set(services.map(s => s.user_id)).size
   const averageDonation = services.length > 0 ? Math.round(totalDonationPotential / services.length) : 0
 
   // Get service types breakdown
