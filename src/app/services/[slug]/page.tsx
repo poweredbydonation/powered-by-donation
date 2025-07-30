@@ -12,13 +12,12 @@ interface ServicePageProps {
 }
 
 type ServiceWithProvider = Service & {
-  provider: {
+  user: {
     id: string
     name: string
     bio: string | null
-    photo: string | null
-    show_bio: boolean
-    show_contact: boolean
+    avatar_url: string | null
+    location: string | null
     created_at: string
   }
 }
@@ -35,13 +34,12 @@ async function getServiceBySlug(slug: string): Promise<ServiceWithProvider | nul
     .from('services')
     .select(`
       *,
-      provider:providers (
+      user:users (
         id,
         name,
         bio,
-        photo,
-        show_bio,
-        show_contact,
+        avatar_url,
+        location,
         created_at
       )
     `)
@@ -253,7 +251,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
                   <h3 className="text-xl font-semibold text-gray-900 mb-2">
                     {service.user.name}
                   </h3>
-                  {service.user.show_bio && service.user.bio && (
+                  {service.user.bio && (
                     <p className="text-gray-600 leading-relaxed mb-4">
                       {service.user.bio}
                     </p>
