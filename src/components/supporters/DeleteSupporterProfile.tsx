@@ -37,13 +37,13 @@ export default function DeleteSupporterProfile({ supporterId, supporterName }: D
         return
       }
 
-      // Delete supporter profile
-      const { error: deleteError } = await supabase
-        .from('supporters')
-        .delete()
+      // Update user to remove supporter role
+      const { error: updateError } = await supabase
+        .from('users')
+        .update({ is_supporter: false })
         .eq('id', supporterId)
 
-      if (deleteError) throw deleteError
+      if (updateError) throw updateError
 
       // Show success state
       setLoading(false)
@@ -62,7 +62,7 @@ export default function DeleteSupporterProfile({ supporterId, supporterName }: D
   if (success) {
     return (
       <div className="bg-green-50 border border-green-200 rounded-md p-4">
-        <p className="text-green-700 font-medium">✓ Supporter profile deleted successfully</p>
+        <p className="text-green-700 font-medium">✓ Supporter role removed successfully</p>
         <p className="text-green-600 text-sm">Redirecting to dashboard...</p>
       </div>
     )
@@ -74,17 +74,17 @@ export default function DeleteSupporterProfile({ supporterId, supporterName }: D
         onClick={() => setShowConfirm(true)}
         className="text-red-600 hover:text-red-800 text-sm font-medium"
       >
-        Delete Supporter Profile
+        Remove Supporter Role
       </button>
     )
   }
 
   return (
     <div className="bg-red-50 border border-red-200 rounded-md p-4">
-      <h4 className="text-lg font-medium text-red-900 mb-2">Delete Supporter Profile</h4>
+      <h4 className="text-lg font-medium text-red-900 mb-2">Remove Supporter Role</h4>
       <p className="text-red-700 mb-4">
-        Are you sure you want to delete your supporter profile{supporterName ? ` for "${supporterName}"` : ''}? 
-        This action cannot be undone and you'll lose access to your donation history.
+        Are you sure you want to remove your supporter role{supporterName ? ` for "${supporterName}"` : ''}? 
+        You can re-enable your supporter role later if needed. Your donation history will be preserved.
       </p>
       
       {error && (
@@ -99,7 +99,7 @@ export default function DeleteSupporterProfile({ supporterId, supporterName }: D
           disabled={loading}
           className="px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {loading ? 'Deleting...' : 'Yes, Delete Profile'}
+          {loading ? 'Updating...' : 'Yes, Remove Supporter Role'}
         </button>
         <button
           onClick={() => setShowConfirm(false)}

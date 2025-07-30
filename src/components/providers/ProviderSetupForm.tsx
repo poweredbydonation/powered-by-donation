@@ -8,9 +8,6 @@ import { createClient } from '@/lib/supabase/client'
 export default function ProviderSetupForm() {
   const [name, setName] = useState('')
   const [bio, setBio] = useState('')
-  const [showBio, setShowBio] = useState(true)
-  const [showContact, setShowContact] = useState(false)
-  const [showInDirectory, setShowInDirectory] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   
@@ -27,14 +24,14 @@ export default function ProviderSetupForm() {
 
     try {
       const { error: insertError } = await supabase
-        .from('providers')
+        .from('users')
         .insert({
           id: user.id,
+          email: user.email,
           name: name.trim(),
           bio: bio.trim() || null,
-          show_bio: showBio,
-          show_contact: showContact,
-          show_in_directory: showInDirectory
+          is_provider: true,
+          is_supporter: true
         })
 
       if (insertError) {
@@ -91,55 +88,6 @@ export default function ProviderSetupForm() {
         </p>
       </div>
 
-      {/* Privacy Settings */}
-      <div className="border-t border-gray-200 pt-6">
-        <h3 className="text-lg font-medium text-gray-900 mb-4">Privacy Settings</h3>
-        
-        <div className="space-y-4">
-          <div className="flex items-center">
-            <input
-              id="show_bio"
-              type="checkbox"
-              checked={showBio}
-              onChange={(e) => setShowBio(e.target.checked)}
-              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-            />
-            <label htmlFor="show_bio" className="ml-2 block text-sm text-gray-700">
-              Show bio publicly
-            </label>
-          </div>
-
-          <div className="flex items-center">
-            <input
-              id="show_contact"
-              type="checkbox"
-              checked={showContact}
-              onChange={(e) => setShowContact(e.target.checked)}
-              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-            />
-            <label htmlFor="show_contact" className="ml-2 block text-sm text-gray-700">
-              Show contact information to supporters
-            </label>
-          </div>
-
-          <div className="flex items-center">
-            <input
-              id="show_in_directory"
-              type="checkbox"
-              checked={showInDirectory}
-              onChange={(e) => setShowInDirectory(e.target.checked)}
-              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-            />
-            <label htmlFor="show_in_directory" className="ml-2 block text-sm text-gray-700">
-              List me in provider directory
-            </label>
-          </div>
-        </div>
-        
-        <p className="mt-3 text-sm text-gray-500">
-          You can change these settings later from your dashboard
-        </p>
-      </div>
 
       {/* Error Display */}
       {error && (

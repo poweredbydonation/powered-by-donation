@@ -50,15 +50,19 @@ export default function ServiceCreationForm() {
         throw new Error('Please select at least one charity when using specific charity requirements.')
       }
 
-      // Get user's provider profile
-      const { data: providerData, error: providerError } = await supabase
-        .from('providers')
-        .select('id')
+      // Check if user has provider role
+      const { data: userData, error: userError } = await supabase
+        .from('users')
+        .select('id, is_provider')
         .eq('id', user.id)
         .single()
 
-      if (providerError || !providerData) {
-        throw new Error('Provider profile not found. Please complete your profile setup first.')
+      if (userError || !userData) {
+        throw new Error('User profile not found. Please complete your profile setup first.')
+      }
+
+      if (!userData.is_provider) {
+        throw new Error('You need to enable your provider role to create services. Please update your profile first.')
       }
 
       // Build service location object

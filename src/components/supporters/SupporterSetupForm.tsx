@@ -8,9 +8,6 @@ import { createClient } from '@/lib/supabase/client'
 export default function SupporterSetupForm() {
   const [name, setName] = useState('')
   const [bio, setBio] = useState('')
-  const [showBio, setShowBio] = useState(false)
-  const [showDonationHistory, setShowDonationHistory] = useState(false)
-  const [showInDirectory, setShowInDirectory] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   
@@ -27,14 +24,14 @@ export default function SupporterSetupForm() {
 
     try {
       const { error: insertError } = await supabase
-        .from('supporters')
+        .from('users')
         .insert({
           id: user.id,
+          email: user.email,
           name: name.trim() || null,
           bio: bio.trim() || null,
-          show_bio: showBio,
-          show_donation_history: showDonationHistory,
-          show_in_directory: showInDirectory
+          is_provider: false,
+          is_supporter: true
         })
 
       if (insertError) {
@@ -90,55 +87,13 @@ export default function SupporterSetupForm() {
         </p>
       </div>
 
-      {/* Privacy Settings */}
+      {/* Privacy Information */}
       <div className="border-t border-gray-200 pt-6">
-        <h3 className="text-lg font-medium text-gray-900 mb-4">Privacy Settings</h3>
-        
-        <div className="space-y-4">
-          <div className="flex items-center">
-            <input
-              id="show_bio"
-              type="checkbox"
-              checked={showBio}
-              onChange={(e) => setShowBio(e.target.checked)}
-              className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
-            />
-            <label htmlFor="show_bio" className="ml-2 block text-sm text-gray-700">
-              Show bio publicly
-            </label>
-          </div>
-
-          <div className="flex items-center">
-            <input
-              id="show_donation_history"
-              type="checkbox"
-              checked={showDonationHistory}
-              onChange={(e) => setShowDonationHistory(e.target.checked)}
-              className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
-            />
-            <label htmlFor="show_donation_history" className="ml-2 block text-sm text-gray-700">
-              Show my donation history (anonymous amounts only)
-            </label>
-          </div>
-
-          <div className="flex items-center">
-            <input
-              id="show_in_directory"
-              type="checkbox"
-              checked={showInDirectory}
-              onChange={(e) => setShowInDirectory(e.target.checked)}
-              className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
-            />
-            <label htmlFor="show_in_directory" className="ml-2 block text-sm text-gray-700">
-              List me in supporter directory
-            </label>
-          </div>
-        </div>
-        
-        <div className="mt-4 p-3 bg-blue-50 rounded-md">
+        <div className="p-4 bg-blue-50 rounded-md">
+          <h3 className="text-lg font-medium text-blue-900 mb-2">Privacy Promise</h3>
           <p className="text-sm text-blue-700">
-            <strong>Privacy Promise:</strong> Your donations are always displayed anonymously to the public. 
-            Only providers and charities you support will know your identity.
+            Your donations are always displayed anonymously to the public. 
+            Only providers and charities you support will know your identity to thank you.
           </p>
         </div>
       </div>
