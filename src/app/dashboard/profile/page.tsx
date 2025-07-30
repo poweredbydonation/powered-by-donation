@@ -38,10 +38,6 @@ export default async function ProfilePage() {
             <UnifiedUserProfileForm 
               user={user}
               existingProfile={userProfile}
-              onProfileCreated={() => {
-                // Refresh the page to show updated data
-                window.location.reload()
-              }}
             />
           </div>
         </div>

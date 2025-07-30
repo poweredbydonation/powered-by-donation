@@ -89,6 +89,11 @@ export default function UnifiedUserProfileForm({ user, existingProfile, onProfil
         setTimeout(() => {
           router.push('/dashboard')
         }, 1500)
+      } else {
+        // If updating existing profile and no callback provided, refresh the page
+        setTimeout(() => {
+          window.location.reload()
+        }, 1500)
       }
 
     } catch (err: any) {
