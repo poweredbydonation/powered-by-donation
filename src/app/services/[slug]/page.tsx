@@ -240,9 +240,9 @@ export default async function ServicePage({ params }: ServicePageProps) {
             <div className="p-8">
               <h2 className="text-2xl font-bold text-gray-900 mb-6">About the Provider</h2>
               <div className="flex items-start space-x-6">
-                {service.user.photo && (
+                {service.user.avatar_url && (
                   <img 
-                    src={service.user.photo} 
+                    src={service.user.avatar_url} 
                     alt={service.user.name}
                     className="w-16 h-16 rounded-full object-cover"
                   />
