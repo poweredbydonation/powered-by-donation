@@ -59,6 +59,7 @@ export interface Service {
   show_in_directory?: boolean;
   is_active?: boolean;
   created_at?: Date;
+  happiness_rate?: number; // % supporter satisfaction (calculated from service_requests)
 }
 
 export interface CharityCache {

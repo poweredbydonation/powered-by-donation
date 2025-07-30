@@ -12,9 +12,10 @@ import Link from 'next/link'
 import { formatCurrency } from '@/lib/currency'
 
 type ServiceWithProvider = Service & {
-  provider: {
+  user: {
     name: string
-    show_bio: boolean
+    bio?: string
+    location?: string
   } | null
 }
 
@@ -61,9 +62,10 @@ function SearchResults() {
           .from('services')
           .select(`
             *,
-            provider:providers (
+            user:users (
               name,
-              show_bio
+              bio,
+              location
             )
           `)
           .eq('is_active', true)
@@ -74,8 +76,8 @@ function SearchResults() {
           throw fetchError
         }
 
-        // Filter out services without provider data
-        const validServices = (data || []).filter(service => service.provider !== null)
+        // Filter out services without user data
+        const validServices = (data || []).filter(service => service.user !== null)
         setServices(validServices)
       } catch (err) {
         console.error('Error fetching services:', err)
@@ -98,7 +100,7 @@ function SearchResults() {
       filtered = filtered.filter(service => 
         service.title.toLowerCase().includes(query) ||
         service.description?.toLowerCase().includes(query) ||
-        service.provider?.name.toLowerCase().includes(query)
+        service.user?.name.toLowerCase().includes(query)
       )
     }
 

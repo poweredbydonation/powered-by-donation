@@ -59,9 +59,10 @@ async function getServicesByCategory(category: string): Promise<ServiceWithProvi
     .from('services')
     .select(`
       *,
-      provider:providers (
+      user:users (
         name,
-        show_bio
+        bio,
+        location
       )
     `)
     .eq('is_active', true)

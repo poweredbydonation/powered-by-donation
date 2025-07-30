@@ -12,8 +12,8 @@ interface ServiceCardProps {
 }
 
 export default function ServiceCard({ service }: ServiceCardProps) {  
-  // Safety check - if no provider data, don't render the card
-  if (!service.provider) {
+  // Safety check - if no user data, don't render the card
+  if (!service.user) {
     return null
   }
 
@@ -44,7 +44,7 @@ export default function ServiceCard({ service }: ServiceCardProps) {
     : 'Specific charities'
 
   // Provider name with fallback
-  const providerName = service.provider?.name || 'Unknown Provider'
+  const providerName = service.user?.name || 'Unknown Provider'
 
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md hover:border-gray-300 transition-all duration-200">

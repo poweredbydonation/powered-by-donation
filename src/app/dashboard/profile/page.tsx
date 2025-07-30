@@ -1,7 +1,8 @@
 import AuthGuard from '@/components/auth/AuthGuard'
 import { createClient } from '@/lib/supabase/server'
-import ProfileEditor from '@/components/profile/ProfileEditor'
+import { redirect } from 'next/navigation'
 import Navbar from '@/components/Navbar'
+import UnifiedUserProfileForm from '@/components/profile/UnifiedUserProfileForm'
 
 // Disable caching for this page so it always shows fresh data
 export const dynamic = 'force-dynamic'
@@ -14,19 +15,17 @@ export default async function ProfilePage() {
     return <div>Not authenticated</div>
   }
 
-  // Check if user has provider profile
-  const { data: provider } = await supabase
-    .from('providers')
+  // Check if user has profile in users table
+  const { data: userProfile } = await supabase
+    .from('users')
     .select('*')
     .eq('id', user.id)
     .single()
 
-  // Check if user has supporter profile  
-  const { data: supporter } = await supabase
-    .from('supporters')
-    .select('*')
-    .eq('id', user.id)
-    .single()
+  // If no profile exists, redirect to setup
+  if (!userProfile) {
+    redirect('/dashboard/profile/setup')
+  }
 
   return (
     <AuthGuard>
@@ -36,10 +35,13 @@ export default async function ProfilePage() {
           <div className="bg-white rounded-lg shadow-md p-6">
             <h1 className="text-3xl font-bold text-gray-900 mb-6">Edit Profile</h1>
             
-            <ProfileEditor 
+            <UnifiedUserProfileForm 
               user={user}
-              provider={provider}
-              supporter={supporter}
+              existingProfile={userProfile}
+              onProfileCreated={() => {
+                // Refresh the page to show updated data
+                window.location.reload()
+              }}
             />
           </div>
         </div>

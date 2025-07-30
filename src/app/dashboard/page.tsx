@@ -2,8 +2,7 @@ import AuthGuard from '@/components/auth/AuthGuard'
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
 import Navbar from '@/components/Navbar'
-import DeleteProviderProfile from '@/components/providers/DeleteProviderProfile'
-import DeleteSupporterProfile from '@/components/supporters/DeleteSupporterProfile'
+import DeleteUserProfile from '@/components/profile/DeleteUserProfile'
 
 // Disable caching for this page so it always shows fresh data
 export const dynamic = 'force-dynamic'
@@ -12,17 +11,10 @@ export default async function DashboardPage() {
   const supabase = createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
-  // Check if user has provider profile
-  const { data: provider } = await supabase
-    .from('providers')
-    .select('id, name, bio')
-    .eq('id', user?.id)
-    .single()
-
-  // Check if user has supporter profile  
-  const { data: supporter } = await supabase
-    .from('supporters')
-    .select('id, name, bio')
+  // Check if user has profile in users table
+  const { data: userProfile } = await supabase
+    .from('users')
+    .select('*')
     .eq('id', user?.id)
     .single()
 
@@ -36,42 +28,36 @@ export default async function DashboardPage() {
             
             <div className="bg-blue-50 border border-blue-200 rounded-md p-4 mb-6">
               <h2 className="text-lg font-semibold text-blue-900 mb-2">
-                Welcome back!
+                Welcome back{userProfile?.name ? `, ${userProfile.name}` : ''}!
               </h2>
-              <p className="text-blue-700">
-                Email: {user?.email}
+              <p className="text-blue-800">
+                {userProfile ? 'Your profile is set up and ready to go.' : 'Complete your profile to get started.'}
               </p>
-              <div className="mt-2 text-sm text-blue-600">
-                {provider && <span className="mr-4">✓ Provider Profile</span>}
-                {supporter && <span>✓ Supporter Profile</span>}
-              </div>
+              {userProfile && (
+                <div className="mt-2 text-sm text-blue-600">
+                  {userProfile.is_provider && <span className="mr-4">✓ Service Provider</span>}
+                  {userProfile.is_supporter && <span>✓ Supporter</span>}
+                </div>
+              )}
             </div>
 
             {/* Profile Setup Section */}
-            {!provider && !supporter && (
+            {!userProfile && (
               <div className="bg-yellow-50 border border-yellow-200 rounded-md p-4 mb-6">
                 <h3 className="text-lg font-semibold text-yellow-900 mb-2">Get Started</h3>
-                <p className="text-yellow-800 mb-4">Choose how you'd like to use Powered by Donation:</p>
-                <div className="flex flex-col sm:flex-row gap-3">
-                  <Link 
-                    href="/dashboard/provider/setup"
-                    className="bg-blue-600 text-white px-4 py-2 rounded-md text-center hover:bg-blue-700 transition-colors"
-                  >
-                    Become a Provider
-                  </Link>
-                  <Link 
-                    href="/dashboard/supporter/setup"
-                    className="bg-green-600 text-white px-4 py-2 rounded-md text-center hover:bg-green-700 transition-colors"
-                  >
-                    Become a Supporter
-                  </Link>
-                </div>
+                <p className="text-yellow-800 mb-4">Set up your profile to start using Powered by Donation:</p>
+                <Link 
+                  href="/dashboard/profile/setup"
+                  className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors inline-block"
+                >
+                  Create Your Profile
+                </Link>
               </div>
             )}
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {/* Provider Section */}
-              {provider ? (
+              {userProfile?.is_provider ? (
                 <div className="bg-blue-50 rounded-lg p-4">
                   <h3 className="font-semibold text-blue-900 mb-2">Provider Dashboard</h3>
                   <p className="text-blue-700 text-sm mb-3">Manage your services and donations</p>
@@ -95,16 +81,16 @@ export default async function DashboardPage() {
                   <h3 className="font-semibold text-gray-900 mb-2">Become a Provider</h3>
                   <p className="text-gray-600 text-sm mb-3">Offer services and support charities</p>
                   <Link 
-                    href="/dashboard/provider/setup"
+                    href="/dashboard/profile"
                     className="text-blue-600 hover:text-blue-800 text-sm"
                   >
-                    → Set up Provider Profile
+                    → Enable Provider Role
                   </Link>
                 </div>
               )}
 
               {/* Supporter Section */}
-              {supporter ? (
+              {userProfile?.is_supporter ? (
                 <div className="bg-green-50 rounded-lg p-4">
                   <h3 className="font-semibold text-green-900 mb-2">Supporter Dashboard</h3>
                   <p className="text-green-700 text-sm mb-3">Track your donations and impact</p>
@@ -128,10 +114,10 @@ export default async function DashboardPage() {
                   <h3 className="font-semibold text-gray-900 mb-2">Become a Supporter</h3>
                   <p className="text-gray-600 text-sm mb-3">Support services and charities</p>
                   <Link 
-                    href="/dashboard/supporter/setup"
+                    href="/dashboard/profile"
                     className="text-blue-600 hover:text-blue-800 text-sm"
                   >
-                    → Set up Supporter Profile
+                    → Enable Supporter Role
                   </Link>
                 </div>
               )}
@@ -158,35 +144,32 @@ export default async function DashboardPage() {
             </div>
 
             {/* Profile Management Section */}
-            {(provider || supporter) && (
+            {userProfile && (
               <div className="mt-8 pt-8 border-t border-gray-200">
                 <h2 className="text-xl font-semibold text-gray-900 mb-6">Profile Management</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {provider && (
-                    <div className="bg-white border border-gray-200 rounded-lg p-4">
-                      <h3 className="font-medium text-gray-900 mb-2">Provider Profile</h3>
-                      <p className="text-gray-600 text-sm mb-4">
-                        Name: {provider.name}
-                      </p>
-                      <DeleteProviderProfile 
-                        providerId={provider.id}
-                        providerName={provider.name}
-                      />
-                    </div>
-                  )}
-                  
-                  {supporter && (
-                    <div className="bg-white border border-gray-200 rounded-lg p-4">
-                      <h3 className="font-medium text-gray-900 mb-2">Supporter Profile</h3>
-                      <p className="text-gray-600 text-sm mb-4">
-                        {supporter.name ? `Name: ${supporter.name}` : 'Anonymous profile'}
-                      </p>
-                      <DeleteSupporterProfile 
-                        supporterId={supporter.id}
-                        supporterName={supporter.name}
-                      />
-                    </div>
-                  )}
+                <div className="bg-white border border-gray-200 rounded-lg p-6">
+                  <h3 className="font-medium text-gray-900 mb-2">Your Profile</h3>
+                  <div className="text-gray-600 text-sm mb-4">
+                    <p><strong>Name:</strong> {userProfile.name}</p>
+                    {userProfile.username && <p><strong>Username:</strong> {userProfile.username}</p>}
+                    {userProfile.location && <p><strong>Location:</strong> {userProfile.location}</p>}
+                    <p><strong>Roles:</strong> 
+                      {userProfile.is_provider && userProfile.is_supporter ? ' Provider & Supporter' :
+                       userProfile.is_provider ? ' Provider' :
+                       userProfile.is_supporter ? ' Supporter' : ' None'}
+                    </p>
+                  </div>
+                  <div className="flex gap-4">
+                    <Link
+                      href="/dashboard/profile"
+                      className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors text-sm"
+                    >
+                      Edit Profile
+                    </Link>
+                    <DeleteUserProfile 
+                      user={userProfile}
+                    />
+                  </div>
                 </div>
               </div>
             )}

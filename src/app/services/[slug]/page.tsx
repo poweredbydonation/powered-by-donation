@@ -75,7 +75,7 @@ export async function generateMetadata({ params }: ServicePageProps): Promise<Me
 
   return {
     title: `${service.title} - ${donationAmount} | Powered by Donation`,
-    description: service.description || `Support ${service.provider.name}'s ${service.title} service with a ${donationAmount} donation to charity`,
+    description: service.description || `Support ${service.user.name}'s ${service.title} service with a ${donationAmount} donation to charity`,
     openGraph: {
       title: `${service.title} - ${donationAmount}`,
       description: service.description || `Support this service with a ${donationAmount} donation to charity`,
@@ -225,8 +225,8 @@ export default async function ServicePage({ params }: ServicePageProps) {
                             logo_url?: string
                           }> : null) : null,
                       provider: {
-                        id: service.provider.id,
-                        name: service.provider.name
+                        id: service.user.id,
+                        name: service.user.name
                       }
                     }}
                     isAvailable={isAvailable}
@@ -242,24 +242,24 @@ export default async function ServicePage({ params }: ServicePageProps) {
             <div className="p-8">
               <h2 className="text-2xl font-bold text-gray-900 mb-6">About the Provider</h2>
               <div className="flex items-start space-x-6">
-                {service.provider.photo && (
+                {service.user.photo && (
                   <img 
-                    src={service.provider.photo} 
-                    alt={service.provider.name}
+                    src={service.user.photo} 
+                    alt={service.user.name}
                     className="w-16 h-16 rounded-full object-cover"
                   />
                 )}
                 <div className="flex-1">
                   <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                    {service.provider.name}
+                    {service.user.name}
                   </h3>
-                  {service.provider.show_bio && service.provider.bio && (
+                  {service.user.show_bio && service.user.bio && (
                     <p className="text-gray-600 leading-relaxed mb-4">
-                      {service.provider.bio}
+                      {service.user.bio}
                     </p>
                   )}
                   <div className="text-sm text-gray-500">
-                    Provider since {new Date(service.provider.created_at).toLocaleDateString()}
+                    Provider since {new Date(service.user.created_at).toLocaleDateString()}
                   </div>
                 </div>
               </div>

@@ -10,9 +10,10 @@ import Navbar from '@/components/Navbar'
 import { formatCurrency } from '@/lib/currency'
 
 type ServiceWithProvider = Service & {
-  provider: {
+  user: {
     name: string
-    show_bio: boolean
+    bio?: string
+    location?: string
   } | null
 }
 
@@ -39,9 +40,10 @@ export default function BrowsePage() {
           .from('services')
           .select(`
             *,
-            provider:providers (
+            user:users (
               name,
-              show_bio
+              bio,
+              location
             )
           `)
           .eq('is_active', true)
@@ -52,8 +54,8 @@ export default function BrowsePage() {
           throw fetchError
         }
 
-        // Filter out services without provider data to prevent crashes
-        const validServices = (data || []).filter(service => service.provider !== null)
+        // Filter out services without user data to prevent crashes
+        const validServices = (data || []).filter(service => service.user !== null)
         setServices(validServices)
       } catch (err) {
         console.error('Error fetching services:', err)

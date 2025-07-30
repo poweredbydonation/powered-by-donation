@@ -78,9 +78,10 @@ async function getServicesByLocation(location: string): Promise<ServiceWithProvi
     .from('services')
     .select(`
       *,
-      provider:providers (
+      user:users (
         name,
-        show_bio
+        bio,
+        location
       )
     `)
     .eq('is_active', true)
@@ -94,7 +95,7 @@ async function getServicesByLocation(location: string): Promise<ServiceWithProvi
 
   // Filter services by location (search in service_locations)
   return (services || []).filter(service => {
-    if (!service.provider) return false
+    if (!service.user) return false
     
     const locations = Array.isArray(service.service_locations) 
       ? service.service_locations as ServiceLocation[]
