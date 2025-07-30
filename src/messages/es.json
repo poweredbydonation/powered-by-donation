@@ -1,0 +1,165 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "browse": "Explorar Servicios",
+    "search": "Buscar",
+    "dashboard": "Panel",
+    "login": "Iniciar Sesión",
+    "logout": "Cerrar Sesión",
+    "profile": "Perfil"
+  },
+  "home": {
+    "title": "Powered by Donation",
+    "subtitle": "Mercado de servicios donde las donaciones a organizaciones benéficas desbloquean servicios profesionales",
+    "hero": {
+      "title": "Conecta Servicios con Impacto Benéfico",
+      "subtitle": "Explora servicios profesionales. Haz donaciones a organizaciones benéficas registradas. Construye conexiones comunitarias.",
+      "browse_services": "Explorar Servicios",
+      "how_it_works": "Cómo Funciona"
+    },
+    "how_it_works": {
+      "title": "Cómo Funciona",
+      "step1": {
+        "title": "Explorar Servicios",
+        "description": "Encuentra servicios profesionales ofrecidos por proveedores de la comunidad"
+      },
+      "step2": {
+        "title": "Elegir una Organización Benéfica",
+        "description": "Selecciona entre organizaciones benéficas registradas para recibir tu donación"
+      },
+      "step3": {
+        "title": "Crear Impacto",
+        "description": "Tu donación desbloquea el servicio y apoya una gran causa"
+      }
+    },
+    "recent_activity": {
+      "title": "Actividad Reciente de la Comunidad",
+      "someone_donated": "Alguien donó",
+      "via_service": "vía",
+      "hours_ago": "hace horas",
+      "minutes_ago": "hace minutos"
+    }
+  },
+  "dashboard": {
+    "title": "Panel",
+    "welcome": "Bienvenido",
+    "provider_section": {
+      "title": "Como Proveedor",
+      "create_service": "Crear Servicio",
+      "manage_services": "Gestionar Servicios",
+      "view_requests": "Ver Solicitudes"
+    },
+    "supporter_section": {
+      "title": "Como Partidario",
+      "browse_services": "Explorar Servicios",
+      "donation_history": "Historial de Donaciones"
+    },
+    "profile_section": {
+      "title": "Gestión de Perfil",
+      "edit_profile": "Editar Perfil",
+      "account_settings": "Configuración de Cuenta"
+    }
+  },
+  "profile": {
+    "setup": {
+      "title": "Configurar Tu Perfil",
+      "subtitle": "Crea tu perfil para comenzar a usar Powered by Donation como proveedor de servicios, partidario, o ambos.",
+      "create_profile": "Crear Tu Perfil",
+      "update_profile": "Actualizar Tu Perfil",
+      "roles": {
+        "title": "Tu(s) Rol(es)",
+        "provider": {
+          "title": "Proveedor de Servicios",
+          "description": "Ofrece servicios y ayuda a organizaciones benéficas"
+        },
+        "supporter": {
+          "title": "Partidario",
+          "description": "Encuentra servicios y haz donaciones benéficas"
+        }
+      },
+      "form": {
+        "full_name": "Nombre Completo",
+        "full_name_placeholder": "Tu nombre completo",
+        "username": "Nombre de Usuario (Opcional)",
+        "username_placeholder": "Elige un nombre de usuario único",
+        "username_help": "Para URL de perfil público (opcional)",
+        "bio": "Biografía",
+        "bio_placeholder": "Cuéntales a otros sobre ti y tus intereses...",
+        "location": "Ubicación",
+        "location_placeholder": "Ciudad, Estado/País",
+        "phone": "Número de Teléfono",
+        "phone_placeholder": "Tu número de teléfono",
+        "create_profile": "Crear Perfil",
+        "update_profile": "Actualizar Perfil",
+        "saving": "Guardando...",
+        "success_created": "¡Perfil creado exitosamente!",
+        "success_updated": "¡Perfil actualizado exitosamente!",
+        "error_name_required": "El nombre es requerido",
+        "error_role_required": "Debes ser proveedor, partidario, o ambos",
+        "error_save_failed": "Error al guardar el perfil"
+      }
+    }
+  },
+  "services": {
+    "browse": {
+      "title": "Explorar Servicios",
+      "subtitle": "Encuentra servicios profesionales y apoya organizaciones benéficas",
+      "no_services": "No se encontraron servicios",
+      "load_more": "Cargar Más"
+    },
+    "create": {
+      "title": "Crear Nuevo Servicio",
+      "subtitle": "Ofrece tus habilidades para ayudar a las organizaciones benéficas a recibir donaciones"
+    }
+  },
+  "common": {
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "view": "Ver",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "sort": "Ordenar",
+    "clear": "Limpiar",
+    "apply": "Aplicar",
+    "reset": "Restablecer"
+  },
+  "auth": {
+    "login": {
+      "title": "Iniciar Sesión",
+      "subtitle": "Inicia sesión en tu cuenta"
+    },
+    "logout": {
+      "title": "Cerrar Sesión",
+      "confirm": "¿Estás seguro de que quieres cerrar sesión?"
+    }
+  },
+  "footer": {
+    "about": "Acerca de",
+    "contact": "Contacto",
+    "privacy": "Política de Privacidad",
+    "terms": "Términos de Servicio",
+    "copyright": "© 2025 Powered by Donation. Todos los derechos reservados."
+  },
+  "language": {
+    "select": "Seleccionar Idioma",
+    "en": "English",
+    "es": "Español",
+    "fr": "Français",
+    "de": "Deutsch",
+    "it": "Italiano",
+    "pt": "Português",
+    "zh": "中文",
+    "ja": "日本語",
+    "ko": "한국어",
+    "ar": "العربية",
+    "tr": "Türkçe"
+  }
+}

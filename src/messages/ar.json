@@ -1,0 +1,165 @@
+{
+  "nav": {
+    "home": "Home",
+    "browse": "Browse Services",
+    "search": "Search",
+    "dashboard": "Dashboard",
+    "login": "Login",
+    "logout": "Logout",
+    "profile": "Profile"
+  },
+  "home": {
+    "title": "Powered by Donation",
+    "subtitle": "Service marketplace where donations to charities unlock professional services",
+    "hero": {
+      "title": "Connect Services with Charitable Impact",
+      "subtitle": "Browse professional services. Make donations to registered charities. Build community connections.",
+      "browse_services": "Browse Services",
+      "how_it_works": "How It Works"
+    },
+    "how_it_works": {
+      "title": "How It Works",
+      "step1": {
+        "title": "Browse Services",
+        "description": "Find professional services offered by community providers"
+      },
+      "step2": {
+        "title": "Choose a Charity",
+        "description": "Select from registered charities to receive your donation"
+      },
+      "step3": {
+        "title": "Make Impact",
+        "description": "Your donation unlocks the service and supports a great cause"
+      }
+    },
+    "recent_activity": {
+      "title": "Recent Community Activity",
+      "someone_donated": "Someone donated",
+      "via_service": "via",
+      "hours_ago": "hours ago",
+      "minutes_ago": "minutes ago"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome",
+    "provider_section": {
+      "title": "As a Provider",
+      "create_service": "Create Service",
+      "manage_services": "Manage Services",
+      "view_requests": "View Requests"
+    },
+    "supporter_section": {
+      "title": "As a Supporter",
+      "browse_services": "Browse Services",
+      "donation_history": "Donation History"
+    },
+    "profile_section": {
+      "title": "Profile Management",
+      "edit_profile": "Edit Profile",
+      "account_settings": "Account Settings"
+    }
+  },
+  "profile": {
+    "setup": {
+      "title": "Set Up Your Profile",
+      "subtitle": "Create your profile to start using Powered by Donation as a service provider, supporter, or both.",
+      "create_profile": "Create Your Profile",
+      "update_profile": "Update Your Profile",
+      "roles": {
+        "title": "Your Role(s)",
+        "provider": {
+          "title": "Service Provider",
+          "description": "Offer services and help charities"
+        },
+        "supporter": {
+          "title": "Supporter",
+          "description": "Find services and make charitable donations"
+        }
+      },
+      "form": {
+        "full_name": "Full Name",
+        "full_name_placeholder": "Your full name",
+        "username": "Username (Optional)",
+        "username_placeholder": "Choose a unique username",
+        "username_help": "For public profile URL (optional)",
+        "bio": "Bio",
+        "bio_placeholder": "Tell others about yourself and your interests...",
+        "location": "Location",
+        "location_placeholder": "City, State/Country",
+        "phone": "Phone Number",
+        "phone_placeholder": "Your phone number",
+        "create_profile": "Create Profile",
+        "update_profile": "Update Profile",
+        "saving": "Saving...",
+        "success_created": "Profile created successfully!",
+        "success_updated": "Profile updated successfully!",
+        "error_name_required": "Name is required",
+        "error_role_required": "You must be either a provider, supporter, or both",
+        "error_save_failed": "Failed to save profile"
+      }
+    }
+  },
+  "services": {
+    "browse": {
+      "title": "Browse Services",
+      "subtitle": "Find professional services and support charities",
+      "no_services": "No services found",
+      "load_more": "Load More"
+    },
+    "create": {
+      "title": "Create New Service",
+      "subtitle": "Offer your skills to help charities receive donations"
+    }
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "clear": "Clear",
+    "apply": "Apply",
+    "reset": "Reset"
+  },
+  "auth": {
+    "login": {
+      "title": "Login",
+      "subtitle": "Sign in to your account"
+    },
+    "logout": {
+      "title": "Logout",
+      "confirm": "Are you sure you want to logout?"
+    }
+  },
+  "footer": {
+    "about": "About",
+    "contact": "Contact",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "copyright": "© 2025 Powered by Donation. All rights reserved."
+  },
+  "language": {
+    "select": "Select Language",
+    "en": "English",
+    "es": "Español",
+    "fr": "Français",
+    "de": "Deutsch",
+    "it": "Italiano",
+    "pt": "Português",
+    "zh": "中文",
+    "ja": "日本語",
+    "ko": "한국어",
+    "ar": "العربية",
+    "tr": "Türkçe"
+  }
+}

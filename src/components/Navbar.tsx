@@ -1,10 +1,13 @@
 'use client'
 
-import Link from 'next/link'
 import { useAuth } from '@/hooks/useAuth'
+import { useTranslations } from 'next-intl'
+import { Link } from '@/i18n/routing'
+import LanguageSwitcher from './LanguageSwitcher'
 
 export default function Navbar() {
   const { user, signOut, loading } = useAuth()
+  const t = useTranslations('nav')
 
   const handleSignOut = async () => {
     await signOut()
@@ -16,11 +19,12 @@ export default function Navbar() {
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link href="/" className="text-xl font-bold text-blue-600">
-              Powered by Donation
+              {t('home')} - Powered by Donation
             </Link>
           </div>
 
           <div className="flex items-center space-x-4">
+            <LanguageSwitcher />
             {loading ? (
               <div className="animate-pulse bg-gray-200 h-8 w-20 rounded"></div>
             ) : user ? (
@@ -32,13 +36,13 @@ export default function Navbar() {
                   href="/dashboard"
                   className="text-blue-600 hover:text-blue-800 text-sm font-medium"
                 >
-                  Dashboard
+                  {t('dashboard')}
                 </Link>
                 <button
                   onClick={handleSignOut}
                   className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded text-sm"
                 >
-                  Sign Out
+                  {t('logout')}
                 </button>
               </div>
             ) : (
@@ -47,7 +51,7 @@ export default function Navbar() {
                   href="/login"
                   className="text-blue-600 hover:text-blue-800 text-sm font-medium"
                 >
-                  Sign In
+                  {t('login')}
                 </Link>
                 <Link
                   href="/signup"

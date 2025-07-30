@@ -1,0 +1,165 @@
+{
+  "nav": {
+    "home": "Ana Sayfa",
+    "browse": "Hizmetleri Gözat",
+    "search": "Ara",
+    "dashboard": "Panel",
+    "login": "Giriş Yap",
+    "logout": "Çıkış Yap",
+    "profile": "Profil"
+  },
+  "home": {
+    "title": "Powered by Donation",
+    "subtitle": "Hayır kurumlarına yapılan bağışların profesyonel hizmetleri açtığı hizmet pazaryeri",
+    "hero": {
+      "title": "Hizmetleri Hayırsever Etki ile Bağla",
+      "subtitle": "Profesyonel hizmetleri keşfedin. Kayıtlı hayır kurumlarına bağış yapın. Topluluk bağlantıları kurun.",
+      "browse_services": "Hizmetleri Gözat",
+      "how_it_works": "Nasıl Çalışır"
+    },
+    "how_it_works": {
+      "title": "Nasıl Çalışır",
+      "step1": {
+        "title": "Hizmetleri Gözat",
+        "description": "Topluluk sağlayıcıları tarafından sunulan profesyonel hizmetleri bulun"
+      },
+      "step2": {
+        "title": "Bir Hayır Kurumu Seçin",
+        "description": "Bağışınızı alacak kayıtlı hayır kurumları arasından seçim yapın"
+      },
+      "step3": {
+        "title": "Etki Yaratın",
+        "description": "Bağışınız hizmeti açar ve büyük bir davayı destekler"
+      }
+    },
+    "recent_activity": {
+      "title": "Son Topluluk Etkinliği",
+      "someone_donated": "Biri bağışladı",
+      "via_service": "üzerinden",
+      "hours_ago": "saat önce",
+      "minutes_ago": "dakika önce"
+    }
+  },
+  "dashboard": {
+    "title": "Panel",
+    "welcome": "Hoş Geldiniz",
+    "provider_section": {
+      "title": "Sağlayıcı Olarak",
+      "create_service": "Hizmet Oluştur",
+      "manage_services": "Hizmetleri Yönet",
+      "view_requests": "Talepleri Görüntüle"
+    },
+    "supporter_section": {
+      "title": "Destekçi Olarak",
+      "browse_services": "Hizmetleri Gözat",
+      "donation_history": "Bağış Geçmişi"
+    },
+    "profile_section": {
+      "title": "Profil Yönetimi",
+      "edit_profile": "Profili Düzenle",
+      "account_settings": "Hesap Ayarları"
+    }
+  },
+  "profile": {
+    "setup": {
+      "title": "Profilinizi Kurun",
+      "subtitle": "Powered by Donation'ı hizmet sağlayıcısı, destekçi veya her ikisi olarak kullanmaya başlamak için profilinizi oluşturun.",
+      "create_profile": "Profilinizi Oluşturun",
+      "update_profile": "Profilinizi Güncelleyin",
+      "roles": {
+        "title": "Rol(ler)iniz",
+        "provider": {
+          "title": "Hizmet Sağlayıcısı",
+          "description": "Hizmet sunun ve hayır kurumlarına yardım edin"
+        },
+        "supporter": {
+          "title": "Destekçi",
+          "description": "Hizmet bulun ve hayırsever bağışlar yapın"
+        }
+      },
+      "form": {
+        "full_name": "Tam Ad",
+        "full_name_placeholder": "Tam adınız",
+        "username": "Kullanıcı Adı (İsteğe Bağlı)",
+        "username_placeholder": "Benzersiz bir kullanıcı adı seçin",
+        "username_help": "Herkese açık profil URL'si için (isteğe bağlı)",
+        "bio": "Biyografi",
+        "bio_placeholder": "Kendiniz ve ilgi alanlarınız hakkında başkalarına anlatın...",
+        "location": "Konum",
+        "location_placeholder": "Şehir, Eyalet/Ülke",
+        "phone": "Telefon Numarası",
+        "phone_placeholder": "Telefon numaranız",
+        "create_profile": "Profil Oluştur",
+        "update_profile": "Profili Güncelle",
+        "saving": "Kaydediliyor...",
+        "success_created": "Profil başarıyla oluşturuldu!",
+        "success_updated": "Profil başarıyla güncellendi!",
+        "error_name_required": "Ad gereklidir",
+        "error_role_required": "Sağlayıcı, destekçi veya her ikisi olmalısınız",
+        "error_save_failed": "Profil kaydedilemedi"
+      }
+    }
+  },
+  "services": {
+    "browse": {
+      "title": "Hizmetleri Gözat",
+      "subtitle": "Profesyonel hizmetler bulun ve hayır kurumlarını destekleyin",
+      "no_services": "Hizmet bulunamadı",
+      "load_more": "Daha Fazla Yükle"
+    },
+    "create": {
+      "title": "Yeni Hizmet Oluştur",
+      "subtitle": "Hayır kurumlarının bağış almasına yardımcı olmak için becerilerinizi sunun"
+    }
+  },
+  "common": {
+    "loading": "Yükleniyor...",
+    "error": "Hata",
+    "success": "Başarılı",
+    "cancel": "İptal",
+    "save": "Kaydet",
+    "delete": "Sil",
+    "edit": "Düzenle",
+    "view": "Görüntüle",
+    "back": "Geri",
+    "next": "İleri",
+    "previous": "Önceki",
+    "search": "Ara",
+    "filter": "Filtrele",
+    "sort": "Sırala",
+    "clear": "Temizle",
+    "apply": "Uygula",
+    "reset": "Sıfırla"
+  },
+  "auth": {
+    "login": {
+      "title": "Giriş Yap",
+      "subtitle": "Hesabınıza giriş yapın"
+    },
+    "logout": {
+      "title": "Çıkış Yap",
+      "confirm": "Çıkış yapmak istediğinizden emin misiniz?"
+    }
+  },
+  "footer": {
+    "about": "Hakkında",
+    "contact": "İletişim",
+    "privacy": "Gizlilik Politikası",
+    "terms": "Hizmet Şartları",
+    "copyright": "© 2025 Powered by Donation. Tüm hakları saklıdır."
+  },
+  "language": {
+    "select": "Dil Seçin",
+    "en": "English",
+    "es": "Español",
+    "fr": "Français",
+    "de": "Deutsch",
+    "it": "Italiano",
+    "pt": "Português",
+    "zh": "中文",
+    "ja": "日本語",
+    "ko": "한국어",
+    "ar": "العربية",
+    "tr": "Türkçe"
+  }
+}

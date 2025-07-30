@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find:*)",
+      "Bash(pnpm run:*)",
+      "Bash(npx tsc:*)",
+      "Bash(timeout 15s pnpm run dev)",
+      "Bash(for file in src/messages/*.json)",
+      "Bash(do echo \"=== $file ===\")",
+      "Bash(jq:*)",
+      "Bash(done)"
+    ],
+    "deny": []
+  }
+}
