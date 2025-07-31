@@ -10,10 +10,10 @@ export default getRequestConfig(async ({ locale }) => {
 
   let messages;
   try {
-    messages = (await import(`./src/messages/${locale}.json`)).default;
+    messages = (await import(`../messages/${locale}.json`)).default;
   } catch (error) {
     // Fallback to English if the locale file doesn't exist
-    messages = (await import(`./src/messages/en.json`)).default;
+    messages = (await import(`../messages/en.json`)).default;
   }
 
   return {
