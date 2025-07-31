@@ -4,6 +4,7 @@ import Link from 'next/link'
 import MultilingualNavbar from '@/components/MultilingualNavbar'
 import DeleteUserProfile from '@/components/profile/DeleteUserProfile'
 import { getMessages, getTranslations } from 'next-intl/server'
+import { NextIntlClientProvider } from 'next-intl'
 
 // Disable caching for this page so it always shows fresh data
 export const dynamic = 'force-dynamic'
@@ -176,9 +177,11 @@ export default async function DashboardPage({ params }: DashboardPageProps) {
                     >
                       {t('editProfile')}
                     </Link>
-                    <DeleteUserProfile 
-                      user={userProfile}
-                    />
+                    <NextIntlClientProvider messages={{ deleteProfile: messages.deleteProfile }}>
+                      <DeleteUserProfile 
+                        user={userProfile}
+                      />
+                    </NextIntlClientProvider>
                   </div>
                 </div>
               </div>
