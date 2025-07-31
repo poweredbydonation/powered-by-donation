@@ -1,21 +1,21 @@
 {
   "nav": {
     "home": "Home",
-    "browse": "Browse Services",
-    "search": "Search",
+    "browse": "Esplora Servizi",
+    "search": "Cerca",
     "dashboard": "Dashboard",
-    "login": "Login",
-    "logout": "Logout",
-    "profile": "Profile"
+    "login": "Accedi",
+    "logout": "Esci",
+    "profile": "Profilo"
   },
   "home": {
     "title": "Powered by Donation",
-    "subtitle": "Service marketplace where donations to charities unlock professional services",
+    "subtitle": "Mercato dei servizi dove le donazioni agli enti di beneficenza sbloccano servizi professionali",
     "hero": {
-      "title": "Connect Services with Charitable Impact",
-      "subtitle": "Browse professional services. Make donations to registered charities. Build community connections.",
-      "browse_services": "Browse Services",
-      "how_it_works": "How It Works"
+      "title": "Connetti i Servizi con l'Impatto Benefico",
+      "subtitle": "Esplora servizi professionali. Fai donazioni a enti di beneficenza registrati. Costruisci connessioni comunitarie.",
+      "browse_services": "Esplora Servizi",
+      "how_it_works": "Come Funziona"
     },
     "how_it_works": {
       "title": "How It Works",
@@ -133,12 +133,33 @@
   },
   "auth": {
     "login": {
-      "title": "Login",
-      "subtitle": "Sign in to your account"
+      "title": "Accedi",
+      "subtitle": "Accedi al tuo account",
+      "email": "Email",
+      "password": "Password",
+      "email_placeholder": "tua@email.com",
+      "password_placeholder": "La tua password",
+      "sign_in_button": "Accedi",
+      "signing_in": "Accesso in corso...",
+      "or_continue_with": "O continua con",
+      "no_account": "Non hai un account?",
+      "sign_up_link": "Registrati",
+      "forgot_password": "Password dimenticata?",
+      "remember_me": "Ricordami"
     },
     "logout": {
-      "title": "Logout",
-      "confirm": "Are you sure you want to logout?"
+      "title": "Esci",
+      "confirm": "Sei sicuro di voler uscire?"
+    },
+    "signup": {
+      "title": "Registrati",
+      "subtitle": "Crea il tuo account",
+      "name": "Nome completo",
+      "confirm_password": "Conferma password",
+      "sign_up_button": "Registrati",
+      "signing_up": "Creazione account...",
+      "have_account": "Hai già un account?",
+      "sign_in_link": "Accedi"
     }
   },
   "footer": {

@@ -1,0 +1,207 @@
+{
+  "nav": {
+    "home": "Trang chủ",
+    "browse": "Duyệt dịch vụ",
+    "search": "Tìm kiếm",
+    "dashboard": "Bảng điều khiển",
+    "login": "Đăng nhập",
+    "logout": "Đăng xuất",
+    "profile": "Hồ sơ"
+  },
+  "home": {
+    "title": "Powered by Donation",
+    "subtitle": "Thị trường dịch vụ nơi các khoản quyên góp cho tổ chức từ thiện mở khóa các dịch vụ chuyên nghiệp",
+    "hero": {
+      "title": "Kết nối dịch vụ với tác động từ thiện",
+      "subtitle": "Duyệt các dịch vụ chuyên nghiệp. Quyên góp cho các tổ chức từ thiện đã đăng ký. Xây dựng kết nối cộng đồng.",
+      "browse_services": "Duyệt dịch vụ",
+      "how_it_works": "Cách thức hoạt động"
+    },
+    "how_it_works": {
+      "title": "Cách thức hoạt động",
+      "step1": {
+        "title": "Duyệt dịch vụ",
+        "description": "Tìm các dịch vụ chuyên nghiệp được cung cấp bởi các nhà cung cấp cộng đồng"
+      },
+      "step2": {
+        "title": "Chọn tổ chức từ thiện",
+        "description": "Chọn từ các tổ chức từ thiện đã đăng ký để nhận quyên góp của bạn"
+      },
+      "step3": {
+        "title": "Kết nối và tác động",
+        "description": "Nhận dịch vụ và tạo ra tác động tích cực cho cộng đồng"
+      }
+    },
+    "recent_activity": {
+      "title": "Hoạt động gần đây",
+      "someone_donated": "Ai đó đã quyên góp",
+      "via_service": "thông qua dịch vụ cho",
+      "hours_ago": "giờ trước"
+    }
+  },
+  "dashboard": {
+    "title": "Bảng điều khiển",
+    "welcome": "Chào mừng",
+    "provider_section": {
+      "title": "Với tư cách nhà cung cấp",
+      "create_service": "Tạo dịch vụ",
+      "manage_services": "Quản lý dịch vụ",
+      "view_requests": "Xem yêu cầu"
+    },
+    "supporter_section": {
+      "title": "Với tư cách người ủng hộ",
+      "browse_services": "Duyệt dịch vụ",
+      "donation_history": "Lịch sử quyên góp"
+    },
+    "profile_section": {
+      "title": "Quản lý hồ sơ",
+      "edit_profile": "Chỉnh sửa hồ sơ",
+      "account_settings": "Cài đặt tài khoản"
+    }
+  },
+  "profile": {
+    "setup": {
+      "title": "Thiết lập hồ sơ của bạn",
+      "subtitle": "Tạo hồ sơ để bắt đầu sử dụng Powered by Donation với tư cách nhà cung cấp dịch vụ, người ủng hộ, hoặc cả hai.",
+      "create_profile": "Tạo hồ sơ của bạn",
+      "update_profile": "Cập nhật hồ sơ của bạn",
+      "roles": {
+        "title": "Vai trò của bạn",
+        "provider": {
+          "title": "Nhà cung cấp dịch vụ",
+          "description": "Cung cấp dịch vụ và giúp đỡ các tổ chức từ thiện"
+        },
+        "supporter": {
+          "title": "Người ủng hộ",
+          "description": "Tìm dịch vụ và thực hiện quyên góp từ thiện"
+        }
+      },
+      "form": {
+        "full_name": "Họ và tên",
+        "full_name_placeholder": "Họ và tên của bạn",
+        "username": "Tên người dùng (Tùy chọn)",
+        "username_placeholder": "Chọn tên người dùng duy nhất",
+        "username_help": "Cho URL hồ sơ công khai (tùy chọn)",
+        "bio": "Tiểu sử",
+        "bio_placeholder": "Kể cho mọi người biết về bạn và sở thích của bạn...",
+        "location": "Vị trí",
+        "location_placeholder": "Thành phố, Tỉnh/Quốc gia",
+        "phone": "Số điện thoại",
+        "phone_placeholder": "Số điện thoại của bạn",
+        "create_profile": "Tạo hồ sơ",
+        "update_profile": "Cập nhật hồ sơ",
+        "saving": "Đang lưu...",
+        "success_created": "Hồ sơ đã được tạo thành công!",
+        "success_updated": "Hồ sơ đã được cập nhật thành công!",
+        "error_name_required": "Tên là bắt buộc",
+        "error_role_required": "Bạn phải là nhà cung cấp, người ủng hộ, hoặc cả hai",
+        "error_save_failed": "Không thể lưu hồ sơ"
+      }
+    }
+  },
+  "services": {
+    "browse": {
+      "title": "Duyệt dịch vụ",
+      "subtitle": "Tìm dịch vụ chuyên nghiệp và hỗ trợ tổ chức từ thiện",
+      "no_services": "Không tìm thấy dịch vụ nào",
+      "load_more": "Tải thêm"
+    },
+    "create": {
+      "title": "Tạo dịch vụ mới",
+      "subtitle": "Cung cấp kỹ năng của bạn để giúp các tổ chức từ thiện nhận quyên góp"
+    }
+  },
+  "common": {
+    "loading": "Đang tải...",
+    "error": "Lỗi",
+    "success": "Thành công",
+    "cancel": "Hủy",
+    "save": "Lưu",
+    "delete": "Xóa",
+    "edit": "Chỉnh sửa",
+    "view": "Xem",
+    "back": "Quay lại",
+    "next": "Tiếp theo",
+    "previous": "Trước đó",
+    "search": "Tìm kiếm",
+    "filter": "Lọc",
+    "sort": "Sắp xếp",
+    "clear": "Xóa",
+    "apply": "Áp dụng",
+    "reset": "Đặt lại"
+  },
+  "auth": {
+    "login": {
+      "title": "Đăng nhập",
+      "subtitle": "Đăng nhập vào tài khoản của bạn",
+      "email": "Email",
+      "password": "Mật khẩu",
+      "email_placeholder": "your@email.com",
+      "password_placeholder": "Mật khẩu của bạn",
+      "sign_in_button": "Đăng nhập",
+      "signing_in": "Đang đăng nhập...",
+      "or_continue_with": "Hoặc tiếp tục với",
+      "no_account": "Chưa có tài khoản?",
+      "sign_up_link": "Đăng ký",
+      "forgot_password": "Quên mật khẩu?",
+      "remember_me": "Ghi nhớ tôi"
+    },
+    "logout": {
+      "title": "Đăng xuất",
+      "confirm": "Bạn có chắc chắn muốn đăng xuất?"
+    },
+    "signup": {
+      "title": "Tạo tài khoản",
+      "fields": {
+        "email": "Email",
+        "password": "Mật khẩu",
+        "confirmPassword": "Xác nhận mật khẩu"
+      },
+      "placeholders": {
+        "email": "email@của.bạn",
+        "password": "Ít nhất 6 ký tự",
+        "confirmPassword": "Xác nhận mật khẩu của bạn"
+      },
+      "buttons": {
+        "create": "Tạo tài khoản",
+        "creating": "Đang tạo tài khoản..."
+      },
+      "errors": {
+        "passwordMismatch": "Mật khẩu không khớp",
+        "passwordTooShort": "Mật khẩu phải có ít nhất 6 ký tự"
+      },
+      "success": {
+        "title": "Kiểm tra Email của bạn!",
+        "message": "Chúng tôi đã gửi liên kết xác nhận đến",
+        "instruction": "Vui lòng kiểm tra email và nhấp vào liên kết để kích hoạt tài khoản.",
+        "backToLogin": "Quay lại Đăng nhập"
+      },
+      "divider": "Hoặc tiếp tục với",
+      "socialButtons": {
+        "google": "Đăng ký với Google",
+        "microsoft": "Đăng ký với Microsoft",
+        "github": "Đăng ký với GitHub",
+        "apple": "Đăng ký với Apple"
+      },
+      "footer": {
+        "hasAccount": "Đã có tài khoản?",
+        "signIn": "Đăng nhập"
+      }
+    }
+  },
+  "footer": {
+    "about": "Giới thiệu",
+    "contact": "Liên hệ",
+    "privacy": "Chính sách bảo mật",
+    "terms": "Điều khoản dịch vụ",
+    "copyright": "© 2025 Powered by Donation. Tất cả quyền được bảo lưu."
+  },
+  "language": {
+    "select": "Chọn ngôn ngữ",
+    "en": "Tiếng Anh",
+    "es": "Tiếng Tây Ban Nha",
+    "fr": "Tiếng Pháp",
+    "de": "Tiếng Đức",
+    "vi": "Tiếng Việt"
+  }
+}

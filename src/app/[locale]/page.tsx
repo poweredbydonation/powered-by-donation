@@ -9,10 +9,10 @@ interface HomePageProps {
 }
 
 export default async function HomePage({ params }: HomePageProps) {
-  const locale = params.locale
-  const t = await getTranslations('home')
-  const tNav = await getTranslations('nav')
-  const messages = await getMessages()
+  const { locale } = params
+  const t = await getTranslations({ locale, namespace: 'home' })
+  const tNav = await getTranslations({ locale, namespace: 'nav' })
+  const messages = await getMessages({ locale })
 
   return (
     <div className="min-h-screen bg-white">

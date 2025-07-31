@@ -133,12 +133,61 @@
   },
   "auth": {
     "login": {
-      "title": "Login",
-      "subtitle": "Sign in to your account"
+      "title": "Sign In",
+      "subtitle": "Sign in to your account",
+      "email": "Email",
+      "password": "Password",
+      "email_placeholder": "your@email.com",
+      "password_placeholder": "Your password",
+      "sign_in_button": "Sign In",
+      "signing_in": "Signing in...",
+      "or_continue_with": "Or continue with",
+      "no_account": "Don't have an account?",
+      "sign_up_link": "Sign up",
+      "forgot_password": "Forgot password?",
+      "remember_me": "Remember me"
     },
     "logout": {
       "title": "Logout",
       "confirm": "Are you sure you want to logout?"
+    },
+    "signup": {
+      "title": "Create Account",
+      "fields": {
+        "email": "Email",
+        "password": "Password",
+        "confirmPassword": "Confirm Password"
+      },
+      "placeholders": {
+        "email": "your@email.com",
+        "password": "At least 6 characters",
+        "confirmPassword": "Confirm your password"
+      },
+      "buttons": {
+        "create": "Create Account",
+        "creating": "Creating account..."
+      },
+      "errors": {
+        "passwordMismatch": "Passwords do not match",
+        "passwordTooShort": "Password must be at least 6 characters"
+      },
+      "success": {
+        "title": "Check Your Email!",
+        "message": "We've sent you a confirmation link at",
+        "instruction": "Please check your email and click the link to activate your account.",
+        "backToLogin": "Back to Login"
+      },
+      "divider": "Or continue with",
+      "socialButtons": {
+        "google": "Sign up with Google",
+        "microsoft": "Sign up with Microsoft",
+        "github": "Sign up with GitHub",
+        "apple": "Sign up with Apple"
+      },
+      "footer": {
+        "hasAccount": "Already have an account?",
+        "signIn": "Sign in"
+      }
     }
   },
   "footer": {

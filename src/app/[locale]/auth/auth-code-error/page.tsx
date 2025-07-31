@@ -1,8 +1,20 @@
 import { Link } from '@/i18n/routing'
+import MultilingualNavbar from '@/components/MultilingualNavbar'
+import { getMessages } from 'next-intl/server'
 
-export default function AuthCodeError() {
+interface AuthCodeErrorProps {
+  params: {
+    locale: string
+  }
+}
+
+export default async function AuthCodeError({ params }: AuthCodeErrorProps) {
+  const { locale } = params
+  const messages = await getMessages({ locale })
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-50">
+      <MultilingualNavbar locale={locale} messages={messages} />
+      <div className="flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <div className="text-center">
@@ -52,6 +64,7 @@ export default function AuthCodeError() {
             </p>
           </div>
         </div>
+      </div>
       </div>
     </div>
   )

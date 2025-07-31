@@ -1,21 +1,21 @@
 {
   "nav": {
-    "home": "Home",
-    "browse": "Browse Services",
-    "search": "Search",
+    "home": "Startseite",
+    "browse": "Services Durchsuchen",
+    "search": "Suchen",
     "dashboard": "Dashboard",
-    "login": "Login",
-    "logout": "Logout",
-    "profile": "Profile"
+    "login": "Anmelden",
+    "logout": "Abmelden",
+    "profile": "Profil"
   },
   "home": {
     "title": "Powered by Donation",
-    "subtitle": "Service marketplace where donations to charities unlock professional services",
+    "subtitle": "Service-Marktplatz, bei dem Spenden an Wohltätigkeitsorganisationen professionelle Services freischalten",
     "hero": {
-      "title": "Connect Services with Charitable Impact",
-      "subtitle": "Browse professional services. Make donations to registered charities. Build community connections.",
-      "browse_services": "Browse Services",
-      "how_it_works": "How It Works"
+      "title": "Services mit Wohltätigkeitseinfluss Verbinden",
+      "subtitle": "Durchsuchen Sie professionelle Services. Spenden Sie an registrierte Wohltätigkeitsorganisationen. Schaffen Sie Gemeinschaftsverbindungen.",
+      "browse_services": "Services Durchsuchen",
+      "how_it_works": "Wie es Funktioniert"
     },
     "how_it_works": {
       "title": "How It Works",

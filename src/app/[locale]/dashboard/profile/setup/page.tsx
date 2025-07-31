@@ -1,15 +1,24 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import AuthGuard from '@/components/auth/AuthGuard'
-import Navbar from '@/components/Navbar'
+import MultilingualNavbar from '@/components/MultilingualNavbar'
 import UnifiedUserProfileForm from '@/components/profile/UnifiedUserProfileForm'
+import { getMessages } from 'next-intl/server'
 
 export const metadata = {
   title: 'Profile Setup - Powered by Donation',
   description: 'Set up your profile to start using Powered by Donation as a provider, supporter, or both',
 }
 
-export default async function ProfileSetupPage() {
+interface ProfileSetupPageProps {
+  params: {
+    locale: string
+  }
+}
+
+export default async function ProfileSetupPage({ params }: ProfileSetupPageProps) {
+  const { locale } = params
+  const messages = await getMessages({ locale })
   const supabase = createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
@@ -31,7 +40,7 @@ export default async function ProfileSetupPage() {
 
   return (
     <AuthGuard>
-      <Navbar />
+      <MultilingualNavbar locale={locale} messages={messages} />
       <div className="min-h-screen bg-gray-50 py-12">
         <div className="max-w-3xl mx-auto px-4">
           <div className="text-center mb-8">

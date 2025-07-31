@@ -1,13 +1,22 @@
 import AuthGuard from '@/components/auth/AuthGuard'
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import Navbar from '@/components/Navbar'
+import MultilingualNavbar from '@/components/MultilingualNavbar'
 import UnifiedUserProfileForm from '@/components/profile/UnifiedUserProfileForm'
+import { getMessages } from 'next-intl/server'
 
 // Disable caching for this page so it always shows fresh data
 export const dynamic = 'force-dynamic'
 
-export default async function ProfilePage() {
+interface ProfilePageProps {
+  params: {
+    locale: string
+  }
+}
+
+export default async function ProfilePage({ params }: ProfilePageProps) {
+  const { locale } = params
+  const messages = await getMessages({ locale })
   const supabase = createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
@@ -29,7 +38,7 @@ export default async function ProfilePage() {
 
   return (
     <AuthGuard>
-      <Navbar />
+      <MultilingualNavbar locale={locale} messages={messages} />
       <div className="min-h-screen bg-gray-50 py-12">
         <div className="max-w-4xl mx-auto px-4">
           <div className="bg-white rounded-lg shadow-md p-6">

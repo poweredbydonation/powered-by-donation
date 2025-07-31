@@ -1,0 +1,50 @@
+{
+  "nav": {
+    "home": "主頁",
+    "browse": "瀏覽服務",
+    "search": "搜尋",
+    "dashboard": "控制面板",
+    "login": "登入",
+    "logout": "登出",
+    "profile": "個人檔案"
+  },
+  "home": {
+    "title": "Powered by Donation",
+    "subtitle": "透過慈善捐款解鎖專業服務嘅服務市場",
+    "hero": {
+      "title": "將服務與慈善影響連接",
+      "subtitle": "瀏覽專業服務。向註冊慈善機構捐款。建立社區聯繫。",
+      "browse_services": "瀏覽服務",
+      "how_it_works": "運作方式"
+    },
+    "how_it_works": {
+      "title": "運作方式",
+      "step1": {
+        "title": "瀏覽服務",
+        "description": "搵由社區提供者提供嘅專業服務"
+      },
+      "step2": {
+        "title": "選擇慈善機構",
+        "description": "從註冊慈善機構中選擇接收你嘅捐款"
+      },
+      "step3": {
+        "title": "連接同產生影響",
+        "description": "獲得服務同為社區帶來正面影響"
+      }
+    },
+    "recent_activity": {
+      "title": "最近活動",
+      "someone_donated": "有人捐咗",
+      "via_service": "透過服務俾",
+      "hours_ago": "小時前"
+    }
+  },
+  "language": {
+    "select": "選擇語言",
+    "en": "英文",
+    "es": "西班牙文",
+    "fr": "法文",
+    "de": "德文",
+    "yue": "粵語"
+  }
+}

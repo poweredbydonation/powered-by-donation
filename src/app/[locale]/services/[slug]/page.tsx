@@ -2,12 +2,14 @@ import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { Service, ServiceLocation } from '@/types/database'
-import Navbar from '@/components/Navbar'
+import MultilingualNavbar from '@/components/MultilingualNavbar'
 import ServiceDonationFlow from '@/components/services/ServiceDonationFlow'
+import { getMessages } from 'next-intl/server'
 
 interface ServicePageProps {
   params: {
     slug: string
+    locale: string
   }
 }
 
@@ -83,7 +85,9 @@ export async function generateMetadata({ params }: ServicePageProps): Promise<Me
 }
 
 export default async function ServicePage({ params }: ServicePageProps) {
-  const service = await getServiceBySlug(params.slug)
+  const { locale, slug } = params
+  const messages = await getMessages({ locale })
+  const service = await getServiceBySlug(slug)
 
   if (!service) {
     notFound()
@@ -125,7 +129,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
 
   return (
     <>
-      <Navbar />
+      <MultilingualNavbar locale={locale} messages={messages} />
       <div className="min-h-screen bg-gray-50">
         <div className="container mx-auto px-4 py-8">
           {/* Service Header */}

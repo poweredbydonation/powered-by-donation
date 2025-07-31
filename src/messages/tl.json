@@ -1,0 +1,50 @@
+{
+  "nav": {
+    "home": "Home",
+    "browse": "Mag-browse ng mga Serbisyo",
+    "search": "Maghanap",
+    "dashboard": "Dashboard",
+    "login": "Mag-login",
+    "logout": "Mag-logout",
+    "profile": "Profile"
+  },
+  "home": {
+    "title": "Powered by Donation",
+    "subtitle": "Service marketplace kung saan ang mga donasyon sa mga charity ay nag-unlock ng mga propesyonal na serbisyo",
+    "hero": {
+      "title": "Ikonekta ang mga Serbisyo sa Charitable Impact",
+      "subtitle": "Mag-browse ng mga propesyonal na serbisyo. Mag-donate sa mga rehistradong charity. Makabuo ng mga community connection.",
+      "browse_services": "Mag-browse ng mga Serbisyo",
+      "how_it_works": "Paano Ito Gumagana"
+    },
+    "how_it_works": {
+      "title": "Paano Ito Gumagana",
+      "step1": {
+        "title": "Mag-browse ng mga Serbisyo",
+        "description": "Hanapin ang mga propesyonal na serbisyong inaalok ng mga community provider"
+      },
+      "step2": {
+        "title": "Pumili ng Charity",
+        "description": "Pumili mula sa mga rehistradong charity upang makatanggap ng inyong donasyon"
+      },
+      "step3": {
+        "title": "Kumonekta at Gumawa ng Impact",
+        "description": "Makatanggap ng serbisyo at gumawa ng positibong impact sa komunidad"
+      }
+    },
+    "recent_activity": {
+      "title": "Kamakailang Aktibidad",
+      "someone_donated": "May nag-donate ng",
+      "via_service": "sa pamamagitan ng serbisyo para sa",
+      "hours_ago": "oras na nakalipas"
+    }
+  },
+  "language": {
+    "select": "Pumili ng Wika",
+    "en": "English",
+    "es": "Español",
+    "fr": "Français",
+    "de": "Deutsch",
+    "tl": "Filipino"
+  }
+}

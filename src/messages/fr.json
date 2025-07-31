@@ -1,21 +1,21 @@
 {
   "nav": {
-    "home": "Home",
-    "browse": "Browse Services",
-    "search": "Search",
-    "dashboard": "Dashboard",
-    "login": "Login",
-    "logout": "Logout",
-    "profile": "Profile"
+    "home": "Accueil",
+    "browse": "Explorer les Services",
+    "search": "Rechercher",
+    "dashboard": "Tableau de Bord",
+    "login": "Connexion",
+    "logout": "Déconnexion",
+    "profile": "Profil"
   },
   "home": {
     "title": "Powered by Donation",
-    "subtitle": "Service marketplace where donations to charities unlock professional services",
+    "subtitle": "Marché de services où les dons à des œuvres caritatives débloquent des services professionnels",
     "hero": {
-      "title": "Connect Services with Charitable Impact",
-      "subtitle": "Browse professional services. Make donations to registered charities. Build community connections.",
-      "browse_services": "Browse Services",
-      "how_it_works": "How It Works"
+      "title": "Connecter les Services avec l'Impact Caritatif",
+      "subtitle": "Parcourez les services professionnels. Faites des dons à des organisations caritatives enregistrées. Créez des connexions communautaires.",
+      "browse_services": "Explorer les Services",
+      "how_it_works": "Comment ça Marche"
     },
     "how_it_works": {
       "title": "How It Works",

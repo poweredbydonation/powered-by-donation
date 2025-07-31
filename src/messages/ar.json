@@ -1,21 +1,21 @@
 {
   "nav": {
-    "home": "Home",
-    "browse": "Browse Services",
-    "search": "Search",
-    "dashboard": "Dashboard",
-    "login": "Login",
-    "logout": "Logout",
-    "profile": "Profile"
+    "home": "الرئيسية",
+    "browse": "تصفح الخدمات",
+    "search": "بحث",
+    "dashboard": "لوحة التحكم",
+    "login": "تسجيل الدخول",
+    "logout": "تسجيل الخروج",
+    "profile": "الملف الشخصي"
   },
   "home": {
     "title": "Powered by Donation",
-    "subtitle": "Service marketplace where donations to charities unlock professional services",
+    "subtitle": "سوق الخدمات حيث تفتح التبرعات للجمعيات الخيرية الخدمات المهنية",
     "hero": {
-      "title": "Connect Services with Charitable Impact",
-      "subtitle": "Browse professional services. Make donations to registered charities. Build community connections.",
-      "browse_services": "Browse Services",
-      "how_it_works": "How It Works"
+      "title": "ربط الخدمات بالتأثير الخيري",
+      "subtitle": "تصفح الخدمات المهنية. تبرع للجمعيات الخيرية المسجلة. بناء روابط مجتمعية.",
+      "browse_services": "تصفح الخدمات",
+      "how_it_works": "كيف يعمل"
     },
     "how_it_works": {
       "title": "How It Works",
@@ -133,12 +133,33 @@
   },
   "auth": {
     "login": {
-      "title": "Login",
-      "subtitle": "Sign in to your account"
+      "title": "تسجيل الدخول",
+      "subtitle": "سجل الدخول إلى حسابك",
+      "email": "البريد الإلكتروني",
+      "password": "كلمة المرور",
+      "email_placeholder": "your@email.com",
+      "password_placeholder": "كلمة المرور الخاصة بك",
+      "sign_in_button": "تسجيل الدخول",
+      "signing_in": "جاري تسجيل الدخول...",
+      "or_continue_with": "أو متابعة باستخدام",
+      "no_account": "ليس لديك حساب؟",
+      "sign_up_link": "انشاء حساب",
+      "forgot_password": "هل نسيت كلمة المرور؟",
+      "remember_me": "تذكرني"
     },
     "logout": {
-      "title": "Logout",
-      "confirm": "Are you sure you want to logout?"
+      "title": "تسجيل الخروج",
+      "confirm": "هل أنت متأكد من أنك تريد تسجيل الخروج؟"
+    },
+    "signup": {
+      "title": "انشاء حساب",
+      "subtitle": "انشئ حسابك",
+      "name": "الاسم الكامل",
+      "confirm_password": "تأكيد كلمة المرور",
+      "sign_up_button": "انشاء حساب",
+      "signing_up": "جاري إنشاء الحساب...",
+      "have_account": "هل لديك حساب بالفعل؟",
+      "sign_in_link": "تسجيل الدخول"
     }
   },
   "footer": {

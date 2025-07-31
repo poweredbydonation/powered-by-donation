@@ -1,8 +1,8 @@
 import createMiddleware from 'next-intl/middleware';
 
 export default createMiddleware({
-  // A list of all locales that are supported
-  locales: ['en', 'es', 'fr', 'de', 'it', 'pt', 'zh', 'ja', 'ko', 'ar', 'tr'],
+  // A list of all locales that are supported - prioritized by Australian demographics  
+  locales: ['en', 'zh', 'ar', 'vi', 'yue', 'pa', 'el', 'it', 'tl', 'hi', 'es'],
   
   // Used when no locale matches
   defaultLocale: 'en'
@@ -11,11 +11,7 @@ export default createMiddleware({
 export const config = {
   // Match only internationalized pathnames
   matcher: [
-    // Match all pathnames except for
-    // - API routes
-    // - _next static files
-    // - _next image optimization files
-    // - favicon.ico
-    '/((?!api|_next/static|_next/image|favicon.ico).*)'
+    // Skip all internal paths (_next), API routes, auth routes, and static files
+    '/((?!_next|api|auth|favicon.ico|robots.txt|sitemap.xml|.*\\..*).*)'
   ]
 };

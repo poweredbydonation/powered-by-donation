@@ -2,14 +2,16 @@ import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { Service } from '@/types/database'
-import Navbar from '@/components/Navbar'
+import MultilingualNavbar from '@/components/MultilingualNavbar'
 import ServiceList from '@/components/services/ServiceList'
 import ServiceSort, { SortOption, sortServices } from '@/components/services/ServiceSort'
 import Link from 'next/link'
+import { getMessages } from 'next-intl/server'
 
 interface CategoryPageProps {
   params: {
     category: string
+    locale: string
   }
 }
 
@@ -112,14 +114,16 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
 }
 
 export default async function CategoryPage({ params }: CategoryPageProps) {
-  const categoryName = formatCategoryName(params.category)
+  const { locale, category } = params
+  const messages = await getMessages({ locale })
+  const categoryName = formatCategoryName(category)
   
   // Validate category exists
   if (!SERVICE_CATEGORIES.some(cat => cat.toLowerCase() === categoryName.toLowerCase())) {
     notFound()
   }
 
-  const services = await getServicesByCategory(params.category)
+  const services = await getServicesByCategory(category)
 
   // Calculate category statistics
   const totalDonationPotential = services.reduce((sum, service) => sum + service.donation_amount, 0)
@@ -139,7 +143,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
 
   return (
     <>
-      <Navbar />
+      <MultilingualNavbar locale={locale} messages={messages} />
       <div className="min-h-screen bg-gray-50">
         <div className="container mx-auto px-4 py-8">
           {/* Category Header */}

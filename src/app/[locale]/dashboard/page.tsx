@@ -1,13 +1,23 @@
 import AuthGuard from '@/components/auth/AuthGuard'
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
-import Navbar from '@/components/Navbar'
+import MultilingualNavbar from '@/components/MultilingualNavbar'
 import DeleteUserProfile from '@/components/profile/DeleteUserProfile'
+import { getMessages, getTranslations } from 'next-intl/server'
 
 // Disable caching for this page so it always shows fresh data
 export const dynamic = 'force-dynamic'
 
-export default async function DashboardPage() {
+interface DashboardPageProps {
+  params: {
+    locale: string
+  }
+}
+
+export default async function DashboardPage({ params }: DashboardPageProps) {
+  const { locale } = params
+  const messages = await getMessages({ locale })
+  const t = await getTranslations({ locale, namespace: 'dashboard' })
   const supabase = createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
@@ -20,11 +30,11 @@ export default async function DashboardPage() {
 
   return (
     <AuthGuard>
-      <Navbar />
+      <MultilingualNavbar locale={locale} messages={messages} />
       <div className="min-h-screen bg-gray-50 py-12">
         <div className="max-w-4xl mx-auto px-4">
           <div className="bg-white rounded-lg shadow-md p-6">
-            <h1 className="text-3xl font-bold text-gray-900 mb-6">Dashboard</h1>
+            <h1 className="text-3xl font-bold text-gray-900 mb-6">{t('title') || 'Dashboard'}</h1>
             
             <div className="bg-blue-50 border border-blue-200 rounded-md p-4 mb-6">
               <h2 className="text-lg font-semibold text-blue-900 mb-2">

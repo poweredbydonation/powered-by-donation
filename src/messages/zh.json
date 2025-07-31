@@ -1,21 +1,21 @@
 {
   "nav": {
-    "home": "Home",
-    "browse": "Browse Services",
-    "search": "Search",
-    "dashboard": "Dashboard",
-    "login": "Login",
-    "logout": "Logout",
-    "profile": "Profile"
+    "home": "首页",
+    "browse": "浏览服务",
+    "search": "搜索",
+    "dashboard": "仪表板",
+    "login": "登录",
+    "logout": "退出",
+    "profile": "个人资料"
   },
   "home": {
     "title": "Powered by Donation",
-    "subtitle": "Service marketplace where donations to charities unlock professional services",
+    "subtitle": "通过慈善捐赠解锁专业服务的服务市场",
     "hero": {
-      "title": "Connect Services with Charitable Impact",
-      "subtitle": "Browse professional services. Make donations to registered charities. Build community connections.",
-      "browse_services": "Browse Services",
-      "how_it_works": "How It Works"
+      "title": "连接服务与慈善影响",
+      "subtitle": "浏览专业服务。向注册慈善机构捐款。建立社区联系。",
+      "browse_services": "浏览服务",
+      "how_it_works": "工作原理"
     },
     "how_it_works": {
       "title": "How It Works",
@@ -133,12 +133,61 @@
   },
   "auth": {
     "login": {
-      "title": "Login",
-      "subtitle": "Sign in to your account"
+      "title": "登录",
+      "subtitle": "登录您的账户",
+      "email": "邮箱",
+      "password": "密码",
+      "email_placeholder": "your@email.com",
+      "password_placeholder": "您的密码",
+      "sign_in_button": "登录",
+      "signing_in": "正在登录...",
+      "or_continue_with": "或使用以下方式继续",
+      "no_account": "还没有账户？",
+      "sign_up_link": "注册",
+      "forgot_password": "忘记密码？",
+      "remember_me": "记住我"
     },
     "logout": {
-      "title": "Logout",
-      "confirm": "Are you sure you want to logout?"
+      "title": "退出登录",
+      "confirm": "您确定要退出登录吗？"
+    },
+    "signup": {
+      "title": "创建账户",
+      "fields": {
+        "email": "邮箱",
+        "password": "密码",
+        "confirmPassword": "确认密码"
+      },
+      "placeholders": {
+        "email": "您的邮箱",
+        "password": "至少6个字符",
+        "confirmPassword": "确认您的密码"
+      },
+      "buttons": {
+        "create": "创建账户",
+        "creating": "正在创建账户..."
+      },
+      "errors": {
+        "passwordMismatch": "密码不匹配",
+        "passwordTooShort": "密码必须至少6个字符"
+      },
+      "success": {
+        "title": "查看您的邮箱！",
+        "message": "我们已向您发送确认链接至",
+        "instruction": "请查看邮箱并点击链接激活您的账户。",
+        "backToLogin": "返回登录"
+      },
+      "divider": "或继续使用",
+      "socialButtons": {
+        "google": "使用Google注册",
+        "microsoft": "使用Microsoft注册",
+        "github": "使用GitHub注册",
+        "apple": "使用Apple注册"
+      },
+      "footer": {
+        "hasAccount": "已有账户？",
+        "signIn": "登录"
+      }
     }
   },
   "footer": {

@@ -7,7 +7,12 @@ import MicrosoftSignInButton from './MicrosoftSignInButton'
 import GitHubSignInButton from './GitHubSignInButton'
 import AppleSignInButton from './AppleSignInButton'
 
-export default function SignupForm() {
+interface SignupFormProps {
+  locale: string
+  messages: any
+}
+
+export default function SignupForm({ locale, messages }: SignupFormProps) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -16,19 +21,29 @@ export default function SignupForm() {
   const [success, setSuccess] = useState(false)
   const { signUp } = useAuth()
 
+  // Custom translation function
+  const t = (key: string) => {
+    const keys = key.split('.')
+    let value = messages?.auth?.signup
+    for (const k of keys) {
+      value = value?.[k]
+    }
+    return value || key
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
     setError(null)
 
     if (password !== confirmPassword) {
-      setError('Passwords do not match')
+      setError(t('errors.passwordMismatch'))
       setLoading(false)
       return
     }
 
     if (password.length < 6) {
-      setError('Password must be at least 6 characters')
+      setError(t('errors.passwordTooShort'))
       setLoading(false)
       return
     }
@@ -48,16 +63,16 @@ export default function SignupForm() {
     return (
       <div className="max-w-md mx-auto mt-8 p-6 bg-white rounded-lg shadow-md">
         <div className="text-center">
-          <h2 className="text-2xl font-bold mb-4 text-green-600">Check Your Email!</h2>
+          <h2 className="text-2xl font-bold mb-4 text-green-600">{t('success.title')}</h2>
           <p className="text-gray-600">
-            We've sent you a confirmation link at <strong>{email}</strong>. 
-            Please check your email and click the link to activate your account.
+            {t('success.message')} <strong>{email}</strong>. 
+            {t('success.instruction')}
           </p>
           <a 
-            href="/login" 
+            href={`/${locale}/login`}
             className="mt-4 inline-block text-blue-600 hover:text-blue-500"
           >
-            Back to Login
+            {t('success.backToLogin')}
           </a>
         </div>
       </div>
@@ -66,12 +81,12 @@ export default function SignupForm() {
 
   return (
     <div className="max-w-md mx-auto mt-8 p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-6 text-center">Create Account</h2>
+      <h2 className="text-2xl font-bold mb-6 text-center">{t('title')}</h2>
       
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-            Email
+            {t('fields.email')}
           </label>
           <input
             id="email"
@@ -80,13 +95,13 @@ export default function SignupForm() {
             onChange={(e) => setEmail(e.target.value)}
             required
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-            placeholder="your@email.com"
+            placeholder={t('placeholders.email')}
           />
         </div>
 
         <div>
           <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-            Password
+            {t('fields.password')}
           </label>
           <input
             id="password"
@@ -95,13 +110,13 @@ export default function SignupForm() {
             onChange={(e) => setPassword(e.target.value)}
             required
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-            placeholder="At least 6 characters"
+            placeholder={t('placeholders.password')}
           />
         </div>
 
         <div>
           <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
-            Confirm Password
+            {t('fields.confirmPassword')}
           </label>
           <input
             id="confirmPassword"
@@ -110,7 +125,7 @@ export default function SignupForm() {
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-            placeholder="Confirm your password"
+            placeholder={t('placeholders.confirmPassword')}
           />
         </div>
 
@@ -125,7 +140,7 @@ export default function SignupForm() {
           disabled={loading}
           className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
         >
-          {loading ? 'Creating account...' : 'Create Account'}
+          {loading ? t('buttons.creating') : t('buttons.create')}
         </button>
       </form>
 
@@ -135,22 +150,22 @@ export default function SignupForm() {
             <div className="w-full border-t border-gray-300" />
           </div>
           <div className="relative flex justify-center text-sm">
-            <span className="px-2 bg-white text-gray-500">Or continue with</span>
+            <span className="px-2 bg-white text-gray-500">{t('divider')}</span>
           </div>
         </div>
 
         <div className="mt-6 space-y-3">
-          <GoogleSignInButton text="Sign up with Google" />
-          <MicrosoftSignInButton text="Sign up with Microsoft" />
-          <GitHubSignInButton text="Sign up with GitHub" />
-          <AppleSignInButton text="Sign up with Apple" />
+          <GoogleSignInButton text={t('socialButtons.google')} />
+          <MicrosoftSignInButton text={t('socialButtons.microsoft')} />
+          <GitHubSignInButton text={t('socialButtons.github')} />
+          <AppleSignInButton text={t('socialButtons.apple')} />
         </div>
       </div>
 
       <p className="mt-4 text-center text-sm text-gray-600">
-        Already have an account?{' '}
-        <a href="/login" className="text-blue-600 hover:text-blue-500">
-          Sign in
+        {t('footer.hasAccount')}{' '}
+        <a href={`/${locale}/login`} className="text-blue-600 hover:text-blue-500">
+          {t('footer.signIn')}
         </a>
       </p>
     </div>
