@@ -2,7 +2,7 @@ import createMiddleware from 'next-intl/middleware';
 
 export default createMiddleware({
   // A list of all locales that are supported - prioritized by Australian demographics  
-  locales: ['en', 'zh', 'ar', 'vi', 'yue', 'pa', 'el', 'it', 'tl', 'hi', 'es'],
+  locales: ['en', 'zh', 'ar', 'vi', 'yue', 'pa', 'el', 'it', 'tl', 'hi', 'es', 'tr'],
   
   // Used when no locale matches
   defaultLocale: 'en'

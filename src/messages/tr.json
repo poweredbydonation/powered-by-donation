@@ -134,11 +134,60 @@
   "auth": {
     "login": {
       "title": "Giriş Yap",
-      "subtitle": "Hesabınıza giriş yapın"
+      "subtitle": "Hesabınıza giriş yapın",
+      "email": "E-posta",
+      "password": "Şifre",
+      "email_placeholder": "e-postaniz@ornek.com",
+      "password_placeholder": "Şifreniz",
+      "sign_in_button": "Giriş Yap",
+      "signing_in": "Giriş yapılıyor...",
+      "or_continue_with": "Veya şununla devam edin",
+      "no_account": "Hesabınız yok mu?",
+      "sign_up_link": "Kaydol",
+      "forgot_password": "Şifrenizi mi unuttunuz?",
+      "remember_me": "Beni hatırla"
     },
     "logout": {
       "title": "Çıkış Yap",
       "confirm": "Çıkış yapmak istediğinizden emin misiniz?"
+    },
+    "signup": {
+      "title": "Hesap Oluştur",
+      "fields": {
+        "email": "E-posta",
+        "password": "Şifre",
+        "confirmPassword": "Şifreyi Onayla"
+      },
+      "placeholders": {
+        "email": "e-postaniz@ornek.com",
+        "password": "En az 6 karakter",
+        "confirmPassword": "Şifrenizi onaylayın"
+      },
+      "buttons": {
+        "create": "Hesap Oluştur",
+        "creating": "Hesap oluşturuluyor..."
+      },
+      "errors": {
+        "passwordMismatch": "Şifreler eşleşmiyor",
+        "passwordTooShort": "Şifre en az 6 karakter olmalıdır"
+      },
+      "success": {
+        "title": "E-postanızı Kontrol Edin!",
+        "message": "Size onay bağlantısı gönderdik:",
+        "instruction": "Lütfen e-postanızı kontrol edin ve hesabınızı etkinleştirmek için bağlantıya tıklayın.",
+        "backToLogin": "Giriş Sayfasına Dön"
+      },
+      "divider": "Veya şununla devam edin",
+      "socialButtons": {
+        "google": "Google ile kaydol",
+        "microsoft": "Microsoft ile kaydol",
+        "github": "GitHub ile kaydol",
+        "apple": "Apple ile kaydol"
+      },
+      "footer": {
+        "hasAccount": "Zaten hesabınız var mı?",
+        "signIn": "Giriş yap"
+      }
     }
   },
   "footer": {
@@ -160,6 +209,12 @@
     "ja": "日本語",
     "ko": "한국어",
     "ar": "العربية",
-    "tr": "Türkçe"
+    "tr": "Türkçe",
+    "vi": "Tiếng Việt",
+    "yue": "粵語",
+    "pa": "ਪੰਜਾਬੀ",
+    "el": "Ελληνικά",
+    "tl": "Filipino",
+    "hi": "हिन्दी"
   }
 }
