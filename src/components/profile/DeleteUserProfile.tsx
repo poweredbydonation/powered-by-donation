@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { User } from '@/types/database'
+import { useTranslations } from 'next-intl'
 
 interface DeleteUserProfileProps {
   user: User
@@ -13,6 +14,7 @@ export default function DeleteUserProfile({ user, onDeleted }: DeleteUserProfile
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [showConfirmation, setShowConfirmation] = useState(false)
+  const t = useTranslations('deleteProfile')
 
   const supabase = createClient()
 
@@ -31,7 +33,7 @@ export default function DeleteUserProfile({ user, onDeleted }: DeleteUserProfile
           .eq('is_active', true)
 
         if (services && services.length > 0) {
-          setError('You cannot delete your profile while you have active services. Please deactivate all services first.')
+          setError(t('errors.activeServices'))
           return
         }
       }
@@ -45,7 +47,7 @@ export default function DeleteUserProfile({ user, onDeleted }: DeleteUserProfile
           .neq('status', 'success')
 
         if (requests && requests.length > 0) {
-          setError('You cannot delete your profile while you have active service requests or pending donations. Contact support if you need assistance.')
+          setError(t('errors.activeRequests'))
           return
         }
       }
@@ -67,7 +69,7 @@ export default function DeleteUserProfile({ user, onDeleted }: DeleteUserProfile
 
     } catch (err: any) {
       console.error('Profile deletion error:', err)
-      setError(err.message || 'Failed to delete profile')
+      setError(err.message || t('errors.deleteFailed'))
     } finally {
       setLoading(false)
       setShowConfirmation(false)
@@ -77,20 +79,20 @@ export default function DeleteUserProfile({ user, onDeleted }: DeleteUserProfile
   if (!showConfirmation) {
     return (
       <div className="bg-red-50 border border-red-200 rounded-md p-4">
-        <h3 className="text-lg font-semibold text-red-900 mb-2">Delete Profile</h3>
+        <h3 className="text-lg font-semibold text-red-900 mb-2">{t('title')}</h3>
         <p className="text-red-700 mb-4">
-          This will permanently delete your profile and all associated data. This action cannot be undone.
+          {t('description')}
         </p>
         
         {user.is_provider && (
           <p className="text-red-600 text-sm mb-2">
-            ⚠️ As a provider, this will also delete all your services and service history.
+            {t('providerWarning')}
           </p>
         )}
         
         {user.is_supporter && (
           <p className="text-red-600 text-sm mb-4">
-            ⚠️ As a supporter, this will delete your donation history and service requests.
+            {t('supporterWarning')}
           </p>
         )}
 
@@ -98,7 +100,7 @@ export default function DeleteUserProfile({ user, onDeleted }: DeleteUserProfile
           onClick={() => setShowConfirmation(true)}
           className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors"
         >
-          Delete Profile
+          {t('deleteButton')}
         </button>
       </div>
     )
@@ -106,7 +108,7 @@ export default function DeleteUserProfile({ user, onDeleted }: DeleteUserProfile
 
   return (
     <div className="bg-red-50 border border-red-200 rounded-md p-6">
-      <h3 className="text-lg font-semibold text-red-900 mb-4">Confirm Profile Deletion</h3>
+      <h3 className="text-lg font-semibold text-red-900 mb-4">{t('confirmTitle')}</h3>
       
       {error && (
         <div className="bg-red-100 border border-red-300 rounded-md p-3 mb-4">
@@ -115,16 +117,15 @@ export default function DeleteUserProfile({ user, onDeleted }: DeleteUserProfile
       )}
 
       <p className="text-red-700 mb-6">
-        Are you sure you want to delete your profile for "{user.name}"? 
-        This action is permanent and will:
+        {t('confirmDescription', { name: user.name })}
       </p>
       
       <ul className="text-red-600 text-sm mb-6 space-y-1">
-        <li>• Delete your profile information</li>
-        {user.is_provider && <li>• Remove all your services</li>}
-        {user.is_supporter && <li>• Delete your donation history</li>}
-        <li>• Sign you out of the platform</li>
-        <li>• Cannot be undone</li>
+        <li>• {t('confirmList.deleteInfo')}</li>
+        {user.is_provider && <li>• {t('confirmList.removeServices')}</li>}
+        {user.is_supporter && <li>• {t('confirmList.deleteHistory')}</li>}
+        <li>• {t('confirmList.signOut')}</li>
+        <li>• {t('confirmList.cannotUndo')}</li>
       </ul>
 
       <div className="flex space-x-4">
@@ -133,7 +134,7 @@ export default function DeleteUserProfile({ user, onDeleted }: DeleteUserProfile
           disabled={loading}
           className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
-          {loading ? 'Deleting...' : 'Yes, Delete My Profile'}
+          {loading ? t('deleting') : t('confirmButton')}
         </button>
         
         <button
@@ -141,7 +142,7 @@ export default function DeleteUserProfile({ user, onDeleted }: DeleteUserProfile
           disabled={loading}
           className="bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400 disabled:opacity-50 transition-colors"
         >
-          Cancel
+          {t('cancel')}
         </button>
       </div>
     </div>

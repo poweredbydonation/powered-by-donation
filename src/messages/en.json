@@ -259,5 +259,29 @@
     "ko": "한국어",
     "ar": "العربية",
     "tr": "Türkçe"
+  },
+  "deleteProfile": {
+    "title": "Delete Profile",
+    "description": "This will permanently delete your profile and all associated data. This action cannot be undone.",
+    "providerWarning": "⚠️ As a provider, this will also delete all your services and service history.",
+    "supporterWarning": "⚠️ As a supporter, this will delete your donation history and service requests.",
+    "deleteButton": "Delete Profile",
+    "confirmTitle": "Confirm Profile Deletion",
+    "confirmDescription": "Are you sure you want to delete your profile for \"{name}\"? This action is permanent and will:",
+    "confirmList": {
+      "deleteInfo": "Delete your profile information",
+      "removeServices": "Remove all your services",
+      "deleteHistory": "Delete your donation history",
+      "signOut": "Sign you out of the platform",
+      "cannotUndo": "Cannot be undone"
+    },
+    "confirmButton": "Yes, Delete My Profile",
+    "deleting": "Deleting...",
+    "cancel": "Cancel",
+    "errors": {
+      "activeServices": "You cannot delete your profile while you have active services. Please deactivate all services first.",
+      "activeRequests": "You cannot delete your profile while you have active service requests or pending donations. Contact support if you need assistance.",
+      "deleteFailed": "Failed to delete profile"
+    }
   }
 }

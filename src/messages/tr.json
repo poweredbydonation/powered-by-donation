@@ -265,5 +265,29 @@
     "el": "Ελληνικά",
     "tl": "Filipino",
     "hi": "हिन्दी"
+  },
+  "deleteProfile": {
+    "title": "Profili Sil",
+    "description": "Bu işlem profilinizi ve tüm ilişkili verileri kalıcı olarak silecektir. Bu işlem geri alınamaz.",
+    "providerWarning": "⚠️ Sağlayıcı olarak, bu işlem tüm hizmetlerinizi ve hizmet geçmişinizi de silecektir.",
+    "supporterWarning": "⚠️ Destekçi olarak, bu işlem bağış geçmişinizi ve hizmet taleplerinizi silecektir.",
+    "deleteButton": "Profili Sil",
+    "confirmTitle": "Profil Silme İşlemini Onayla",
+    "confirmDescription": "\"{name}\" profilinizi silmek istediğinizden emin misiniz? Bu işlem kalıcıdır ve şunları yapacaktır:",
+    "confirmList": {
+      "deleteInfo": "Profil bilgilerinizi siler",
+      "removeServices": "Tüm hizmetlerinizi kaldırır",
+      "deleteHistory": "Bağış geçmişinizi siler",
+      "signOut": "Platformdan çıkış yapar",
+      "cannotUndo": "Geri alınamaz"
+    },
+    "confirmButton": "Evet, Profilimi Sil",
+    "deleting": "Siliniyor...",
+    "cancel": "İptal",
+    "errors": {
+      "activeServices": "Aktif hizmetleriniz varken profilinizi silemezsiniz. Lütfen önce tüm hizmetleri devre dışı bırakın.",
+      "activeRequests": "Aktif hizmet talepleriniz veya bekleyen bağışlarınız varken profilinizi silemezsiniz. Yardım için desteğe başvurun.",
+      "deleteFailed": "Profil silinemedi"
+    }
   }
 }
