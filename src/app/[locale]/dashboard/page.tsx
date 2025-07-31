@@ -38,15 +38,15 @@ export default async function DashboardPage({ params }: DashboardPageProps) {
             
             <div className="bg-blue-50 border border-blue-200 rounded-md p-4 mb-6">
               <h2 className="text-lg font-semibold text-blue-900 mb-2">
-                Welcome back{userProfile?.name ? `, ${userProfile.name}` : ''}!
+                {t('welcome')}{userProfile?.name ? `, ${userProfile.name}` : ''}!
               </h2>
               <p className="text-blue-800">
-                {userProfile ? 'Your profile is set up and ready to go.' : 'Complete your profile to get started.'}
+                {userProfile ? t('profileReady') : t('completeProfile')}
               </p>
               {userProfile && (
                 <div className="mt-2 text-sm text-blue-600">
-                  {userProfile.is_provider && <span className="mr-4">✓ Service Provider</span>}
-                  {userProfile.is_supporter && <span>✓ Supporter</span>}
+                  {userProfile.is_provider && <span className="mr-4">✓ {t('serviceProvider')}</span>}
+                  {userProfile.is_supporter && <span>✓ {t('supporter')}</span>}
                 </div>
               )}
             </div>
@@ -54,13 +54,13 @@ export default async function DashboardPage({ params }: DashboardPageProps) {
             {/* Profile Setup Section */}
             {!userProfile && (
               <div className="bg-yellow-50 border border-yellow-200 rounded-md p-4 mb-6">
-                <h3 className="text-lg font-semibold text-yellow-900 mb-2">Get Started</h3>
-                <p className="text-yellow-800 mb-4">Set up your profile to start using Powered by Donation:</p>
+                <h3 className="text-lg font-semibold text-yellow-900 mb-2">{t('getStarted')}</h3>
+                <p className="text-yellow-800 mb-4">{t('setupPrompt')}</p>
                 <Link 
-                  href="/dashboard/profile/setup"
+                  href={`/${locale}/dashboard/profile/setup`}
                   className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors inline-block"
                 >
-                  Create Your Profile
+                  {t('createProfile')}
                 </Link>
               </div>
             )}
@@ -69,32 +69,32 @@ export default async function DashboardPage({ params }: DashboardPageProps) {
               {/* Provider Section */}
               {userProfile?.is_provider ? (
                 <div className="bg-blue-50 rounded-lg p-4">
-                  <h3 className="font-semibold text-blue-900 mb-2">Provider Dashboard</h3>
-                  <p className="text-blue-700 text-sm mb-3">Manage your services and donations</p>
+                  <h3 className="font-semibold text-blue-900 mb-2">{t('providerDashboard')}</h3>
+                  <p className="text-blue-700 text-sm mb-3">{t('providerDescription')}</p>
                   <div className="space-y-2">
                     <Link 
-                      href="/dashboard/services"
+                      href={`/${locale}/dashboard/services`}
                       className="block text-blue-600 hover:text-blue-800 text-sm"
                     >
-                      → Manage Services
+                      → {t('manageServices')}
                     </Link>
                     <Link 
-                      href="/dashboard/services/create"
+                      href={`/${locale}/dashboard/services/create`}
                       className="block text-blue-600 hover:text-blue-800 text-sm"
                     >
-                      → Create New Service
+                      → {t('createNewService')}
                     </Link>
                   </div>
                 </div>
               ) : (
                 <div className="bg-gray-50 rounded-lg p-4">
-                  <h3 className="font-semibold text-gray-900 mb-2">Become a Provider</h3>
-                  <p className="text-gray-600 text-sm mb-3">Offer services and support charities</p>
+                  <h3 className="font-semibold text-gray-900 mb-2">{t('becomeProvider')}</h3>
+                  <p className="text-gray-600 text-sm mb-3">{t('providerOffer')}</p>
                   <Link 
-                    href="/dashboard/profile"
+                    href={`/${locale}/dashboard/profile`}
                     className="text-blue-600 hover:text-blue-800 text-sm"
                   >
-                    → Enable Provider Role
+                    → {t('enableProviderRole')}
                   </Link>
                 </div>
               )}
@@ -102,52 +102,52 @@ export default async function DashboardPage({ params }: DashboardPageProps) {
               {/* Supporter Section */}
               {userProfile?.is_supporter ? (
                 <div className="bg-green-50 rounded-lg p-4">
-                  <h3 className="font-semibold text-green-900 mb-2">Supporter Dashboard</h3>
-                  <p className="text-green-700 text-sm mb-3">Track your donations and impact</p>
+                  <h3 className="font-semibold text-green-900 mb-2">{t('supporterDashboard')}</h3>
+                  <p className="text-green-700 text-sm mb-3">{t('supporterDescription')}</p>
                   <div className="space-y-2">
                     <Link 
-                      href="/dashboard/donations"
+                      href={`/${locale}/dashboard/donations`}
                       className="block text-green-600 hover:text-green-800 text-sm"
                     >
-                      → My Donations
+                      → {t('myDonations')}
                     </Link>
                     <Link 
-                      href="/browse"
+                      href={`/${locale}/browse`}
                       className="block text-green-600 hover:text-green-800 text-sm"
                     >
-                      → Browse Services
+                      → {t('browseServices')}
                     </Link>
                   </div>
                 </div>
               ) : (
                 <div className="bg-gray-50 rounded-lg p-4">
-                  <h3 className="font-semibold text-gray-900 mb-2">Become a Supporter</h3>
-                  <p className="text-gray-600 text-sm mb-3">Support services and charities</p>
+                  <h3 className="font-semibold text-gray-900 mb-2">{t('becomeSupporter')}</h3>
+                  <p className="text-gray-600 text-sm mb-3">{t('supporterOffer')}</p>
                   <Link 
-                    href="/dashboard/profile"
+                    href={`/${locale}/dashboard/profile`}
                     className="text-blue-600 hover:text-blue-800 text-sm"
                   >
-                    → Enable Supporter Role
+                    → {t('enableSupporterRole')}
                   </Link>
                 </div>
               )}
 
               {/* General Settings */}
               <div className="bg-gray-50 rounded-lg p-4">
-                <h3 className="font-semibold text-gray-900 mb-2">Account Settings</h3>
-                <p className="text-gray-600 text-sm mb-3">Manage your account preferences</p>
+                <h3 className="font-semibold text-gray-900 mb-2">{t('accountSettings')}</h3>
+                <p className="text-gray-600 text-sm mb-3">{t('accountDescription')}</p>
                 <div className="space-y-2">
                   <Link 
-                    href="/dashboard/profile"
+                    href={`/${locale}/dashboard/profile`}
                     className="block text-gray-600 hover:text-gray-800 text-sm"
                   >
-                    → Edit Profile
+                    → {t('editProfile')}
                   </Link>
                   <Link 
-                    href="/dashboard/settings"
+                    href={`/${locale}/dashboard/settings`}
                     className="block text-gray-600 hover:text-gray-800 text-sm"
                   >
-                    → Privacy Settings
+                    → {t('privacySettings')}
                   </Link>
                 </div>
               </div>
@@ -156,25 +156,25 @@ export default async function DashboardPage({ params }: DashboardPageProps) {
             {/* Profile Management Section */}
             {userProfile && (
               <div className="mt-8 pt-8 border-t border-gray-200">
-                <h2 className="text-xl font-semibold text-gray-900 mb-6">Profile Management</h2>
+                <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('profileManagement')}</h2>
                 <div className="bg-white border border-gray-200 rounded-lg p-6">
-                  <h3 className="font-medium text-gray-900 mb-2">Your Profile</h3>
+                  <h3 className="font-medium text-gray-900 mb-2">{t('yourProfile')}</h3>
                   <div className="text-gray-600 text-sm mb-4">
-                    <p><strong>Name:</strong> {userProfile.name}</p>
-                    {userProfile.username && <p><strong>Username:</strong> {userProfile.username}</p>}
-                    {userProfile.location && <p><strong>Location:</strong> {userProfile.location}</p>}
-                    <p><strong>Roles:</strong> 
-                      {userProfile.is_provider && userProfile.is_supporter ? ' Provider & Supporter' :
-                       userProfile.is_provider ? ' Provider' :
-                       userProfile.is_supporter ? ' Supporter' : ' None'}
+                    <p><strong>{t('name')}:</strong> {userProfile.name}</p>
+                    {userProfile.username && <p><strong>{t('username')}:</strong> {userProfile.username}</p>}
+                    {userProfile.location && <p><strong>{t('location')}:</strong> {userProfile.location}</p>}
+                    <p><strong>{t('roles')}:</strong> 
+                      {userProfile.is_provider && userProfile.is_supporter ? ` ${t('providerAndSupporter')}` :
+                       userProfile.is_provider ? ` ${t('providerRole')}` :
+                       userProfile.is_supporter ? ` ${t('supporterRole')}` : ` ${t('noRoles')}`}
                     </p>
                   </div>
                   <div className="flex gap-4">
                     <Link
-                      href="/dashboard/profile"
+                      href={`/${locale}/dashboard/profile`}
                       className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors text-sm"
                     >
-                      Edit Profile
+                      {t('editProfile')}
                     </Link>
                     <DeleteUserProfile 
                       user={userProfile}
