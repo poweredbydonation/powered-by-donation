@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter, usePathname } from 'next/navigation'
+import { useRouter, Link } from '@/i18n/routing'
 import { useAuth } from '@/hooks/useAuth'
 import GoogleSignInButton from './GoogleSignInButton'
 import MicrosoftSignInButton from './MicrosoftSignInButton'
@@ -15,10 +15,6 @@ export default function LoginForm() {
   const [error, setError] = useState<string | null>(null)
   const { signIn } = useAuth()
   const router = useRouter()
-  const pathname = usePathname()
-
-  // Extract locale from pathname
-  const locale = pathname.split('/')[1] || 'en'
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -30,7 +26,7 @@ export default function LoginForm() {
     if (error) {
       setError(error.message)
     } else {
-      router.push(`/${locale}/dashboard`)
+      router.push('/dashboard')
     }
     
     setLoading(false)
@@ -106,9 +102,9 @@ export default function LoginForm() {
 
       <p className="mt-4 text-center text-sm text-gray-600">
         Don't have an account?{' '}
-        <a href={`/${locale}/signup`} className="text-blue-600 hover:text-blue-500">
+        <Link href="/signup" className="text-blue-600 hover:text-blue-500">
           Sign up
-        </a>
+        </Link>
       </p>
     </div>
   )
