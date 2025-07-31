@@ -1,5 +1,6 @@
 import MultilingualNavbar from '@/components/MultilingualNavbar'
 import { Monitor, TrendingUp, Camera } from 'lucide-react'
+import { getTranslations, getMessages } from 'next-intl/server'
 
 interface HomePageProps {
   params: {
@@ -9,15 +10,9 @@ interface HomePageProps {
 
 export default async function HomePage({ params }: HomePageProps) {
   const locale = params.locale
-
-  // Load messages directly from JSON files
-  let messages: any = {}
-  try {
-    messages = (await import(`../../messages/${locale}.json`)).default
-  } catch (error) {
-    // Fallback to English
-    messages = (await import(`../../messages/en.json`)).default
-  }
+  const t = await getTranslations('home')
+  const tNav = await getTranslations('nav')
+  const messages = await getMessages()
 
   return (
     <div className="min-h-screen bg-white">
@@ -27,11 +22,11 @@ export default async function HomePage({ params }: HomePageProps) {
       <div className="bg-gradient-to-br from-blue-50 to-indigo-100">
         <div className="max-w-4xl mx-auto px-6 py-16 text-center">
           <h1 className="text-5xl font-bold text-gray-900 mb-6">
-            {messages.home?.title || 'Powered by Donation'}
+            {t('title')}
           </h1>
           
           <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-            {messages.home?.subtitle || 'Service marketplace where donations to charities unlock professional services'}
+            {t('subtitle')}
           </p>
           
           <div className="space-x-4">
@@ -39,14 +34,14 @@ export default async function HomePage({ params }: HomePageProps) {
               href={`/${locale}/browse`}
               className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors inline-block"
             >
-              {messages.home?.hero?.browse_services || 'Browse Services'}
+              {t('hero.browse_services')}
             </a>
             
             <a 
               href={`/${locale}/dashboard`}
               className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-50 border border-blue-600 transition-colors inline-block"
             >
-              {messages?.nav?.dashboard || 'Dashboard'}
+              {tNav('dashboard')}
             </a>
           </div>
         </div>
@@ -57,7 +52,7 @@ export default async function HomePage({ params }: HomePageProps) {
         <div className="max-w-6xl mx-auto px-6">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              {messages.home?.how_it_works?.title || 'How It Works'}
+              {t('how_it_works.title')}
             </h2>
           </div>
 
@@ -68,10 +63,10 @@ export default async function HomePage({ params }: HomePageProps) {
                 <Monitor className="h-8 w-8 text-blue-600" />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                {messages.home?.how_it_works?.step1?.title || 'Browse Services'}
+                {t('how_it_works.step1.title')}
               </h3>
               <p className="text-gray-600">
-                {messages.home?.how_it_works?.step1?.description || 'Find professional services offered by community providers'}
+                {t('how_it_works.step1.description')}
               </p>
             </div>
 
@@ -81,10 +76,10 @@ export default async function HomePage({ params }: HomePageProps) {
                 <TrendingUp className="h-8 w-8 text-green-600" />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                {messages.home?.how_it_works?.step2?.title || 'Choose a Charity'}
+                {t('how_it_works.step2.title')}
               </h3>
               <p className="text-gray-600">
-                {messages.home?.how_it_works?.step2?.description || 'Select from registered charities to receive your donation'}
+                {t('how_it_works.step2.description')}
               </p>
             </div>
 
@@ -94,10 +89,10 @@ export default async function HomePage({ params }: HomePageProps) {
                 <Camera className="h-8 w-8 text-purple-600" />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                {messages.home?.how_it_works?.step3?.title || 'Make Impact'}
+                {t('how_it_works.step3.title')}
               </h3>
               <p className="text-gray-600">
-                {messages.home?.how_it_works?.step3?.description || 'Your donation unlocks the service and supports a great cause'}
+                {t('how_it_works.step3.description')}
               </p>
             </div>
           </div>
@@ -109,7 +104,7 @@ export default async function HomePage({ params }: HomePageProps) {
         <div className="max-w-6xl mx-auto px-6">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              {messages.home?.recent_activity?.title || 'Recent Community Activity'}
+              {t('recent_activity.title')}
             </h2>
           </div>
 
@@ -118,31 +113,31 @@ export default async function HomePage({ params }: HomePageProps) {
             <div className="bg-white p-6 rounded-lg shadow-sm">
               <p className="text-gray-700">
                 <span className="font-medium">
-                  {messages.home?.recent_activity?.someone_donated || 'Someone donated'} $150
+                  {t('recent_activity.someone_donated')} $150
                 </span>
-                {' '}for Web Design {messages.home?.recent_activity?.via_service || 'via'} Cancer Research Australia
+                {' '}for Web Design {t('recent_activity.via_service')} Cancer Research Australia
               </p>
-              <p className="text-sm text-gray-500 mt-2">2 {messages.home?.recent_activity?.hours_ago || 'hours ago'}</p>
+              <p className="text-sm text-gray-500 mt-2">2 {t('recent_activity.hours_ago')}</p>
             </div>
 
             {/* Example 2 */}
             <div className="bg-white p-6 rounded-lg shadow-sm">
               <p className="text-gray-700">
                 <span className="font-medium">
-                  {messages.home?.recent_activity?.someone_donated || 'Someone donated'} $75
+                  {t('recent_activity.someone_donated')} $75
                 </span>
-                {' '}for Business Consulting {messages.home?.recent_activity?.via_service || 'via'} Beyond Blue
+                {' '}for Business Consulting {t('recent_activity.via_service')} Beyond Blue
               </p>
-              <p className="text-sm text-gray-500 mt-2">5 {messages.home?.recent_activity?.hours_ago || 'hours ago'}</p>
+              <p className="text-sm text-gray-500 mt-2">5 {t('recent_activity.hours_ago')}</p>
             </div>
 
             {/* Example 3 */}
             <div className="bg-white p-6 rounded-lg shadow-sm">
               <p className="text-gray-700">
                 <span className="font-medium">
-                  {messages.home?.recent_activity?.someone_donated || 'Someone donated'} $200
+                  {t('recent_activity.someone_donated')} $200
                 </span>
-                {' '}for Photography {messages.home?.recent_activity?.via_service || 'via'} RSPCA NSW
+                {' '}for Photography {t('recent_activity.via_service')} RSPCA NSW
               </p>
               <p className="text-sm text-gray-500 mt-2">1 day ago</p>
             </div>
