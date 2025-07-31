@@ -4,7 +4,13 @@ import { NextRequest, NextResponse } from 'next/server'
 async function handleAuthCallback(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url)
   let code = searchParams.get('code')
-  const next = searchParams.get('next') ?? '/dashboard'
+  
+  // Detect locale from referrer or default to 'en'
+  const referrer = request.headers.get('referer')
+  const localeMatch = referrer?.match(/\/([a-z]{2})\//)
+  const locale = localeMatch?.[1] ?? 'en'
+  
+  const next = searchParams.get('next') ?? `/${locale}/dashboard`
 
   // For POST requests (Apple), extract code from form data
   if (request.method === 'POST') {
@@ -31,7 +37,7 @@ async function handleAuthCallback(request: NextRequest) {
   }
 
   // return the user to an error page with instructions
-  return NextResponse.redirect(`${origin}/auth/auth-code-error`)
+  return NextResponse.redirect(`${origin}/${locale}/auth/auth-code-error`)
 }
 
 export async function GET(request: NextRequest) {

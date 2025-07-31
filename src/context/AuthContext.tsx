@@ -67,41 +67,61 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   const signInWithGoogle = async () => {
+    // Extract locale from current URL
+    const locale = window.location.pathname.match(/^\/([a-z]{2})\//)?.[1] ?? 'en'
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`
+        redirectTo: `${window.location.origin}/auth/callback`,
+        queryParams: {
+          next: `/${locale}/dashboard`
+        }
       }
     })
     return { error }
   }
 
   const signInWithMicrosoft = async () => {
+    // Extract locale from current URL
+    const locale = window.location.pathname.match(/^\/([a-z]{2})\//)?.[1] ?? 'en'
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'azure',
       options: {
         redirectTo: `${window.location.origin}/auth/callback`,
-        scopes: 'openid profile email'
+        scopes: 'openid profile email',
+        queryParams: {
+          next: `/${locale}/dashboard`
+        }
       }
     })
     return { error }
   }
 
   const signInWithGitHub = async () => {
+    // Extract locale from current URL
+    const locale = window.location.pathname.match(/^\/([a-z]{2})\//)?.[1] ?? 'en'
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'github',
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`
+        redirectTo: `${window.location.origin}/auth/callback`,
+        queryParams: {
+          next: `/${locale}/dashboard`
+        }
       }
     })
     return { error }
   }
 
   const signInWithApple = async () => {
+    // Extract locale from current URL
+    const locale = window.location.pathname.match(/^\/([a-z]{2})\//)?.[1] ?? 'en'
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'apple',
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`
+        redirectTo: `${window.location.origin}/auth/callback`,
+        queryParams: {
+          next: `/${locale}/dashboard`
+        }
       }
     })
     return { error }

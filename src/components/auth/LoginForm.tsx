@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, Link } from '@/i18n/routing'
 import { useAuth } from '@/hooks/useAuth'
 import GoogleSignInButton from './GoogleSignInButton'
 import MicrosoftSignInButton from './MicrosoftSignInButton'
@@ -102,9 +102,9 @@ export default function LoginForm() {
 
       <p className="mt-4 text-center text-sm text-gray-600">
         Don't have an account?{' '}
-        <a href="/signup" className="text-blue-600 hover:text-blue-500">
+        <Link href="/signup" className="text-blue-600 hover:text-blue-500">
           Sign up
-        </a>
+        </Link>
       </p>
     </div>
   )

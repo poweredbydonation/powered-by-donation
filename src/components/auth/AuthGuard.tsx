@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
-import { useRouter, usePathname } from 'next/navigation'
+import { useRouter, usePathname } from '@/i18n/routing'
 import { useAuth } from '@/hooks/useAuth'
 
 interface AuthGuardProps {
@@ -17,20 +17,16 @@ export default function AuthGuard({
 }: AuthGuardProps) {
   const { user, loading } = useAuth()
   const router = useRouter()
-  const pathname = usePathname()
-
-  // Extract locale from pathname
-  const locale = pathname.split('/')[1] || 'en'
 
   useEffect(() => {
     if (!loading) {
       if (requireAuth && !user) {
-        router.push(`/${locale}${redirectTo}`)
+        router.push(redirectTo)
       } else if (!requireAuth && user) {
-        router.push(`/${locale}/dashboard`)
+        router.push('/dashboard')
       }
     }
-  }, [user, loading, requireAuth, redirectTo, router, locale])
+  }, [user, loading, requireAuth, redirectTo, router])
 
   // Show loading spinner while checking auth
   if (loading) {
