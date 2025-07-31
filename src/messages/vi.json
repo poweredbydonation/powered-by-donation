@@ -104,7 +104,21 @@
       "title": "Duyệt dịch vụ",
       "subtitle": "Tìm dịch vụ chuyên nghiệp và hỗ trợ tổ chức từ thiện",
       "no_services": "Không tìm thấy dịch vụ nào",
-      "load_more": "Tải thêm"
+      "load_more": "Tải thêm",
+      "allLocations": "Tất Cả Địa Điểm",
+      "provider": "Nhà Cung Cấp",
+      "communityImpact": {
+        "title": "Tác Động Cộng Đồng",
+        "activeServices": "Dịch Vụ Hoạt Động",
+        "totalDonationPotential": "Tổng Tiềm Năng Quyên Góp",
+        "activeProviders": "Nhà Cung Cấp Hoạt Động",
+        "donationsNote": "Tất cả quyên góp được chuyển trực tiếp đến các tổ chức từ thiện đã đăng ký qua JustGiving"
+      },
+      "callToAction": {
+        "title": "Bạn muốn cung cấp dịch vụ của mình?",
+        "description": "Tham gia cộng đồng nhà cung cấp của chúng tôi và giúp đỡ các tổ chức từ thiện đồng thời thể hiện kỹ năng của bạn.",
+        "button": "Bắt Đầu"
+      }
     },
     "create": {
       "title": "Tạo dịch vụ mới",

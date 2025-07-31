@@ -105,7 +105,21 @@
       "title": "Explorar Servicios",
       "subtitle": "Encuentra servicios profesionales y apoya organizaciones benéficas",
       "no_services": "No se encontraron servicios",
-      "load_more": "Cargar Más"
+      "load_more": "Cargar Más",
+      "allLocations": "Todas las Ubicaciones",
+      "provider": "Proveedor",
+      "communityImpact": {
+        "title": "Impacto Comunitario",
+        "activeServices": "Servicios Activos",
+        "totalDonationPotential": "Potencial Total de Donaciones",
+        "activeProviders": "Proveedores Activos",
+        "donationsNote": "Todas las donaciones van directamente a organizaciones benéficas registradas a través de JustGiving"
+      },
+      "callToAction": {
+        "title": "¿Quieres ofrecer tus servicios?",
+        "description": "Únete a nuestra comunidad de proveedores y ayuda a las organizaciones benéficas mientras muestras tus habilidades.",
+        "button": "Comenzar"
+      }
     },
     "create": {
       "title": "Crear Nuevo Servicio",

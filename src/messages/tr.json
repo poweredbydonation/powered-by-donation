@@ -105,7 +105,21 @@
       "title": "Hizmetleri Gözat",
       "subtitle": "Profesyonel hizmetler bulun ve hayır kurumlarını destekleyin",
       "no_services": "Hizmet bulunamadı",
-      "load_more": "Daha Fazla Yükle"
+      "load_more": "Daha Fazla Yükle",
+      "allLocations": "Tüm Konumlar",
+      "provider": "Sağlayıcı",
+      "communityImpact": {
+        "title": "Topluluk Etkisi",
+        "activeServices": "Aktif Hizmetler",
+        "totalDonationPotential": "Toplam Bağış Potansiyeli",
+        "activeProviders": "Aktif Sağlayıcılar",
+        "donationsNote": "Tüm bağışlar JustGiving aracılığıyla doğrudan kayıtlı hayır kurumlarına gider"
+      },
+      "callToAction": {
+        "title": "Hizmetlerinizi sunmak ister misiniz?",
+        "description": "Sağlayıcı topluluğumuza katılın ve becerilerinizi sergilerken hayır kurumlarına yardım edin.",
+        "button": "Başlayın"
+      }
     },
     "create": {
       "title": "Yeni Hizmet Oluştur",

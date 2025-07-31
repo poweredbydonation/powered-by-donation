@@ -102,14 +102,28 @@
   },
   "services": {
     "browse": {
-      "title": "Browse Services",
-      "subtitle": "Find professional services and support charities",
-      "no_services": "No services found",
-      "load_more": "Load More"
+      "title": "浏览服务",
+      "subtitle": "寻找专业服务并支持慈善机构",
+      "no_services": "未找到服务",
+      "load_more": "加载更多",
+      "allLocations": "所有地点",
+      "provider": "提供者",
+      "communityImpact": {
+        "title": "社区影响",
+        "activeServices": "活跃服务",
+        "totalDonationPotential": "总捐赠潜力",
+        "activeProviders": "活跃提供者",
+        "donationsNote": "所有捐款通过JustGiving直接捐给注册慈善机构"
+      },
+      "callToAction": {
+        "title": "想要提供您的服务吗？",
+        "description": "加入我们的提供者社区，在展示您的技能的同时帮助慈善机构。",
+        "button": "开始"
+      }
     },
     "create": {
-      "title": "Create New Service",
-      "subtitle": "Offer your skills to help charities receive donations"
+      "title": "创建新服务",
+      "subtitle": "提供您的技能来帮助慈善机构接收捐款"
     }
   },
   "common": {

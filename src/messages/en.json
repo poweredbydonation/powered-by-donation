@@ -105,7 +105,21 @@
       "title": "Browse Services",
       "subtitle": "Find professional services and support charities",
       "no_services": "No services found",
-      "load_more": "Load More"
+      "load_more": "Load More",
+      "allLocations": "All Locations",
+      "provider": "Provider",
+      "communityImpact": {
+        "title": "Community Impact",
+        "activeServices": "Active Services",
+        "totalDonationPotential": "Total Donation Potential",
+        "activeProviders": "Active Providers",
+        "donationsNote": "All donations go directly to registered charities via JustGiving"
+      },
+      "callToAction": {
+        "title": "Want to offer your services?",
+        "description": "Join our community of providers and help charities while showcasing your skills.",
+        "button": "Get Started"
+      }
     },
     "create": {
       "title": "Create New Service",
