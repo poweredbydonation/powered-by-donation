@@ -1,11 +1,14 @@
 'use client';
 
 import { Heart, Github, ExternalLink } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { Link } from '@/i18n/routing';
 
 const Footer = () => {
   const t = useTranslations('footer');
+  const locale = useLocale();
+  
+  console.log('Footer current locale:', locale);
 
   return (
     <footer className="bg-gray-50 border-t border-gray-200 mt-16">
@@ -109,22 +112,22 @@ const Footer = () => {
             </h4>
             <ul className="space-y-2 text-sm text-gray-600">
               <li>
-                <Link href="/services" className="hover:text-gray-900">
+                <Link href={`/${locale}/services`} className="hover:text-gray-900">
                   {t('navigation.platform.browse_services')}
                 </Link>
               </li>
               <li>
-                <Link href="/providers" className="hover:text-gray-900">
+                <Link href={`/${locale}/providers`} className="hover:text-gray-900">
                   {t('navigation.platform.service_providers')}
                 </Link>
               </li>
               <li>
-                <Link href="/charities" className="hover:text-gray-900">
+                <Link href={`/${locale}/charities`} className="hover:text-gray-900">
                   {t('navigation.platform.featured_charities')}
                 </Link>
               </li>
               <li>
-                <Link href="/how-it-works" className="hover:text-gray-900">
+                <Link href={`/${locale}/how-it-works`} className="hover:text-gray-900">
                   {t('navigation.platform.how_it_works')}
                 </Link>
               </li>
@@ -138,22 +141,22 @@ const Footer = () => {
             </h4>
             <ul className="space-y-2 text-sm text-gray-600">
               <li>
-                <Link href="/privacy" className="hover:text-gray-900">
+                <Link href={`/${locale}/privacy`} className="hover:text-gray-900">
                   {t('navigation.legal.privacy_policy')}
                 </Link>
               </li>
               <li>
-                <Link href="/terms" className="hover:text-gray-900">
+                <Link href={`/${locale}/terms`} className="hover:text-gray-900">
                   {t('navigation.legal.terms_of_service')}
                 </Link>
               </li>
               <li>
-                <Link href="/about" className="hover:text-gray-900">
+                <Link href={`/${locale}/about`} className="hover:text-gray-900">
                   {t('navigation.legal.about_us')}
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="hover:text-gray-900">
+                <Link href={`/${locale}/contact`} className="hover:text-gray-900">
                   {t('navigation.legal.contact')}
                 </Link>
               </li>
@@ -178,17 +181,17 @@ const Footer = () => {
                 </a>
               </li>
               <li>
-                <Link href="/contribute" className="hover:text-gray-900">
+                <Link href={`/${locale}/contribute`} className="hover:text-gray-900">
                   {t('navigation.community.contribute')}
                 </Link>
               </li>
               <li>
-                <Link href="/feedback" className="hover:text-gray-900">
+                <Link href={`/${locale}/feedback`} className="hover:text-gray-900">
                   {t('navigation.community.feedback')}
                 </Link>
               </li>
               <li>
-                <Link href="/support" className="hover:text-gray-900">
+                <Link href={`/${locale}/support`} className="hover:text-gray-900">
                   {t('navigation.community.support')}
                 </Link>
               </li>
