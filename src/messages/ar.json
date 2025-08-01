@@ -33,11 +33,12 @@
       }
     },
     "recent_activity": {
-      "title": "Recent Community Activity",
-      "someone_donated": "Someone donated",
-      "via_service": "via",
-      "hours_ago": "hours ago",
-      "minutes_ago": "minutes ago"
+      "title": "النشاط المجتمعي الأخير",
+      "someone_donated": "تبرع شخص ما",
+      "via_service": "عبر",
+      "hours_ago": "ساعات مضت",
+      "minutes_ago": "دقائق مضت",
+      "days_ago": "يوم مضى"
     }
   },
   "dashboard": {
@@ -163,11 +164,48 @@
     }
   },
   "footer": {
-    "about": "About",
-    "contact": "Contact",
-    "privacy": "Privacy Policy",
-    "terms": "Terms of Service",
-    "copyright": "© 2025 Powered by Donation. All rights reserved."
+    "trust": {
+      "noFees": {
+        "title": "100% من تبرعك يذهب إلى الجمعية الخيرية",
+        "description": "نحن لا نفرض أي رسوم. جميع التبرعات يتم معالجتها مباشرة عبر JustGiving — نحن لن نتعامل مع معلومات الدفع الخاصة بك."
+      },
+      "openSource": {
+        "title": "مفتوح المصدر بالكامل وشفاف",
+        "description": "منصتنا بالكامل مفتوحة المصدر. عرض كودنا، المساهمة، أو مراجعة ممارساتنا على GitHub — شفافية كاملة، لا جدول أعمال مخفي."
+      }
+    },
+    "brand": {
+      "tagline": "ربط الخدمات بالعطاء الخيري. بناء المجتمع من خلال الكرم.",
+      "abn": "ABN: 17 927 784 658"
+    },
+    "navigation": {
+      "platform": {
+        "title": "المنصة",
+        "browse_services": "تصفح الخدمات",
+        "service_providers": "مقدمي الخدمات",
+        "featured_charities": "الجمعيات الخيرية المميزة",
+        "how_it_works": "كيف يعمل"
+      },
+      "legal": {
+        "title": "قانوني",
+        "privacy_policy": "سياسة الخصوصية",
+        "terms_of_service": "شروط الخدمة",
+        "about_us": "عنا",
+        "contact": "اتصل بنا"
+      },
+      "community": {
+        "title": "المجتمع",
+        "github": "GitHub",
+        "contribute": "ساهم",
+        "feedback": "تعليقات",
+        "support": "دعم"
+      }
+    },
+    "bottom": {
+      "copyright": "© 2025 Powered by Donation. تم بناؤه ب❤️ للمجتمع.",
+      "made_in": "صنع في أستراليا",
+      "powered_by": "مدعوم من JustGiving"
+    }
   },
   "language": {
     "select": "Select Language",

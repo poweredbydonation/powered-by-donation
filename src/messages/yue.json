@@ -39,6 +39,50 @@
       "hours_ago": "小時前"
     }
   },
+  "footer": {
+    "trust": {
+      "noFees": {
+        "title": "你嘅捐款100%去慈善機構",
+        "description": "我哋唔收任何費用。所有捐款都係直接透過JustGiving處理 — 我哋從來唔會處理你嘅付款資料。"
+      },
+      "openSource": {
+        "title": "完全開源同透明",
+        "description": "我哋成個平台都係開源嘅。喺GitHub度睇我哋嘅代碼、貢獻或者審計我哋嘅做法 — 完全透明，冇隱藏議程。"
+      }
+    },
+    "brand": {
+      "tagline": "將服務同慈善捐款連結埋一齊。透過慷慨建立社區。",
+      "abn": "ABN: 17 927 784 658"
+    },
+    "navigation": {
+      "platform": {
+        "title": "平台",
+        "browse_services": "瀏覽服務",
+        "service_providers": "服務提供者",
+        "featured_charities": "精選慈善機構",
+        "how_it_works": "點樣運作"
+      },
+      "legal": {
+        "title": "法律",
+        "privacy_policy": "私隱政策",
+        "terms_of_service": "服務條款",
+        "about_us": "關於我哋",
+        "contact": "聯絡"
+      },
+      "community": {
+        "title": "社區",
+        "github": "GitHub",
+        "contribute": "貢獻",
+        "feedback": "意見反饋",
+        "support": "支援"
+      }
+    },
+    "bottom": {
+      "copyright": "© 2025 Powered by Donation. 用❤️為社區而建。",
+      "made_in": "澳洲製造",
+      "powered_by": "由JustGiving提供支援"
+    }
+  },
   "language": {
     "select": "選擇語言",
     "en": "英文",

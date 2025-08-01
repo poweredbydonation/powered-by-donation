@@ -204,11 +204,48 @@
     }
   },
   "footer": {
-    "about": "Giới thiệu",
-    "contact": "Liên hệ",
-    "privacy": "Chính sách bảo mật",
-    "terms": "Điều khoản dịch vụ",
-    "copyright": "© 2025 Powered by Donation. Tất cả quyền được bảo lưu."
+    "trust": {
+      "noFees": {
+        "title": "100% Khoản Đóng Góp Của Bạn Dành Cho Từ Thiện",
+        "description": "Chúng tôi không tính phí. Tất cả các khoản đóng góp được xử lý trực tiếp qua JustGiving — chúng tôi không bao giờ xử lý thông tin thanh toán của bạn."
+      },
+      "openSource": {
+        "title": "Hoàn Toàn Mã Nguồn Mở & Minh Bạch",
+        "description": "Toàn bộ nền tảng của chúng tôi đều mã nguồn mở. Xem mã của chúng tôi, đóng góp, hoặc kiểm tra các hoạt động của chúng tôi trên GitHub — hoàn toàn minh bạch, không có chương trình nghị sự ẩn."
+      }
+    },
+    "brand": {
+      "tagline": "Kết nối dịch vụ với việc quyên góp từ thiện. Xây dựng cộng đồng thông qua lòng hảo tâm.",
+      "abn": "ABN: 17 927 784 658"
+    },
+    "navigation": {
+      "platform": {
+        "title": "Nền Tảng",
+        "browse_services": "Duyệt Dịch Vụ",
+        "service_providers": "Nhà Cung Cấp Dịch Vụ",
+        "featured_charities": "Tổ Chức Từ Thiện Nổi Bật",
+        "how_it_works": "Cách Hoạt Động"
+      },
+      "legal": {
+        "title": "Pháp Lý",
+        "privacy_policy": "Chính Sách Bảo Mật",
+        "terms_of_service": "Điều Khoản Dịch Vụ",
+        "about_us": "Về Chúng Tôi",
+        "contact": "Liên Hệ"
+      },
+      "community": {
+        "title": "Cộng Đồng",
+        "github": "GitHub",
+        "contribute": "Đóng Góp",
+        "feedback": "Phản Hồi",
+        "support": "Hỗ Trợ"
+      }
+    },
+    "bottom": {
+      "copyright": "© 2025 Powered by Donation. Được xây dựng với ❤️ cho cộng đồng.",
+      "made_in": "Được tạo tại Úc",
+      "powered_by": "Được hỗ trợ bởi JustGiving"
+    }
   },
   "language": {
     "select": "Chọn ngôn ngữ",

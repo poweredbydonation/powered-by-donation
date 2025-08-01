@@ -115,7 +115,7 @@ export default async function HomePage({ params }: HomePageProps) {
                 <span className="font-medium">
                   {t('recent_activity.someone_donated')} $150
                 </span>
-                {' '}for Web Design {t('recent_activity.via_service')} Cancer Research Australia
+                {' '}{t('recent_activity.via_service')} Web Design → Cancer Research Australia
               </p>
               <p className="text-sm text-gray-500 mt-2">2 {t('recent_activity.hours_ago')}</p>
             </div>
@@ -126,7 +126,7 @@ export default async function HomePage({ params }: HomePageProps) {
                 <span className="font-medium">
                   {t('recent_activity.someone_donated')} $75
                 </span>
-                {' '}for Business Consulting {t('recent_activity.via_service')} Beyond Blue
+                {' '}{t('recent_activity.via_service')} Business Consulting → Beyond Blue
               </p>
               <p className="text-sm text-gray-500 mt-2">5 {t('recent_activity.hours_ago')}</p>
             </div>
@@ -137,9 +137,9 @@ export default async function HomePage({ params }: HomePageProps) {
                 <span className="font-medium">
                   {t('recent_activity.someone_donated')} $200
                 </span>
-                {' '}for Photography {t('recent_activity.via_service')} RSPCA NSW
+                {' '}{t('recent_activity.via_service')} Photography → RSPCA NSW
               </p>
-              <p className="text-sm text-gray-500 mt-2">1 day ago</p>
+              <p className="text-sm text-gray-500 mt-2">1 {t('recent_activity.days_ago')}</p>
             </div>
           </div>
         </div>

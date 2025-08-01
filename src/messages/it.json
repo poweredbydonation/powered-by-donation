@@ -163,11 +163,48 @@
     }
   },
   "footer": {
-    "about": "About",
-    "contact": "Contact",
-    "privacy": "Privacy Policy",
-    "terms": "Terms of Service",
-    "copyright": "© 2025 Powered by Donation. All rights reserved."
+    "trust": {
+      "noFees": {
+        "title": "Il 100% della Tua Donazione Va all'Ente di Beneficenza",
+        "description": "Non addebitiamo commissioni. Tutte le donazioni vengono elaborate direttamente tramite JustGiving — non gestiamo mai le tue informazioni di pagamento."
+      },
+      "openSource": {
+        "title": "Completamente Open Source e Trasparente",
+        "description": "La nostra intera piattaforma è open source. Visualizza il nostro codice, contribuisci o controlla le nostre pratiche su GitHub — trasparenza completa, nessuna agenda nascosta."
+      }
+    },
+    "brand": {
+      "tagline": "Collegare servizi con donazioni benefiche. Costruire comunità attraverso la generosità.",
+      "abn": "ABN: 17 927 784 658"
+    },
+    "navigation": {
+      "platform": {
+        "title": "Piattaforma",
+        "browse_services": "Esplora Servizi",
+        "service_providers": "Fornitori di Servizi",
+        "featured_charities": "Enti di Beneficenza in Evidenza",
+        "how_it_works": "Come Funziona"
+      },
+      "legal": {
+        "title": "Legale",
+        "privacy_policy": "Informativa sulla Privacy",
+        "terms_of_service": "Termini di Servizio",
+        "about_us": "Chi Siamo",
+        "contact": "Contatto"
+      },
+      "community": {
+        "title": "Comunità",
+        "github": "GitHub",
+        "contribute": "Contribuisci",
+        "feedback": "Feedback",
+        "support": "Supporto"
+      }
+    },
+    "bottom": {
+      "copyright": "© 2025 Powered by Donation. Costruito con ❤️ per la comunità.",
+      "made_in": "Made in Australia",
+      "powered_by": "Alimentato da JustGiving"
+    }
   },
   "language": {
     "select": "Select Language",

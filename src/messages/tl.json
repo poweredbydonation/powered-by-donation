@@ -39,6 +39,50 @@
       "hours_ago": "oras na nakalipas"
     }
   },
+  "footer": {
+    "trust": {
+      "noFees": {
+        "title": "100% ng Inyong Donasyon ay Napupunta sa Charity",
+        "description": "Hindi kami nangingsingil ng bayad. Lahat ng donasyon ay direktang pinoproseso sa pamamagitan ng JustGiving — hindi namin hinahawakan ang inyong payment information."
+      },
+      "openSource": {
+        "title": "Lubos na Open Source at Transparent",
+        "description": "Ang buong platform namin ay open source. Tingnan ang aming code, mag-contribute, o i-audit ang aming mga gawain sa GitHub — kumpletong transparency, walang nakatagong agenda."
+      }
+    },
+    "brand": {
+      "tagline": "Nagkokonekta ng mga serbisyo sa charitable giving. Nagtatayo ng komunidad sa pamamagitan ng pagbibigay.",
+      "abn": "ABN: 17 927 784 658"
+    },
+    "navigation": {
+      "platform": {
+        "title": "Platform",
+        "browse_services": "I-browse ang mga Serbisyo",
+        "service_providers": "Mga Service Provider",
+        "featured_charities": "Featured na mga Charity",
+        "how_it_works": "Paano Ito Gumagana"
+      },
+      "legal": {
+        "title": "Legal",
+        "privacy_policy": "Privacy Policy",
+        "terms_of_service": "Terms of Service",
+        "about_us": "Tungkol sa Amin",
+        "contact": "Makipag-ugnayan"
+      },
+      "community": {
+        "title": "Komunidad",
+        "github": "GitHub",
+        "contribute": "Mag-contribute",
+        "feedback": "Feedback",
+        "support": "Suporta"
+      }
+    },
+    "bottom": {
+      "copyright": "© 2025 Powered by Donation. Ginawa nang may ❤️ para sa komunidad.",
+      "made_in": "Ginawa sa Australia",
+      "powered_by": "Powered by JustGiving"
+    }
+  },
   "language": {
     "select": "Pumili ng Wika",
     "en": "English",

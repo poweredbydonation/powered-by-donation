@@ -23,6 +23,11 @@ const languages = [
   { code: 'hi', flag: '🇮🇳', name: 'हिन्दी' },
   { code: 'es', flag: '🇪🇸', name: 'Español' },
   { code: 'tr', flag: '🇹🇷', name: 'Türkçe' },
+  { code: 'fr', flag: '🇫🇷', name: 'Français' },
+  { code: 'de', flag: '🇩🇪', name: 'Deutsch' },
+  { code: 'ja', flag: '🇯🇵', name: '日本語' },
+  { code: 'ko', flag: '🇰🇷', name: '한국어' },
+  { code: 'pt', flag: '🇵🇹', name: 'Português' },
 ]
 
 export default function MultilingualNavbar({ locale, messages }: MultilingualNavbarProps) {

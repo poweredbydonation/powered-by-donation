@@ -37,7 +37,8 @@
       "someone_donated": "Someone donated",
       "via_service": "via",
       "hours_ago": "hours ago",
-      "minutes_ago": "minutes ago"
+      "minutes_ago": "minutes ago",
+      "days_ago": "day ago"
     }
   },
   "dashboard": {
@@ -243,11 +244,48 @@
     }
   },
   "footer": {
-    "about": "About",
-    "contact": "Contact",
-    "privacy": "Privacy Policy",
-    "terms": "Terms of Service",
-    "copyright": "© 2025 Powered by Donation. All rights reserved."
+    "trust": {
+      "noFees": {
+        "title": "100% of Your Donation Goes to Charity",
+        "description": "We don't charge any fees. All donations are processed directly through JustGiving — we never handle your payment information."
+      },
+      "openSource": {
+        "title": "Fully Open Source & Transparent",
+        "description": "Our entire platform is open source. View our code, contribute, or audit our practices on GitHub — complete transparency, no hidden agenda."
+      }
+    },
+    "brand": {
+      "tagline": "Connecting services with charitable giving. Building community through generosity.",
+      "abn": "ABN: 17 927 784 658"
+    },
+    "navigation": {
+      "platform": {
+        "title": "Platform",
+        "browse_services": "Browse Services",
+        "service_providers": "Service Providers",
+        "featured_charities": "Featured Charities",
+        "how_it_works": "How It Works"
+      },
+      "legal": {
+        "title": "Legal",
+        "privacy_policy": "Privacy Policy",
+        "terms_of_service": "Terms of Service",
+        "about_us": "About Us",
+        "contact": "Contact"
+      },
+      "community": {
+        "title": "Community",
+        "github": "GitHub",
+        "contribute": "Contribute",
+        "feedback": "Feedback",
+        "support": "Support"
+      }
+    },
+    "bottom": {
+      "copyright": "© 2025 Powered by Donation. Built with ❤️ for the community.",
+      "made_in": "Made in Australia",
+      "powered_by": "Powered by JustGiving"
+    }
   },
   "language": {
     "select": "Select Language",

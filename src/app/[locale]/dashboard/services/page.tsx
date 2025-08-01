@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import AuthGuard from '@/components/auth/AuthGuard'
-import Navbar from '@/components/Navbar'
+import MultilingualNavbar from '@/components/MultilingualNavbar'
 import { useAuth } from '@/hooks/useAuth'
 import { createClient } from '@/lib/supabase/client'
 import { Service, ServiceLocation } from '@/types/database'
@@ -19,6 +19,7 @@ export default function ServicesPage() {
   const [services, setServices] = useState<UserService[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [messages, setMessages] = useState<any>({})
   
   const { user } = useAuth()
   const params = useParams()
@@ -31,6 +32,18 @@ export default function ServicesPage() {
   }
 
   useEffect(() => {
+    // Load messages
+    async function loadMessages() {
+      try {
+        const msgs = (await import(`../../../../messages/${locale}.json`)).default
+        setMessages(msgs)
+      } catch (error) {
+        // Fallback to English
+        const msgs = (await import(`../../../../messages/en.json`)).default
+        setMessages(msgs)
+      }
+    }
+
     async function fetchUserServices() {
       if (!user) return
 
@@ -62,8 +75,9 @@ export default function ServicesPage() {
       }
     }
 
+    loadMessages()
     fetchUserServices()
-  }, [user, supabase])
+  }, [user, supabase, locale])
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-AU', {
@@ -113,7 +127,7 @@ export default function ServicesPage() {
 
   return (
     <AuthGuard>
-      <Navbar />
+      <MultilingualNavbar locale={locale} messages={messages} />
       <div className="min-h-screen bg-gray-50 py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-8">

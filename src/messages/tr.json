@@ -240,11 +240,48 @@
     }
   },
   "footer": {
-    "about": "Hakkında",
-    "contact": "İletişim",
-    "privacy": "Gizlilik Politikası",
-    "terms": "Hizmet Şartları",
-    "copyright": "© 2025 Powered by Donation. Tüm hakları saklıdır."
+    "trust": {
+      "noFees": {
+        "title": "Bağışınızın %100'ü Hayır Kurumuna Gider",
+        "description": "Hiçbir ücret almayız. Tüm bağışlar doğrudan JustGiving üzerinden işlenir — ödeme bilgilerinizi asla ele almayız."
+      },
+      "openSource": {
+        "title": "Tamamen Açık Kaynak ve Şeffaf",
+        "description": "Tüm platformumuz açık kaynaktır. GitHub'da kodlarımızı görüntüleyin, katkıda bulunun veya uygulamalarımızı denetleyin — tam şeffaflık, gizli gündem yok."
+      }
+    },
+    "brand": {
+      "tagline": "Hizmetleri hayırsever bağışlarla birleştirmek. Cömertlik yoluyla topluluk inşa etmek.",
+      "abn": "ABN: 17 927 784 658"
+    },
+    "navigation": {
+      "platform": {
+        "title": "Platform",
+        "browse_services": "Hizmetleri Gözat",
+        "service_providers": "Hizmet Sağlayıcıları",
+        "featured_charities": "Öne Çıkan Hayır Kurumları",
+        "how_it_works": "Nasıl Çalışır"
+      },
+      "legal": {
+        "title": "Yasal",
+        "privacy_policy": "Gizlilik Politikası",
+        "terms_of_service": "Hizmet Şartları",
+        "about_us": "Hakkımızda",
+        "contact": "İletişim"
+      },
+      "community": {
+        "title": "Topluluk",
+        "github": "GitHub",
+        "contribute": "Katkıda Bulun",
+        "feedback": "Geri Bildirim",
+        "support": "Destek"
+      }
+    },
+    "bottom": {
+      "copyright": "© 2025 Powered by Donation. Topluluk için ❤️ ile inşa edildi.",
+      "made_in": "Avustralya'da Yapıldı",
+      "powered_by": "JustGiving Destekli"
+    }
   },
   "language": {
     "select": "Dil Seçin",

@@ -142,11 +142,48 @@
     }
   },
   "footer": {
-    "about": "About",
-    "contact": "Contact",
-    "privacy": "Privacy Policy",
-    "terms": "Terms of Service",
-    "copyright": "© 2025 Powered by Donation. All rights reserved."
+    "trust": {
+      "noFees": {
+        "title": "기부금의 100%가 자선단체에 전달됩니다",
+        "description": "저희는 어떠한 수수료도 부과하지 않습니다. 모든 기부금은 JustGiving을 통해 직접 처리됩니다 — 저희는 귀하의 결제 정보를 처리하지 않습니다."
+      },
+      "openSource": {
+        "title": "완전한 오픈소스 및 투명성",
+        "description": "저희의 전체 플랫폼이 오픈소스입니다. GitHub에서 저희의 코드를 확인하고, 기여하거나, 저희의 관행을 감사하세요 — 완전한 투명성, 숨겼되는 의도가 없습니다."
+      }
+    },
+    "brand": {
+      "tagline": "서비스를 자선 기부와 연결합니다. 관대함을 통해 커뮤니티를 구축합니다.",
+      "abn": "ABN: 17 927 784 658"
+    },
+    "navigation": {
+      "platform": {
+        "title": "플랫폼",
+        "browse_services": "서비스 둘러보기",
+        "service_providers": "서비스 제공자",
+        "featured_charities": "주목받는 자선단체",
+        "how_it_works": "작동 원리"
+      },
+      "legal": {
+        "title": "법적 사항",
+        "privacy_policy": "개인정보 보호정책",
+        "terms_of_service": "서비스 약관",
+        "about_us": "회사 소개",
+        "contact": "연락처"
+      },
+      "community": {
+        "title": "커뮤니티",
+        "github": "GitHub",
+        "contribute": "기여하기",
+        "feedback": "피드백",
+        "support": "지원"
+      }
+    },
+    "bottom": {
+      "copyright": "© 2025 Powered by Donation. 커뮤니티를 위해 ❤️로 만들어졌습니다.",
+      "made_in": "호주에서 제작",
+      "powered_by": "JustGiving 제공"
+    }
   },
   "language": {
     "select": "Select Language",

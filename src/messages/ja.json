@@ -142,11 +142,48 @@
     }
   },
   "footer": {
-    "about": "About",
-    "contact": "Contact",
-    "privacy": "Privacy Policy",
-    "terms": "Terms of Service",
-    "copyright": "© 2025 Powered by Donation. All rights reserved."
+    "trust": {
+      "noFees": {
+        "title": "あなたの寄付の100%がチャリティーに届きます",
+        "description": "私たちは手数料を請求しません。すべての寄付はJustGivingを通じて直接処理されます—私たちがあなたの支払い情報を取り扱うことはありません。"
+      },
+      "openSource": {
+        "title": "完全なオープンソース・トランスペアレント",
+        "description": "私たちのプラットフォームは完全にオープンソースです。GitHubでコードを確認し、貢献し、または私たちの取り組みを監査してください—完全な透明性、隠された意図はありません。"
+      }
+    },
+    "brand": {
+      "tagline": "サービスとチャリティー寄付をつなぐ。寛大さを通じてコミュニティを構築する。",
+      "abn": "ABN: 17 927 784 658"
+    },
+    "navigation": {
+      "platform": {
+        "title": "プラットフォーム",
+        "browse_services": "サービスを探す",
+        "service_providers": "サービスプロバイダー",
+        "featured_charities": "注目のチャリティー",
+        "how_it_works": "仕組み"
+      },
+      "legal": {
+        "title": "法的情報",
+        "privacy_policy": "プライバシーポリシー",
+        "terms_of_service": "利用規約",
+        "about_us": "私たちについて",
+        "contact": "お問い合わせ"
+      },
+      "community": {
+        "title": "コミュニティ",
+        "github": "GitHub",
+        "contribute": "貢献",
+        "feedback": "フィードバック",
+        "support": "サポート"
+      }
+    },
+    "bottom": {
+      "copyright": "© 2025 Powered by Donation. コミュニティのために❤️で作られました。",
+      "made_in": "オーストラリア製",
+      "powered_by": "JustGiving提供"
+    }
   },
   "language": {
     "select": "Select Language",

@@ -205,11 +205,48 @@
     }
   },
   "footer": {
-    "about": "About",
-    "contact": "Contact",
-    "privacy": "Privacy Policy",
-    "terms": "Terms of Service",
-    "copyright": "© 2025 Powered by Donation. All rights reserved."
+    "trust": {
+      "noFees": {
+        "title": "您的捐款100%流向慈善机构",
+        "description": "我们不收取任何费用。所有捐款都直接通过JustGiving处理——我们永远不会处理您的付款信息。"
+      },
+      "openSource": {
+        "title": "完全开源透明",
+        "description": "我们的整个平台都是开源的。在GitHub上查看我们的代码、贡献或审核我们的做法——完全透明，没有隐藏议程。"
+      }
+    },
+    "brand": {
+      "tagline": "连接服务与慈善捐赠。通过慷慨构建社区。",
+      "abn": "ABN: 17 927 784 658"
+    },
+    "navigation": {
+      "platform": {
+        "title": "平台",
+        "browse_services": "浏览服务",
+        "service_providers": "服务提供者",
+        "featured_charities": "特色慈善机构",
+        "how_it_works": "工作原理"
+      },
+      "legal": {
+        "title": "法律",
+        "privacy_policy": "隐私政策",
+        "terms_of_service": "服务条款",
+        "about_us": "关于我们",
+        "contact": "联系我们"
+      },
+      "community": {
+        "title": "社区",
+        "github": "GitHub",
+        "contribute": "贡献",
+        "feedback": "反馈",
+        "support": "支持"
+      }
+    },
+    "bottom": {
+      "copyright": "© 2025 Powered by Donation. 用❤️为社区而建。",
+      "made_in": "澳大利亚制造",
+      "powered_by": "由JustGiving提供支持"
+    }
   },
   "language": {
     "select": "Select Language",
