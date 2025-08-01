@@ -2,13 +2,22 @@
 
 import { Heart, Github, ExternalLink } from 'lucide-react';
 import { useTranslations, useLocale } from 'next-intl';
-import { Link } from '@/i18n/routing';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 const Footer = () => {
   const t = useTranslations('footer');
-  const locale = useLocale();
+  const hookLocale = useLocale();
+  const pathname = usePathname();
   
-  console.log('Footer current locale:', locale);
+  // Extract locale from pathname as fallback
+  const urlLocale = pathname.split('/')[1] || 'en';
+  const locale = urlLocale;
+  
+  console.log('Footer hook locale:', hookLocale);
+  console.log('Footer URL locale:', urlLocale);
+  console.log('Footer using locale:', locale);
+  console.log('Footer pathname:', pathname);
 
   return (
     <footer className="bg-gray-50 border-t border-gray-200 mt-16">
