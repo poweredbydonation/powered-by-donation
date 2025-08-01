@@ -121,7 +121,7 @@ const Footer = () => {
             </h4>
             <ul className="space-y-2 text-sm text-gray-600">
               <li>
-                <Link href={`/${locale}/services`} className="hover:text-gray-900">
+                <Link href={`/${locale}/browse`} className="hover:text-gray-900">
                   {t('navigation.platform.browse_services')}
                 </Link>
               </li>
