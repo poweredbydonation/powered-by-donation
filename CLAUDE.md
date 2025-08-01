@@ -24,12 +24,13 @@
 
 ### Technical Stack (ALWAYS USE THESE)
 ```
-Frontend: Next.js 14+ (App Router) + TypeScript + Tailwind CSS
+Frontend: Next.js 14+ (App Router) + TypeScript + Tailwind CSS + next-intl
 Mobile: React Native (Expo) - Phase 2 (separate repository)
 Backend: Supabase (database, auth, edge functions)
 Deployment: GitHub → Vercel (automated deployment)
 Package Manager: pnpm (NEVER use npm)
 SEO: Built-in Next.js SEO + structured data
+Internationalization: next-intl with 12 language support
 ```
 
 ### Budget Constraints
@@ -204,40 +205,45 @@ interface OptionalSharing {
 }
 ```
 
-## Database Schema: Simple MVP Approach
+## Database Schema: Unified User System
 
 ### Core Entity Tables
 ```sql
--- Providers with basic privacy controls
-CREATE TABLE providers (
-  id UUID PRIMARY KEY,
-  name TEXT NOT NULL,
+-- Unified users table replacing providers and supporters
+CREATE TABLE users (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  auth_id UUID UNIQUE REFERENCES auth.users(id) ON DELETE CASCADE,
+  email TEXT NOT NULL,
+  username TEXT UNIQUE,
+  full_name TEXT,
   bio TEXT,
-  photo TEXT,
-  contact JSONB,
+  location_suburb TEXT,
+  location_state TEXT,
+  contact_info JSONB DEFAULT '{}'::jsonb,
+  
+  -- Profile type flags
+  is_provider BOOLEAN DEFAULT false,
+  is_supporter BOOLEAN DEFAULT false,
+  
+  -- Privacy controls
   show_bio BOOLEAN DEFAULT true,
   show_contact BOOLEAN DEFAULT false,
   show_in_directory BOOLEAN DEFAULT false,
-  created_at TIMESTAMP DEFAULT NOW()
-);
-
--- Supporters with basic privacy
-CREATE TABLE supporters (
-  id UUID PRIMARY KEY,
-  name TEXT,
-  bio TEXT,
-  photo TEXT,
-  contact JSONB,
-  show_bio BOOLEAN DEFAULT false,
   show_donation_history BOOLEAN DEFAULT false,
-  show_in_directory BOOLEAN DEFAULT false,
-  created_at TIMESTAMP DEFAULT NOW()
+  
+  -- Reputation metrics
+  received_happiness INTEGER DEFAULT 0,
+  sent_happiness INTEGER DEFAULT 0,
+  total_interactions INTEGER DEFAULT 0,
+  
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
 );
 
 -- Services with availability, capacity, and charity requirements
 CREATE TABLE services (
   id UUID PRIMARY KEY,
-  provider_id UUID REFERENCES providers(id),
+  provider_id UUID REFERENCES users(id),
   title TEXT NOT NULL,
   description TEXT,
   
@@ -266,8 +272,8 @@ CREATE TABLE services (
 -- Service request tracking with satisfaction feedback
 CREATE TABLE service_requests (
   id UUID PRIMARY KEY,
-  supporter_id UUID REFERENCES supporters(id),
-  provider_id UUID REFERENCES providers(id),
+  supporter_id UUID REFERENCES users(id),
+  provider_id UUID REFERENCES users(id),
   service_id UUID REFERENCES services(id),
   justgiving_charity_id TEXT NOT NULL,
   donation_amount DECIMAL NOT NULL,       -- Fixed amount from service
@@ -329,17 +335,9 @@ CREATE TABLE charity_cache (
   stats_last_updated TIMESTAMP DEFAULT NOW()
 );
 
--- Happiness metrics for reputation system
-ALTER TABLE providers
-ADD COLUMN received_happiness INTEGER,       -- % of supporters who rated them 'happy'
-ADD COLUMN sent_happiness INTEGER;          -- % of supporters this provider rated 'happy'
-
-ALTER TABLE supporters  
-ADD COLUMN received_happiness INTEGER,       -- % of providers who rated them 'happy'
-ADD COLUMN sent_happiness INTEGER;          -- % of providers/services they rated 'happy'
-
+-- Service happiness metrics
 ALTER TABLE services
-ADD COLUMN happiness_rate INTEGER;           -- % supporter satisfaction for this service
+ADD COLUMN happiness_rate INTEGER DEFAULT 0;           -- % supporter satisfaction for this service
 
 -- Enhanced service_requests for mutual feedback
 ALTER TABLE service_requests 
@@ -673,6 +671,58 @@ const resetMonthlyStats = async () => {
 8. **Build reputation** - Happiness ratings create supporter reputation for future service access
 9. **Optional sharing** - Social media posts or downloadable certificates
 
+## Internationalization System
+
+### Language Support
+The platform supports 12 languages with complete translation coverage:
+- **English (en)** - Default locale
+- **Chinese (zh)** - Simplified Chinese
+- **Arabic (ar)** - Right-to-left support
+- **Vietnamese (vi)** - High Australian community presence
+- **Cantonese (yue)** - Hong Kong/Guangdong communities
+- **Punjabi (pa)** - Sikh communities
+- **Greek (el)** - Established Australian community
+- **Italian (it)** - Traditional Australian migration
+- **Filipino (tl)** - Growing community presence
+- **Hindi (hi)** - Large Indian diaspora
+- **Spanish (es)** - International accessibility
+- **Turkish (tr)** - Middle Eastern communities
+
+### Implementation Architecture
+```typescript
+// Translation key structure
+const translationStructure = {
+  nav: { /* Navigation items */ },
+  home: { /* Homepage content */ },
+  dashboard: { /* Dashboard interface */ },
+  profile: { /* Profile management */ },
+  services: { /* Service-related content */ },
+  auth: { /* Authentication flows */ },
+  browse: { /* Browse/search interface */ },
+  common: { /* Shared UI elements */ }
+}
+
+// Usage in components
+import { useTranslations } from 'next-intl';
+
+const MyComponent = () => {
+  const t = useTranslations('dashboard');
+  return <h1>{t('title')}</h1>; // Uses dashboard.title key
+}
+```
+
+### Translation Management
+- **File Structure**: `/src/messages/[locale].json`
+- **Key Organization**: Hierarchical structure by feature/page
+- **Fallback Strategy**: English as default for missing translations
+- **Quality Assurance**: All user-facing text must use translation keys
+
+### Locale Routing
+- **URL Structure**: `/[locale]/page` (e.g., `/en/browse`, `/zh/dashboard`)
+- **Default Behavior**: English locale for root URLs
+- **Navigation**: Locale-aware Link and router components
+- **Middleware**: Automatic locale detection and redirection
+
 ## Brand Guidelines
 
 ### Logo & Identity
@@ -734,19 +784,29 @@ const resetMonthlyStats = async () => {
 - ✅ Updated service creation form with charity selection UI
 - ✅ Comprehensive test interfaces for donation flow and charity cache management
 
-#### ⏳ **Remaining Timeline**:
-- **Week 5**: Provider-supporter connections + satisfaction feedback system
-- **Week 6**: Email automation + service status tracking  
-- **Week 7**: Social sharing features + advanced reputation system
-- **Week 8**: Testing, optimization, production deployment
+#### ✅ **Week 5 COMPLETED**: Internationalization + unified user system
+- ✅ Complete internationalization system with next-intl
+- ✅ 12 language support: English, Chinese, Arabic, Vietnamese, Cantonese, Punjabi, Greek, Italian, Filipino, Hindi, Spanish, Turkish
+- ✅ Unified user system replacing separate providers/supporters tables
+- ✅ Database migration to consolidated users table with dual role support
+- ✅ Updated authentication and profile management for unified system
+- ✅ Comprehensive translation keys for all user-facing content
+- ✅ Language switcher component with smooth locale transitions
+- ✅ Proper locale routing and middleware configuration
 
-### Phase 2: Not-for-Profit Transition (Weeks 9-16)
+#### ⏳ **Remaining Timeline**:
+- **Week 6**: Provider-supporter connections + satisfaction feedback system
+- **Week 7**: Email automation + service status tracking  
+- **Week 8**: Social sharing features + advanced reputation system
+- **Week 9**: Testing, optimization, production deployment
+
+### Phase 2: Not-for-Profit Transition (Weeks 10-17)
 - Legal structure transition
 - Mobile app development (React Native - separate repository)
 - Enhanced analytics and reporting
 - Grant applications
 
-### Phase 3: Charity Registration (Weeks 17-24)
+### Phase 3: Charity Registration (Weeks 18-25)
 - ACNC charity application
 - Platform scaling and optimization
 - Major funding applications
@@ -809,7 +869,7 @@ git push origin main  # Triggers automatic deployment to powered-by-donation
 4. **Aggregate statistics** - Show platform activity in totals only
 5. **Fixed pricing** - Services have exact donation amounts, not minimum or variable
 6. **Fixed layouts** - Consistent user experience, no customization
-7. **Simple schema** - Basic privacy toggles, no complex modularity
+7. **Unified user system** - Single users table supporting both provider and supporter roles
 8. **Donor-centric language** - Focus on charitable giving, not transactional service
 9. **JustGiving only** - Only registered charities allowed
 10. **Charity requirements** - Either "any charity" or "specific charities" options
@@ -822,6 +882,8 @@ git push origin main  # Triggers automatic deployment to powered-by-donation
 17. **Australian law** - Consider privacy and consumer protection
 18. **No payment processing** - We only facilitate, JustGiving handles payments
 19. **GitHub deployment** - All code changes via Git push, not manual deployment
+20. **Internationalization** - Use next-intl translation keys for all user-facing text
+21. **Multi-language support** - 12 languages supported with proper locale routing
 
 ### Never Suggest
 - Public donor names, persistent anonymous identities, or user tracking
@@ -834,6 +896,8 @@ git push origin main  # Triggers automatic deployment to powered-by-donation
 - Complex authentication beyond Supabase
 - Manual deployment commands (use Git push instead)
 - Non-JustGiving charities
+- Separate provider/supporter tables (use unified users table)
+- Hardcoded English text (use translation keys)
 
 ### Always Suggest
 - Anonymous public displays ("Someone donated $X")
@@ -853,6 +917,9 @@ git push origin main  # Triggers automatic deployment to powered-by-donation
 - Structured data for rich snippets
 - Performance optimizations
 - Accessibility improvements
+- Translation key usage with next-intl (t('key.path'))
+- Unified user system for both provider and supporter functionality
+- Proper locale-aware routing and navigation
 
 ## Contact & Support
 

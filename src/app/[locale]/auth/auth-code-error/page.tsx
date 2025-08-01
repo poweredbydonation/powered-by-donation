@@ -6,10 +6,16 @@ interface AuthCodeErrorProps {
   params: {
     locale: string
   }
+  searchParams: {
+    error?: string
+    error_description?: string
+    code?: string
+  }
 }
 
-export default async function AuthCodeError({ params }: AuthCodeErrorProps) {
+export default async function AuthCodeError({ params, searchParams }: AuthCodeErrorProps) {
   const { locale } = params
+  const { error, error_description, code } = searchParams
   const messages = await getMessages({ locale })
   return (
     <div className="min-h-screen bg-gray-50">
@@ -39,6 +45,16 @@ export default async function AuthCodeError({ params }: AuthCodeErrorProps) {
             <p className="mt-2 text-sm text-gray-600">
               Sorry, we couldn't process your authentication request. The link may have expired or been used already.
             </p>
+            
+            {/* Debug information */}
+            {(error || error_description || code) && (
+              <div className="mt-4 p-4 bg-gray-100 rounded-md text-left">
+                <h3 className="text-sm font-medium text-gray-900 mb-2">Debug Information:</h3>
+                {error && <p className="text-xs text-gray-600"><strong>Error:</strong> {error}</p>}
+                {error_description && <p className="text-xs text-gray-600"><strong>Description:</strong> {error_description}</p>}
+                {code && <p className="text-xs text-gray-600"><strong>Code:</strong> {code.substring(0, 20)}...</p>}
+              </div>
+            )}
           </div>
 
           <div className="mt-6">

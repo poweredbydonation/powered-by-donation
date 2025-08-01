@@ -27,20 +27,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const getSession = async () => {
-      const { data: { session }, error } = await supabase.auth.getSession()
-      if (error) {
-        console.error('Error getting session:', error)
-      } else {
-        setSession(session)
-        setUser(session?.user ?? null)
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession()
+        if (error) {
+          console.error('Error getting session:', error)
+          setSession(null)
+          setUser(null)
+        } else {
+          console.log('Initial session loaded:', session?.user?.email)
+          setSession(session)
+          setUser(session?.user ?? null)
+        }
+      } catch (error) {
+        console.error('Error in getSession:', error)
+        setSession(null)
+        setUser(null)
+      } finally {
+        setLoading(false)
       }
-      setLoading(false)
     }
 
     getSession()
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
+        console.log('Auth state change:', event, session?.user?.email)
         setSession(session)
         setUser(session?.user ?? null)
         setLoading(false)
@@ -69,10 +80,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signInWithGoogle = async () => {
     // Extract locale from current URL
     const locale = window.location.pathname.match(/^\/([a-z]{2})\//)?.[1] ?? 'en'
+    
+    // Determine the correct redirect URL based on environment
+    const isDevelopment = process.env.NODE_ENV === 'development' || window.location.hostname === 'localhost'
+    const redirectTo = isDevelopment 
+      ? `http://localhost:3000/auth/callback`
+      : `${window.location.origin}/auth/callback`
+    
+    console.log('OAuth redirect URL:', redirectTo)
+    
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
+        redirectTo,
         queryParams: {
           next: `/${locale}/dashboard`
         }
@@ -84,10 +104,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signInWithMicrosoft = async () => {
     // Extract locale from current URL
     const locale = window.location.pathname.match(/^\/([a-z]{2})\//)?.[1] ?? 'en'
+    
+    // Determine the correct redirect URL based on environment
+    const isDevelopment = process.env.NODE_ENV === 'development' || window.location.hostname === 'localhost'
+    const redirectTo = isDevelopment 
+      ? `http://localhost:3000/auth/callback`
+      : `${window.location.origin}/auth/callback`
+    
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'azure',
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
+        redirectTo,
         scopes: 'openid profile email',
         queryParams: {
           next: `/${locale}/dashboard`
@@ -100,10 +127,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signInWithGitHub = async () => {
     // Extract locale from current URL
     const locale = window.location.pathname.match(/^\/([a-z]{2})\//)?.[1] ?? 'en'
+    
+    // Determine the correct redirect URL based on environment
+    const isDevelopment = process.env.NODE_ENV === 'development' || window.location.hostname === 'localhost'
+    const redirectTo = isDevelopment 
+      ? `http://localhost:3000/auth/callback`
+      : `${window.location.origin}/auth/callback`
+    
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'github',
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
+        redirectTo,
         queryParams: {
           next: `/${locale}/dashboard`
         }
@@ -115,10 +149,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signInWithApple = async () => {
     // Extract locale from current URL
     const locale = window.location.pathname.match(/^\/([a-z]{2})\//)?.[1] ?? 'en'
+    
+    // Determine the correct redirect URL based on environment
+    const isDevelopment = process.env.NODE_ENV === 'development' || window.location.hostname === 'localhost'
+    const redirectTo = isDevelopment 
+      ? `http://localhost:3000/auth/callback`
+      : `${window.location.origin}/auth/callback`
+    
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'apple',
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
+        redirectTo,
         queryParams: {
           next: `/${locale}/dashboard`
         }

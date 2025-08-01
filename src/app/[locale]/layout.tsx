@@ -1,6 +1,7 @@
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { AuthProvider } from '@/context/AuthContext'
+import AuthDebug from '@/components/auth/AuthDebug'
 
 export default async function LocaleLayout({
   children,
@@ -17,6 +18,7 @@ export default async function LocaleLayout({
     <AuthProvider>
       <NextIntlClientProvider messages={messages}>
         {children}
+        <AuthDebug />
       </NextIntlClientProvider>
     </AuthProvider>
   );

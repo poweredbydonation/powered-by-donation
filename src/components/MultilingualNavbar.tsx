@@ -1,8 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
 import { Menu, X, ChevronDown } from 'lucide-react'
+import { useAuth } from '@/hooks/useAuth'
 
 interface MultilingualNavbarProps {
   locale: string
@@ -27,7 +28,22 @@ const languages = [
 export default function MultilingualNavbar({ locale, messages }: MultilingualNavbarProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isLangOpen, setIsLangOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
   const pathname = usePathname()
+  const { user, signOut, loading } = useAuth()
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  const handleSignOut = async () => {
+    try {
+      await signOut()
+      window.location.href = `/${locale}`
+    } catch (error) {
+      console.error('Error signing out:', error)
+    }
+  }
   
   const currentLang = languages.find(lang => lang.code === locale) || languages[0]
   const otherLangs = languages.filter(lang => lang.code !== locale)
@@ -57,19 +73,57 @@ export default function MultilingualNavbar({ locale, messages }: MultilingualNav
               {messages?.nav?.browse || 'Browse Services'}
             </a>
             
-            <a 
-              href={`/${locale}/dashboard`}
-              className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
-            >
-              {messages?.nav?.dashboard || 'Dashboard'}
-            </a>
+            {/* Authentication-aware navigation */}
+            {!mounted ? (
+              <div className="animate-pulse bg-gray-200 h-8 w-20 rounded"></div>
+            ) : loading ? (
+              <div className="animate-pulse bg-gray-200 h-8 w-20 rounded"></div>
+            ) : user ? (
+              <>
+                <a 
+                  href={`/${locale}/dashboard`}
+                  className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
+                >
+                  {messages?.nav?.dashboard || 'Dashboard'}
+                </a>
+                
+                <div className="flex items-center space-x-3">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                      <span className="text-sm font-medium text-blue-600">
+                        {user.email?.charAt(0).toUpperCase()}
+                      </span>
+                    </div>
+                    <span className="text-sm text-gray-700 hidden lg:block">
+                      {user.email}
+                    </span>
+                  </div>
+                  
+                  <button
+                    onClick={handleSignOut}
+                    className="bg-red-50 hover:bg-red-100 text-red-600 hover:text-red-700 px-3 py-1 rounded text-sm font-medium transition-colors"
+                  >
+                    {messages?.nav?.logout || 'Logout'}
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <a 
+                  href={`/${locale}/dashboard`}
+                  className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
+                >
+                  {messages?.nav?.dashboard || 'Dashboard'}
+                </a>
 
-            <a 
-              href={`/${locale}/login`}
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium"
-            >
-              {messages?.nav?.login || 'Login'}
-            </a>
+                <a 
+                  href={`/${locale}/login`}
+                  className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                >
+                  {messages?.nav?.login || 'Login'}
+                </a>
+              </>
+            )}
 
             {/* Language Dropdown */}
             <div className="relative">
@@ -128,13 +182,40 @@ export default function MultilingualNavbar({ locale, messages }: MultilingualNav
                 {messages?.nav?.dashboard || 'Dashboard'}
               </a>
 
-              <a 
-                href={`/${locale}/login`}
-                className="block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium text-center"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                {messages?.nav?.login || 'Login'}
-              </a>
+              {/* Mobile Authentication */}
+              {!mounted ? (
+                <div className="animate-pulse bg-gray-200 h-8 w-20 rounded"></div>
+              ) : loading ? (
+                <div className="animate-pulse bg-gray-200 h-8 w-20 rounded"></div>
+              ) : user ? (
+                <div className="border-t pt-4">
+                  <div className="flex items-center space-x-3 mb-3">
+                    <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                      <span className="text-sm font-medium text-blue-600">
+                        {user.email?.charAt(0).toUpperCase()}
+                      </span>
+                    </div>
+                    <span className="text-sm text-gray-700">{user.email}</span>
+                  </div>
+                  <button
+                    onClick={() => {
+                      handleSignOut()
+                      setIsMenuOpen(false)
+                    }}
+                    className="block w-full bg-red-50 hover:bg-red-100 text-red-600 hover:text-red-700 px-4 py-2 rounded-lg transition-colors font-medium text-center"
+                  >
+                    {messages?.nav?.logout || 'Logout'}
+                  </button>
+                </div>
+              ) : (
+                <a 
+                  href={`/${locale}/login`}
+                  className="block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium text-center"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {messages?.nav?.login || 'Login'}
+                </a>
+              )}
 
               {/* Mobile Language Selector */}
               <div className="border-t pt-4">
