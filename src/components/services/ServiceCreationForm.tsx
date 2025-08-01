@@ -1,10 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/hooks/useAuth'
 import { createClient } from '@/lib/supabase/client'
-import { CharityRequirementType, ServiceLocation } from '@/types/database'
+import { CharityRequirementType, ServiceLocation, Service } from '@/types/database'
 import CharitySelector from './CharitySelector'
 
 interface SelectedCharity {
@@ -14,7 +14,17 @@ interface SelectedCharity {
   logo_url?: string
 }
 
-export default function ServiceCreationForm() {
+interface ServiceCreationFormProps {
+  initialData?: Service
+  onSuccess?: () => void
+  mode?: 'create' | 'edit'
+}
+
+export default function ServiceCreationForm({ 
+  initialData, 
+  onSuccess, 
+  mode = 'create' 
+}: ServiceCreationFormProps) {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [donationAmount, setDonationAmount] = useState('')
@@ -36,6 +46,44 @@ export default function ServiceCreationForm() {
   const { user } = useAuth()
   const router = useRouter()
   const supabase = createClient()
+
+  // Initialize form with existing data when in edit mode
+  useEffect(() => {
+    if (initialData && mode === 'edit') {
+      setTitle(initialData.title || '')
+      setDescription(initialData.description || '')
+      setDonationAmount(initialData.donation_amount?.toString() || '')
+      setCharityRequirementType(initialData.charity_requirement_type || 'any_charity')
+      
+      // Handle dates
+      if (initialData.available_from) {
+        setAvailableFrom(new Date(initialData.available_from).toISOString().split('T')[0])
+      }
+      if (initialData.available_until) {
+        setAvailableUntil(new Date(initialData.available_until).toISOString().split('T')[0])
+      }
+      if (initialData.max_supporters) {
+        setMaxSupporters(initialData.max_supporters.toString())
+      }
+
+      // Handle preferred charities
+      if (initialData.preferred_charities && Array.isArray(initialData.preferred_charities)) {
+        setSelectedCharities(initialData.preferred_charities as SelectedCharity[])
+      }
+
+      // Handle service locations
+      if (initialData.service_locations && Array.isArray(initialData.service_locations)) {
+        const locations = initialData.service_locations as ServiceLocation[]
+        if (locations.length > 0) {
+          const firstLocation = locations[0]
+          setLocationType(firstLocation.type || 'remote')
+          setAddress(firstLocation.address || '')
+          setArea(firstLocation.area || '')
+          setRadius(firstLocation.radius?.toString() || '')
+        }
+      }
+    }
+  }, [initialData, mode])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -85,7 +133,7 @@ export default function ServiceCreationForm() {
 
       // Prepare service data
       const serviceData = {
-        user_id: user.id,
+        ...(mode === 'create' && { user_id: user.id }),
         title: title.trim(),
         description: description.trim() || null,
         donation_amount: parseFloat(donationAmount),
@@ -95,23 +143,43 @@ export default function ServiceCreationForm() {
         available_until: availableUntil || null,
         max_supporters: maxSupporters ? parseInt(maxSupporters) : null,
         service_locations: [serviceLocation],
-        show_in_directory: true,
-        is_active: true,
+        ...(mode === 'create' && { 
+          show_in_directory: true,
+          is_active: true 
+        }),
       }
 
-      const { error: insertError } = await supabase
-        .from('services')
-        .insert([serviceData])
+      if (mode === 'edit' && initialData) {
+        // Update existing service
+        const { error: updateError } = await supabase
+          .from('services')
+          .update(serviceData)
+          .eq('id', initialData.id)
+          .eq('user_id', user.id) // Ensure user owns this service
 
-      if (insertError) {
-        throw insertError
+        if (updateError) {
+          throw updateError
+        }
+      } else {
+        // Create new service
+        const { error: insertError } = await supabase
+          .from('services')
+          .insert([serviceData])
+
+        if (insertError) {
+          throw insertError
+        }
       }
 
-      // Redirect to services dashboard
-      router.push('/dashboard/services')
+      // Call success callback or redirect
+      if (onSuccess) {
+        onSuccess()
+      } else {
+        router.push('/dashboard/services')
+      }
     } catch (err) {
-      console.error('Service creation error:', err)
-      setError(err instanceof Error ? err.message : 'Failed to create service')
+      console.error(`Service ${mode} error:`, err)
+      setError(err instanceof Error ? err.message : `Failed to ${mode} service`)
     } finally {
       setLoading(false)
     }
@@ -418,7 +486,10 @@ export default function ServiceCreationForm() {
           disabled={loading}
           className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
         >
-          {loading ? 'Creating...' : 'Create Service'}
+          {loading 
+            ? (mode === 'edit' ? 'Updating...' : 'Creating...') 
+            : (mode === 'edit' ? 'Update Service' : 'Create Service')
+          }
         </button>
       </div>
     </form>

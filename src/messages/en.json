@@ -81,6 +81,9 @@
     "provider_section": {
       "title": "As a Provider",
       "create_service": "Create Service",
+      "update_service": "Update Service",
+      "creating": "Creating...",
+      "updating": "Updating...",
       "manage_services": "Manage Services",
       "view_requests": "View Requests"
     },

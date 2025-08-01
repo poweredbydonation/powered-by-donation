@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { useParams } from 'next/navigation'
 import AuthGuard from '@/components/auth/AuthGuard'
 import Navbar from '@/components/Navbar'
 import { useAuth } from '@/hooks/useAuth'
@@ -20,7 +21,14 @@ export default function ServicesPage() {
   const [error, setError] = useState<string | null>(null)
   
   const { user } = useAuth()
+  const params = useParams()
+  const locale = params.locale as string
   const supabase = createClient()
+
+  // Generate slug from service title
+  const generateSlug = (title: string): string => {
+    return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
+  }
 
   useEffect(() => {
     async function fetchUserServices() {
@@ -117,7 +125,7 @@ export default function ServicesPage() {
                 </p>
               </div>
               <Link
-                href="/dashboard/services/create"
+                href={`/${locale}/dashboard/services/create`}
                 className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 font-medium"
               >
                 Create New Service
@@ -173,7 +181,7 @@ export default function ServicesPage() {
                   Create your first service to start connecting with supporters and helping charities.
                 </p>
                 <Link
-                  href="/dashboard/services/create"
+                  href={`/${locale}/dashboard/services/create`}
                   className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200"
                 >
                   Create Your First Service
@@ -247,12 +255,18 @@ export default function ServicesPage() {
                         </div>
 
                         <div className="flex items-center space-x-2 ml-4">
-                          <button className="text-blue-600 hover:text-blue-700 text-sm font-medium">
+                          <Link 
+                            href={`/${locale}/dashboard/services/edit/${service.id}`}
+                            className="text-blue-600 hover:text-blue-700 text-sm font-medium"
+                          >
                             Edit
-                          </button>
-                          <button className="text-gray-400 hover:text-gray-600 text-sm font-medium">
+                          </Link>
+                          <Link 
+                            href={`/${locale}/services/${generateSlug(service.title)}`}
+                            className="text-gray-400 hover:text-gray-600 text-sm font-medium"
+                          >
                             View
-                          </button>
+                          </Link>
                         </div>
                       </div>
                     </div>
