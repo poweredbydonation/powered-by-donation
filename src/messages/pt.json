@@ -66,6 +66,51 @@
     "becomeSupporter": "Tornar-se Apoiador",
     "supporterOffer": "Apoie serviços e instituições de caridade",
     "enableSupporterRole": "Ativar Função de Apoiador",
+    "services": {
+      "title": "Meus Serviços",
+      "subtitle": "Gerencie suas ofertas de serviços e acompanhe o engajamento dos apoiadores",
+      "create_service": "Criar Novo Serviço",
+      "create_first_service": "Criar Seu Primeiro Serviço",
+      "edit": "Editar",
+      "view": "Visualizar",
+      "loading": {
+        "title": "Carregando serviços..."
+      },
+      "errors": {
+        "title": "Erro ao carregar serviços",
+        "load_failed": "Falha ao carregar seus serviços. Tente novamente mais tarde."
+      },
+      "empty": {
+        "title": "Ainda não há serviços",
+        "description": "Crie seu primeiro serviço para começar a se conectar com apoiadores e ajudar instituições de caridade."
+      },
+      "status": {
+        "active": "Ativo",
+        "inactive": "Inativo",
+        "upcoming": "Próximo",
+        "expired": "Expirado",
+        "full": "Lotado"
+      },
+      "fields": {
+        "donation": "Doação",
+        "location": "Localização",
+        "charity": "Instituição de Caridade",
+        "capacity": "Capacidade"
+      },
+      "location": {
+        "remote": "Remoto",
+        "hybrid": "Híbrido",
+        "physical": "Presencial",
+        "tbd": "Localização a definir"
+      },
+      "charity": {
+        "any_charity": "Qualquer instituição de caridade",
+        "specific_charities": "Instituições de caridade específicas"
+      },
+      "availability": {
+        "starts": "Inicia"
+      }
+    },
     "accountSettings": "Configurações da Conta",
     "accountDescription": "Gerencie suas preferências de conta",
     "editProfile": "Editar Perfil",

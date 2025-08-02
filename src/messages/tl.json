@@ -7,7 +7,7 @@
     "login": "Mag-login",
     "logout": "Mag-logout",
     "profile": "Profile",
-    "tagline": "Platform ng serbisyo para sa donasyon"
+    "tagline": ""
   },
   "home": {
     "title": "Powered by Donation",
@@ -66,6 +66,51 @@
     "becomeSupporter": "Maging Supporter",
     "supporterOffer": "Sumuporta sa mga serbisyo at charity",
     "enableSupporterRole": "I-enable ang Supporter Role",
+    "services": {
+      "title": "Aking mga Serbisyo",
+      "subtitle": "I-manage ang inyong mga alok na serbisyo at i-track ang supporter engagement",
+      "create_service": "Lumikha ng Bagong Serbisyo",
+      "create_first_service": "Lumikha ng Inyong Unang Serbisyo",
+      "edit": "I-edit",
+      "view": "Tingnan",
+      "loading": {
+        "title": "Naglo-load ng mga serbisyo..."
+      },
+      "errors": {
+        "title": "Error sa pag-load ng mga serbisyo",
+        "load_failed": "Hindi na-load ang inyong mga serbisyo. Subukan ulit mamaya."
+      },
+      "empty": {
+        "title": "Walang mga serbisyo pa",
+        "description": "Lumikha ng inyong unang serbisyo upang magsimulang makipag-ugnayan sa mga supporter at makatulong sa mga charity."
+      },
+      "status": {
+        "active": "Aktibo",
+        "inactive": "Hindi aktibo",
+        "upcoming": "Paparating",
+        "expired": "Nag-expire na",
+        "full": "Puno na"
+      },
+      "fields": {
+        "donation": "Donasyon",
+        "location": "Lokasyon",
+        "charity": "Charity",
+        "capacity": "Kapasidad"
+      },
+      "location": {
+        "remote": "Remote",
+        "hybrid": "Hybrid",
+        "physical": "Personal",
+        "tbd": "Lokasyon TBD"
+      },
+      "charity": {
+        "any_charity": "Kahit anong charity",
+        "specific_charities": "Mga tukoy na charity"
+      },
+      "availability": {
+        "starts": "Nagsisimula"
+      }
+    },
     "accountSettings": "Account Settings",
     "accountDescription": "I-manage ang inyong account preferences",
     "editProfile": "I-edit ang Profile",

@@ -66,6 +66,51 @@
     "becomeSupporter": "Devenir Supporteur",
     "supporterOffer": "Soutenir des services et des œuvres caritatives",
     "enableSupporterRole": "Activer le Rôle de Supporteur",
+    "services": {
+      "title": "Mes Services",
+      "subtitle": "Gérez vos offres de services et suivez l'engagement des supporteurs",
+      "create_service": "Créer un Nouveau Service",
+      "create_first_service": "Créer Votre Premier Service",
+      "edit": "Modifier",
+      "view": "Voir",
+      "loading": {
+        "title": "Chargement des services..."
+      },
+      "errors": {
+        "title": "Erreur lors du chargement des services",
+        "load_failed": "Impossible de charger vos services. Veuillez réessayer plus tard."
+      },
+      "empty": {
+        "title": "Aucun service pour le moment",
+        "description": "Créez votre premier service pour commencer à vous connecter avec les supporteurs et aider les œuvres caritatives."
+      },
+      "status": {
+        "active": "Actif",
+        "inactive": "Inactif",
+        "upcoming": "À venir",
+        "expired": "Expiré",
+        "full": "Complet"
+      },
+      "fields": {
+        "donation": "Don",
+        "location": "Localisation",
+        "charity": "Œuvre Caritative",
+        "capacity": "Capacité"
+      },
+      "location": {
+        "remote": "À distance",
+        "hybrid": "Hybride",
+        "physical": "Physique",
+        "tbd": "Localisation à déterminer"
+      },
+      "charity": {
+        "any_charity": "N'importe quelle œuvre caritative",
+        "specific_charities": "Œuvres caritatives spécifiques"
+      },
+      "availability": {
+        "starts": "Commence"
+      }
+    },
     "accountSettings": "Paramètres du Compte",
     "accountDescription": "Gérez vos préférences de compte",
     "editProfile": "Modifier le Profil",

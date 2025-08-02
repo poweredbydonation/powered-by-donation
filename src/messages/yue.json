@@ -66,6 +66,51 @@
     "becomeSupporter": "成為支持者",
     "supporterOffer": "支持服務同慈善機構",
     "enableSupporterRole": "啟用支持者角色",
+    "services": {
+      "title": "我嘅服務",
+      "subtitle": "管理你嘅服務提供同追蹤支持者參與",
+      "create_service": "建立新服務",
+      "create_first_service": "建立你嘅第一個服務",
+      "edit": "編輯",
+      "view": "查看",
+      "loading": {
+        "title": "載入服務緊..."
+      },
+      "errors": {
+        "title": "載入服務錯誤",
+        "load_failed": "載入你嘅服務失敗。請稍後再試。"
+      },
+      "empty": {
+        "title": "暫時冇服務",
+        "description": "建立你嘅第一個服務開始同支持者連結並幫助慈善機構。"
+      },
+      "status": {
+        "active": "活躍",
+        "inactive": "非活躍",
+        "upcoming": "即將開始",
+        "expired": "已過期",
+        "full": "已滿"
+      },
+      "fields": {
+        "donation": "捐款",
+        "location": "位置",
+        "charity": "慈善機構",
+        "capacity": "容量"
+      },
+      "location": {
+        "remote": "遠程",
+        "hybrid": "混合",
+        "physical": "實體",
+        "tbd": "位置待定"
+      },
+      "charity": {
+        "any_charity": "任何慈善機構",
+        "specific_charities": "特定慈善機構"
+      },
+      "availability": {
+        "starts": "開始"
+      }
+    },
     "accountSettings": "帳戶設定",
     "accountDescription": "管理你嘅帳戶偏好",
     "editProfile": "編輯個人檔案",

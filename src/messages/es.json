@@ -38,7 +38,8 @@
       "someone_donated": "Alguien donó",
       "via_service": "vía",
       "hours_ago": "hace horas",
-      "minutes_ago": "hace minutos"
+      "minutes_ago": "hace minutos",
+      "days_ago": "hace días"
     }
   },
   "dashboard": {
@@ -65,6 +66,51 @@
     "becomeSupporter": "Convertirse en Partidario",
     "supporterOffer": "Apoya servicios y organizaciones benéficas",
     "enableSupporterRole": "Activar Rol de Partidario",
+    "services": {
+      "title": "Mis Servicios",
+      "subtitle": "Gestiona tus ofertas de servicios y rastrea la participación de partidarios",
+      "create_service": "Crear Nuevo Servicio",
+      "create_first_service": "Crear Tu Primer Servicio",
+      "edit": "Editar",
+      "view": "Ver",
+      "loading": {
+        "title": "Cargando servicios..."
+      },
+      "errors": {
+        "title": "Error cargando servicios",
+        "load_failed": "Error al cargar tus servicios. Por favor intenta de nuevo más tarde."
+      },
+      "empty": {
+        "title": "Aún no hay servicios",
+        "description": "Crea tu primer servicio para comenzar a conectarte con partidarios y ayudar a organizaciones benéficas."
+      },
+      "status": {
+        "active": "Activo",
+        "inactive": "Inactivo",
+        "upcoming": "Próximo",
+        "expired": "Expirado",
+        "full": "Completo"
+      },
+      "fields": {
+        "donation": "Donación",
+        "location": "Ubicación",
+        "charity": "Organización Benéfica",
+        "capacity": "Capacidad"
+      },
+      "location": {
+        "remote": "Remoto",
+        "hybrid": "Híbrido",
+        "physical": "Físico",
+        "tbd": "Ubicación por determinar"
+      },
+      "charity": {
+        "any_charity": "Cualquier organización benéfica",
+        "specific_charities": "Organizaciones benéficas específicas"
+      },
+      "availability": {
+        "starts": "Comienza"
+      }
+    },
     "accountSettings": "Configuración de Cuenta",
     "accountDescription": "Gestiona las preferencias de tu cuenta",
     "editProfile": "Editar Perfil",
@@ -82,6 +128,9 @@
     "provider_section": {
       "title": "Como Proveedor",
       "create_service": "Crear Servicio",
+      "update_service": "Actualizar Servicio",
+      "creating": "Creando...",
+      "updating": "Actualizando...",
       "manage_services": "Gestionar Servicios",
       "view_requests": "Ver Solicitudes"
     },
@@ -303,5 +352,29 @@
     "vi": "Tiếng Việt",
     "yue": "粵語",
     "zh": "中文"
+  },
+  "deleteProfile": {
+    "title": "Eliminar Perfil",
+    "description": "Esto eliminará permanentemente tu perfil y todos los datos asociados. Esta acción no se puede deshacer.",
+    "providerWarning": "⚠️ Como proveedor, esto también eliminará todos tus servicios e historial de servicios.",
+    "supporterWarning": "⚠️ Como partidario, esto eliminará tu historial de donaciones y solicitudes de servicios.",
+    "deleteButton": "Eliminar Perfil",
+    "confirmTitle": "Confirmar Eliminación de Perfil",
+    "confirmDescription": "¿Estás seguro de que quieres eliminar tu perfil para \"{name}\"? Esta acción es permanente y:",
+    "confirmList": {
+      "deleteInfo": "Eliminará la información de tu perfil",
+      "removeServices": "Eliminará todos tus servicios",
+      "deleteHistory": "Eliminará tu historial de donaciones",
+      "signOut": "Te desconectará de la plataforma",
+      "cannotUndo": "No se puede deshacer"
+    },
+    "confirmButton": "Sí, Eliminar Mi Perfil",
+    "deleting": "Eliminando...",
+    "cancel": "Cancelar",
+    "errors": {
+      "activeServices": "No puedes eliminar tu perfil mientras tengas servicios activos. Por favor desactiva todos los servicios primero.",
+      "activeRequests": "No puedes eliminar tu perfil mientras tengas solicitudes de servicios activas o donaciones pendientes. Contacta al soporte si necesitas asistencia.",
+      "deleteFailed": "Error al eliminar el perfil"
+    }
   }
 }

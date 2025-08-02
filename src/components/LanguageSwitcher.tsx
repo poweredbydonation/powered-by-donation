@@ -2,14 +2,13 @@
 
 import { useState } from 'react'
 import { useLocale, useTranslations } from 'next-intl'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import { LANGUAGES, getLanguageByCode } from '@/config/languages'
 
 export default function LanguageSwitcher() {
   const [isOpen, setIsOpen] = useState(false)
   const locale = useLocale()
   const pathname = usePathname()
-  const router = useRouter()
   const t = useTranslations('language')
 
   // Build languages array with translations
@@ -21,11 +20,12 @@ export default function LanguageSwitcher() {
   const currentLanguage = languages.find(lang => lang.code === locale) || languages[0]
 
   const handleLanguageChange = (newLocale: string) => {
-    // Remove current locale from pathname and add new locale
+    // Use the same logic as MultilingualNavbar
     const pathWithoutLocale = pathname.replace(`/${locale}`, '') || '/'
     const newPath = `/${newLocale}${pathWithoutLocale === '/' ? '' : pathWithoutLocale}`
     
-    router.push(newPath)
+    // Use the same navigation approach as MultilingualNavbar  
+    window.location.href = newPath
     setIsOpen(false)
   }
 

@@ -7,7 +7,7 @@
     "login": "Đăng nhập",
     "logout": "Đăng xuất",
     "profile": "Hồ sơ",
-    "tagline": "Nền tảng dịch vụ quyên góp"
+    "tagline": ""
   },
   "home": {
     "title": "Powered by Donation",
@@ -66,6 +66,51 @@
     "becomeSupporter": "Trở thành người ủng hộ",
     "supporterOffer": "Hỗ trợ dịch vụ và tổ chức từ thiện",
     "enableSupporterRole": "Kích hoạt vai trò người ủng hộ",
+    "services": {
+      "title": "Dịch vụ của tôi",
+      "subtitle": "Quản lý các dịch vụ bạn cung cấp và theo dõi sự tương tác của người ủng hộ",
+      "create_service": "Tạo dịch vụ mới",
+      "create_first_service": "Tạo dịch vụ đầu tiên của bạn",
+      "edit": "Chỉnh sửa",
+      "view": "Xem",
+      "loading": {
+        "title": "Đang tải dịch vụ..."
+      },
+      "errors": {
+        "title": "Lỗi khi tải dịch vụ",
+        "load_failed": "Không thể tải dịch vụ của bạn. Vui lòng thử lại sau."
+      },
+      "empty": {
+        "title": "Chưa có dịch vụ nào",
+        "description": "Tạo dịch vụ đầu tiên để bắt đầu kết nối với người ủng hộ và giúp đỡ các tổ chức từ thiện."
+      },
+      "status": {
+        "active": "Hoạt động",
+        "inactive": "Không hoạt động",
+        "upcoming": "Sắp tới",
+        "expired": "Đã hết hạn",
+        "full": "Đã đầy"
+      },
+      "fields": {
+        "donation": "Quyên góp",
+        "location": "Vị trí",
+        "charity": "Tổ chức từ thiện",
+        "capacity": "Sức chứa"
+      },
+      "location": {
+        "remote": "Từ xa",
+        "hybrid": "Kết hợp",
+        "physical": "Trực tiếp",
+        "tbd": "Vị trí sẽ được xác định"
+      },
+      "charity": {
+        "any_charity": "Bất kỳ tổ chức từ thiện nào",
+        "specific_charities": "Các tổ chức từ thiện cụ thể"
+      },
+      "availability": {
+        "starts": "Bắt đầu"
+      }
+    },
     "accountSettings": "Cài đặt tài khoản",
     "accountDescription": "Quản lý tùy chọn tài khoản của bạn",
     "editProfile": "Chỉnh sửa hồ sơ",

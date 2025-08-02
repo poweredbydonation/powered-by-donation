@@ -17,6 +17,10 @@ export default function MultilingualNavbar({ locale, messages }: MultilingualNav
   const [mounted, setMounted] = useState(false)
   const pathname = usePathname()
   const { user, signOut, loading } = useAuth()
+  
+  console.log('=== MULTILINGUAL NAVBAR DEBUG ===')
+  console.log('MultilingualNavbar received locale prop:', locale)
+  console.log('MultilingualNavbar pathname:', pathname)
 
   useEffect(() => {
     setMounted(true)
@@ -36,7 +40,26 @@ export default function MultilingualNavbar({ locale, messages }: MultilingualNav
   
   // Get the path without the locale prefix
   const getPathWithoutLocale = () => {
-    return pathname.replace(`/${locale}`, '') || '/'
+    console.log('MultilingualNavbar - pathname:', pathname)
+    console.log('MultilingualNavbar - locale:', locale)
+    
+    // Remove the current locale from the beginning of the pathname
+    // Handle both cases: with and without leading slash
+    let pathWithoutLocale = pathname
+    if (pathWithoutLocale.startsWith(`/${locale}`)) {
+      pathWithoutLocale = pathWithoutLocale.substring(`/${locale}`.length)
+    }
+    
+    // Ensure we always have a leading slash or default to '/'
+    if (!pathWithoutLocale.startsWith('/')) {
+      pathWithoutLocale = pathWithoutLocale || '/'
+    }
+    if (pathWithoutLocale === '') {
+      pathWithoutLocale = '/'
+    }
+    
+    console.log('MultilingualNavbar - getPathWithoutLocale result:', pathWithoutLocale)
+    return pathWithoutLocale
   }
 
   return (

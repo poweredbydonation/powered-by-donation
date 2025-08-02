@@ -66,6 +66,51 @@
     "becomeSupporter": "Become a Supporter",
     "supporterOffer": "Support services and charities",
     "enableSupporterRole": "Enable Supporter Role",
+    "services": {
+      "title": "My Services",
+      "subtitle": "Manage your service offerings and track supporter engagement",
+      "create_service": "Create New Service",
+      "create_first_service": "Create Your First Service",
+      "edit": "Edit",
+      "view": "View",
+      "loading": {
+        "title": "Loading services..."
+      },
+      "errors": {
+        "title": "Error loading services",
+        "load_failed": "Failed to load your services. Please try again later."
+      },
+      "empty": {
+        "title": "No services yet",
+        "description": "Create your first service to start connecting with supporters and helping charities."
+      },
+      "status": {
+        "active": "Active",
+        "inactive": "Inactive",
+        "upcoming": "Upcoming",
+        "expired": "Expired",
+        "full": "Full"
+      },
+      "fields": {
+        "donation": "Donation",
+        "location": "Location",
+        "charity": "Charity",
+        "capacity": "Capacity"
+      },
+      "location": {
+        "remote": "Remote",
+        "hybrid": "Hybrid",
+        "physical": "Physical",
+        "tbd": "Location TBD"
+      },
+      "charity": {
+        "any_charity": "Any charity",
+        "specific_charities": "Specific charities"
+      },
+      "availability": {
+        "starts": "Starts"
+      }
+    },
     "accountSettings": "Account Settings",
     "accountDescription": "Manage your account preferences",
     "editProfile": "Edit Profile",

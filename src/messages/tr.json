@@ -66,6 +66,51 @@
     "becomeSupporter": "Destekçi Olun",
     "supporterOffer": "Hizmetleri destekleyin ve hayır kurumlarına yardım edin",
     "enableSupporterRole": "Destekçi Rolünü Etkinleştir",
+    "services": {
+      "title": "Hizmetlerim",
+      "subtitle": "Hizmet tekliflerinizi yönetin ve destekçi katılımını takip edin",
+      "create_service": "Yeni Hizmet Oluştur",
+      "create_first_service": "İlk Hizmetinizi Oluşturun",
+      "edit": "Düzenle",
+      "view": "Görüntüle",
+      "loading": {
+        "title": "Hizmetler yükleniyor..."
+      },
+      "errors": {
+        "title": "Hizmetler yüklenirken hata",
+        "load_failed": "Hizmetleriniz yüklenemedi. Lütfen daha sonra tekrar deneyin."
+      },
+      "empty": {
+        "title": "Henüz hizmet yok",
+        "description": "Destekçilerle bağlantı kurmaya ve hayır kurumlarına yardım etmeye başlamak için ilk hizmetinizi oluşturun."
+      },
+      "status": {
+        "active": "Aktif",
+        "inactive": "Pasif",
+        "upcoming": "Yaklaşan",
+        "expired": "Süresi Dolmuş",
+        "full": "Dolu"
+      },
+      "fields": {
+        "donation": "Bağış",
+        "location": "Konum",
+        "charity": "Hayır Kurumu",
+        "capacity": "Kapasite"
+      },
+      "location": {
+        "remote": "Uzaktan",
+        "hybrid": "Hibrit",
+        "physical": "Fiziksel",
+        "tbd": "Konum Belirlenecek"
+      },
+      "charity": {
+        "any_charity": "Herhangi bir hayır kurumu",
+        "specific_charities": "Belirli hayır kurumları"
+      },
+      "availability": {
+        "starts": "Başlar"
+      }
+    },
     "accountSettings": "Hesap Ayarları",
     "accountDescription": "Hesap tercihlerinizi yönetin",
     "editProfile": "Profili Düzenle",

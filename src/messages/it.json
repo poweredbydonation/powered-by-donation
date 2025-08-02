@@ -1,9 +1,9 @@
 {
   "nav": {
-    "home": "Home",
+    "home": "Inizio",
     "browse": "Esplora Servizi",
     "search": "Cerca",
-    "dashboard": "Dashboard",
+    "dashboard": "Pannello di Controllo",
     "login": "Accedi",
     "logout": "Esci",
     "profile": "Profilo",
@@ -43,7 +43,7 @@
     }
   },
   "dashboard": {
-    "title": "Dashboard",
+    "title": "Pannello di Controllo",
     "welcome": "Bentornato",
     "profileReady": "Il tuo profilo è configurato e pronto.",
     "completeProfile": "Completa il tuo profilo per iniziare.",
@@ -52,20 +52,65 @@
     "getStarted": "Inizia",
     "setupPrompt": "Configura il tuo profilo per iniziare a utilizzare Powered by Donation:",
     "createProfile": "Crea il Tuo Profilo",
-    "providerDashboard": "Dashboard Fornitore",
+    "providerDashboard": "Pannello Fornitore",
     "providerDescription": "Gestisci i tuoi servizi e donazioni",
     "manageServices": "Gestisci Servizi",
     "createNewService": "Crea Nuovo Servizio",
     "becomeProvider": "Diventa Fornitore",
     "providerOffer": "Offri servizi e supporta enti di beneficenza",
     "enableProviderRole": "Attiva Ruolo Fornitore",
-    "supporterDashboard": "Dashboard Sostenitore",
+    "supporterDashboard": "Pannello Sostenitore",
     "supporterDescription": "Tieni traccia delle tue donazioni e impatto",
     "myDonations": "Le Mie Donazioni",
     "browseServices": "Esplora Servizi",
     "becomeSupporter": "Diventa Sostenitore",
     "supporterOffer": "Supporta servizi ed enti di beneficenza",
     "enableSupporterRole": "Attiva Ruolo Sostenitore",
+    "services": {
+      "title": "I Miei Servizi",
+      "subtitle": "Gestisci le tue offerte di servizi e tieni traccia del coinvolgimento dei sostenitori",
+      "create_service": "Crea Nuovo Servizio",
+      "create_first_service": "Crea il Tuo Primo Servizio",
+      "edit": "Modifica",
+      "view": "Visualizza",
+      "loading": {
+        "title": "Caricamento servizi..."
+      },
+      "errors": {
+        "title": "Errore nel caricamento dei servizi",
+        "load_failed": "Impossibile caricare i tuoi servizi. Riprova più tardi."
+      },
+      "empty": {
+        "title": "Nessun servizio ancora",
+        "description": "Crea il tuo primo servizio per iniziare a collegarti con i sostenitori e aiutare gli enti di beneficenza."
+      },
+      "status": {
+        "active": "Attivo",
+        "inactive": "Inattivo",
+        "upcoming": "Prossimo",
+        "expired": "Scaduto",
+        "full": "Completo"
+      },
+      "fields": {
+        "donation": "Donazione",
+        "location": "Posizione",
+        "charity": "Ente di Beneficenza",
+        "capacity": "Capacità"
+      },
+      "location": {
+        "remote": "Remoto",
+        "hybrid": "Ibrido",
+        "physical": "Fisico",
+        "tbd": "Posizione da definire"
+      },
+      "charity": {
+        "any_charity": "Qualsiasi ente di beneficenza",
+        "specific_charities": "Enti di beneficenza specifici"
+      },
+      "availability": {
+        "starts": "Inizia"
+      }
+    },
     "accountSettings": "Impostazioni Account",
     "accountDescription": "Gestisci le preferenze del tuo account",
     "editProfile": "Modifica Profilo",

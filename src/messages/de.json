@@ -3,7 +3,7 @@
     "home": "Startseite",
     "browse": "Services Durchsuchen",
     "search": "Suchen",
-    "dashboard": "Dashboard",
+    "dashboard": "Übersicht",
     "login": "Anmelden",
     "logout": "Abmelden",
     "profile": "Profil",
@@ -43,7 +43,7 @@
     }
   },
   "dashboard": {
-    "title": "Dashboard",
+    "title": "Übersicht",
     "welcome": "Willkommen zurück",
     "profileReady": "Ihr Profil ist eingerichtet und einsatzbereit.",
     "completeProfile": "Vervollständigen Sie Ihr Profil, um zu beginnen.",
@@ -52,20 +52,65 @@
     "getStarted": "Loslegen",
     "setupPrompt": "Richten Sie Ihr Profil ein, um Powered by Donation zu nutzen:",
     "createProfile": "Ihr Profil Erstellen",
-    "providerDashboard": "Anbieter-Dashboard",
+    "providerDashboard": "Anbieter-Übersicht",
     "providerDescription": "Verwalten Sie Ihre Services und Spenden",
     "manageServices": "Services Verwalten",
     "createNewService": "Neuen Service Erstellen",
     "becomeProvider": "Anbieter Werden",
     "providerOffer": "Services anbieten und Wohltätigkeitsorganisationen unterstützen",
     "enableProviderRole": "Anbieter-Rolle Aktivieren",
-    "supporterDashboard": "Unterstützer-Dashboard",
+    "supporterDashboard": "Unterstützer-Übersicht",
     "supporterDescription": "Verfolgen Sie Ihre Spenden und Ihren Einfluss",
     "myDonations": "Meine Spenden",
     "browseServices": "Services Durchsuchen",
     "becomeSupporter": "Unterstützer Werden",
     "supporterOffer": "Services und Wohltätigkeitsorganisationen unterstützen",
     "enableSupporterRole": "Unterstützer-Rolle Aktivieren",
+    "services": {
+      "title": "Meine Services",
+      "subtitle": "Verwalten Sie Ihre Service-Angebote und verfolgen Sie das Engagement der Unterstützer",
+      "create_service": "Neuen Service Erstellen",
+      "create_first_service": "Ihren Ersten Service Erstellen",
+      "edit": "Bearbeiten",
+      "view": "Anzeigen",
+      "loading": {
+        "title": "Services werden geladen..."
+      },
+      "errors": {
+        "title": "Fehler beim Laden der Services",
+        "load_failed": "Fehler beim Laden Ihrer Services. Bitte versuchen Sie es später erneut."
+      },
+      "empty": {
+        "title": "Noch keine Services",
+        "description": "Erstellen Sie Ihren ersten Service, um mit Unterstützern in Kontakt zu treten und Wohltätigkeitsorganisationen zu helfen."
+      },
+      "status": {
+        "active": "Aktiv",
+        "inactive": "Inaktiv",
+        "upcoming": "Bevorstehend",
+        "expired": "Abgelaufen",
+        "full": "Ausgebucht"
+      },
+      "fields": {
+        "donation": "Spende",
+        "location": "Standort",
+        "charity": "Wohltätigkeitsorganisation",
+        "capacity": "Kapazität"
+      },
+      "location": {
+        "remote": "Remote",
+        "hybrid": "Hybrid",
+        "physical": "Physisch",
+        "tbd": "Standort steht noch aus"
+      },
+      "charity": {
+        "any_charity": "Jede Wohltätigkeitsorganisation",
+        "specific_charities": "Bestimmte Wohltätigkeitsorganisationen"
+      },
+      "availability": {
+        "starts": "Beginnt"
+      }
+    },
     "accountSettings": "Kontoeinstellungen",
     "accountDescription": "Verwalten Sie Ihre Kontopräferenzen",
     "editProfile": "Profil Bearbeiten",

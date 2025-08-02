@@ -66,6 +66,51 @@
     "becomeSupporter": "サポーターになる",
     "supporterOffer": "サービスとチャリティーをサポート",
     "enableSupporterRole": "サポーターロールを有効にする",
+    "services": {
+      "title": "マイサービス",
+      "subtitle": "サービス提供を管理し、サポーターの参加を追跡",
+      "create_service": "新しいサービスを作成",
+      "create_first_service": "最初のサービスを作成",
+      "edit": "編集",
+      "view": "表示",
+      "loading": {
+        "title": "サービス読み込み中..."
+      },
+      "errors": {
+        "title": "サービス読み込みエラー",
+        "load_failed": "サービスの読み込みに失敗しました。後でもう一度お試しください。"
+      },
+      "empty": {
+        "title": "まだサービスがありません",
+        "description": "サポーターとのつながりを始め、チャリティーを支援するために最初のサービスを作成しましょう。"
+      },
+      "status": {
+        "active": "アクティブ",
+        "inactive": "非アクティブ",
+        "upcoming": "開始予定",
+        "expired": "期限切れ",
+        "full": "満員"
+      },
+      "fields": {
+        "donation": "寄付",
+        "location": "場所",
+        "charity": "チャリティー",
+        "capacity": "定員"
+      },
+      "location": {
+        "remote": "リモート",
+        "hybrid": "ハイブリッド",
+        "physical": "対面",
+        "tbd": "場所未定"
+      },
+      "charity": {
+        "any_charity": "任意のチャリティー",
+        "specific_charities": "特定のチャリティー"
+      },
+      "availability": {
+        "starts": "開始"
+      }
+    },
     "accountSettings": "アカウント設定",
     "accountDescription": "アカウントの設定を管理",
     "editProfile": "プロフィール編集",

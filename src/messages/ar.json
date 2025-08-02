@@ -66,6 +66,51 @@
     "becomeSupporter": "كن داعماً",
     "supporterOffer": "ادعم الخدمات والجمعيات الخيرية",
     "enableSupporterRole": "تفعيل دور الداعم",
+    "services": {
+      "title": "خدماتي",
+      "subtitle": "إدارة عروض الخدمات الخاصة بك وتتبع مشاركة الداعمين",
+      "create_service": "إنشاء خدمة جديدة",
+      "create_first_service": "أنشئ خدمتك الأولى",
+      "edit": "تعديل",
+      "view": "عرض",
+      "loading": {
+        "title": "جاري تحميل الخدمات..."
+      },
+      "errors": {
+        "title": "خطأ في تحميل الخدمات",
+        "load_failed": "فشل في تحميل خدماتك. يرجى المحاولة مرة أخرى لاحقاً."
+      },
+      "empty": {
+        "title": "لا توجد خدمات بعد",
+        "description": "أنشئ خدمتك الأولى لبدء التواصل مع الداعمين ومساعدة الجمعيات الخيرية."
+      },
+      "status": {
+        "active": "نشط",
+        "inactive": "غير نشط",
+        "upcoming": "قادم",
+        "expired": "منتهي الصلاحية",
+        "full": "مكتمل"
+      },
+      "fields": {
+        "donation": "التبرع",
+        "location": "الموقع",
+        "charity": "الجمعية الخيرية",
+        "capacity": "السعة"
+      },
+      "location": {
+        "remote": "عن بُعد",
+        "hybrid": "مختلط",
+        "physical": "فعلي",
+        "tbd": "موقع سيحدد لاحقاً"
+      },
+      "charity": {
+        "any_charity": "أي جمعية خيرية",
+        "specific_charities": "جمعيات خيرية محددة"
+      },
+      "availability": {
+        "starts": "يبدأ"
+      }
+    },
     "accountSettings": "إعدادات الحساب",
     "accountDescription": "إدارة تفضيلات حسابك",
     "editProfile": "تعديل الملف الشخصي",

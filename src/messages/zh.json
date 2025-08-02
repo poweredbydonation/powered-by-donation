@@ -66,6 +66,51 @@
     "becomeSupporter": "成为支持者",
     "supporterOffer": "支持服务和慈善机构",
     "enableSupporterRole": "启用支持者角色",
+    "services": {
+      "title": "我的服务",
+      "subtitle": "管理您的服务提供并跟踪支持者参与",
+      "create_service": "创建新服务",
+      "create_first_service": "创建您的第一个服务",
+      "edit": "编辑",
+      "view": "查看",
+      "loading": {
+        "title": "加载服务中..."
+      },
+      "errors": {
+        "title": "加载服务时出错",
+        "load_failed": "无法加载您的服务。请稍后重试。"
+      },
+      "empty": {
+        "title": "暂无服务",
+        "description": "创建您的第一个服务，开始与支持者联系并帮助慈善机构。"
+      },
+      "status": {
+        "active": "活跃",
+        "inactive": "非活跃",
+        "upcoming": "即将开始",
+        "expired": "已过期",
+        "full": "已满"
+      },
+      "fields": {
+        "donation": "捐款",
+        "location": "位置",
+        "charity": "慈善机构",
+        "capacity": "容量"
+      },
+      "location": {
+        "remote": "远程",
+        "hybrid": "混合",
+        "physical": "实地",
+        "tbd": "位置待定"
+      },
+      "charity": {
+        "any_charity": "任何慈善机构",
+        "specific_charities": "特定慈善机构"
+      },
+      "availability": {
+        "starts": "开始时间"
+      }
+    },
     "accountSettings": "账户设置",
     "accountDescription": "管理您的账户偏好",
     "editProfile": "编辑个人资料",

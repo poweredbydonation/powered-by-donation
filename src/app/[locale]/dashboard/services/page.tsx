@@ -22,18 +22,22 @@ export default function ServicesPage() {
   const [error, setError] = useState<string | null>(null)
   
   const { user } = useAuth()
-  const t = useTranslations('dashboard.services')
+  const t = useTranslations('dashboard')
   const locale = useLocale()
   const messages = useMessages()
   const params = useParams()
   const supabase = createClient()
   
   // Console debugging for Phase 1 checkpoint
-  console.log('Services page locale:', locale)
+  console.log('=== SERVICES PAGE LOCALE DEBUG ===')
+  console.log('Services page locale from useLocale():', locale)
+  console.log('URL pathname:', window.location.pathname)
+  console.log('Params:', params)
+  console.log('Params locale:', params.locale)
   console.log('Translations loaded:', !!t)
-  console.log('Using translation for title:', t('title'))
-  console.log('Translation test - create_service:', t('create_service'))
-  console.log('Translation test - status.active:', t('status.active'))
+  console.log('Using translation for title:', t('services.title'))
+  console.log('Translation test - create_service:', t('services.create_service'))
+  console.log('Translation test - status.active:', t('services.status.active'))
   console.log('All hardcoded strings replaced with translations')
 
   // Generate slug from service title
@@ -67,7 +71,7 @@ export default function ServicesPage() {
         setServices(data || [])
       } catch (err) {
         console.error('Error fetching user services:', err)
-        setError(t('errors.load_failed'))
+        setError(t('services.errors.load_failed'))
       } finally {
         setLoading(false)
       }
@@ -86,19 +90,19 @@ export default function ServicesPage() {
 
   const getLocationDisplay = (locations: any) => {
     if (!Array.isArray(locations) || locations.length === 0) {
-      return t('location.tbd')
+      return t('services.location.tbd')
     }
     
     const location = locations[0] as ServiceLocation
     switch (location.type) {
       case 'remote':
-        return t('location.remote')
+        return t('services.location.remote')
       case 'hybrid':
-        return t('location.hybrid')
+        return t('services.location.hybrid')
       case 'physical':
-        return location.area || t('location.physical')
+        return location.area || t('services.location.physical')
       default:
-        return t('location.tbd')
+        return t('services.location.tbd')
     }
   }
 
@@ -108,18 +112,18 @@ export default function ServicesPage() {
     const availableUntil = service.available_until ? new Date(service.available_until) : null
     
     if (now < availableFrom) {
-      return { status: 'upcoming', text: `${t('availability.starts')} ${availableFrom.toLocaleDateString()}`, color: 'text-yellow-600' }
+      return { status: 'upcoming', text: `${t('services.availability.starts')} ${availableFrom.toLocaleDateString()}`, color: 'text-yellow-600' }
     }
     
     if (availableUntil && now > availableUntil) {
-      return { status: 'expired', text: t('status.expired'), color: 'text-red-600' }
+      return { status: 'expired', text: t('services.status.expired'), color: 'text-red-600' }
     }
     
     if (service.max_supporters && service.current_supporters && service.current_supporters >= service.max_supporters) {
-      return { status: 'full', text: t('status.full'), color: 'text-red-600' }
+      return { status: 'full', text: t('services.status.full'), color: 'text-red-600' }
     }
     
-    return { status: 'active', text: t('status.active'), color: 'text-green-600' }
+    return { status: 'active', text: t('services.status.active'), color: 'text-green-600' }
   }
 
   return (
@@ -130,16 +134,16 @@ export default function ServicesPage() {
           <div className="mb-8">
             <div className="flex justify-between items-center">
               <div>
-                <h1 className="text-3xl font-bold text-gray-900">{t('title')}</h1>
+                <h1 className="text-3xl font-bold text-gray-900">{t('services.title')}</h1>
                 <p className="mt-2 text-gray-600">
-                  {t('subtitle')}
+                  {t('services.subtitle')}
                 </p>
               </div>
               <Link
                 href={`/${locale}/dashboard/services/create`}
                 className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 font-medium"
               >
-                {t('create_service')}
+                {t('services.create_service')}
               </Link>
             </div>
           </div>
@@ -161,7 +165,7 @@ export default function ServicesPage() {
           {error && !loading && (
             <div className="bg-red-50 border border-red-200 rounded-lg p-6">
               <div className="text-red-800">
-                <h3 className="font-medium mb-2">{t('errors.title')}</h3>
+                <h3 className="font-medium mb-2">{t('services.errors.title')}</h3>
                 <p className="text-sm">{error}</p>
               </div>
             </div>
@@ -187,15 +191,15 @@ export default function ServicesPage() {
                     />
                   </svg>
                 </div>
-                <h3 className="text-lg font-medium text-gray-900 mb-2">{t('empty.title')}</h3>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">{t('services.empty.title')}</h3>
                 <p className="text-gray-500 mb-4">
-                  {t('empty.description')}
+                  {t('services.empty.description')}
                 </p>
                 <Link
                   href={`/${locale}/dashboard/services/create`}
                   className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200"
                 >
-                  {t('create_first_service')}
+                  {t('services.create_first_service')}
                 </Link>
               </div>
             </div>
@@ -221,7 +225,7 @@ export default function ServicesPage() {
                             </span>
                             {!service.is_active && (
                               <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium text-gray-600 bg-gray-100">
-                                {t('status.inactive')}
+                                {t('services.status.inactive')}
                               </span>
                             )}
                           </div>
@@ -234,29 +238,29 @@ export default function ServicesPage() {
 
                           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                             <div>
-                              <span className="text-gray-500">{t('fields.donation')}:</span>
+                              <span className="text-gray-500">{t('services.fields.donation')}:</span>
                               <div className="font-semibold text-green-600">
                                 {formatCurrency(service.donation_amount)}
                               </div>
                             </div>
                             
                             <div>
-                              <span className="text-gray-500">{t('fields.location')}:</span>
+                              <span className="text-gray-500">{t('services.fields.location')}:</span>
                               <div className="font-medium">
                                 {getLocationDisplay(service.service_locations)}
                               </div>
                             </div>
                             
                             <div>
-                              <span className="text-gray-500">{t('fields.charity')}:</span>
+                              <span className="text-gray-500">{t('services.fields.charity')}:</span>
                               <div className="font-medium">
-                                {service.charity_requirement_type === 'any_charity' ? t('charity.any_charity') : t('charity.specific_charities')}
+                                {service.charity_requirement_type === 'any_charity' ? t('services.charity.any_charity') : t('services.charity.specific_charities')}
                               </div>
                             </div>
                             
                             {service.max_supporters && (
                               <div>
-                                <span className="text-gray-500">{t('fields.capacity')}:</span>
+                                <span className="text-gray-500">{t('services.fields.capacity')}:</span>
                                 <div className="font-medium">
                                   {service.current_supporters || 0} / {service.max_supporters}
                                 </div>
@@ -270,13 +274,13 @@ export default function ServicesPage() {
                             href={`/${locale}/dashboard/services/edit/${service.id}`}
                             className="text-blue-600 hover:text-blue-700 text-sm font-medium"
                           >
-                            {t('edit')}
+                            {t('services.edit')}
                           </Link>
                           <Link 
                             href={`/${locale}/services/${generateSlug(service.title)}`}
                             className="text-gray-400 hover:text-gray-600 text-sm font-medium"
                           >
-                            {t('view')}
+                            {t('services.view')}
                           </Link>
                         </div>
                       </div>

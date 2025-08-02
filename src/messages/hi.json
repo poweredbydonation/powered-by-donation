@@ -66,6 +66,51 @@
     "becomeSupporter": "समर्थक बनें",
     "supporterOffer": "सेवाओं और चैरिटी का समर्थन करें",
     "enableSupporterRole": "समर्थक भूमिका सक्षम करें",
+    "services": {
+      "title": "मेरी सेवाएं",
+      "subtitle": "अपनी सेवा पेशकशों का प्रबंधन करें और समर्थक जुड़ाव को ट्रैक करें",
+      "create_service": "नई सेवा बनाएं",
+      "create_first_service": "अपनी पहली सेवा बनाएं",
+      "edit": "संपादित करें",
+      "view": "देखें",
+      "loading": {
+        "title": "सेवाएं लोड हो रही हैं..."
+      },
+      "errors": {
+        "title": "सेवाएं लोड करने में त्रुटि",
+        "load_failed": "आपकी सेवाएं लोड करने में विफल। कृपया बाद में पुनः प्रयास करें।"
+      },
+      "empty": {
+        "title": "अभी तक कोई सेवा नहीं",
+        "description": "समर्थकों के साथ जुड़ना शुरू करने और चैरिटी की मदद करने के लिए अपनी पहली सेवा बनाएं।"
+      },
+      "status": {
+        "active": "सक्रिय",
+        "inactive": "निष्क्रिय",
+        "upcoming": "आगामी",
+        "expired": "समाप्त",
+        "full": "भरा हुआ"
+      },
+      "fields": {
+        "donation": "दान",
+        "location": "स्थान",
+        "charity": "चैरिटी",
+        "capacity": "क्षमता"
+      },
+      "location": {
+        "remote": "दूरस्थ",
+        "hybrid": "हाइब्रिड",
+        "physical": "भौतिक",
+        "tbd": "स्थान तय होना है"
+      },
+      "charity": {
+        "any_charity": "कोई भी चैरिटी",
+        "specific_charities": "विशिष्ट चैरिटी"
+      },
+      "availability": {
+        "starts": "शुरू होता है"
+      }
+    },
     "accountSettings": "खाता सेटिंग्स",
     "accountDescription": "अपनी खाता प्राथमिकताएं प्रबंधित करें",
     "editProfile": "प्रोफ़ाइल संपादित करें",

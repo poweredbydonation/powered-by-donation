@@ -66,6 +66,51 @@
     "becomeSupporter": "ਸਮਰਥਕ ਬਣੋ",
     "supporterOffer": "ਸੇਵਾਵਾਂ ਅਤੇ ਚੈਰਿਟੀਆਂ ਦਾ ਸਮਰਥਨ ਕਰੋ",
     "enableSupporterRole": "ਸਮਰਥਕ ਰੋਲ ਚਾਲੂ ਕਰੋ",
+    "services": {
+      "title": "ਮੇਰੀਆਂ ਸੇਵਾਵਾਂ",
+      "subtitle": "ਆਪਣੀਆਂ ਸੇਵਾ ਪੇਸ਼ਕਸ਼ਾਂ ਦਾ ਪ੍ਰਬੰਧਨ ਕਰੋ ਅਤੇ ਸਮਰਥਕ ਸ਼ਮੂਲੀਅਤ ਨੂੰ ਟਰੈਕ ਕਰੋ",
+      "create_service": "ਨਵੀਂ ਸੇਵਾ ਬਣਾਓ",
+      "create_first_service": "ਆਪਣੀ ਪਹਿਲੀ ਸੇਵਾ ਬਣਾਓ",
+      "edit": "ਸੰਪਾਦਿਤ ਕਰੋ",
+      "view": "ਦੇਖੋ",
+      "loading": {
+        "title": "ਸੇਵਾਵਾਂ ਲੋਡ ਹੋ ਰਹੀਆਂ ਹਨ..."
+      },
+      "errors": {
+        "title": "ਸੇਵਾਵਾਂ ਲੋਡ ਕਰਨ ਵਿੱਚ ਗਲਤੀ",
+        "load_failed": "ਤੁਹਾਡੀਆਂ ਸੇਵਾਵਾਂ ਲੋਡ ਕਰਨ ਵਿੱਚ ਅਸਫਲ। ਕਿਰਪਾ ਕਰਕੇ ਬਾਅਦ ਵਿੱਚ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।"
+      },
+      "empty": {
+        "title": "ਅਜੇ ਕੋਈ ਸੇਵਾ ਨਹੀਂ",
+        "description": "ਸਮਰਥਕਾਂ ਨਾਲ ਜੁੜਨਾ ਅਤੇ ਚੈਰਿਟੀਆਂ ਦੀ ਮਦਦ ਕਰਨਾ ਸ਼ੁਰੂ ਕਰਨ ਲਈ ਆਪਣੀ ਪਹਿਲੀ ਸੇਵਾ ਬਣਾਓ।"
+      },
+      "status": {
+        "active": "ਸਰਗਰਮ",
+        "inactive": "ਨਿਸ਼ਕਿਰਿਆ",
+        "upcoming": "ਆਉਣ ਵਾਲੀ",
+        "expired": "ਮਿਆਦ ਖਤਮ",
+        "full": "ਭਰੀ ਹੋਈ"
+      },
+      "fields": {
+        "donation": "ਦਾਨ",
+        "location": "ਸਥਾਨ",
+        "charity": "ਚੈਰਿਟੀ",
+        "capacity": "ਸਮਰੱਥਾ"
+      },
+      "location": {
+        "remote": "ਰਿਮੋਟ",
+        "hybrid": "ਹਾਈਬ੍ਰਿਡ",
+        "physical": "ਸਰੀਰਕ",
+        "tbd": "ਸਥਾਨ ਤੈਅ ਕਰਨਾ ਬਾਕੀ"
+      },
+      "charity": {
+        "any_charity": "ਕੋਈ ਵੀ ਚੈਰਿਟੀ",
+        "specific_charities": "ਖਾਸ ਚੈਰਿਟੀਆਂ"
+      },
+      "availability": {
+        "starts": "ਸ਼ੁਰੂ ਹੁੰਦੀ ਹੈ"
+      }
+    },
     "accountSettings": "ਖਾਤਾ ਸੈਟਿੰਗਾਂ",
     "accountDescription": "ਆਪਣੀਆਂ ਖਾਤਾ ਤਰਜੀਹਾਂ ਦਾ ਪ੍ਰਬੰਧਨ ਕਰੋ",
     "editProfile": "ਪ੍ਰੋਫਾਈਲ ਸੰਪਾਦਿਤ ਕਰੋ",
