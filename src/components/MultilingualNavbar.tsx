@@ -4,31 +4,12 @@ import { useState, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
 import { Menu, X, ChevronDown } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
+import { LANGUAGES, getOtherLanguages, getLanguageByCode } from '@/config/languages'
 
 interface MultilingualNavbarProps {
   locale: string
   messages: any
 }
-
-const languages = [
-  { code: 'en', flag: '🇺🇸', name: 'English' },
-  { code: 'zh', flag: '🇨🇳', name: '中文' },
-  { code: 'ar', flag: '🇸🇦', name: 'العربية' },
-  { code: 'vi', flag: '🇻🇳', name: 'Tiếng Việt' },
-  { code: 'yue', flag: '🇭🇰', name: '粵語' },
-  { code: 'pa', flag: '🇮🇳', name: 'ਪੰਜਾਬੀ' },
-  { code: 'el', flag: '🇬🇷', name: 'Ελληνικά' },
-  { code: 'it', flag: '🇮🇹', name: 'Italiano' },
-  { code: 'tl', flag: '🇵🇭', name: 'Filipino' },
-  { code: 'hi', flag: '🇮🇳', name: 'हिन्दी' },
-  { code: 'es', flag: '🇪🇸', name: 'Español' },
-  { code: 'tr', flag: '🇹🇷', name: 'Türkçe' },
-  { code: 'fr', flag: '🇫🇷', name: 'Français' },
-  { code: 'de', flag: '🇩🇪', name: 'Deutsch' },
-  { code: 'ja', flag: '🇯🇵', name: '日本語' },
-  { code: 'ko', flag: '🇰🇷', name: '한국어' },
-  { code: 'pt', flag: '🇵🇹', name: 'Português' },
-]
 
 export default function MultilingualNavbar({ locale, messages }: MultilingualNavbarProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -55,8 +36,8 @@ export default function MultilingualNavbar({ locale, messages }: MultilingualNav
     }
   }
   
-  const currentLang = languages.find(lang => lang.code === locale) || languages[0]
-  const otherLangs = languages.filter(lang => lang.code !== locale)
+  const currentLang = getLanguageByCode(locale) || LANGUAGES[0]
+  const otherLangs = getOtherLanguages(locale)
   
   // Get the path without the locale prefix
   const getPathWithoutLocale = () => {
@@ -162,7 +143,7 @@ export default function MultilingualNavbar({ locale, messages }: MultilingualNav
                       onClick={() => setIsLangOpen(false)}
                     >
                       <span className="text-lg">{lang.flag}</span>
-                      <span className="text-sm">{lang.name}</span>
+                      <span className="text-sm">{lang.nativeName}</span>
                     </a>
                   ))}
                 </div>
@@ -238,7 +219,7 @@ export default function MultilingualNavbar({ locale, messages }: MultilingualNav
               <div className="border-t pt-4">
                 <div className="text-sm text-gray-500 mb-2">Language:</div>
                 <div className="grid grid-cols-2 gap-2">
-                  {languages.map((lang) => (
+                  {LANGUAGES.map((lang) => (
                     <a
                       key={lang.code}
                       href={`/${lang.code}${getPathWithoutLocale()}`}
@@ -250,7 +231,7 @@ export default function MultilingualNavbar({ locale, messages }: MultilingualNav
                       onClick={() => setIsMenuOpen(false)}
                     >
                       <span>{lang.flag}</span>
-                      <span className="text-sm">{lang.name}</span>
+                      <span className="text-sm">{lang.nativeName}</span>
                     </a>
                   ))}
                 </div>

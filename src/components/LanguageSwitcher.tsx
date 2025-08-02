@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useLocale, useTranslations } from 'next-intl'
 import { usePathname, useRouter } from 'next/navigation'
-import { routing } from '@/i18n/routing'
+import { LANGUAGES, getLanguageByCode } from '@/config/languages'
 
 export default function LanguageSwitcher() {
   const [isOpen, setIsOpen] = useState(false)
@@ -12,19 +12,11 @@ export default function LanguageSwitcher() {
   const router = useRouter()
   const t = useTranslations('language')
 
-  const languages = [
-    { code: 'en', name: t('en'), flag: '🇺🇸' },
-    { code: 'es', name: t('es'), flag: '🇪🇸' },
-    { code: 'tr', name: t('tr'), flag: '🇹🇷' },
-    { code: 'fr', name: t('fr'), flag: '🇫🇷' },
-    { code: 'de', name: t('de'), flag: '🇩🇪' },
-    { code: 'it', name: t('it'), flag: '🇮🇹' },
-    { code: 'pt', name: t('pt'), flag: '🇵🇹' },
-    { code: 'zh', name: t('zh'), flag: '🇨🇳' },
-    { code: 'ja', name: t('ja'), flag: '🇯🇵' },
-    { code: 'ko', name: t('ko'), flag: '🇰🇷' },
-    { code: 'ar', name: t('ar'), flag: '🇸🇦' }
-  ]
+  // Build languages array with translations
+  const languages = LANGUAGES.map(lang => ({
+    ...lang,
+    name: t(lang.code)
+  }))
 
   const currentLanguage = languages.find(lang => lang.code === locale) || languages[0]
 
