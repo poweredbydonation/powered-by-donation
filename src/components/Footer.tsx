@@ -14,10 +14,6 @@ const Footer = () => {
   const urlLocale = pathname.split('/')[1] || 'en';
   const locale = urlLocale;
   
-  console.log('Footer hook locale:', hookLocale);
-  console.log('Footer URL locale:', urlLocale);
-  console.log('Footer using locale:', locale);
-  console.log('Footer pathname:', pathname);
 
   return (
     <footer className="bg-gray-50 border-t border-gray-200 mt-16">

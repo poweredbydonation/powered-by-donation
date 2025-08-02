@@ -34,7 +34,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setSession(null)
           setUser(null)
         } else {
-          console.log('Initial session loaded:', session?.user?.email)
           setSession(session)
           setUser(session?.user ?? null)
         }
@@ -51,7 +50,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        console.log('Auth state change:', event, session?.user?.email)
         setSession(session)
         setUser(session?.user ?? null)
         setLoading(false)
@@ -87,7 +85,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       ? `http://localhost:3000/auth/callback`
       : `${window.location.origin}/auth/callback`
     
-    console.log('OAuth redirect URL:', redirectTo)
     
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
