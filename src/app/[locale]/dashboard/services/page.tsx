@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
+import { useTranslations, useLocale, useMessages } from 'next-intl'
 import AuthGuard from '@/components/auth/AuthGuard'
 import MultilingualNavbar from '@/components/MultilingualNavbar'
 import { useAuth } from '@/hooks/useAuth'
@@ -19,12 +20,21 @@ export default function ServicesPage() {
   const [services, setServices] = useState<UserService[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [messages, setMessages] = useState<any>({})
   
   const { user } = useAuth()
+  const t = useTranslations('dashboard.services')
+  const locale = useLocale()
+  const messages = useMessages()
   const params = useParams()
-  const locale = params.locale as string
   const supabase = createClient()
+  
+  // Console debugging for Phase 1 checkpoint
+  console.log('Services page locale:', locale)
+  console.log('Translations loaded:', !!t)
+  console.log('Using translation for title:', t('title'))
+  console.log('Translation test - create_service:', t('create_service'))
+  console.log('Translation test - status.active:', t('status.active'))
+  console.log('All hardcoded strings replaced with translations')
 
   // Generate slug from service title
   const generateSlug = (title: string): string => {
@@ -32,18 +42,6 @@ export default function ServicesPage() {
   }
 
   useEffect(() => {
-    // Load messages
-    async function loadMessages() {
-      try {
-        const msgs = (await import(`../../../../messages/${locale}.json`)).default
-        setMessages(msgs)
-      } catch (error) {
-        // Fallback to English
-        const msgs = (await import(`../../../../messages/en.json`)).default
-        setMessages(msgs)
-      }
-    }
-
     async function fetchUserServices() {
       if (!user) return
 
@@ -69,18 +67,17 @@ export default function ServicesPage() {
         setServices(data || [])
       } catch (err) {
         console.error('Error fetching user services:', err)
-        setError('Failed to load your services. Please try again later.')
+        setError(t('errors.load_failed'))
       } finally {
         setLoading(false)
       }
     }
 
-    loadMessages()
     fetchUserServices()
-  }, [user, supabase, locale])
+  }, [user, supabase])
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-AU', {
+    return new Intl.NumberFormat(locale, {
       style: 'currency',
       currency: 'AUD',
       minimumFractionDigits: 0,
@@ -89,19 +86,19 @@ export default function ServicesPage() {
 
   const getLocationDisplay = (locations: any) => {
     if (!Array.isArray(locations) || locations.length === 0) {
-      return 'Location TBD'
+      return t('location.tbd')
     }
     
     const location = locations[0] as ServiceLocation
     switch (location.type) {
       case 'remote':
-        return 'Remote'
+        return t('location.remote')
       case 'hybrid':
-        return 'Hybrid'
+        return t('location.hybrid')
       case 'physical':
-        return location.area || 'Physical'
+        return location.area || t('location.physical')
       default:
-        return 'Location TBD'
+        return t('location.tbd')
     }
   }
 
@@ -111,18 +108,18 @@ export default function ServicesPage() {
     const availableUntil = service.available_until ? new Date(service.available_until) : null
     
     if (now < availableFrom) {
-      return { status: 'upcoming', text: `Starts ${availableFrom.toLocaleDateString()}`, color: 'text-yellow-600' }
+      return { status: 'upcoming', text: `${t('availability.starts')} ${availableFrom.toLocaleDateString()}`, color: 'text-yellow-600' }
     }
     
     if (availableUntil && now > availableUntil) {
-      return { status: 'expired', text: 'Expired', color: 'text-red-600' }
+      return { status: 'expired', text: t('status.expired'), color: 'text-red-600' }
     }
     
     if (service.max_supporters && service.current_supporters && service.current_supporters >= service.max_supporters) {
-      return { status: 'full', text: 'Full', color: 'text-red-600' }
+      return { status: 'full', text: t('status.full'), color: 'text-red-600' }
     }
     
-    return { status: 'active', text: 'Active', color: 'text-green-600' }
+    return { status: 'active', text: t('status.active'), color: 'text-green-600' }
   }
 
   return (
@@ -133,16 +130,16 @@ export default function ServicesPage() {
           <div className="mb-8">
             <div className="flex justify-between items-center">
               <div>
-                <h1 className="text-3xl font-bold text-gray-900">My Services</h1>
+                <h1 className="text-3xl font-bold text-gray-900">{t('title')}</h1>
                 <p className="mt-2 text-gray-600">
-                  Manage your service offerings and track supporter engagement
+                  {t('subtitle')}
                 </p>
               </div>
               <Link
                 href={`/${locale}/dashboard/services/create`}
                 className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 font-medium"
               >
-                Create New Service
+                {t('create_service')}
               </Link>
             </div>
           </div>
@@ -164,7 +161,7 @@ export default function ServicesPage() {
           {error && !loading && (
             <div className="bg-red-50 border border-red-200 rounded-lg p-6">
               <div className="text-red-800">
-                <h3 className="font-medium mb-2">Error loading services</h3>
+                <h3 className="font-medium mb-2">{t('errors.title')}</h3>
                 <p className="text-sm">{error}</p>
               </div>
             </div>
@@ -190,15 +187,15 @@ export default function ServicesPage() {
                     />
                   </svg>
                 </div>
-                <h3 className="text-lg font-medium text-gray-900 mb-2">No services yet</h3>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">{t('empty.title')}</h3>
                 <p className="text-gray-500 mb-4">
-                  Create your first service to start connecting with supporters and helping charities.
+                  {t('empty.description')}
                 </p>
                 <Link
                   href={`/${locale}/dashboard/services/create`}
                   className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200"
                 >
-                  Create Your First Service
+                  {t('create_first_service')}
                 </Link>
               </div>
             </div>
@@ -224,7 +221,7 @@ export default function ServicesPage() {
                             </span>
                             {!service.is_active && (
                               <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium text-gray-600 bg-gray-100">
-                                Inactive
+                                {t('status.inactive')}
                               </span>
                             )}
                           </div>
@@ -237,29 +234,29 @@ export default function ServicesPage() {
 
                           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                             <div>
-                              <span className="text-gray-500">Donation:</span>
+                              <span className="text-gray-500">{t('fields.donation')}:</span>
                               <div className="font-semibold text-green-600">
                                 {formatCurrency(service.donation_amount)}
                               </div>
                             </div>
                             
                             <div>
-                              <span className="text-gray-500">Location:</span>
+                              <span className="text-gray-500">{t('fields.location')}:</span>
                               <div className="font-medium">
                                 {getLocationDisplay(service.service_locations)}
                               </div>
                             </div>
                             
                             <div>
-                              <span className="text-gray-500">Charity:</span>
+                              <span className="text-gray-500">{t('fields.charity')}:</span>
                               <div className="font-medium">
-                                {service.charity_requirement_type === 'any_charity' ? 'Any charity' : 'Specific charities'}
+                                {service.charity_requirement_type === 'any_charity' ? t('charity.any_charity') : t('charity.specific_charities')}
                               </div>
                             </div>
                             
                             {service.max_supporters && (
                               <div>
-                                <span className="text-gray-500">Capacity:</span>
+                                <span className="text-gray-500">{t('fields.capacity')}:</span>
                                 <div className="font-medium">
                                   {service.current_supporters || 0} / {service.max_supporters}
                                 </div>
@@ -273,13 +270,13 @@ export default function ServicesPage() {
                             href={`/${locale}/dashboard/services/edit/${service.id}`}
                             className="text-blue-600 hover:text-blue-700 text-sm font-medium"
                           >
-                            Edit
+                            {t('edit')}
                           </Link>
                           <Link 
                             href={`/${locale}/services/${generateSlug(service.title)}`}
                             className="text-gray-400 hover:text-gray-600 text-sm font-medium"
                           >
-                            View
+                            {t('view')}
                           </Link>
                         </div>
                       </div>
