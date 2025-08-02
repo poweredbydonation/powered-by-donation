@@ -6,7 +6,8 @@
     "dashboard": "Dashboard",
     "login": "Anmelden",
     "logout": "Abmelden",
-    "profile": "Profil"
+    "profile": "Profil",
+    "tagline": "Spenden-Service-Plattform"
   },
   "home": {
     "title": "Powered by Donation",

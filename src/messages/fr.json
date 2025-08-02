@@ -6,7 +6,8 @@
     "dashboard": "Tableau de Bord",
     "login": "Connexion",
     "logout": "Déconnexion",
-    "profile": "Profil"
+    "profile": "Profil",
+    "tagline": "Plateforme de services contre dons"
   },
   "home": {
     "title": "Powered by Donation",

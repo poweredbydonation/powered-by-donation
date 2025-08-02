@@ -6,7 +6,8 @@
     "dashboard": "Panel",
     "login": "Iniciar Sesión",
     "logout": "Cerrar Sesión",
-    "profile": "Perfil"
+    "profile": "Perfil",
+    "tagline": "Plataforma de servicios por donaciones"
   },
   "home": {
     "title": "Powered by Donation",

@@ -6,7 +6,8 @@
     "dashboard": "Dashboard",
     "login": "Accedi",
     "logout": "Esci",
-    "profile": "Profilo"
+    "profile": "Profilo",
+    "tagline": "Piattaforma servizi per donazioni"
   },
   "home": {
     "title": "Powered by Donation",

@@ -6,7 +6,8 @@
     "dashboard": "대시보드",
     "login": "로그인",
     "logout": "로그아웃",
-    "profile": "프로필"
+    "profile": "프로필",
+    "tagline": "기부 서비스 플랫폼"
   },
   "home": {
     "title": "Powered by Donation",

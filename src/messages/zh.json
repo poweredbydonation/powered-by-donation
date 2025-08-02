@@ -6,7 +6,8 @@
     "dashboard": "仪表板",
     "login": "登录",
     "logout": "退出",
-    "profile": "个人资料"
+    "profile": "个人资料",
+    "tagline": "捐赠服务平台"
   },
   "home": {
     "title": "Powered by Donation",

@@ -6,7 +6,8 @@
     "dashboard": "Dashboard",
     "login": "Login",
     "logout": "Logout",
-    "profile": "Profile"
+    "profile": "Profile",
+    "tagline": ""
   },
   "home": {
     "title": "Powered by Donation",

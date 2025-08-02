@@ -39,7 +39,12 @@ export default function MultilingualNavbar({ locale, messages }: MultilingualNav
 
   useEffect(() => {
     setMounted(true)
+    console.log('MultilingualNavbar mounted - Locale:', locale, 'Tagline:', messages?.nav?.tagline, 'Should show:', locale !== 'en' && messages?.nav?.tagline)
   }, [])
+
+  useEffect(() => {
+    console.log('MultilingualNavbar props changed - Locale:', locale, 'Tagline:', messages?.nav?.tagline, 'Should show:', locale !== 'en' && !!messages?.nav?.tagline)
+  }, [locale, messages?.nav?.tagline])
 
   const handleSignOut = async () => {
     try {
@@ -61,12 +66,19 @@ export default function MultilingualNavbar({ locale, messages }: MultilingualNav
   return (
     <nav className="bg-white shadow-sm border-b">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
+        <div className="flex justify-between h-20">
           <div className="flex items-center">
-            <a href={`/${locale}`} className="text-xl font-bold text-blue-600">
-              <span className="hidden sm:inline">Powered by Donation</span>
-              <span className="sm:hidden">PD</span>
-            </a>
+            <div className="flex flex-col justify-center">
+              <a href={`/${locale}`} className="text-xl font-bold text-blue-600">
+                <span className="hidden sm:inline">Powered by Donation</span>
+                <span className="sm:hidden">PD</span>
+              </a>
+              {locale !== 'en' && messages?.nav?.tagline && messages.nav.tagline.trim() !== '' && (
+                <div className="text-sm text-gray-600 mt-0.5 hidden sm:block">
+                  {messages.nav.tagline}
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Desktop Navigation */}

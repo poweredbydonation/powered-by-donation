@@ -6,7 +6,8 @@
     "dashboard": "ダッシュボード",
     "login": "ログイン",
     "logout": "ログアウト",
-    "profile": "プロフィール"
+    "profile": "プロフィール",
+    "tagline": "寄付サービスプラットフォーム"
   },
   "home": {
     "title": "Powered by Donation",

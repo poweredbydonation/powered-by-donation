@@ -6,7 +6,8 @@
     "dashboard": "Panel",
     "login": "Giriş Yap",
     "logout": "Çıkış Yap",
-    "profile": "Profil"
+    "profile": "Profil",
+    "tagline": "Bağış karşılığı hizmet platformu"
   },
   "home": {
     "title": "Powered by Donation",

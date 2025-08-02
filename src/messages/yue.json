@@ -6,7 +6,8 @@
     "dashboard": "控制面板",
     "login": "登入",
     "logout": "登出",
-    "profile": "個人檔案"
+    "profile": "個人檔案",
+    "tagline": "捐款服務平台"
   },
   "home": {
     "title": "Powered by Donation",

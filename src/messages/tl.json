@@ -6,7 +6,8 @@
     "dashboard": "Dashboard",
     "login": "Mag-login",
     "logout": "Mag-logout",
-    "profile": "Profile"
+    "profile": "Profile",
+    "tagline": "Platform ng serbisyo para sa donasyon"
   },
   "home": {
     "title": "Powered by Donation",
