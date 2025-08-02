@@ -674,19 +674,24 @@ const resetMonthlyStats = async () => {
 ## Internationalization System
 
 ### Language Support
-The platform supports 12 languages with complete translation coverage:
+The platform supports 17 languages with complete translation coverage:
 - **English (en)** - Default locale
 - **Chinese (zh)** - Simplified Chinese
-- **Arabic (ar)** - Right-to-left support
-- **Vietnamese (vi)** - High Australian community presence
-- **Cantonese (yue)** - Hong Kong/Guangdong communities
-- **Punjabi (pa)** - Sikh communities
-- **Greek (el)** - Established Australian community
-- **Italian (it)** - Traditional Australian migration
-- **Filipino (tl)** - Growing community presence
-- **Hindi (hi)** - Large Indian diaspora
+- **German (de)** - European accessibility
 - **Spanish (es)** - International accessibility
+- **French (fr)** - International accessibility
+- **Greek (el)** - Established Australian community
+- **Cantonese (yue)** - Hong Kong/Guangdong communities
+- **Hindi (hi)** - Large Indian diaspora
+- **Punjabi (pa)** - Sikh communities
+- **Italian (it)** - Traditional Australian migration
+- **Japanese (ja)** - Asian accessibility
+- **Korean (ko)** - Growing Korean community
+- **Filipino (tl)** - Growing community presence
+- **Portuguese (pt)** - South American accessibility
+- **Arabic (ar)** - Right-to-left support
 - **Turkish (tr)** - Middle Eastern communities
+- **Vietnamese (vi)** - High Australian community presence
 
 ### Implementation Architecture
 ```typescript
@@ -722,6 +727,50 @@ const MyComponent = () => {
 - **Default Behavior**: English locale for root URLs
 - **Navigation**: Locale-aware Link and router components
 - **Middleware**: Automatic locale detection and redirection
+
+### Language Configuration Management
+
+#### Centralized Language System
+The platform uses a centralized language configuration system located in `src/config/languages.ts` that automatically propagates to all components.
+
+#### Adding New Languages
+To add a new language to the platform:
+
+1. **Add to central config** - Edit `src/config/languages.ts`:
+   ```typescript
+   export const LANGUAGES: Language[] = [
+     // ... existing languages
+     { code: 'new', name: 'Language Name', flag: '🏳️', nativeName: 'Native Name' },
+   ]
+   ```
+
+2. **Create translation file** - Add `src/messages/new.json` with all translations
+
+3. **That's it!** The new language will automatically appear in:
+   - All language selector dropdowns
+   - Routing configuration
+   - Mobile and desktop navigation
+
+#### Files that automatically use the central config:
+- `src/i18n/routing.ts` - Next.js routing configuration
+- `src/components/LanguageSwitcher.tsx` - Standalone language selector
+- `src/components/MultilingualNavbar.tsx` - Main navigation bar
+
+#### Language Data Structure:
+```typescript
+interface Language {
+  code: string        // ISO language code (e.g., 'en', 'fr')
+  name: string        // English name (e.g., 'French')
+  flag: string        // Flag emoji (e.g., '🇫🇷')
+  nativeName: string  // Native language name (e.g., 'Français')
+}
+```
+
+#### Helper Functions:
+- `getLanguageByCode(code)` - Get language object by code
+- `getOtherLanguages(currentCode)` - Get all languages except current
+- `LOCALE_CODES` - Array of just the language codes
+- `DEFAULT_LOCALE` - Default language ('en')
 
 ## Brand Guidelines
 
@@ -883,7 +932,7 @@ git push origin main  # Triggers automatic deployment to powered-by-donation
 18. **No payment processing** - We only facilitate, JustGiving handles payments
 19. **GitHub deployment** - All code changes via Git push, not manual deployment
 20. **Internationalization** - Use next-intl translation keys for all user-facing text
-21. **Multi-language support** - 12 languages supported with proper locale routing
+21. **Multi-language support** - 17 languages supported with proper locale routing
 
 ### Never Suggest
 - Public donor names, persistent anonymous identities, or user tracking
