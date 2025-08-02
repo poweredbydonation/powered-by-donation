@@ -2,14 +2,16 @@ import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { Service, ServiceLocation } from '@/types/database'
-import Navbar from '@/components/Navbar'
+import MultilingualNavbar from '@/components/MultilingualNavbar'
 import ServiceList from '@/components/services/ServiceList'
 import Link from 'next/link'
 import { formatCurrency } from '@/lib/currency'
+import { getMessages } from 'next-intl/server'
 
 interface LocationPageProps {
   params: {
     location: string
+    locale: string
   }
 }
 
@@ -146,8 +148,10 @@ export async function generateMetadata({ params }: LocationPageProps): Promise<M
 }
 
 export default async function LocationPage({ params }: LocationPageProps) {
-  const locationName = formatLocationName(params.location)
-  const services = await getServicesByLocation(params.location)
+  const { locale, location } = params
+  const messages = await getMessages({ locale })
+  const locationName = formatLocationName(location)
+  const services = await getServicesByLocation(location)
 
   // Calculate location statistics
   const totalDonationPotential = services.reduce((sum, service) => sum + service.donation_amount, 0)
@@ -179,7 +183,7 @@ export default async function LocationPage({ params }: LocationPageProps) {
 
   return (
     <>
-      <Navbar />
+      <MultilingualNavbar locale={locale} messages={messages} />
       <div className="min-h-screen bg-gray-50">
         <div className="container mx-auto px-4 py-8">
           {/* Location Header */}

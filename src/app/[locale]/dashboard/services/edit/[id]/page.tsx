@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import AuthGuard from '@/components/auth/AuthGuard'
-import Navbar from '@/components/Navbar'
+import MultilingualNavbar from '@/components/MultilingualNavbar'
 import ServiceCreationForm from '@/components/services/ServiceCreationForm'
 import { useAuth } from '@/hooks/useAuth'
 import { createClient } from '@/lib/supabase/client'
@@ -13,6 +13,7 @@ export default function EditServicePage() {
   const [service, setService] = useState<Service | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [messages, setMessages] = useState<any>({})
   
   const router = useRouter()
   const params = useParams()
@@ -23,6 +24,18 @@ export default function EditServicePage() {
   const locale = params.locale as string
 
   useEffect(() => {
+    // Load messages
+    async function loadMessages() {
+      try {
+        const msgs = (await import(`../../../../../../messages/${locale}.json`)).default
+        setMessages(msgs)
+      } catch (error) {
+        // Fallback to English
+        const msgs = (await import(`../../../../../../messages/en.json`)).default
+        setMessages(msgs)
+      }
+    }
+
     async function fetchService() {
       if (!user || !serviceId) return
 
@@ -55,8 +68,9 @@ export default function EditServicePage() {
       }
     }
 
+    loadMessages()
     fetchService()
-  }, [user, serviceId, supabase])
+  }, [user, serviceId, supabase, locale])
 
   const handleUpdateSuccess = () => {
     router.push(`/${locale}/dashboard/services`)
@@ -65,7 +79,7 @@ export default function EditServicePage() {
   if (loading) {
     return (
       <AuthGuard>
-        <Navbar />
+        <MultilingualNavbar locale={locale} messages={messages} />
         <div className="min-h-screen bg-gray-50 py-8">
           <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="bg-white rounded-lg shadow p-6">
@@ -87,7 +101,7 @@ export default function EditServicePage() {
   if (error) {
     return (
       <AuthGuard>
-        <Navbar />
+        <MultilingualNavbar locale={locale} messages={messages} />
         <div className="min-h-screen bg-gray-50 py-8">
           <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="bg-red-50 border border-red-200 rounded-lg p-6">
@@ -114,7 +128,7 @@ export default function EditServicePage() {
 
   return (
     <AuthGuard>
-      <Navbar />
+      <MultilingualNavbar locale={locale} messages={messages} />
       <div className="min-h-screen bg-gray-50 py-8">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-8">
