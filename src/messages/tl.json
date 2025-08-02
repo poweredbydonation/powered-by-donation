@@ -28,15 +28,219 @@
         "description": "Pumili mula sa mga rehistradong charity upang makatanggap ng inyong donasyon"
       },
       "step3": {
-        "title": "Kumonekta at Gumawa ng Impact",
-        "description": "Makatanggap ng serbisyo at gumawa ng positibong impact sa komunidad"
+        "title": "Gumawa ng Impact",
+        "description": "Ang inyong donasyon ay mag-unlock ng serbisyo at susuportahan ang isang magandang layunin"
       }
     },
     "recent_activity": {
-      "title": "Kamakailang Aktibidad",
+      "title": "Kamakailang Aktibidad ng Komunidad",
       "someone_donated": "May nag-donate ng",
-      "via_service": "sa pamamagitan ng serbisyo para sa",
-      "hours_ago": "oras na nakalipas"
+      "via_service": "sa pamamagitan ng",
+      "hours_ago": "oras na nakalipas",
+      "minutes_ago": "minuto na nakalipas",
+      "days_ago": "araw na nakalipas"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Maligayang pagbabalik",
+    "profileReady": "Ang inyong profile ay naka-setup na at handa na.",
+    "completeProfile": "Kumpletuhin ang inyong profile upang makapagsimula.",
+    "serviceProvider": "Service Provider",
+    "supporter": "Supporter",
+    "getStarted": "Magsimula",
+    "setupPrompt": "I-setup ang inyong profile upang magsimulang gamitin ang Powered by Donation:",
+    "createProfile": "Lumikha ng Inyong Profile",
+    "providerDashboard": "Provider Dashboard",
+    "providerDescription": "I-manage ang inyong mga serbisyo at donasyon",
+    "manageServices": "I-manage ang mga Serbisyo",
+    "createNewService": "Lumikha ng Bagong Serbisyo",
+    "becomeProvider": "Maging Provider",
+    "providerOffer": "Mag-offer ng mga serbisyo at sumuporta sa mga charity",
+    "enableProviderRole": "I-enable ang Provider Role",
+    "supporterDashboard": "Supporter Dashboard",
+    "supporterDescription": "I-track ang inyong mga donasyon at impact",
+    "myDonations": "Aking mga Donasyon",
+    "browseServices": "Mag-browse ng mga Serbisyo",
+    "becomeSupporter": "Maging Supporter",
+    "supporterOffer": "Sumuporta sa mga serbisyo at charity",
+    "enableSupporterRole": "I-enable ang Supporter Role",
+    "accountSettings": "Account Settings",
+    "accountDescription": "I-manage ang inyong account preferences",
+    "editProfile": "I-edit ang Profile",
+    "privacySettings": "Privacy Settings",
+    "profileManagement": "Profile Management",
+    "yourProfile": "Inyong Profile",
+    "name": "Pangalan",
+    "username": "Username",
+    "location": "Lokasyon",
+    "roles": "Mga Role",
+    "providerAndSupporter": "Provider at Supporter",
+    "providerRole": "Provider",
+    "supporterRole": "Supporter",
+    "noRoles": "Wala",
+    "provider_section": {
+      "title": "Bilang Provider",
+      "create_service": "Lumikha ng Serbisyo",
+      "update_service": "I-update ang Serbisyo",
+      "creating": "Ginagawa...",
+      "updating": "Ina-update...",
+      "manage_services": "I-manage ang mga Serbisyo",
+      "view_requests": "Tingnan ang mga Request"
+    },
+    "supporter_section": {
+      "title": "Bilang Supporter",
+      "browse_services": "Mag-browse ng mga Serbisyo",
+      "donation_history": "Kasaysayan ng Donasyon"
+    },
+    "profile_section": {
+      "title": "Profile Management",
+      "edit_profile": "I-edit ang Profile",
+      "account_settings": "Account Settings"
+    }
+  },
+  "profile": {
+    "setup": {
+      "title": "I-setup ang Inyong Profile",
+      "subtitle": "Lumikha ng inyong profile upang magsimulang gamitin ang Powered by Donation bilang service provider, supporter, o pareho.",
+      "create_profile": "Lumikha ng Inyong Profile",
+      "update_profile": "I-update ang Inyong Profile",
+      "roles": {
+        "title": "Inyong Role(s)",
+        "provider": {
+          "title": "Service Provider",
+          "description": "Mag-offer ng mga serbisyo at tumulong sa mga charity"
+        },
+        "supporter": {
+          "title": "Supporter",
+          "description": "Maghanap ng mga serbisyo at gumawa ng charitable donations"
+        }
+      },
+      "form": {
+        "full_name": "Buong Pangalan",
+        "full_name_placeholder": "Inyong buong pangalan",
+        "username": "Username (Opsyonal)",
+        "username_placeholder": "Pumili ng natatanging username",
+        "username_help": "Para sa public profile URL (opsyonal)",
+        "bio": "Bio",
+        "bio_placeholder": "Sabihin sa iba ang tungkol sa inyo at inyong mga interes...",
+        "location": "Lokasyon",
+        "location_placeholder": "Lungsod, Estado/Bansa",
+        "phone": "Numero ng Telepono",
+        "phone_placeholder": "Inyong numero ng telepono",
+        "create_profile": "Lumikha ng Profile",
+        "update_profile": "I-update ang Profile",
+        "saving": "Nase-save...",
+        "success_created": "Matagumpay na nalikha ang profile!",
+        "success_updated": "Matagumpay na na-update ang profile!",
+        "error_name_required": "Kailangan ang pangalan",
+        "error_role_required": "Dapat kayong maging provider, supporter, o pareho",
+        "error_save_failed": "Hindi na-save ang profile"
+      }
+    }
+  },
+  "services": {
+    "browse": {
+      "title": "Mag-browse ng mga Serbisyo",
+      "subtitle": "Maghanap ng mga propesyonal na serbisyo at sumuporta sa mga charity",
+      "no_services": "Walang nahanap na serbisyo",
+      "load_more": "Mag-load ng Higit Pa",
+      "allLocations": "Lahat ng Lokasyon",
+      "provider": "Provider",
+      "communityImpact": {
+        "title": "Community Impact",
+        "activeServices": "Aktibong mga Serbisyo",
+        "totalDonationPotential": "Kabuuang Donation Potential",
+        "activeProviders": "Aktibong mga Provider",
+        "donationsNote": "Lahat ng donasyon ay direktang napupunta sa mga rehistradong charity sa pamamagitan ng JustGiving"
+      },
+      "callToAction": {
+        "title": "Gusto ninyong mag-offer ng inyong mga serbisyo?",
+        "description": "Sumali sa aming komunidad ng mga provider at tumulong sa mga charity habang ipinapakita ang inyong mga kasanayan.",
+        "button": "Magsimula"
+      }
+    },
+    "create": {
+      "title": "Lumikha ng Bagong Serbisyo",
+      "subtitle": "I-offer ang inyong mga kasanayan upang makatulong sa mga charity na makatanggap ng donasyon"
+    }
+  },
+  "common": {
+    "loading": "Naglo-load...",
+    "error": "Error",
+    "success": "Tagumpay",
+    "cancel": "Kanselahin",
+    "save": "I-save",
+    "delete": "Tanggalin",
+    "edit": "I-edit",
+    "view": "Tingnan",
+    "back": "Bumalik",
+    "next": "Susunod",
+    "previous": "Nakaraan",
+    "search": "Maghanap",
+    "filter": "I-filter",
+    "sort": "I-sort",
+    "clear": "I-clear",
+    "apply": "I-apply",
+    "reset": "I-reset"
+  },
+  "auth": {
+    "login": {
+      "title": "Mag-sign In",
+      "subtitle": "Mag-sign in sa inyong account",
+      "email": "Email",
+      "password": "Password",
+      "email_placeholder": "your@email.com",
+      "password_placeholder": "Inyong password",
+      "sign_in_button": "Mag-sign In",
+      "signing_in": "Nagsa-sign in...",
+      "or_continue_with": "O magpatuloy gamit ang",
+      "no_account": "Walang account?",
+      "sign_up_link": "Mag-sign up",
+      "forgot_password": "Nakalimutan ang password?",
+      "remember_me": "Tandaan ako"
+    },
+    "logout": {
+      "title": "Mag-logout",
+      "confirm": "Sigurado kayong mag-logout?"
+    },
+    "signup": {
+      "title": "Lumikha ng Account",
+      "fields": {
+        "email": "Email",
+        "password": "Password",
+        "confirmPassword": "I-confirm ang Password"
+      },
+      "placeholders": {
+        "email": "your@email.com",
+        "password": "Hindi bababa sa 6 characters",
+        "confirmPassword": "I-confirm ang inyong password"
+      },
+      "buttons": {
+        "create": "Lumikha ng Account",
+        "creating": "Ginagawa ang account..."
+      },
+      "errors": {
+        "passwordMismatch": "Hindi tugma ang mga password",
+        "passwordTooShort": "Ang password ay dapat hindi bababa sa 6 characters"
+      },
+      "success": {
+        "title": "Tingnan ang Inyong Email!",
+        "message": "Nagpadala kami ng confirmation link sa",
+        "instruction": "Pakitingnan ang inyong email at i-click ang link upang ma-activate ang inyong account.",
+        "backToLogin": "Bumalik sa Login"
+      },
+      "divider": "O magpatuloy gamit ang",
+      "socialButtons": {
+        "google": "Mag-sign up gamit ang Google",
+        "microsoft": "Mag-sign up gamit ang Microsoft",
+        "github": "Mag-sign up gamit ang GitHub",
+        "apple": "Mag-sign up gamit ang Apple"
+      },
+      "footer": {
+        "hasAccount": "May account na?",
+        "signIn": "Mag-sign in"
+      }
     }
   },
   "footer": {
@@ -85,10 +289,46 @@
   },
   "language": {
     "select": "Pumili ng Wika",
+    "ar": "العربية",
+    "de": "Deutsch",
+    "el": "Ελληνικά",
     "en": "English",
     "es": "Español",
     "fr": "Français",
-    "de": "Deutsch",
-    "tl": "Filipino"
+    "hi": "हिन्दी",
+    "it": "Italiano",
+    "ja": "日本語",
+    "ko": "한국어",
+    "pa": "ਪੰਜਾਬੀ",
+    "pt": "Português",
+    "tl": "Filipino",
+    "tr": "Türkçe",
+    "vi": "Tiếng Việt",
+    "yue": "粵語",
+    "zh": "中文"
+  },
+  "deleteProfile": {
+    "title": "Tanggalin ang Profile",
+    "description": "Ito ay permanenteng magtatatanggal ng inyong profile at lahat ng kaugnay na data. Hindi na ito mababawi.",
+    "providerWarning": "⚠️ Bilang provider, matatanggal din ang lahat ng inyong mga serbisyo at kasaysayan ng serbisyo.",
+    "supporterWarning": "⚠️ Bilang supporter, matatanggal ang inyong kasaysayan ng donasyon at mga service request.",
+    "deleteButton": "Tanggalin ang Profile",
+    "confirmTitle": "I-confirm ang Pagtanggal ng Profile",
+    "confirmDescription": "Sigurado kayong gustong tanggalin ang inyong profile para kay \"{name}\"? Ang aksyong ito ay permanente at:",
+    "confirmList": {
+      "deleteInfo": "Matatanggal ang inyong profile information",
+      "removeServices": "Matatanggal ang lahat ng inyong mga serbisyo",
+      "deleteHistory": "Matatanggal ang inyong kasaysayan ng donasyon",
+      "signOut": "Mala-logout kayo sa platform",
+      "cannotUndo": "Hindi na mababawi"
+    },
+    "confirmButton": "Oo, Tanggalin ang Aking Profile",
+    "deleting": "Tinatanggal...",
+    "cancel": "Kanselahin",
+    "errors": {
+      "activeServices": "Hindi ninyo matatanggal ang inyong profile habang may aktibong mga serbisyo. Pakideactivate muna ang lahat ng serbisyo.",
+      "activeRequests": "Hindi ninyo matatanggal ang inyong profile habang may aktibong service request o pending na donasyon. Makipag-ugnayan sa support kung kailangan ninyo ng tulong.",
+      "deleteFailed": "Hindi natanggal ang profile"
+    }
   }
 }

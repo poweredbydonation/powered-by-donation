@@ -1,144 +1,246 @@
 {
   "nav": {
-    "home": "Home",
-    "browse": "Browse Services",
-    "search": "Search",
-    "dashboard": "Dashboard",
-    "login": "Login",
-    "logout": "Logout",
-    "profile": "Profile"
+    "home": "ホーム",
+    "browse": "サービスを探す",
+    "search": "検索",
+    "dashboard": "ダッシュボード",
+    "login": "ログイン",
+    "logout": "ログアウト",
+    "profile": "プロフィール"
   },
   "home": {
     "title": "Powered by Donation",
-    "subtitle": "Service marketplace where donations to charities unlock professional services",
+    "subtitle": "チャリティーへの寄付でプロフェッショナルサービスを利用できるサービスマーケットプレイス",
     "hero": {
-      "title": "Connect Services with Charitable Impact",
-      "subtitle": "Browse professional services. Make donations to registered charities. Build community connections.",
-      "browse_services": "Browse Services",
-      "how_it_works": "How It Works"
+      "title": "サービスとチャリティーの影響をつなぐ",
+      "subtitle": "プロフェッショナルサービスを探す。登録チャリティーに寄付する。コミュニティのつながりを築く。",
+      "browse_services": "サービスを探す",
+      "how_it_works": "仕組み"
     },
     "how_it_works": {
-      "title": "How It Works",
+      "title": "仕組み",
       "step1": {
-        "title": "Browse Services",
-        "description": "Find professional services offered by community providers"
+        "title": "サービスを探す",
+        "description": "コミュニティプロバイダーが提供するプロフェッショナルサービスを見つける"
       },
       "step2": {
-        "title": "Choose a Charity",
-        "description": "Select from registered charities to receive your donation"
+        "title": "チャリティーを選ぶ",
+        "description": "寄付を受け取る登録チャリティーから選択する"
       },
       "step3": {
-        "title": "Make Impact",
-        "description": "Your donation unlocks the service and supports a great cause"
+        "title": "インパクトを作る",
+        "description": "あなたの寄付がサービスを解除し、素晴らしい目的をサポートします"
       }
     },
     "recent_activity": {
-      "title": "Recent Community Activity",
-      "someone_donated": "Someone donated",
-      "via_service": "via",
-      "hours_ago": "hours ago",
-      "minutes_ago": "minutes ago"
+      "title": "最近のコミュニティ活動",
+      "someone_donated": "どなたかが寄付しました",
+      "via_service": "経由で",
+      "hours_ago": "時間前",
+      "minutes_ago": "分前",
+      "days_ago": "日前"
     }
   },
   "dashboard": {
-    "title": "Dashboard",
-    "welcome": "Welcome",
+    "title": "ダッシュボード",
+    "welcome": "おかえりなさい",
+    "profileReady": "プロフィールが設定され、準備完了です。",
+    "completeProfile": "開始するためにプロフィールを完成させてください。",
+    "serviceProvider": "サービスプロバイダー",
+    "supporter": "サポーター",
+    "getStarted": "開始する",
+    "setupPrompt": "Powered by Donationの使用を開始するためにプロフィールを設定してください：",
+    "createProfile": "プロフィールを作成",
+    "providerDashboard": "プロバイダーダッシュボード",
+    "providerDescription": "サービスと寄付を管理",
+    "manageServices": "サービスを管理",
+    "createNewService": "新しいサービスを作成",
+    "becomeProvider": "プロバイダーになる",
+    "providerOffer": "サービスを提供してチャリティーをサポート",
+    "enableProviderRole": "プロバイダーロールを有効にする",
+    "supporterDashboard": "サポーターダッシュボード",
+    "supporterDescription": "寄付とインパクトを追跡",
+    "myDonations": "私の寄付",
+    "browseServices": "サービスを探す",
+    "becomeSupporter": "サポーターになる",
+    "supporterOffer": "サービスとチャリティーをサポート",
+    "enableSupporterRole": "サポーターロールを有効にする",
+    "accountSettings": "アカウント設定",
+    "accountDescription": "アカウントの設定を管理",
+    "editProfile": "プロフィール編集",
+    "privacySettings": "プライバシー設定",
+    "profileManagement": "プロフィール管理",
+    "yourProfile": "あなたのプロフィール",
+    "name": "名前",
+    "username": "ユーザー名",
+    "location": "場所",
+    "roles": "ロール",
+    "providerAndSupporter": "プロバイダー＆サポーター",
+    "providerRole": "プロバイダー",
+    "supporterRole": "サポーター",
+    "noRoles": "なし",
     "provider_section": {
-      "title": "As a Provider",
-      "create_service": "Create Service",
-      "manage_services": "Manage Services",
-      "view_requests": "View Requests"
+      "title": "プロバイダーとして",
+      "create_service": "サービスを作成",
+      "update_service": "サービスを更新",
+      "creating": "作成中...",
+      "updating": "更新中...",
+      "manage_services": "サービスを管理",
+      "view_requests": "リクエストを表示"
     },
     "supporter_section": {
-      "title": "As a Supporter",
-      "browse_services": "Browse Services",
-      "donation_history": "Donation History"
+      "title": "サポーターとして",
+      "browse_services": "サービスを探す",
+      "donation_history": "寄付履歴"
     },
     "profile_section": {
-      "title": "Profile Management",
-      "edit_profile": "Edit Profile",
-      "account_settings": "Account Settings"
+      "title": "プロフィール管理",
+      "edit_profile": "プロフィール編集",
+      "account_settings": "アカウント設定"
     }
   },
   "profile": {
     "setup": {
-      "title": "Set Up Your Profile",
-      "subtitle": "Create your profile to start using Powered by Donation as a service provider, supporter, or both.",
-      "create_profile": "Create Your Profile",
-      "update_profile": "Update Your Profile",
+      "title": "プロフィールを設定",
+      "subtitle": "サービスプロバイダー、サポーター、またはその両方としてPowered by Donationの使用を開始するためにプロフィールを作成してください。",
+      "create_profile": "プロフィールを作成",
+      "update_profile": "プロフィールを更新",
       "roles": {
-        "title": "Your Role(s)",
+        "title": "あなたのロール",
         "provider": {
-          "title": "Service Provider",
-          "description": "Offer services and help charities"
+          "title": "サービスプロバイダー",
+          "description": "サービスを提供してチャリティーを支援"
         },
         "supporter": {
-          "title": "Supporter",
-          "description": "Find services and make charitable donations"
+          "title": "サポーター",
+          "description": "サービスを見つけてチャリティー寄付を行う"
         }
       },
       "form": {
-        "full_name": "Full Name",
-        "full_name_placeholder": "Your full name",
-        "username": "Username (Optional)",
-        "username_placeholder": "Choose a unique username",
-        "username_help": "For public profile URL (optional)",
-        "bio": "Bio",
-        "bio_placeholder": "Tell others about yourself and your interests...",
-        "location": "Location",
-        "location_placeholder": "City, State/Country",
-        "phone": "Phone Number",
-        "phone_placeholder": "Your phone number",
-        "create_profile": "Create Profile",
-        "update_profile": "Update Profile",
-        "saving": "Saving...",
-        "success_created": "Profile created successfully!",
-        "success_updated": "Profile updated successfully!",
-        "error_name_required": "Name is required",
-        "error_role_required": "You must be either a provider, supporter, or both",
-        "error_save_failed": "Failed to save profile"
+        "full_name": "フルネーム",
+        "full_name_placeholder": "あなたのフルネーム",
+        "username": "ユーザー名（オプション）",
+        "username_placeholder": "一意のユーザー名を選択",
+        "username_help": "公開プロフィールURL用（オプション）",
+        "bio": "自己紹介",
+        "bio_placeholder": "あなた自身と興味について他の人に教えてください...",
+        "location": "場所",
+        "location_placeholder": "市、州/国",
+        "phone": "電話番号",
+        "phone_placeholder": "あなたの電話番号",
+        "create_profile": "プロフィール作成",
+        "update_profile": "プロフィール更新",
+        "saving": "保存中...",
+        "success_created": "プロフィールが正常に作成されました！",
+        "success_updated": "プロフィールが正常に更新されました！",
+        "error_name_required": "名前は必須です",
+        "error_role_required": "プロバイダー、サポーター、またはその両方である必要があります",
+        "error_save_failed": "プロフィールの保存に失敗しました"
       }
     }
   },
   "services": {
     "browse": {
-      "title": "Browse Services",
-      "subtitle": "Find professional services and support charities",
-      "no_services": "No services found",
-      "load_more": "Load More"
+      "title": "サービスを探す",
+      "subtitle": "プロフェッショナルサービスを見つけてチャリティーをサポート",
+      "no_services": "サービスが見つかりません",
+      "load_more": "さらに読み込む",
+      "allLocations": "すべての場所",
+      "provider": "プロバイダー",
+      "communityImpact": {
+        "title": "コミュニティインパクト",
+        "activeServices": "アクティブサービス",
+        "totalDonationPotential": "総寄付ポテンシャル",
+        "activeProviders": "アクティブプロバイダー",
+        "donationsNote": "すべての寄付はJustGiving経由で登録チャリティーに直接送られます"
+      },
+      "callToAction": {
+        "title": "サービスを提供したいですか？",
+        "description": "プロバイダーコミュニティに参加して、スキルを披露しながらチャリティーを支援しましょう。",
+        "button": "開始する"
+      }
     },
     "create": {
-      "title": "Create New Service",
-      "subtitle": "Offer your skills to help charities receive donations"
+      "title": "新しいサービスを作成",
+      "subtitle": "チャリティーが寄付を受け取れるようにスキルを提供"
     }
   },
   "common": {
-    "loading": "Loading...",
-    "error": "Error",
-    "success": "Success",
-    "cancel": "Cancel",
-    "save": "Save",
-    "delete": "Delete",
-    "edit": "Edit",
-    "view": "View",
-    "back": "Back",
-    "next": "Next",
-    "previous": "Previous",
-    "search": "Search",
-    "filter": "Filter",
-    "sort": "Sort",
-    "clear": "Clear",
-    "apply": "Apply",
-    "reset": "Reset"
+    "loading": "読み込み中...",
+    "error": "エラー",
+    "success": "成功",
+    "cancel": "キャンセル",
+    "save": "保存",
+    "delete": "削除",
+    "edit": "編集",
+    "view": "表示",
+    "back": "戻る",
+    "next": "次へ",
+    "previous": "前へ",
+    "search": "検索",
+    "filter": "フィルター",
+    "sort": "並び替え",
+    "clear": "クリア",
+    "apply": "適用",
+    "reset": "リセット"
   },
   "auth": {
     "login": {
-      "title": "Login",
-      "subtitle": "Sign in to your account"
+      "title": "ログイン",
+      "subtitle": "アカウントにサインイン",
+      "email": "メール",
+      "password": "パスワード",
+      "email_placeholder": "your@email.com",
+      "password_placeholder": "あなたのパスワード",
+      "sign_in_button": "ログイン",
+      "signing_in": "ログイン中...",
+      "or_continue_with": "または次でログイン",
+      "no_account": "アカウントをお持ちでないですか？",
+      "sign_up_link": "登録する",
+      "forgot_password": "パスワードを忘れましたか？",
+      "remember_me": "ログイン状態を保つ"
     },
     "logout": {
-      "title": "Logout",
-      "confirm": "Are you sure you want to logout?"
+      "title": "ログアウト",
+      "confirm": "本当にログアウトしますか？"
+    },
+    "signup": {
+      "title": "アカウント作成",
+      "fields": {
+        "email": "メール",
+        "password": "パスワード",
+        "confirmPassword": "パスワード確認"
+      },
+      "placeholders": {
+        "email": "your@email.com",
+        "password": "6文字以上",
+        "confirmPassword": "パスワードを確認"
+      },
+      "buttons": {
+        "create": "アカウント作成",
+        "creating": "アカウント作成中..."
+      },
+      "errors": {
+        "passwordMismatch": "パスワードが一致しません",
+        "passwordTooShort": "パスワードは6文字以上である必要があります"
+      },
+      "success": {
+        "title": "メールを確認してください！",
+        "message": "確認リンクを送信しました",
+        "instruction": "メールを確認し、リンクをクリックしてアカウントを有効化してください。",
+        "backToLogin": "ログインに戻る"
+      },
+      "divider": "または次でログイン",
+      "socialButtons": {
+        "google": "Googleで登録",
+        "microsoft": "Microsoftで登録",
+        "github": "GitHubで登録",
+        "apple": "Appleで登録"
+      },
+      "footer": {
+        "hasAccount": "すでにアカウントをお持ちですか？",
+        "signIn": "ログイン"
+      }
     }
   },
   "footer": {
@@ -186,17 +288,47 @@
     }
   },
   "language": {
-    "select": "Select Language",
+    "select": "言語を選択",
+    "ar": "العربية",
+    "de": "Deutsch",
+    "el": "Ελληνικά",
     "en": "English",
     "es": "Español",
     "fr": "Français",
-    "de": "Deutsch",
+    "hi": "हिन्दी",
     "it": "Italiano",
-    "pt": "Português",
-    "zh": "中文",
     "ja": "日本語",
     "ko": "한국어",
-    "ar": "العربية",
-    "tr": "Türkçe"
+    "pa": "ਪੰਜਾਬੀ",
+    "pt": "Português",
+    "tl": "Filipino",
+    "tr": "Türkçe",
+    "vi": "Tiếng Việt",
+    "yue": "粵語",
+    "zh": "中文"
+  },
+  "deleteProfile": {
+    "title": "プロフィールを削除",
+    "description": "これによりプロフィールと関連するすべてのデータが永久に削除されます。この操作は元に戻せません。",
+    "providerWarning": "⚠️ プロバイダーとして、すべてのサービスとサービス履歴も削除されます。",
+    "supporterWarning": "⚠️ サポーターとして、寄付履歴とサービスリクエストが削除されます。",
+    "deleteButton": "プロフィールを削除",
+    "confirmTitle": "プロフィール削除を確認",
+    "confirmDescription": "\"{name}\"のプロフィールを削除してもよろしいですか？この操作は永続的で:",
+    "confirmList": {
+      "deleteInfo": "プロフィール情報を削除",
+      "removeServices": "すべてのサービスを削除",
+      "deleteHistory": "寄付履歴を削除",
+      "signOut": "プラットフォームからログアウト",
+      "cannotUndo": "元に戻せません"
+    },
+    "confirmButton": "はい、プロフィールを削除します",
+    "deleting": "削除中...",
+    "cancel": "キャンセル",
+    "errors": {
+      "activeServices": "アクティブなサービスがある間はプロフィールを削除できません。最初にすべてのサービスを無効化してください。",
+      "activeRequests": "アクティブなサービスリクエストや保留中の寄付がある間はプロフィールを削除できません。サポートが必要な場合はお問い合わせください。",
+      "deleteFailed": "プロフィールの削除に失敗しました"
+    }
   }
 }

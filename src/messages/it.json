@@ -18,118 +18,171 @@
       "how_it_works": "Come Funziona"
     },
     "how_it_works": {
-      "title": "How It Works",
+      "title": "Come Funziona",
       "step1": {
-        "title": "Browse Services",
-        "description": "Find professional services offered by community providers"
+        "title": "Esplora Servizi",
+        "description": "Trova servizi professionali offerti dai fornitori della comunità"
       },
       "step2": {
-        "title": "Choose a Charity",
-        "description": "Select from registered charities to receive your donation"
+        "title": "Scegli un Ente di Beneficenza",
+        "description": "Seleziona tra gli enti di beneficenza registrati per ricevere la tua donazione"
       },
       "step3": {
-        "title": "Make Impact",
-        "description": "Your donation unlocks the service and supports a great cause"
+        "title": "Crea Impatto",
+        "description": "La tua donazione sblocca il servizio e supporta una grande causa"
       }
     },
     "recent_activity": {
-      "title": "Recent Community Activity",
-      "someone_donated": "Someone donated",
-      "via_service": "via",
-      "hours_ago": "hours ago",
-      "minutes_ago": "minutes ago"
+      "title": "Attività Recente della Comunità",
+      "someone_donated": "Qualcuno ha donato",
+      "via_service": "tramite",
+      "hours_ago": "ore fa",
+      "minutes_ago": "minuti fa",
+      "days_ago": "giorni fa"
     }
   },
   "dashboard": {
     "title": "Dashboard",
-    "welcome": "Welcome",
+    "welcome": "Bentornato",
+    "profileReady": "Il tuo profilo è configurato e pronto.",
+    "completeProfile": "Completa il tuo profilo per iniziare.",
+    "serviceProvider": "Fornitore di Servizi",
+    "supporter": "Sostenitore",
+    "getStarted": "Inizia",
+    "setupPrompt": "Configura il tuo profilo per iniziare a utilizzare Powered by Donation:",
+    "createProfile": "Crea il Tuo Profilo",
+    "providerDashboard": "Dashboard Fornitore",
+    "providerDescription": "Gestisci i tuoi servizi e donazioni",
+    "manageServices": "Gestisci Servizi",
+    "createNewService": "Crea Nuovo Servizio",
+    "becomeProvider": "Diventa Fornitore",
+    "providerOffer": "Offri servizi e supporta enti di beneficenza",
+    "enableProviderRole": "Attiva Ruolo Fornitore",
+    "supporterDashboard": "Dashboard Sostenitore",
+    "supporterDescription": "Tieni traccia delle tue donazioni e impatto",
+    "myDonations": "Le Mie Donazioni",
+    "browseServices": "Esplora Servizi",
+    "becomeSupporter": "Diventa Sostenitore",
+    "supporterOffer": "Supporta servizi ed enti di beneficenza",
+    "enableSupporterRole": "Attiva Ruolo Sostenitore",
+    "accountSettings": "Impostazioni Account",
+    "accountDescription": "Gestisci le preferenze del tuo account",
+    "editProfile": "Modifica Profilo",
+    "privacySettings": "Impostazioni Privacy",
+    "profileManagement": "Gestione Profilo",
+    "yourProfile": "Il Tuo Profilo",
+    "name": "Nome",
+    "username": "Nome Utente",
+    "location": "Posizione",
+    "roles": "Ruoli",
+    "providerAndSupporter": "Fornitore e Sostenitore",
+    "providerRole": "Fornitore",
+    "supporterRole": "Sostenitore",
+    "noRoles": "Nessuno",
     "provider_section": {
-      "title": "As a Provider",
-      "create_service": "Create Service",
-      "manage_services": "Manage Services",
-      "view_requests": "View Requests"
+      "title": "Come Fornitore",
+      "create_service": "Crea Servizio",
+      "update_service": "Aggiorna Servizio",
+      "creating": "Creazione...",
+      "updating": "Aggiornamento...",
+      "manage_services": "Gestisci Servizi",
+      "view_requests": "Visualizza Richieste"
     },
     "supporter_section": {
-      "title": "As a Supporter",
-      "browse_services": "Browse Services",
-      "donation_history": "Donation History"
+      "title": "Come Sostenitore",
+      "browse_services": "Esplora Servizi",
+      "donation_history": "Cronologia Donazioni"
     },
     "profile_section": {
-      "title": "Profile Management",
-      "edit_profile": "Edit Profile",
-      "account_settings": "Account Settings"
+      "title": "Gestione Profilo",
+      "edit_profile": "Modifica Profilo",
+      "account_settings": "Impostazioni Account"
     }
   },
   "profile": {
     "setup": {
-      "title": "Set Up Your Profile",
-      "subtitle": "Create your profile to start using Powered by Donation as a service provider, supporter, or both.",
-      "create_profile": "Create Your Profile",
-      "update_profile": "Update Your Profile",
+      "title": "Configura il Tuo Profilo",
+      "subtitle": "Crea il tuo profilo per iniziare a utilizzare Powered by Donation come fornitore di servizi, sostenitore o entrambi.",
+      "create_profile": "Crea il Tuo Profilo",
+      "update_profile": "Aggiorna il Tuo Profilo",
       "roles": {
-        "title": "Your Role(s)",
+        "title": "I Tuoi Ruoli",
         "provider": {
-          "title": "Service Provider",
-          "description": "Offer services and help charities"
+          "title": "Fornitore di Servizi",
+          "description": "Offri servizi e aiuta gli enti di beneficenza"
         },
         "supporter": {
-          "title": "Supporter",
-          "description": "Find services and make charitable donations"
+          "title": "Sostenitore",
+          "description": "Trova servizi e fai donazioni benefiche"
         }
       },
       "form": {
-        "full_name": "Full Name",
-        "full_name_placeholder": "Your full name",
-        "username": "Username (Optional)",
-        "username_placeholder": "Choose a unique username",
-        "username_help": "For public profile URL (optional)",
-        "bio": "Bio",
-        "bio_placeholder": "Tell others about yourself and your interests...",
-        "location": "Location",
-        "location_placeholder": "City, State/Country",
-        "phone": "Phone Number",
-        "phone_placeholder": "Your phone number",
-        "create_profile": "Create Profile",
-        "update_profile": "Update Profile",
-        "saving": "Saving...",
-        "success_created": "Profile created successfully!",
-        "success_updated": "Profile updated successfully!",
-        "error_name_required": "Name is required",
-        "error_role_required": "You must be either a provider, supporter, or both",
-        "error_save_failed": "Failed to save profile"
+        "full_name": "Nome Completo",
+        "full_name_placeholder": "Il tuo nome completo",
+        "username": "Nome Utente (Opzionale)",
+        "username_placeholder": "Scegli un nome utente unico",
+        "username_help": "Per l'URL del profilo pubblico (opzionale)",
+        "bio": "Biografia",
+        "bio_placeholder": "Racconta agli altri di te e dei tuoi interessi...",
+        "location": "Posizione",
+        "location_placeholder": "Città, Stato/Paese",
+        "phone": "Numero di Telefono",
+        "phone_placeholder": "Il tuo numero di telefono",
+        "create_profile": "Crea Profilo",
+        "update_profile": "Aggiorna Profilo",
+        "saving": "Salvataggio...",
+        "success_created": "Profilo creato con successo!",
+        "success_updated": "Profilo aggiornato con successo!",
+        "error_name_required": "Il nome è obbligatorio",
+        "error_role_required": "Devi essere un fornitore, sostenitore o entrambi",
+        "error_save_failed": "Impossibile salvare il profilo"
       }
     }
   },
   "services": {
     "browse": {
-      "title": "Browse Services",
-      "subtitle": "Find professional services and support charities",
-      "no_services": "No services found",
-      "load_more": "Load More"
+      "title": "Esplora Servizi",
+      "subtitle": "Trova servizi professionali e supporta enti di beneficenza",
+      "no_services": "Nessun servizio trovato",
+      "load_more": "Carica Altri",
+      "allLocations": "Tutte le Posizioni",
+      "provider": "Fornitore",
+      "communityImpact": {
+        "title": "Impatto della Comunità",
+        "activeServices": "Servizi Attivi",
+        "totalDonationPotential": "Potenziale Totale di Donazione",
+        "activeProviders": "Fornitori Attivi",
+        "donationsNote": "Tutte le donazioni vanno direttamente agli enti di beneficenza registrati tramite JustGiving"
+      },
+      "callToAction": {
+        "title": "Vuoi offrire i tuoi servizi?",
+        "description": "Unisciti alla nostra comunità di fornitori e aiuta gli enti di beneficenza mostrando le tue competenze.",
+        "button": "Inizia"
+      }
     },
     "create": {
-      "title": "Create New Service",
-      "subtitle": "Offer your skills to help charities receive donations"
+      "title": "Crea Nuovo Servizio",
+      "subtitle": "Offri le tue competenze per aiutare gli enti di beneficenza a ricevere donazioni"
     }
   },
   "common": {
-    "loading": "Loading...",
-    "error": "Error",
-    "success": "Success",
-    "cancel": "Cancel",
-    "save": "Save",
-    "delete": "Delete",
-    "edit": "Edit",
-    "view": "View",
-    "back": "Back",
-    "next": "Next",
-    "previous": "Previous",
-    "search": "Search",
-    "filter": "Filter",
-    "sort": "Sort",
-    "clear": "Clear",
-    "apply": "Apply",
-    "reset": "Reset"
+    "loading": "Caricamento...",
+    "error": "Errore",
+    "success": "Successo",
+    "cancel": "Annulla",
+    "save": "Salva",
+    "delete": "Elimina",
+    "edit": "Modifica",
+    "view": "Visualizza",
+    "back": "Indietro",
+    "next": "Avanti",
+    "previous": "Precedente",
+    "search": "Cerca",
+    "filter": "Filtra",
+    "sort": "Ordina",
+    "clear": "Cancella",
+    "apply": "Applica",
+    "reset": "Reimposta"
   },
   "auth": {
     "login": {
@@ -152,14 +205,42 @@
       "confirm": "Sei sicuro di voler uscire?"
     },
     "signup": {
-      "title": "Registrati",
-      "subtitle": "Crea il tuo account",
-      "name": "Nome completo",
-      "confirm_password": "Conferma password",
-      "sign_up_button": "Registrati",
-      "signing_up": "Creazione account...",
-      "have_account": "Hai già un account?",
-      "sign_in_link": "Accedi"
+      "title": "Crea Account",
+      "fields": {
+        "email": "Email",
+        "password": "Password",
+        "confirmPassword": "Conferma Password"
+      },
+      "placeholders": {
+        "email": "tua@email.com",
+        "password": "Almeno 6 caratteri",
+        "confirmPassword": "Conferma la tua password"
+      },
+      "buttons": {
+        "create": "Crea Account",
+        "creating": "Creazione account..."
+      },
+      "errors": {
+        "passwordMismatch": "Le password non corrispondono",
+        "passwordTooShort": "La password deve essere di almeno 6 caratteri"
+      },
+      "success": {
+        "title": "Controlla la Tua Email!",
+        "message": "Ti abbiamo inviato un link di conferma a",
+        "instruction": "Controlla la tua email e clicca sul link per attivare il tuo account.",
+        "backToLogin": "Torna al Login"
+      },
+      "divider": "O continua con",
+      "socialButtons": {
+        "google": "Registrati con Google",
+        "microsoft": "Registrati con Microsoft",
+        "github": "Registrati con GitHub",
+        "apple": "Registrati con Apple"
+      },
+      "footer": {
+        "hasAccount": "Hai già un account?",
+        "signIn": "Accedi"
+      }
     }
   },
   "footer": {
@@ -202,22 +283,52 @@
     },
     "bottom": {
       "copyright": "© 2025 Powered by Donation. Costruito con ❤️ per la comunità.",
-      "made_in": "Made in Australia",
+      "made_in": "Realizzato in Australia",
       "powered_by": "Alimentato da JustGiving"
     }
   },
   "language": {
-    "select": "Select Language",
+    "select": "Seleziona Lingua",
+    "ar": "العربية",
+    "de": "Deutsch",
+    "el": "Ελληνικά",
     "en": "English",
     "es": "Español",
     "fr": "Français",
-    "de": "Deutsch",
+    "hi": "हिन्दी",
     "it": "Italiano",
-    "pt": "Português",
-    "zh": "中文",
     "ja": "日本語",
     "ko": "한국어",
-    "ar": "العربية",
-    "tr": "Türkçe"
+    "pa": "ਪੰਜਾਬੀ",
+    "pt": "Português",
+    "tl": "Filipino",
+    "tr": "Türkçe",
+    "vi": "Tiếng Việt",
+    "yue": "粵語",
+    "zh": "中文"
+  },
+  "deleteProfile": {
+    "title": "Elimina Profilo",
+    "description": "Questo eliminerà permanentemente il tuo profilo e tutti i dati associati. Questa azione non può essere annullata.",
+    "providerWarning": "⚠️ Come fornitore, questo eliminerà anche tutti i tuoi servizi e la cronologia dei servizi.",
+    "supporterWarning": "⚠️ Come sostenitore, questo eliminerà la tua cronologia delle donazioni e le richieste di servizio.",
+    "deleteButton": "Elimina Profilo",
+    "confirmTitle": "Conferma Eliminazione Profilo",
+    "confirmDescription": "Sei sicuro di voler eliminare il tuo profilo per \"{name}\"? Questa azione è permanente e:",
+    "confirmList": {
+      "deleteInfo": "Eliminerà le informazioni del tuo profilo",
+      "removeServices": "Rimuoverà tutti i tuoi servizi",
+      "deleteHistory": "Eliminerà la tua cronologia delle donazioni",
+      "signOut": "Ti disconnetterà dalla piattaforma",
+      "cannotUndo": "Non può essere annullata"
+    },
+    "confirmButton": "Sì, Elimina il Mio Profilo",
+    "deleting": "Eliminazione...",
+    "cancel": "Annulla",
+    "errors": {
+      "activeServices": "Non puoi eliminare il tuo profilo mentre hai servizi attivi. Disattiva prima tutti i servizi.",
+      "activeRequests": "Non puoi eliminare il tuo profilo mentre hai richieste di servizio attive o donazioni in sospeso. Contatta il supporto se hai bisogno di assistenza.",
+      "deleteFailed": "Impossibile eliminare il profilo"
+    }
   }
 }

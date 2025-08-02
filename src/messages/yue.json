@@ -33,10 +33,214 @@
       }
     },
     "recent_activity": {
-      "title": "最近活動",
+      "title": "最近社區活動",
       "someone_donated": "有人捐咗",
-      "via_service": "透過服務俾",
-      "hours_ago": "小時前"
+      "via_service": "透過",
+      "hours_ago": "小時前",
+      "minutes_ago": "分鐘前",
+      "days_ago": "日前"
+    }
+  },
+  "dashboard": {
+    "title": "控制面板",
+    "welcome": "歡迎返嚟",
+    "profileReady": "你嘅個人檔案已經設定好，可以開始使用。",
+    "completeProfile": "完成你嘅個人檔案開始使用。",
+    "serviceProvider": "服務提供者",
+    "supporter": "支持者",
+    "getStarted": "開始使用",
+    "setupPrompt": "設定你嘅個人檔案開始使用Powered by Donation：",
+    "createProfile": "建立你嘅個人檔案",
+    "providerDashboard": "提供者控制面板",
+    "providerDescription": "管理你嘅服務同捐款",
+    "manageServices": "管理服務",
+    "createNewService": "建立新服務",
+    "becomeProvider": "成為提供者",
+    "providerOffer": "提供服務同支持慈善機構",
+    "enableProviderRole": "啟用提供者角色",
+    "supporterDashboard": "支持者控制面板",
+    "supporterDescription": "追蹤你嘅捐款同影響",
+    "myDonations": "我嘅捐款",
+    "browseServices": "瀏覽服務",
+    "becomeSupporter": "成為支持者",
+    "supporterOffer": "支持服務同慈善機構",
+    "enableSupporterRole": "啟用支持者角色",
+    "accountSettings": "帳戶設定",
+    "accountDescription": "管理你嘅帳戶偏好",
+    "editProfile": "編輯個人檔案",
+    "privacySettings": "私隱設定",
+    "profileManagement": "個人檔案管理",
+    "yourProfile": "你嘅個人檔案",
+    "name": "姓名",
+    "username": "用戶名",
+    "location": "位置",
+    "roles": "角色",
+    "providerAndSupporter": "提供者同支持者",
+    "providerRole": "提供者",
+    "supporterRole": "支持者",
+    "noRoles": "無",
+    "provider_section": {
+      "title": "作為提供者",
+      "create_service": "建立服務",
+      "update_service": "更新服務",
+      "creating": "建立緊...",
+      "updating": "更新緊...",
+      "manage_services": "管理服務",
+      "view_requests": "查看要求"
+    },
+    "supporter_section": {
+      "title": "作為支持者",
+      "browse_services": "瀏覽服務",
+      "donation_history": "捐款歷史"
+    },
+    "profile_section": {
+      "title": "個人檔案管理",
+      "edit_profile": "編輯個人檔案",
+      "account_settings": "帳戶設定"
+    }
+  },
+  "profile": {
+    "setup": {
+      "title": "設定你嘅個人檔案",
+      "subtitle": "建立你嘅個人檔案開始使用Powered by Donation作為服務提供者、支持者或兩者皆是。",
+      "create_profile": "建立你嘅個人檔案",
+      "update_profile": "更新你嘅個人檔案",
+      "roles": {
+        "title": "你嘅角色",
+        "provider": {
+          "title": "服務提供者",
+          "description": "提供服務同幫助慈善機構"
+        },
+        "supporter": {
+          "title": "支持者",
+          "description": "搵服務同進行慈善捐款"
+        }
+      },
+      "form": {
+        "full_name": "全名",
+        "full_name_placeholder": "你嘅全名",
+        "username": "用戶名（可選）",
+        "username_placeholder": "選擇一個獨特嘅用戶名",
+        "username_help": "用於公開個人檔案網址（可選）",
+        "bio": "簡介",
+        "bio_placeholder": "話畀其他人知你嘅情況同興趣...",
+        "location": "位置",
+        "location_placeholder": "城市，州/國家",
+        "phone": "電話號碼",
+        "phone_placeholder": "你嘅電話號碼",
+        "create_profile": "建立個人檔案",
+        "update_profile": "更新個人檔案",
+        "saving": "儲存緊...",
+        "success_created": "個人檔案建立成功！",
+        "success_updated": "個人檔案更新成功！",
+        "error_name_required": "姓名係必須嘅",
+        "error_role_required": "你必須係提供者、支持者或兩者皆是",
+        "error_save_failed": "儲存個人檔案失敗"
+      }
+    }
+  },
+  "services": {
+    "browse": {
+      "title": "瀏覽服務",
+      "subtitle": "搵專業服務同支持慈善機構",
+      "no_services": "搵唔到服務",
+      "load_more": "載入更多",
+      "allLocations": "所有位置",
+      "provider": "提供者",
+      "communityImpact": {
+        "title": "社區影響",
+        "activeServices": "活躍服務",
+        "totalDonationPotential": "總捐款潛力",
+        "activeProviders": "活躍提供者",
+        "donationsNote": "所有捐款都直接透過JustGiving去到註冊慈善機構"
+      },
+      "callToAction": {
+        "title": "想提供你嘅服務？",
+        "description": "加入我哋嘅提供者社區，幫助慈善機構同時展示你嘅技能。",
+        "button": "開始使用"
+      }
+    },
+    "create": {
+      "title": "建立新服務",
+      "subtitle": "提供你嘅技能幫助慈善機構接收捐款"
+    }
+  },
+  "common": {
+    "loading": "載入緊...",
+    "error": "錯誤",
+    "success": "成功",
+    "cancel": "取消",
+    "save": "儲存",
+    "delete": "刪除",
+    "edit": "編輯",
+    "view": "查看",
+    "back": "返回",
+    "next": "下一個",
+    "previous": "上一個",
+    "search": "搜尋",
+    "filter": "篩選",
+    "sort": "排序",
+    "clear": "清除",
+    "apply": "應用",
+    "reset": "重設"
+  },
+  "auth": {
+    "login": {
+      "title": "登入",
+      "subtitle": "登入你嘅帳戶",
+      "email": "電郵",
+      "password": "密碼",
+      "email_placeholder": "your@email.com",
+      "password_placeholder": "你嘅密碼",
+      "sign_in_button": "登入",
+      "signing_in": "登入緊...",
+      "or_continue_with": "或者用以下方式繼續",
+      "no_account": "冇帳戶？",
+      "sign_up_link": "註冊",
+      "forgot_password": "忘記密碼？",
+      "remember_me": "記住我"
+    },
+    "logout": {
+      "title": "登出",
+      "confirm": "你確定要登出？"
+    },
+    "signup": {
+      "title": "建立帳戶",
+      "fields": {
+        "email": "電郵",
+        "password": "密碼",
+        "confirmPassword": "確認密碼"
+      },
+      "placeholders": {
+        "email": "your@email.com",
+        "password": "至少6個字符",
+        "confirmPassword": "確認你嘅密碼"
+      },
+      "buttons": {
+        "create": "建立帳戶",
+        "creating": "建立帳戶緊..."
+      },
+      "errors": {
+        "passwordMismatch": "密碼唔匹配",
+        "passwordTooShort": "密碼必須至少6個字符"
+      },
+      "success": {
+        "title": "檢查你嘅電郵！",
+        "message": "我哋已經發送確認連結到",
+        "instruction": "請檢查你嘅電郵並點擊連結啟用你嘅帳戶。",
+        "backToLogin": "返回登入"
+      },
+      "divider": "或者用以下方式繼續",
+      "socialButtons": {
+        "google": "用Google註冊",
+        "microsoft": "用Microsoft註冊",
+        "github": "用GitHub註冊",
+        "apple": "用Apple註冊"
+      },
+      "footer": {
+        "hasAccount": "已經有帳戶？",
+        "signIn": "登入"
+      }
     }
   },
   "footer": {
@@ -85,10 +289,46 @@
   },
   "language": {
     "select": "選擇語言",
+    "ar": "阿拉伯文",
+    "de": "德文",
+    "el": "希臘文",
     "en": "英文",
     "es": "西班牙文",
     "fr": "法文",
-    "de": "德文",
-    "yue": "粵語"
+    "hi": "印地文",
+    "it": "意大利文",
+    "ja": "日文",
+    "ko": "韓文",
+    "pa": "旁遮普文",
+    "pt": "葡萄牙文",
+    "tl": "菲律賓文",
+    "tr": "土耳其文",
+    "vi": "越南文",
+    "yue": "粵語",
+    "zh": "中文"
+  },
+  "deleteProfile": {
+    "title": "刪除個人檔案",
+    "description": "呢個會永久刪除你嘅個人檔案同所有相關資料。呢個動作係無得撤銷嘅。",
+    "providerWarning": "⚠️ 作為提供者，呢個亦會刪除你所有嘅服務同服務歷史。",
+    "supporterWarning": "⚠️ 作為支持者，呢個會刪除你嘅捐款歷史同服務要求。",
+    "deleteButton": "刪除個人檔案",
+    "confirmTitle": "確認刪除個人檔案",
+    "confirmDescription": "你確定要刪除\"{name}\"嘅個人檔案？呢個動作係永久嘅，會：",
+    "confirmList": {
+      "deleteInfo": "刪除你嘅個人檔案資料",
+      "removeServices": "移除你所有嘅服務",
+      "deleteHistory": "刪除你嘅捐款歷史",
+      "signOut": "將你登出平台",
+      "cannotUndo": "無得撤銷"
+    },
+    "confirmButton": "係，刪除我嘅個人檔案",
+    "deleting": "刪除緊...",
+    "cancel": "取消",
+    "errors": {
+      "activeServices": "當你有活躍服務時無法刪除個人檔案。請先停用所有服務。",
+      "activeRequests": "當你有活躍服務要求或待處理捐款時無法刪除個人檔案。如需協助請聯絡支援。",
+      "deleteFailed": "刪除個人檔案失敗"
+    }
   }
 }

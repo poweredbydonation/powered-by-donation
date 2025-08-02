@@ -1,144 +1,246 @@
 {
   "nav": {
-    "home": "Home",
-    "browse": "Browse Services",
-    "search": "Search",
-    "dashboard": "Dashboard",
-    "login": "Login",
-    "logout": "Logout",
-    "profile": "Profile"
+    "home": "홈",
+    "browse": "서비스 둘러보기",
+    "search": "검색",
+    "dashboard": "대시보드",
+    "login": "로그인",
+    "logout": "로그아웃",
+    "profile": "프로필"
   },
   "home": {
     "title": "Powered by Donation",
-    "subtitle": "Service marketplace where donations to charities unlock professional services",
+    "subtitle": "자선단체 기부를 통해 전문 서비스를 이용할 수 있는 서비스 마켓플레이스",
     "hero": {
-      "title": "Connect Services with Charitable Impact",
-      "subtitle": "Browse professional services. Make donations to registered charities. Build community connections.",
-      "browse_services": "Browse Services",
-      "how_it_works": "How It Works"
+      "title": "서비스와 자선 활동을 연결하세요",
+      "subtitle": "전문 서비스를 둘러보세요. 등록된 자선단체에 기부하세요. 커뮤니티 연결을 구축하세요.",
+      "browse_services": "서비스 둘러보기",
+      "how_it_works": "작동 원리"
     },
     "how_it_works": {
-      "title": "How It Works",
+      "title": "작동 원리",
       "step1": {
-        "title": "Browse Services",
-        "description": "Find professional services offered by community providers"
+        "title": "서비스 둘러보기",
+        "description": "커뮤니티 제공자가 제공하는 전문 서비스를 찾아보세요"
       },
       "step2": {
-        "title": "Choose a Charity",
-        "description": "Select from registered charities to receive your donation"
+        "title": "자선단체 선택",
+        "description": "기부를 받을 등록된 자선단체를 선택하세요"
       },
       "step3": {
-        "title": "Make Impact",
-        "description": "Your donation unlocks the service and supports a great cause"
+        "title": "영향력 만들기",
+        "description": "귀하의 기부가 서비스를 활성화하고 좋은 대의를 지원합니다"
       }
     },
     "recent_activity": {
-      "title": "Recent Community Activity",
-      "someone_donated": "Someone donated",
-      "via_service": "via",
-      "hours_ago": "hours ago",
-      "minutes_ago": "minutes ago"
+      "title": "최근 커뮤니티 활동",
+      "someone_donated": "누군가 기부했습니다",
+      "via_service": "~를 통해",
+      "hours_ago": "시간 전",
+      "minutes_ago": "분 전",
+      "days_ago": "일 전"
     }
   },
   "dashboard": {
-    "title": "Dashboard",
-    "welcome": "Welcome",
+    "title": "대시보드",
+    "welcome": "다시 오신 것을 환영합니다",
+    "profileReady": "귀하의 프로필이 설정되어 사용할 준비가 되었습니다.",
+    "completeProfile": "시작하려면 프로필을 완성하세요.",
+    "serviceProvider": "서비스 제공자",
+    "supporter": "후원자",
+    "getStarted": "시작하기",
+    "setupPrompt": "Powered by Donation 사용을 시작하려면 프로필을 설정하세요:",
+    "createProfile": "프로필 만들기",
+    "providerDashboard": "제공자 대시보드",
+    "providerDescription": "서비스와 기부를 관리하세요",
+    "manageServices": "서비스 관리",
+    "createNewService": "새 서비스 만들기",
+    "becomeProvider": "제공자 되기",
+    "providerOffer": "서비스를 제공하고 자선단체를 지원하세요",
+    "enableProviderRole": "제공자 역할 활성화",
+    "supporterDashboard": "후원자 대시보드",
+    "supporterDescription": "기부와 영향력을 추적하세요",
+    "myDonations": "내 기부",
+    "browseServices": "서비스 둘러보기",
+    "becomeSupporter": "후원자 되기",
+    "supporterOffer": "서비스와 자선단체를 지원하세요",
+    "enableSupporterRole": "후원자 역할 활성화",
+    "accountSettings": "계정 설정",
+    "accountDescription": "계정 환경설정을 관리하세요",
+    "editProfile": "프로필 편집",
+    "privacySettings": "개인정보 설정",
+    "profileManagement": "프로필 관리",
+    "yourProfile": "귀하의 프로필",
+    "name": "이름",
+    "username": "사용자명",
+    "location": "위치",
+    "roles": "역할",
+    "providerAndSupporter": "제공자 및 후원자",
+    "providerRole": "제공자",
+    "supporterRole": "후원자",
+    "noRoles": "없음",
     "provider_section": {
-      "title": "As a Provider",
-      "create_service": "Create Service",
-      "manage_services": "Manage Services",
-      "view_requests": "View Requests"
+      "title": "제공자로서",
+      "create_service": "서비스 만들기",
+      "update_service": "서비스 업데이트",
+      "creating": "생성 중...",
+      "updating": "업데이트 중...",
+      "manage_services": "서비스 관리",
+      "view_requests": "요청 보기"
     },
     "supporter_section": {
-      "title": "As a Supporter",
-      "browse_services": "Browse Services",
-      "donation_history": "Donation History"
+      "title": "후원자로서",
+      "browse_services": "서비스 둘러보기",
+      "donation_history": "기부 내역"
     },
     "profile_section": {
-      "title": "Profile Management",
-      "edit_profile": "Edit Profile",
-      "account_settings": "Account Settings"
+      "title": "프로필 관리",
+      "edit_profile": "프로필 편집",
+      "account_settings": "계정 설정"
     }
   },
   "profile": {
     "setup": {
-      "title": "Set Up Your Profile",
-      "subtitle": "Create your profile to start using Powered by Donation as a service provider, supporter, or both.",
-      "create_profile": "Create Your Profile",
-      "update_profile": "Update Your Profile",
+      "title": "프로필 설정",
+      "subtitle": "서비스 제공자, 후원자 또는 둘 다로 Powered by Donation을 사용하려면 프로필을 만드세요.",
+      "create_profile": "프로필 만들기",
+      "update_profile": "프로필 업데이트",
       "roles": {
-        "title": "Your Role(s)",
+        "title": "귀하의 역할",
         "provider": {
-          "title": "Service Provider",
-          "description": "Offer services and help charities"
+          "title": "서비스 제공자",
+          "description": "서비스를 제공하고 자선단체를 도우세요"
         },
         "supporter": {
-          "title": "Supporter",
-          "description": "Find services and make charitable donations"
+          "title": "후원자",
+          "description": "서비스를 찾고 자선 기부를 하세요"
         }
       },
       "form": {
-        "full_name": "Full Name",
-        "full_name_placeholder": "Your full name",
-        "username": "Username (Optional)",
-        "username_placeholder": "Choose a unique username",
-        "username_help": "For public profile URL (optional)",
-        "bio": "Bio",
-        "bio_placeholder": "Tell others about yourself and your interests...",
-        "location": "Location",
-        "location_placeholder": "City, State/Country",
-        "phone": "Phone Number",
-        "phone_placeholder": "Your phone number",
-        "create_profile": "Create Profile",
-        "update_profile": "Update Profile",
-        "saving": "Saving...",
-        "success_created": "Profile created successfully!",
-        "success_updated": "Profile updated successfully!",
-        "error_name_required": "Name is required",
-        "error_role_required": "You must be either a provider, supporter, or both",
-        "error_save_failed": "Failed to save profile"
+        "full_name": "전체 이름",
+        "full_name_placeholder": "귀하의 전체 이름",
+        "username": "사용자명 (선택사항)",
+        "username_placeholder": "고유한 사용자명을 선택하세요",
+        "username_help": "공개 프로필 URL용 (선택사항)",
+        "bio": "자기소개",
+        "bio_placeholder": "자신과 관심사에 대해 다른 사람들에게 알려주세요...",
+        "location": "위치",
+        "location_placeholder": "도시, 주/국가",
+        "phone": "전화번호",
+        "phone_placeholder": "귀하의 전화번호",
+        "create_profile": "프로필 만들기",
+        "update_profile": "프로필 업데이트",
+        "saving": "저장 중...",
+        "success_created": "프로필이 성공적으로 생성되었습니다!",
+        "success_updated": "프로필이 성공적으로 업데이트되었습니다!",
+        "error_name_required": "이름이 필요합니다",
+        "error_role_required": "제공자, 후원자 또는 둘 다여야 합니다",
+        "error_save_failed": "프로필 저장에 실패했습니다"
       }
     }
   },
   "services": {
     "browse": {
-      "title": "Browse Services",
-      "subtitle": "Find professional services and support charities",
-      "no_services": "No services found",
-      "load_more": "Load More"
+      "title": "서비스 둘러보기",
+      "subtitle": "전문 서비스를 찾고 자선단체를 지원하세요",
+      "no_services": "서비스를 찾을 수 없습니다",
+      "load_more": "더 보기",
+      "allLocations": "모든 위치",
+      "provider": "제공자",
+      "communityImpact": {
+        "title": "커뮤니티 임팩트",
+        "activeServices": "활성 서비스",
+        "totalDonationPotential": "총 기부 잠재력",
+        "activeProviders": "활성 제공자",
+        "donationsNote": "모든 기부금은 JustGiving을 통해 등록된 자선단체로 직접 전달됩니다"
+      },
+      "callToAction": {
+        "title": "서비스를 제공하고 싶으신가요?",
+        "description": "제공자 커뮤니티에 참여하여 자선단체를 도우며 기술을 선보이세요.",
+        "button": "시작하기"
+      }
     },
     "create": {
-      "title": "Create New Service",
-      "subtitle": "Offer your skills to help charities receive donations"
+      "title": "새 서비스 만들기",
+      "subtitle": "자선단체가 기부를 받을 수 있도록 기술을 제공하세요"
     }
   },
   "common": {
-    "loading": "Loading...",
-    "error": "Error",
-    "success": "Success",
-    "cancel": "Cancel",
-    "save": "Save",
-    "delete": "Delete",
-    "edit": "Edit",
-    "view": "View",
-    "back": "Back",
-    "next": "Next",
-    "previous": "Previous",
-    "search": "Search",
-    "filter": "Filter",
-    "sort": "Sort",
-    "clear": "Clear",
-    "apply": "Apply",
-    "reset": "Reset"
+    "loading": "로딩 중...",
+    "error": "오류",
+    "success": "성공",
+    "cancel": "취소",
+    "save": "저장",
+    "delete": "삭제",
+    "edit": "편집",
+    "view": "보기",
+    "back": "뒤로",
+    "next": "다음",
+    "previous": "이전",
+    "search": "검색",
+    "filter": "필터",
+    "sort": "정렬",
+    "clear": "지우기",
+    "apply": "적용",
+    "reset": "재설정"
   },
   "auth": {
     "login": {
-      "title": "Login",
-      "subtitle": "Sign in to your account"
+      "title": "로그인",
+      "subtitle": "계정에 로그인하세요",
+      "email": "이메일",
+      "password": "비밀번호",
+      "email_placeholder": "your@email.com",
+      "password_placeholder": "비밀번호",
+      "sign_in_button": "로그인",
+      "signing_in": "로그인 중...",
+      "or_continue_with": "또는 다음으로 계속",
+      "no_account": "계정이 없으신가요?",
+      "sign_up_link": "가입하기",
+      "forgot_password": "비밀번호를 잊으셨나요?",
+      "remember_me": "로그인 상태 유지"
     },
     "logout": {
-      "title": "Logout",
-      "confirm": "Are you sure you want to logout?"
+      "title": "로그아웃",
+      "confirm": "정말 로그아웃하시겠습니까?"
+    },
+    "signup": {
+      "title": "계정 만들기",
+      "fields": {
+        "email": "이메일",
+        "password": "비밀번호",
+        "confirmPassword": "비밀번호 확인"
+      },
+      "placeholders": {
+        "email": "your@email.com",
+        "password": "최소 6자",
+        "confirmPassword": "비밀번호 확인"
+      },
+      "buttons": {
+        "create": "계정 만들기",
+        "creating": "계정 생성 중..."
+      },
+      "errors": {
+        "passwordMismatch": "비밀번호가 일치하지 않습니다",
+        "passwordTooShort": "비밀번호는 최소 6자여야 합니다"
+      },
+      "success": {
+        "title": "이메일을 확인하세요!",
+        "message": "확인 링크를 다음 주소로 보냈습니다",
+        "instruction": "이메일을 확인하고 링크를 클릭하여 계정을 활성화하세요.",
+        "backToLogin": "로그인으로 돌아가기"
+      },
+      "divider": "또는 다음으로 계속",
+      "socialButtons": {
+        "google": "Google로 가입",
+        "microsoft": "Microsoft로 가입",
+        "github": "GitHub로 가입",
+        "apple": "Apple로 가입"
+      },
+      "footer": {
+        "hasAccount": "이미 계정이 있으신가요?",
+        "signIn": "로그인"
+      }
     }
   },
   "footer": {
@@ -186,17 +288,47 @@
     }
   },
   "language": {
-    "select": "Select Language",
+    "select": "언어 선택",
+    "ar": "العربية",
+    "de": "Deutsch",
+    "el": "Ελληνικά",
     "en": "English",
     "es": "Español",
     "fr": "Français",
-    "de": "Deutsch",
+    "hi": "हिन्दी",
     "it": "Italiano",
-    "pt": "Português",
-    "zh": "中文",
     "ja": "日本語",
     "ko": "한국어",
-    "ar": "العربية",
-    "tr": "Türkçe"
+    "pa": "ਪੰਜਾਬੀ",
+    "pt": "Português",
+    "tl": "Filipino",
+    "tr": "Türkçe",
+    "vi": "Tiếng Việt",
+    "yue": "粵語",
+    "zh": "中文"
+  },
+  "deleteProfile": {
+    "title": "프로필 삭제",
+    "description": "이렇게 하면 프로필과 관련된 모든 데이터가 영구적으로 삭제됩니다. 이 작업은 취소할 수 없습니다.",
+    "providerWarning": "⚠️ 제공자로서 모든 서비스와 서비스 내역도 삭제됩니다.",
+    "supporterWarning": "⚠️ 후원자로서 기부 내역과 서비스 요청이 삭제됩니다.",
+    "deleteButton": "프로필 삭제",
+    "confirmTitle": "프로필 삭제 확인",
+    "confirmDescription": "\"{name}\" 프로필을 삭제하시겠습니까? 이 작업은 영구적이며 다음과 같은 결과를 가져옵니다:",
+    "confirmList": {
+      "deleteInfo": "프로필 정보 삭제",
+      "removeServices": "모든 서비스 제거",
+      "deleteHistory": "기부 내역 삭제",
+      "signOut": "플랫폼에서 로그아웃",
+      "cannotUndo": "취소할 수 없음"
+    },
+    "confirmButton": "예, 내 프로필을 삭제합니다",
+    "deleting": "삭제 중...",
+    "cancel": "취소",
+    "errors": {
+      "activeServices": "활성 서비스가 있는 동안에는 프로필을 삭제할 수 없습니다. 먼저 모든 서비스를 비활성화해주세요.",
+      "activeRequests": "활성 서비스 요청이나 대기 중인 기부가 있는 동안에는 프로필을 삭제할 수 없습니다. 도움이 필요하시면 지원팀에 문의하세요.",
+      "deleteFailed": "프로필 삭제에 실패했습니다"
+    }
   }
 }

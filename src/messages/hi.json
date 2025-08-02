@@ -33,10 +33,214 @@
       }
     },
     "recent_activity": {
-      "title": "हाल की गतिविधि",
+      "title": "हाल की सामुदायिक गतिविधि",
       "someone_donated": "किसी ने दान किया",
-      "via_service": "सेवा के माध्यम से",
-      "hours_ago": "घंटे पहले"
+      "via_service": "के माध्यम से",
+      "hours_ago": "घंटे पहले",
+      "minutes_ago": "मिनट पहले",
+      "days_ago": "दिन पहले"
+    }
+  },
+  "dashboard": {
+    "title": "डैशबोर्ड",
+    "welcome": "वापस स्वागत है",
+    "profileReady": "आपकी प्रोफ़ाइल सेट अप है और तैयार है।",
+    "completeProfile": "शुरू करने के लिए अपनी प्रोफ़ाइल पूरी करें।",
+    "serviceProvider": "सेवा प्रदाता",
+    "supporter": "समर्थक",
+    "getStarted": "शुरू करें",
+    "setupPrompt": "Powered by Donation का उपयोग शुरू करने के लिए अपनी प्रोफ़ाइल सेट करें:",
+    "createProfile": "अपनी प्रोफ़ाइल बनाएं",
+    "providerDashboard": "प्रदाता डैशबोर्ड",
+    "providerDescription": "अपनी सेवाओं और दान का प्रबंधन करें",
+    "manageServices": "सेवाओं का प्रबंधन करें",
+    "createNewService": "नई सेवा बनाएं",
+    "becomeProvider": "प्रदाता बनें",
+    "providerOffer": "सेवाएं प्रदान करें और चैरिटी का समर्थन करें",
+    "enableProviderRole": "प्रदाता भूमिका सक्षम करें",
+    "supporterDashboard": "समर्थक डैशबोर्ड",
+    "supporterDescription": "अपने दान और प्रभाव को ट्रैक करें",
+    "myDonations": "मेरे दान",
+    "browseServices": "सेवाएं ब्राउज़ करें",
+    "becomeSupporter": "समर्थक बनें",
+    "supporterOffer": "सेवाओं और चैरिटी का समर्थन करें",
+    "enableSupporterRole": "समर्थक भूमिका सक्षम करें",
+    "accountSettings": "खाता सेटिंग्स",
+    "accountDescription": "अपनी खाता प्राथमिकताएं प्रबंधित करें",
+    "editProfile": "प्रोफ़ाइल संपादित करें",
+    "privacySettings": "गोपनीयता सेटिंग्स",
+    "profileManagement": "प्रोफ़ाइल प्रबंधन",
+    "yourProfile": "आपकी प्रोफ़ाइल",
+    "name": "नाम",
+    "username": "उपयोगकर्ता नाम",
+    "location": "स्थान",
+    "roles": "भूमिकाएं",
+    "providerAndSupporter": "प्रदाता और समर्थक",
+    "providerRole": "प्रदाता",
+    "supporterRole": "समर्थक",
+    "noRoles": "कोई नहीं",
+    "provider_section": {
+      "title": "प्रदाता के रूप में",
+      "create_service": "सेवा बनाएं",
+      "update_service": "सेवा अपडेट करें",
+      "creating": "बनाई जा रही है...",
+      "updating": "अपडेट की जा रही है...",
+      "manage_services": "सेवाओं का प्रबंधन करें",
+      "view_requests": "अनुरोध देखें"
+    },
+    "supporter_section": {
+      "title": "समर्थक के रूप में",
+      "browse_services": "सेवाएं ब्राउज़ करें",
+      "donation_history": "दान इतिहास"
+    },
+    "profile_section": {
+      "title": "प्रोफ़ाइल प्रबंधन",
+      "edit_profile": "प्रोफ़ाइल संपादित करें",
+      "account_settings": "खाता सेटिंग्स"
+    }
+  },
+  "profile": {
+    "setup": {
+      "title": "अपनी प्रोफ़ाइल सेट करें",
+      "subtitle": "सेवा प्रदाता, समर्थक या दोनों के रूप में Powered by Donation का उपयोग शुरू करने के लिए अपनी प्रोफ़ाइल बनाएं।",
+      "create_profile": "अपनी प्रोफ़ाइल बनाएं",
+      "update_profile": "अपनी प्रोफ़ाइल अपडेट करें",
+      "roles": {
+        "title": "आपकी भूमिका(एं)",
+        "provider": {
+          "title": "सेवा प्रदाता",
+          "description": "सेवाएं प्रदान करें और चैरिटी की मदद करें"
+        },
+        "supporter": {
+          "title": "समर्थक",
+          "description": "सेवाएं खोजें और चैरिटेबल दान करें"
+        }
+      },
+      "form": {
+        "full_name": "पूरा नाम",
+        "full_name_placeholder": "आपका पूरा नाम",
+        "username": "उपयोगकर्ता नाम (वैकल्पिक)",
+        "username_placeholder": "एक अनूठा उपयोगकर्ता नाम चुनें",
+        "username_help": "सार्वजनिक प्रोफ़ाइल URL के लिए (वैकल्पिक)",
+        "bio": "बायो",
+        "bio_placeholder": "अपने बारे में और अपनी रुचियों के बारे में दूसरों को बताएं...",
+        "location": "स्थान",
+        "location_placeholder": "शहर, राज्य/देश",
+        "phone": "फोन नंबर",
+        "phone_placeholder": "आपका फोन नंबर",
+        "create_profile": "प्रोफ़ाइल बनाएं",
+        "update_profile": "प्रोफ़ाइल अपडेट करें",
+        "saving": "सेव किया जा रहा है...",
+        "success_created": "प्रोफ़ाइल सफलतापूर्वक बनाई गई!",
+        "success_updated": "प्रोफ़ाइल सफलतापूर्वक अपडेट की गई!",
+        "error_name_required": "नाम आवश्यक है",
+        "error_role_required": "आपको प्रदाता, समर्थक या दोनों होना चाहिए",
+        "error_save_failed": "प्रोफ़ाइल सेव करने में विफल"
+      }
+    }
+  },
+  "services": {
+    "browse": {
+      "title": "सेवाएं ब्राउज़ करें",
+      "subtitle": "पेशेवर सेवाएं खोजें और चैरिटी का समर्थन करें",
+      "no_services": "कोई सेवा नहीं मिली",
+      "load_more": "और लोड करें",
+      "allLocations": "सभी स्थान",
+      "provider": "प्रदाता",
+      "communityImpact": {
+        "title": "सामुदायिक प्रभाव",
+        "activeServices": "सक्रिय सेवाएं",
+        "totalDonationPotential": "कुल दान संभावना",
+        "activeProviders": "सक्रिय प्रदाता",
+        "donationsNote": "सभी दान JustGiving के माध्यम से सीधे पंजीकृत चैरिटी को जाते हैं"
+      },
+      "callToAction": {
+        "title": "क्या आप अपनी सेवाएं प्रदान करना चाहते हैं?",
+        "description": "हमारे प्रदाता समुदाय में शामिल हों और अपने कौशल प्रदर्शित करते हुए चैरिटी की मदद करें।",
+        "button": "शुरू करें"
+      }
+    },
+    "create": {
+      "title": "नई सेवा बनाएं",
+      "subtitle": "चैरिटी को दान प्राप्त करने में मदद करने के लिए अपने कौशल प्रदान करें"
+    }
+  },
+  "common": {
+    "loading": "लोड हो रहा है...",
+    "error": "त्रुटि",
+    "success": "सफलता",
+    "cancel": "रद्द करें",
+    "save": "सेव करें",
+    "delete": "हटाएं",
+    "edit": "संपादित करें",
+    "view": "देखें",
+    "back": "वापस",
+    "next": "अगला",
+    "previous": "पिछला",
+    "search": "खोजें",
+    "filter": "फिल्टर",
+    "sort": "क्रमबद्ध करें",
+    "clear": "साफ करें",
+    "apply": "लागू करें",
+    "reset": "रीसेट करें"
+  },
+  "auth": {
+    "login": {
+      "title": "लॉग इन",
+      "subtitle": "अपने खाते में लॉग इन करें",
+      "email": "ईमेल",
+      "password": "पासवर्ड",
+      "email_placeholder": "your@email.com",
+      "password_placeholder": "आपका पासवर्ड",
+      "sign_in_button": "लॉग इन",
+      "signing_in": "लॉग इन हो रहा है...",
+      "or_continue_with": "या इनके साथ जारी रखें",
+      "no_account": "कोई खाता नहीं है?",
+      "sign_up_link": "साइन अप करें",
+      "forgot_password": "पासवर्ड भूल गए?",
+      "remember_me": "मुझे याद रखें"
+    },
+    "logout": {
+      "title": "लॉग आउट",
+      "confirm": "क्या आप वाकई लॉग आउट करना चाहते हैं?"
+    },
+    "signup": {
+      "title": "खाता बनाएं",
+      "fields": {
+        "email": "ईमेल",
+        "password": "पासवर्ड",
+        "confirmPassword": "पासवर्ड की पुष्टि करें"
+      },
+      "placeholders": {
+        "email": "your@email.com",
+        "password": "कम से कम 6 वर्ण",
+        "confirmPassword": "अपने पासवर्ड की पुष्टि करें"
+      },
+      "buttons": {
+        "create": "खाता बनाएं",
+        "creating": "खाता बनाया जा रहा है..."
+      },
+      "errors": {
+        "passwordMismatch": "पासवर्ड मेल नहीं खाते",
+        "passwordTooShort": "पासवर्ड कम से कम 6 वर्ण का होना चाहिए"
+      },
+      "success": {
+        "title": "अपना ईमेल चेक करें!",
+        "message": "हमने आपको पुष्टिकरण लिंक भेजा है",
+        "instruction": "कृपया अपना ईमेल चेक करें और अपना खाता सक्रिय करने के लिए लिंक पर क्लिक करें।",
+        "backToLogin": "लॉगिन पर वापस जाएं"
+      },
+      "divider": "या इनके साथ जारी रखें",
+      "socialButtons": {
+        "google": "Google के साथ साइन अप करें",
+        "microsoft": "Microsoft के साथ साइन अप करें",
+        "github": "GitHub के साथ साइन अप करें",
+        "apple": "Apple के साथ साइन अप करें"
+      },
+      "footer": {
+        "hasAccount": "पहले से खाता है?",
+        "signIn": "लॉग इन"
+      }
     }
   },
   "footer": {
@@ -85,10 +289,46 @@
   },
   "language": {
     "select": "भाषा चुनें",
-    "en": "अंग्रेजी",
-    "es": "स्पेनिश",
-    "fr": "फ्रेंच",
-    "de": "जर्मन",
-    "hi": "हिंदी"
+    "ar": "العربية",
+    "de": "Deutsch",
+    "el": "Ελληνικά",
+    "en": "English",
+    "es": "Español",
+    "fr": "Français",
+    "hi": "हिन्दी",
+    "it": "Italiano",
+    "ja": "日本語",
+    "ko": "한국어",
+    "pa": "ਪੰਜਾਬੀ",
+    "pt": "Português",
+    "tl": "Filipino",
+    "tr": "Türkçe",
+    "vi": "Tiếng Việt",
+    "yue": "粵語",
+    "zh": "中文"
+  },
+  "deleteProfile": {
+    "title": "प्रोफ़ाइल हटाएं",
+    "description": "यह आपकी प्रोफ़ाइल और सभी संबंधित डेटा को स्थायी रूप से हटा देगा। यह क्रिया पूर्ववत नहीं की जा सकती।",
+    "providerWarning": "⚠️ प्रदाता के रूप में, यह आपकी सभी सेवाओं और सेवा इतिहास को भी हटा देगा।",
+    "supporterWarning": "⚠️ समर्थक के रूप में, यह आपके दान इतिहास और सेवा अनुरोधों को हटा देगा।",
+    "deleteButton": "प्रोफ़ाइल हटाएं",
+    "confirmTitle": "प्रोफ़ाइल हटाने की पुष्टि करें",
+    "confirmDescription": "क्या आप वाकई \"{name}\" की प्रोफ़ाइल हटाना चाहते हैं? यह क्रिया स्थायी है और यह:",
+    "confirmList": {
+      "deleteInfo": "आपकी प्रोफ़ाइल जानकारी हटा देगी",
+      "removeServices": "आपकी सभी सेवाएं हटा देगी",
+      "deleteHistory": "आपका दान इतिहास हटा देगी",
+      "signOut": "आपको प्लेटफॉर्म से लॉग आउट कर देगी",
+      "cannotUndo": "पूर्ववत नहीं की जा सकती"
+    },
+    "confirmButton": "हां, मेरी प्रोफ़ाइल हटाएं",
+    "deleting": "हटाया जा रहा है...",
+    "cancel": "रद्द करें",
+    "errors": {
+      "activeServices": "आप सक्रिय सेवाओं के साथ अपनी प्रोफ़ाइल नहीं हटा सकते। कृपया पहले सभी सेवाओं को निष्क्रिय करें।",
+      "activeRequests": "आप सक्रिय सेवा अनुरोधों या लंबित दान के साथ अपनी प्रोफ़ाइल नहीं हटा सकते। यदि आपको सहायता चाहिए तो समर्थन से संपर्क करें।",
+      "deleteFailed": "प्रोफ़ाइल हटाने में विफल"
+    }
   }
 }

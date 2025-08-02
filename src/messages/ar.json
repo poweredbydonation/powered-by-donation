@@ -9,32 +9,32 @@
     "profile": "الملف الشخصي"
   },
   "home": {
-    "title": "Powered by Donation",
-    "subtitle": "سوق الخدمات حيث تفتح التبرعات للجمعيات الخيرية الخدمات المهنية",
+    "title": "مدعوم بالتبرع",
+    "subtitle": "سوق خدمات حيث تفتح التبرعات للجمعيات الخيرية الخدمات المهنية",
     "hero": {
-      "title": "ربط الخدمات بالتأثير الخيري",
-      "subtitle": "تصفح الخدمات المهنية. تبرع للجمعيات الخيرية المسجلة. بناء روابط مجتمعية.",
+      "title": "ربط الخدمات بالأثر الخيري",
+      "subtitle": "تصفح الخدمات المهنية. تبرع للجمعيات الخيرية المعتمدة. ابني روابط مجتمعية.",
       "browse_services": "تصفح الخدمات",
       "how_it_works": "كيف يعمل"
     },
     "how_it_works": {
-      "title": "How It Works",
+      "title": "كيف يعمل",
       "step1": {
-        "title": "Browse Services",
-        "description": "Find professional services offered by community providers"
+        "title": "تصفح الخدمات",
+        "description": "اعثر على خدمات مهنية يقدمها مزودو الخدمات في المجتمع"
       },
       "step2": {
-        "title": "Choose a Charity",
-        "description": "Select from registered charities to receive your donation"
+        "title": "اختر جمعية خيرية",
+        "description": "اختر من الجمعيات الخيرية المعتمدة لتلقي تبرعك"
       },
       "step3": {
-        "title": "Make Impact",
-        "description": "Your donation unlocks the service and supports a great cause"
+        "title": "اصنع الأثر",
+        "description": "تبرعك يفتح الخدمة ويدعم قضية عظيمة"
       }
     },
     "recent_activity": {
-      "title": "النشاط المجتمعي الأخير",
-      "someone_donated": "تبرع شخص ما",
+      "title": "النشاط المجتمعي الحديث",
+      "someone_donated": "قام شخص بالتبرع",
       "via_service": "عبر",
       "hours_ago": "ساعات مضت",
       "minutes_ago": "دقائق مضت",
@@ -42,110 +42,162 @@
     }
   },
   "dashboard": {
-    "title": "Dashboard",
-    "welcome": "Welcome",
+    "title": "لوحة التحكم",
+    "welcome": "مرحباً بعودتك",
+    "profileReady": "ملفك الشخصي جاهز للاستخدام.",
+    "completeProfile": "أكمل ملفك الشخصي للبدء.",
+    "serviceProvider": "مزود الخدمة",
+    "supporter": "الداعم",
+    "getStarted": "ابدأ",
+    "setupPrompt": "قم بإعداد ملفك الشخصي لبدء استخدام مدعوم بالتبرع:",
+    "createProfile": "إنشاء ملفك الشخصي",
+    "providerDashboard": "لوحة تحكم المزود",
+    "providerDescription": "إدارة خدماتك وتبرعاتك",
+    "manageServices": "إدارة الخدمات",
+    "createNewService": "إنشاء خدمة جديدة",
+    "becomeProvider": "كن مزود خدمة",
+    "providerOffer": "قدم خدمات وادعم الجمعيات الخيرية",
+    "enableProviderRole": "تفعيل دور المزود",
+    "supporterDashboard": "لوحة تحكم الداعم",
+    "supporterDescription": "تتبع تبرعاتك وأثرك",
+    "myDonations": "تبرعاتي",
+    "browseServices": "تصفح الخدمات",
+    "becomeSupporter": "كن داعماً",
+    "supporterOffer": "ادعم الخدمات والجمعيات الخيرية",
+    "enableSupporterRole": "تفعيل دور الداعم",
+    "accountSettings": "إعدادات الحساب",
+    "accountDescription": "إدارة تفضيلات حسابك",
+    "editProfile": "تعديل الملف الشخصي",
+    "privacySettings": "إعدادات الخصوصية",
+    "profileManagement": "إدارة الملف الشخصي",
+    "yourProfile": "ملفك الشخصي",
+    "name": "الاسم",
+    "username": "اسم المستخدم",
+    "location": "الموقع",
+    "roles": "الأدوار",
+    "providerAndSupporter": "مزود وداعم",
+    "providerRole": "مزود",
+    "supporterRole": "داعم",
+    "noRoles": "لا يوجد",
     "provider_section": {
-      "title": "As a Provider",
-      "create_service": "Create Service",
-      "manage_services": "Manage Services",
-      "view_requests": "View Requests"
+      "title": "كمزود خدمة",
+      "create_service": "إنشاء خدمة",
+      "update_service": "تحديث خدمة",
+      "creating": "جاري الإنشاء...",
+      "updating": "جاري التحديث...",
+      "manage_services": "إدارة الخدمات",
+      "view_requests": "عرض الطلبات"
     },
     "supporter_section": {
-      "title": "As a Supporter",
-      "browse_services": "Browse Services",
-      "donation_history": "Donation History"
+      "title": "كداعم",
+      "browse_services": "تصفح الخدمات",
+      "donation_history": "تاريخ التبرعات"
     },
     "profile_section": {
-      "title": "Profile Management",
-      "edit_profile": "Edit Profile",
-      "account_settings": "Account Settings"
+      "title": "إدارة الملف الشخصي",
+      "edit_profile": "تعديل الملف الشخصي",
+      "account_settings": "إعدادات الحساب"
     }
   },
   "profile": {
     "setup": {
-      "title": "Set Up Your Profile",
-      "subtitle": "Create your profile to start using Powered by Donation as a service provider, supporter, or both.",
-      "create_profile": "Create Your Profile",
-      "update_profile": "Update Your Profile",
+      "title": "إعداد ملفك الشخصي",
+      "subtitle": "أنشئ ملفك الشخصي لبدء استخدام مدعوم بالتبرع كمزود خدمة، أو داعم، أو كليهما.",
+      "create_profile": "إنشاء ملفك الشخصي",
+      "update_profile": "تحديث ملفك الشخصي",
       "roles": {
-        "title": "Your Role(s)",
+        "title": "دورك (أدوارك)",
         "provider": {
-          "title": "Service Provider",
-          "description": "Offer services and help charities"
+          "title": "مزود الخدمة",
+          "description": "قدم خدمات وساعد الجمعيات الخيرية"
         },
         "supporter": {
-          "title": "Supporter",
-          "description": "Find services and make charitable donations"
+          "title": "الداعم",
+          "description": "اعثر على خدمات وتبرع للجمعيات الخيرية"
         }
       },
       "form": {
-        "full_name": "Full Name",
-        "full_name_placeholder": "Your full name",
-        "username": "Username (Optional)",
-        "username_placeholder": "Choose a unique username",
-        "username_help": "For public profile URL (optional)",
-        "bio": "Bio",
-        "bio_placeholder": "Tell others about yourself and your interests...",
-        "location": "Location",
-        "location_placeholder": "City, State/Country",
-        "phone": "Phone Number",
-        "phone_placeholder": "Your phone number",
-        "create_profile": "Create Profile",
-        "update_profile": "Update Profile",
-        "saving": "Saving...",
-        "success_created": "Profile created successfully!",
-        "success_updated": "Profile updated successfully!",
-        "error_name_required": "Name is required",
-        "error_role_required": "You must be either a provider, supporter, or both",
-        "error_save_failed": "Failed to save profile"
+        "full_name": "الاسم الكامل",
+        "full_name_placeholder": "اسمك الكامل",
+        "username": "اسم المستخدم (اختياري)",
+        "username_placeholder": "اختر اسم مستخدم فريد",
+        "username_help": "لرابط الملف الشخصي العام (اختياري)",
+        "bio": "النبذة الشخصية",
+        "bio_placeholder": "أخبر الآخرين عن نفسك واهتماماتك...",
+        "location": "الموقع",
+        "location_placeholder": "المدينة، الولاية/البلد",
+        "phone": "رقم الهاتف",
+        "phone_placeholder": "رقم هاتفك",
+        "create_profile": "إنشاء الملف الشخصي",
+        "update_profile": "تحديث الملف الشخصي",
+        "saving": "جاري الحفظ...",
+        "success_created": "تم إنشاء الملف الشخصي بنجاح!",
+        "success_updated": "تم تحديث الملف الشخصي بنجاح!",
+        "error_name_required": "الاسم مطلوب",
+        "error_role_required": "يجب أن تكون مزوداً أو داعماً أو كليهما",
+        "error_save_failed": "فشل في حفظ الملف الشخصي"
       }
     }
   },
   "services": {
     "browse": {
-      "title": "Browse Services",
-      "subtitle": "Find professional services and support charities",
-      "no_services": "No services found",
-      "load_more": "Load More"
+      "title": "تصفح الخدمات",
+      "subtitle": "اعثر على خدمات مهنية وادعم الجمعيات الخيرية",
+      "no_services": "لم يتم العثور على خدمات",
+      "load_more": "تحميل المزيد",
+      "allLocations": "جميع المواقع",
+      "provider": "المزود",
+      "communityImpact": {
+        "title": "الأثر المجتمعي",
+        "activeServices": "الخدمات النشطة",
+        "totalDonationPotential": "إجمالي إمكانية التبرع",
+        "activeProviders": "المزودون النشطون",
+        "donationsNote": "جميع التبرعات تذهب مباشرة للجمعيات الخيرية المعتمدة عبر JustGiving"
+      },
+      "callToAction": {
+        "title": "هل تريد تقديم خدماتك؟",
+        "description": "انضم لمجتمع المزودين لدينا وساعد الجمعيات الخيرية بينما تعرض مهاراتك.",
+        "button": "ابدأ"
+      }
     },
     "create": {
-      "title": "Create New Service",
-      "subtitle": "Offer your skills to help charities receive donations"
+      "title": "إنشاء خدمة جديدة",
+      "subtitle": "قدم مهاراتك لمساعدة الجمعيات الخيرية في تلقي التبرعات"
     }
   },
   "common": {
-    "loading": "Loading...",
-    "error": "Error",
-    "success": "Success",
-    "cancel": "Cancel",
-    "save": "Save",
-    "delete": "Delete",
-    "edit": "Edit",
-    "view": "View",
-    "back": "Back",
-    "next": "Next",
-    "previous": "Previous",
-    "search": "Search",
-    "filter": "Filter",
-    "sort": "Sort",
-    "clear": "Clear",
-    "apply": "Apply",
-    "reset": "Reset"
+    "loading": "جاري التحميل...",
+    "error": "خطأ",
+    "success": "نجح",
+    "cancel": "إلغاء",
+    "save": "حفظ",
+    "delete": "حذف",
+    "edit": "تعديل",
+    "view": "عرض",
+    "back": "رجوع",
+    "next": "التالي",
+    "previous": "السابق",
+    "search": "بحث",
+    "filter": "تصفية",
+    "sort": "ترتيب",
+    "clear": "مسح",
+    "apply": "تطبيق",
+    "reset": "إعادة تعيين"
   },
   "auth": {
     "login": {
       "title": "تسجيل الدخول",
-      "subtitle": "سجل الدخول إلى حسابك",
+      "subtitle": "سجل دخولك إلى حسابك",
       "email": "البريد الإلكتروني",
       "password": "كلمة المرور",
       "email_placeholder": "your@email.com",
       "password_placeholder": "كلمة المرور الخاصة بك",
       "sign_in_button": "تسجيل الدخول",
       "signing_in": "جاري تسجيل الدخول...",
-      "or_continue_with": "أو متابعة باستخدام",
+      "or_continue_with": "أو تابع باستخدام",
       "no_account": "ليس لديك حساب؟",
-      "sign_up_link": "انشاء حساب",
-      "forgot_password": "هل نسيت كلمة المرور؟",
+      "sign_up_link": "سجل",
+      "forgot_password": "نسيت كلمة المرور؟",
       "remember_me": "تذكرني"
     },
     "logout": {
@@ -153,25 +205,53 @@
       "confirm": "هل أنت متأكد من أنك تريد تسجيل الخروج؟"
     },
     "signup": {
-      "title": "انشاء حساب",
-      "subtitle": "انشئ حسابك",
-      "name": "الاسم الكامل",
-      "confirm_password": "تأكيد كلمة المرور",
-      "sign_up_button": "انشاء حساب",
-      "signing_up": "جاري إنشاء الحساب...",
-      "have_account": "هل لديك حساب بالفعل؟",
-      "sign_in_link": "تسجيل الدخول"
+      "title": "إنشاء حساب",
+      "fields": {
+        "email": "البريد الإلكتروني",
+        "password": "كلمة المرور",
+        "confirmPassword": "تأكيد كلمة المرور"
+      },
+      "placeholders": {
+        "email": "your@email.com",
+        "password": "على الأقل 6 أحرف",
+        "confirmPassword": "أكد كلمة المرور الخاصة بك"
+      },
+      "buttons": {
+        "create": "إنشاء حساب",
+        "creating": "جاري إنشاء الحساب..."
+      },
+      "errors": {
+        "passwordMismatch": "كلمات المرور غير متطابقة",
+        "passwordTooShort": "يجب أن تكون كلمة المرور على الأقل 6 أحرف"
+      },
+      "success": {
+        "title": "تحقق من بريدك الإلكتروني!",
+        "message": "لقد أرسلنا لك رابط تأكيد على",
+        "instruction": "يرجى التحقق من بريدك الإلكتروني والنقر على الرابط لتفعيل حسابك.",
+        "backToLogin": "العودة لتسجيل الدخول"
+      },
+      "divider": "أو تابع باستخدام",
+      "socialButtons": {
+        "google": "سجل باستخدام Google",
+        "microsoft": "سجل باستخدام Microsoft",
+        "github": "سجل باستخدام GitHub",
+        "apple": "سجل باستخدام Apple"
+      },
+      "footer": {
+        "hasAccount": "لديك حساب بالفعل؟",
+        "signIn": "سجل الدخول"
+      }
     }
   },
   "footer": {
     "trust": {
       "noFees": {
-        "title": "100% من تبرعك يذهب إلى الجمعية الخيرية",
-        "description": "نحن لا نفرض أي رسوم. جميع التبرعات يتم معالجتها مباشرة عبر JustGiving — نحن لن نتعامل مع معلومات الدفع الخاصة بك."
+        "title": "100% من تبرعك يذهب للجمعية الخيرية",
+        "description": "نحن لا نتقاضى أي رسوم. جميع التبرعات تتم معالجتها مباشرة من خلال JustGiving — نحن لا نتعامل مع معلومات دفعك أبداً."
       },
       "openSource": {
-        "title": "مفتوح المصدر بالكامل وشفاف",
-        "description": "منصتنا بالكامل مفتوحة المصدر. عرض كودنا، المساهمة، أو مراجعة ممارساتنا على GitHub — شفافية كاملة، لا جدول أعمال مخفي."
+        "title": "مفتوح المصدر وشفاف بالكامل",
+        "description": "منصتنا بالكامل مفتوحة المصدر. اعرض كودنا، ساهم، أو راجع ممارساتنا على GitHub — شفافية كاملة، لا أجندة خفية."
       }
     },
     "brand": {
@@ -182,7 +262,7 @@
       "platform": {
         "title": "المنصة",
         "browse_services": "تصفح الخدمات",
-        "service_providers": "مقدمي الخدمات",
+        "service_providers": "مزودو الخدمات",
         "featured_charities": "الجمعيات الخيرية المميزة",
         "how_it_works": "كيف يعمل"
       },
@@ -190,7 +270,7 @@
         "title": "قانوني",
         "privacy_policy": "سياسة الخصوصية",
         "terms_of_service": "شروط الخدمة",
-        "about_us": "عنا",
+        "about_us": "معلومات عنا",
         "contact": "اتصل بنا"
       },
       "community": {
@@ -198,27 +278,57 @@
         "github": "GitHub",
         "contribute": "ساهم",
         "feedback": "تعليقات",
-        "support": "دعم"
+        "support": "الدعم"
       }
     },
     "bottom": {
-      "copyright": "© 2025 Powered by Donation. تم بناؤه ب❤️ للمجتمع.",
+      "copyright": "© 2025 مدعوم بالتبرع. مبني بـ ❤️ من أجل المجتمع.",
       "made_in": "صنع في أستراليا",
-      "powered_by": "مدعوم من JustGiving"
+      "powered_by": "مدعوم بواسطة JustGiving"
     }
   },
   "language": {
-    "select": "Select Language",
+    "select": "اختر اللغة",
+    "ar": "العربية",
+    "de": "Deutsch",
+    "el": "Ελληνικά",
     "en": "English",
     "es": "Español",
     "fr": "Français",
-    "de": "Deutsch",
+    "hi": "हिन्दी",
     "it": "Italiano",
-    "pt": "Português",
-    "zh": "中文",
     "ja": "日本語",
     "ko": "한국어",
-    "ar": "العربية",
-    "tr": "Türkçe"
+    "pa": "ਪੰਜਾਬੀ",
+    "pt": "Português",
+    "tl": "Filipino",
+    "tr": "Türkçe",
+    "vi": "Tiếng Việt",
+    "yue": "粵語",
+    "zh": "中文"
+  },
+  "deleteProfile": {
+    "title": "حذف الملف الشخصي",
+    "description": "سيؤدي هذا إلى حذف ملفك الشخصي وجميع البيانات المرتبطة به نهائياً. لا يمكن التراجع عن هذا الإجراء.",
+    "providerWarning": "⚠️ كمزود، سيؤدي هذا أيضاً إلى حذف جميع خدماتك وتاريخ الخدمات.",
+    "supporterWarning": "⚠️ كداعم، سيؤدي هذا إلى حذف تاريخ تبرعاتك وطلبات الخدمة.",
+    "deleteButton": "حذف الملف الشخصي",
+    "confirmTitle": "تأكيد حذف الملف الشخصي",
+    "confirmDescription": "هل أنت متأكد من أنك تريد حذف ملفك الشخصي لـ \"{name}\"؟ هذا الإجراء دائم وسوف:",
+    "confirmList": {
+      "deleteInfo": "حذف معلومات ملفك الشخصي",
+      "removeServices": "إزالة جميع خدماتك",
+      "deleteHistory": "حذف تاريخ تبرعاتك",
+      "signOut": "تسجيل خروجك من المنصة",
+      "cannotUndo": "لا يمكن التراجع عنه"
+    },
+    "confirmButton": "نعم، احذف ملفي الشخصي",
+    "deleting": "جاري الحذف...",
+    "cancel": "إلغاء",
+    "errors": {
+      "activeServices": "لا يمكنك حذف ملفك الشخصي بينما لديك خدمات نشطة. يرجى إلغاء تفعيل جميع الخدمات أولاً.",
+      "activeRequests": "لا يمكنك حذف ملفك الشخصي بينما لديك طلبات خدمة نشطة أو تبرعات معلقة. اتصل بالدعم إذا كنت بحاجة لمساعدة.",
+      "deleteFailed": "فشل في حذف الملف الشخصي"
+    }
   }
 }

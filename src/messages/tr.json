@@ -37,7 +37,8 @@
       "someone_donated": "Biri bağışladı",
       "via_service": "üzerinden",
       "hours_ago": "saat önce",
-      "minutes_ago": "dakika önce"
+      "minutes_ago": "dakika önce",
+      "days_ago": "gün önce"
     }
   },
   "dashboard": {
@@ -81,6 +82,9 @@
     "provider_section": {
       "title": "Sağlayıcı Olarak",
       "create_service": "Hizmet Oluştur",
+      "update_service": "Hizmeti Güncelle",
+      "creating": "Oluşturuluyor...",
+      "updating": "Güncelleniyor...",
       "manage_services": "Hizmetleri Yönet",
       "view_requests": "Talepleri Görüntüle"
     },

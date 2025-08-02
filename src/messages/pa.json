@@ -28,15 +28,219 @@
         "description": "ਆਪਣਾ ਦਾਨ ਪ੍ਰਾਪਤ ਕਰਨ ਲਈ ਰਜਿਸਟਰਡ ਚੈਰਿਟੀਆਂ ਵਿੱਚੋਂ ਚੁਣੋ"
       },
       "step3": {
-        "title": "ਜੁੜੋ ਅਤੇ ਪ੍ਰਭਾਵ ਪਾਓ",
-        "description": "ਸੇਵਾ ਪ੍ਰਾਪਤ ਕਰੋ ਅਤੇ ਕਮਿਉਨਿਟੀ 'ਤੇ ਸਕਾਰਾਤਮਕ ਪ੍ਰਭਾਵ ਪਾਓ"
+        "title": "ਪ੍ਰਭਾਵ ਪਾਓ",
+        "description": "ਤੁਹਾਡਾ ਦਾਨ ਸੇਵਾ ਅਨਲਾਕ ਕਰਦਾ ਹੈ ਅਤੇ ਇੱਕ ਮਹਾਨ ਕਾਰਨ ਦਾ ਸਮਰਥਨ ਕਰਦਾ ਹੈ"
       }
     },
     "recent_activity": {
-      "title": "ਤਾਜ਼ਾ ਗਤੀਵਿਧੀ",
+      "title": "ਤਾਜ਼ੀ ਕਮਿਉਨਿਟੀ ਗਤੀਵਿਧੀ",
       "someone_donated": "ਕਿਸੇ ਨੇ ਦਾਨ ਕੀਤਾ",
-      "via_service": "ਸੇਵਾ ਰਾਹੀਂ",
-      "hours_ago": "ਘੰਟੇ ਪਹਿਲਾਂ"
+      "via_service": "ਰਾਹੀਂ",
+      "hours_ago": "ਘੰਟੇ ਪਹਿਲਾਂ",
+      "minutes_ago": "ਮਿੰਟ ਪਹਿਲਾਂ",
+      "days_ago": "ਦਿਨ ਪਹਿਲਾਂ"
+    }
+  },
+  "dashboard": {
+    "title": "ਡੈਸ਼ਬੋਰਡ",
+    "welcome": "ਮੁੜ ਸੁਆਗਤ",
+    "profileReady": "ਤੁਹਾਡਾ ਪ੍ਰੋਫਾਈਲ ਸੈੱਟ ਅਪ ਹੈ ਅਤੇ ਜਾਣ ਲਈ ਤਿਆਰ ਹੈ।",
+    "completeProfile": "ਸ਼ੁਰੂ ਕਰਨ ਲਈ ਆਪਣਾ ਪ੍ਰੋਫਾਈਲ ਪੂਰਾ ਕਰੋ।",
+    "serviceProvider": "ਸੇਵਾ ਪ੍ਰਦਾਤਾ",
+    "supporter": "ਸਮਰਥਕ",
+    "getStarted": "ਸ਼ੁਰੂ ਕਰੋ",
+    "setupPrompt": "Powered by Donation ਵਰਤਣਾ ਸ਼ੁਰੂ ਕਰਨ ਲਈ ਆਪਣਾ ਪ੍ਰੋਫਾਈਲ ਸੈੱਟ ਅਪ ਕਰੋ:",
+    "createProfile": "ਆਪਣਾ ਪ੍ਰੋਫਾਈਲ ਬਣਾਓ",
+    "providerDashboard": "ਪ੍ਰਦਾਤਾ ਡੈਸ਼ਬੋਰਡ",
+    "providerDescription": "ਆਪਣੀਆਂ ਸੇਵਾਵਾਂ ਅਤੇ ਦਾਨ ਦਾ ਪ੍ਰਬੰਧਨ ਕਰੋ",
+    "manageServices": "ਸੇਵਾਵਾਂ ਦਾ ਪ੍ਰਬੰਧਨ ਕਰੋ",
+    "createNewService": "ਨਵੀਂ ਸੇਵਾ ਬਣਾਓ",
+    "becomeProvider": "ਪ੍ਰਦਾਤਾ ਬਣੋ",
+    "providerOffer": "ਸੇਵਾਵਾਂ ਦੀ ਪੇਸ਼ਕਸ਼ ਕਰੋ ਅਤੇ ਚੈਰਿਟੀਆਂ ਦਾ ਸਮਰਥਨ ਕਰੋ",
+    "enableProviderRole": "ਪ੍ਰਦਾਤਾ ਰੋਲ ਚਾਲੂ ਕਰੋ",
+    "supporterDashboard": "ਸਮਰਥਕ ਡੈਸ਼ਬੋਰਡ",
+    "supporterDescription": "ਆਪਣੇ ਦਾਨ ਅਤੇ ਪ੍ਰਭਾਵ ਨੂੰ ਟਰੈਕ ਕਰੋ",
+    "myDonations": "ਮੇਰੇ ਦਾਨ",
+    "browseServices": "ਸੇਵਾਵਾਂ ਬ੍ਰਾਊਜ਼ ਕਰੋ",
+    "becomeSupporter": "ਸਮਰਥਕ ਬਣੋ",
+    "supporterOffer": "ਸੇਵਾਵਾਂ ਅਤੇ ਚੈਰਿਟੀਆਂ ਦਾ ਸਮਰਥਨ ਕਰੋ",
+    "enableSupporterRole": "ਸਮਰਥਕ ਰੋਲ ਚਾਲੂ ਕਰੋ",
+    "accountSettings": "ਖਾਤਾ ਸੈਟਿੰਗਾਂ",
+    "accountDescription": "ਆਪਣੀਆਂ ਖਾਤਾ ਤਰਜੀਹਾਂ ਦਾ ਪ੍ਰਬੰਧਨ ਕਰੋ",
+    "editProfile": "ਪ੍ਰੋਫਾਈਲ ਸੰਪਾਦਿਤ ਕਰੋ",
+    "privacySettings": "ਗੁਪਤਤਾ ਸੈਟਿੰਗਾਂ",
+    "profileManagement": "ਪ੍ਰੋਫਾਈਲ ਪ੍ਰਬੰਧਨ",
+    "yourProfile": "ਤੁਹਾਡਾ ਪ੍ਰੋਫਾਈਲ",
+    "name": "ਨਾਮ",
+    "username": "ਯੂਜ਼ਰਨੇਮ",
+    "location": "ਸਥਾਨ",
+    "roles": "ਰੋਲ",
+    "providerAndSupporter": "ਪ੍ਰਦਾਤਾ ਅਤੇ ਸਮਰਥਕ",
+    "providerRole": "ਪ੍ਰਦਾਤਾ",
+    "supporterRole": "ਸਮਰਥਕ",
+    "noRoles": "ਕੋਈ ਨਹੀਂ",
+    "provider_section": {
+      "title": "ਪ੍ਰਦਾਤਾ ਵਜੋਂ",
+      "create_service": "ਸੇਵਾ ਬਣਾਓ",
+      "update_service": "ਸੇਵਾ ਅਪਡੇਟ ਕਰੋ",
+      "creating": "ਬਣਾ ਰਹੇ ਹਾਂ...",
+      "updating": "ਅਪਡੇਟ ਕਰ ਰਹੇ ਹਾਂ...",
+      "manage_services": "ਸੇਵਾਵਾਂ ਦਾ ਪ੍ਰਬੰਧਨ ਕਰੋ",
+      "view_requests": "ਬੇਨਤੀਆਂ ਦੇਖੋ"
+    },
+    "supporter_section": {
+      "title": "ਸਮਰਥਕ ਵਜੋਂ",
+      "browse_services": "ਸੇਵਾਵਾਂ ਬ੍ਰਾਊਜ਼ ਕਰੋ",
+      "donation_history": "ਦਾਨ ਇਤਿਹਾਸ"
+    },
+    "profile_section": {
+      "title": "ਪ੍ਰੋਫਾਈਲ ਪ੍ਰਬੰਧਨ",
+      "edit_profile": "ਪ੍ਰੋਫਾਈਲ ਸੰਪਾਦਿਤ ਕਰੋ",
+      "account_settings": "ਖਾਤਾ ਸੈਟਿੰਗਾਂ"
+    }
+  },
+  "profile": {
+    "setup": {
+      "title": "ਆਪਣਾ ਪ੍ਰੋਫਾਈਲ ਸੈੱਟ ਅਪ ਕਰੋ",
+      "subtitle": "ਸੇਵਾ ਪ੍ਰਦਾਤਾ, ਸਮਰਥਕ, ਜਾਂ ਦੋਵੇਂ ਵਜੋਂ Powered by Donation ਵਰਤਣਾ ਸ਼ੁਰੂ ਕਰਨ ਲਈ ਆਪਣਾ ਪ੍ਰੋਫਾਈਲ ਬਣਾਓ।",
+      "create_profile": "ਆਪਣਾ ਪ੍ਰੋਫਾਈਲ ਬਣਾਓ",
+      "update_profile": "ਆਪਣਾ ਪ੍ਰੋਫਾਈਲ ਅਪਡੇਟ ਕਰੋ",
+      "roles": {
+        "title": "ਤੁਹਾਡਾ ਰੋਲ",
+        "provider": {
+          "title": "ਸੇਵਾ ਪ੍ਰਦਾਤਾ",
+          "description": "ਸੇਵਾਵਾਂ ਦੀ ਪੇਸ਼ਕਸ਼ ਕਰੋ ਅਤੇ ਚੈਰਿਟੀਆਂ ਦੀ ਮਦਦ ਕਰੋ"
+        },
+        "supporter": {
+          "title": "ਸਮਰਥਕ",
+          "description": "ਸੇਵਾਵਾਂ ਲੱਭੋ ਅਤੇ ਚੈਰਿਟੇਬਲ ਦਾਨ ਕਰੋ"
+        }
+      },
+      "form": {
+        "full_name": "ਪੂਰਾ ਨਾਮ",
+        "full_name_placeholder": "ਤੁਹਾਡਾ ਪੂਰਾ ਨਾਮ",
+        "username": "ਯੂਜ਼ਰਨੇਮ (ਵਿਕਲਪਿਕ)",
+        "username_placeholder": "ਇੱਕ ਵਿਲੱਖਣ ਯੂਜ਼ਰਨੇਮ ਚੁਣੋ",
+        "username_help": "ਜਨਤਕ ਪ੍ਰੋਫਾਈਲ URL ਲਈ (ਵਿਕਲਪਿਕ)",
+        "bio": "ਜੀਵਨੀ",
+        "bio_placeholder": "ਦੂਜਿਆਂ ਨੂੰ ਆਪਣੇ ਬਾਰੇ ਅਤੇ ਆਪਣੀਆਂ ਦਿਲਚਸਪੀਆਂ ਬਾਰੇ ਦੱਸੋ...",
+        "location": "ਸਥਾਨ",
+        "location_placeholder": "ਸ਼ਹਿਰ, ਰਾਜ/ਦੇਸ਼",
+        "phone": "ਫ਼ੋਨ ਨੰਬਰ",
+        "phone_placeholder": "ਤੁਹਾਡਾ ਫ਼ੋਨ ਨੰਬਰ",
+        "create_profile": "ਪ੍ਰੋਫਾਈਲ ਬਣਾਓ",
+        "update_profile": "ਪ੍ਰੋਫਾਈਲ ਅਪਡੇਟ ਕਰੋ",
+        "saving": "ਸੇਵ ਕਰ ਰਹੇ ਹਾਂ...",
+        "success_created": "ਪ੍ਰੋਫਾਈਲ ਸਫਲਤਾਪੂਰਵਕ ਬਣਾਇਆ ਗਿਆ!",
+        "success_updated": "ਪ੍ਰੋਫਾਈਲ ਸਫਲਤਾਪੂਰਵਕ ਅਪਡੇਟ ਕੀਤਾ ਗਿਆ!",
+        "error_name_required": "ਨਾਮ ਲਾਜ਼ਮੀ ਹੈ",
+        "error_role_required": "ਤੁਹਾਨੂੰ ਪ੍ਰਦਾਤਾ, ਸਮਰਥਕ, ਜਾਂ ਦੋਵੇਂ ਹੋਣਾ ਚਾਹੀਦਾ ਹੈ",
+        "error_save_failed": "ਪ੍ਰੋਫਾਈਲ ਸੇਵ ਕਰਨ ਵਿੱਚ ਅਸਫਲ"
+      }
+    }
+  },
+  "services": {
+    "browse": {
+      "title": "ਸੇਵਾਵਾਂ ਬ੍ਰਾਊਜ਼ ਕਰੋ",
+      "subtitle": "ਪੇਸ਼ੇਵਰ ਸੇਵਾਵਾਂ ਲੱਭੋ ਅਤੇ ਚੈਰਿਟੀਆਂ ਦਾ ਸਮਰਥਨ ਕਰੋ",
+      "no_services": "ਕੋਈ ਸੇਵਾ ਨਹੀਂ ਮਿਲੀ",
+      "load_more": "ਹੋਰ ਲੋਡ ਕਰੋ",
+      "allLocations": "ਸਾਰੇ ਸਥਾਨ",
+      "provider": "ਪ੍ਰਦਾਤਾ",
+      "communityImpact": {
+        "title": "ਕਮਿਉਨਿਟੀ ਪ੍ਰਭਾਵ",
+        "activeServices": "ਸਰਗਰਮ ਸੇਵਾਵਾਂ",
+        "totalDonationPotential": "ਕੁੱਲ ਦਾਨ ਸੰਭਾਵਨਾ",
+        "activeProviders": "ਸਰਗਰਮ ਪ੍ਰਦਾਤਾ",
+        "donationsNote": "ਸਾਰੇ ਦਾਨ JustGiving ਰਾਹੀਂ ਸਿੱਧੇ ਰਜਿਸਟਰਡ ਚੈਰਿਟੀਆਂ ਨੂੰ ਜਾਂਦੇ ਹਨ"
+      },
+      "callToAction": {
+        "title": "ਆਪਣੀਆਂ ਸੇਵਾਵਾਂ ਦੀ ਪੇਸ਼ਕਸ਼ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ?",
+        "description": "ਸਾਡੇ ਪ੍ਰਦਾਤਾਵਾਂ ਦੇ ਭਾਈਚਾਰੇ ਵਿੱਚ ਸ਼ਾਮਲ ਹੋਵੋ ਅਤੇ ਆਪਣੇ ਹੁਨਰ ਦਿਖਾਉਂਦੇ ਹੋਏ ਚੈਰਿਟੀਆਂ ਦੀ ਮਦਦ ਕਰੋ।",
+        "button": "ਸ਼ੁਰੂ ਕਰੋ"
+      }
+    },
+    "create": {
+      "title": "ਨਵੀਂ ਸੇਵਾ ਬਣਾਓ",
+      "subtitle": "ਚੈਰਿਟੀਆਂ ਨੂੰ ਦਾਨ ਪ੍ਰਾਪਤ ਕਰਨ ਵਿੱਚ ਮਦਦ ਕਰਨ ਲਈ ਆਪਣੇ ਹੁਨਰ ਦੀ ਪੇਸ਼ਕਸ਼ ਕਰੋ"
+    }
+  },
+  "common": {
+    "loading": "ਲੋਡ ਹੋ ਰਿਹਾ ਹੈ...",
+    "error": "ਗਲਤੀ",
+    "success": "ਸਫਲਤਾ",
+    "cancel": "ਰੱਦ ਕਰੋ",
+    "save": "ਸੇਵ ਕਰੋ",
+    "delete": "ਮਿਟਾਓ",
+    "edit": "ਸੰਪਾਦਿਤ ਕਰੋ",
+    "view": "ਦੇਖੋ",
+    "back": "ਵਾਪਸ",
+    "next": "ਅਗਲਾ",
+    "previous": "ਪਿਛਲਾ",
+    "search": "ਖੋਜੋ",
+    "filter": "ਫਿਲਟਰ",
+    "sort": "ਕ੍ਰਮਬੱਧ ਕਰੋ",
+    "clear": "ਸਾਫ਼ ਕਰੋ",
+    "apply": "ਲਾਗੂ ਕਰੋ",
+    "reset": "ਰੀਸੈੱਟ ਕਰੋ"
+  },
+  "auth": {
+    "login": {
+      "title": "ਸਾਈਨ ਇਨ",
+      "subtitle": "ਆਪਣੇ ਖਾਤੇ ਵਿੱਚ ਸਾਈਨ ਇਨ ਕਰੋ",
+      "email": "ਈਮੇਲ",
+      "password": "ਪਾਸਵਰਡ",
+      "email_placeholder": "your@email.com",
+      "password_placeholder": "ਤੁਹਾਡਾ ਪਾਸਵਰਡ",
+      "sign_in_button": "ਸਾਈਨ ਇਨ",
+      "signing_in": "ਸਾਈਨ ਇਨ ਕਰ ਰਹੇ ਹਾਂ...",
+      "or_continue_with": "ਜਾਂ ਇਸ ਨਾਲ ਜਾਰੀ ਰੱਖੋ",
+      "no_account": "ਖਾਤਾ ਨਹੀਂ ਹੈ?",
+      "sign_up_link": "ਸਾਈਨ ਅਪ",
+      "forgot_password": "ਪਾਸਵਰਡ ਭੁੱਲ ਗਏ?",
+      "remember_me": "ਮੈਨੂੰ ਯਾਦ ਰੱਖੋ"
+    },
+    "logout": {
+      "title": "ਲਾਗਆਊਟ",
+      "confirm": "ਕੀ ਤੁਸੀਂ ਯਕੀਨੀ ਤੌਰ 'ਤੇ ਲਾਗਆਊਟ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ?"
+    },
+    "signup": {
+      "title": "ਖਾਤਾ ਬਣਾਓ",
+      "fields": {
+        "email": "ਈਮੇਲ",
+        "password": "ਪਾਸਵਰਡ",
+        "confirmPassword": "ਪਾਸਵਰਡ ਦੀ ਪੁਸ਼ਟੀ ਕਰੋ"
+      },
+      "placeholders": {
+        "email": "your@email.com",
+        "password": "ਘੱਟੋ ਘੱਟ 6 ਅੱਖਰ",
+        "confirmPassword": "ਆਪਣੇ ਪਾਸਵਰਡ ਦੀ ਪੁਸ਼ਟੀ ਕਰੋ"
+      },
+      "buttons": {
+        "create": "ਖਾਤਾ ਬਣਾਓ",
+        "creating": "ਖਾਤਾ ਬਣਾ ਰਹੇ ਹਾਂ..."
+      },
+      "errors": {
+        "passwordMismatch": "ਪਾਸਵਰਡ ਮੇਲ ਨਹੀਂ ਖਾਂਦੇ",
+        "passwordTooShort": "ਪਾਸਵਰਡ ਘੱਟੋ ਘੱਟ 6 ਅੱਖਰਾਂ ਦਾ ਹੋਣਾ ਚਾਹੀਦਾ ਹੈ"
+      },
+      "success": {
+        "title": "ਆਪਣੀ ਈਮੇਲ ਦੇਖੋ!",
+        "message": "ਅਸੀਂ ਤੁਹਾਨੂੰ ਇੱਕ ਪੁਸ਼ਟੀ ਲਿੰਕ ਭੇਜਿਆ ਹੈ",
+        "instruction": "ਕਿਰਪਾ ਕਰਕੇ ਆਪਣੀ ਈਮੇਲ ਦੇਖੋ ਅਤੇ ਆਪਣਾ ਖਾਤਾ ਕਿਰਿਆਸ਼ੀਲ ਕਰਨ ਲਈ ਲਿੰਕ 'ਤੇ ਕਲਿੱਕ ਕਰੋ।",
+        "backToLogin": "ਲਾਗਇਨ 'ਤੇ ਵਾਪਸ"
+      },
+      "divider": "ਜਾਂ ਇਸ ਨਾਲ ਜਾਰੀ ਰੱਖੋ",
+      "socialButtons": {
+        "google": "Google ਨਾਲ ਸਾਈਨ ਅਪ",
+        "microsoft": "Microsoft ਨਾਲ ਸਾਈਨ ਅਪ",
+        "github": "GitHub ਨਾਲ ਸਾਈਨ ਅਪ",
+        "apple": "Apple ਨਾਲ ਸਾਈਨ ਅਪ"
+      },
+      "footer": {
+        "hasAccount": "ਪਹਿਲਾਂ ਤੋਂ ਖਾਤਾ ਹੈ?",
+        "signIn": "ਸਾਈਨ ਇਨ"
+      }
     }
   },
   "footer": {
@@ -85,10 +289,46 @@
   },
   "language": {
     "select": "ਭਾਸ਼ਾ ਚੁਣੋ",
-    "en": "ਅੰਗਰੇਜ਼ੀ",
-    "es": "ਸਪੈਨਿਸ਼",
-    "fr": "ਫ੍ਰੈਂਚ",
-    "de": "ਜਰਮਨ",
-    "pa": "ਪੰਜਾਬੀ"
+    "ar": "العربية",
+    "de": "Deutsch",
+    "el": "Ελληνικά",
+    "en": "English",
+    "es": "Español",
+    "fr": "Français",
+    "hi": "हिन्दी",
+    "it": "Italiano",
+    "ja": "日本語",
+    "ko": "한국어",
+    "pa": "ਪੰਜਾਬੀ",
+    "pt": "Português",
+    "tl": "Filipino",
+    "tr": "Türkçe",
+    "vi": "Tiếng Việt",
+    "yue": "粵語",
+    "zh": "中文"
+  },
+  "deleteProfile": {
+    "title": "ਪ੍ਰੋਫਾਈਲ ਮਿਟਾਓ",
+    "description": "ਇਸ ਨਾਲ ਤੁਹਾਡਾ ਪ੍ਰੋਫਾਈਲ ਅਤੇ ਸਾਰਾ ਸੰਬੰਧਿਤ ਡੇਟਾ ਸਥਾਈ ਤੌਰ 'ਤੇ ਮਿਟ ਜਾਵੇਗਾ। ਇਸ ਕਿਰਿਆ ਨੂੰ ਵਾਪਸ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਦਾ।",
+    "providerWarning": "⚠️ ਪ੍ਰਦਾਤਾ ਵਜੋਂ, ਇਸ ਨਾਲ ਤੁਹਾਡੀਆਂ ਸਾਰੀਆਂ ਸੇਵਾਵਾਂ ਅਤੇ ਸੇਵਾ ਇਤਿਹਾਸ ਵੀ ਮਿਟ ਜਾਵੇਗਾ।",
+    "supporterWarning": "⚠️ ਸਮਰਥਕ ਵਜੋਂ, ਇਸ ਨਾਲ ਤੁਹਾਡਾ ਦਾਨ ਇਤਿਹਾਸ ਅਤੇ ਸੇਵਾ ਬੇਨਤੀਆਂ ਮਿਟ ਜਾਣਗੀਆਂ।",
+    "deleteButton": "ਪ੍ਰੋਫਾਈਲ ਮਿਟਾਓ",
+    "confirmTitle": "ਪ੍ਰੋਫਾਈਲ ਮਿਟਾਉਣ ਦੀ ਪੁਸ਼ਟੀ ਕਰੋ",
+    "confirmDescription": "ਕੀ ਤੁਸੀਂ ਯਕੀਨੀ ਤੌਰ 'ਤੇ \"{name}\" ਲਈ ਆਪਣਾ ਪ੍ਰੋਫਾਈਲ ਮਿਟਾਉਣਾ ਚਾਹੁੰਦੇ ਹੋ? ਇਹ ਕਿਰਿਆ ਸਥਾਈ ਹੈ ਅਤੇ ਇਸ ਨਾਲ:",
+    "confirmList": {
+      "deleteInfo": "ਤੁਹਾਡੀ ਪ੍ਰੋਫਾਈਲ ਜਾਣਕਾਰੀ ਮਿਟਾ ਦੇਵੇਗਾ",
+      "removeServices": "ਤੁਹਾਡੀਆਂ ਸਾਰੀਆਂ ਸੇਵਾਵਾਂ ਹਟਾ ਦੇਵੇਗਾ",
+      "deleteHistory": "ਤੁਹਾਡਾ ਦਾਨ ਇਤਿਹਾਸ ਮਿਟਾ ਦੇਵੇਗਾ",
+      "signOut": "ਤੁਹਾਨੂੰ ਪਲੇਟਫਾਰਮ ਤੋਂ ਸਾਈਨ ਆਊਟ ਕਰ ਦੇਵੇਗਾ",
+      "cannotUndo": "ਵਾਪਸ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਦਾ"
+    },
+    "confirmButton": "ਹਾਂ, ਮੇਰਾ ਪ੍ਰੋਫਾਈਲ ਮਿਟਾਓ",
+    "deleting": "ਮਿਟਾ ਰਹੇ ਹਾਂ...",
+    "cancel": "ਰੱਦ ਕਰੋ",
+    "errors": {
+      "activeServices": "ਤੁਸੀਂ ਆਪਣਾ ਪ੍ਰੋਫਾਈਲ ਨਹੀਂ ਮਿਟਾ ਸਕਦੇ ਜਦੋਂ ਤੱਕ ਤੁਹਾਡੀਆਂ ਸਰਗਰਮ ਸੇਵਾਵਾਂ ਹਨ। ਕਿਰਪਾ ਕਰਕੇ ਪਹਿਲਾਂ ਸਾਰੀਆਂ ਸੇਵਾਵਾਂ ਨੂੰ ਬੰਦ ਕਰੋ।",
+      "activeRequests": "ਤੁਸੀਂ ਆਪਣਾ ਪ੍ਰੋਫਾਈਲ ਨਹੀਂ ਮਿਟਾ ਸਕਦੇ ਜਦੋਂ ਤੱਕ ਤੁਹਾਡੀਆਂ ਸਰਗਰਮ ਸੇਵਾ ਬੇਨਤੀਆਂ ਜਾਂ ਲੰਬਿਤ ਦਾਨ ਹਨ। ਜੇ ਤੁਹਾਨੂੰ ਸਹਾਇਤਾ ਦੀ ਲੋੜ ਹੈ ਤਾਂ ਸਹਾਇਤਾ ਨਾਲ ਸੰਪਰਕ ਕਰੋ।",
+      "deleteFailed": "ਪ੍ਰੋਫਾਈਲ ਮਿਟਾਉਣ ਵਿੱਚ ਅਸਫਲ"
+    }
   }
 }

@@ -18,85 +18,124 @@
       "how_it_works": "工作原理"
     },
     "how_it_works": {
-      "title": "How It Works",
+      "title": "工作原理",
       "step1": {
-        "title": "Browse Services",
-        "description": "Find professional services offered by community providers"
+        "title": "浏览服务",
+        "description": "寻找社区提供者提供的专业服务"
       },
       "step2": {
-        "title": "Choose a Charity",
-        "description": "Select from registered charities to receive your donation"
+        "title": "选择慈善机构",
+        "description": "从注册慈善机构中选择以接收您的捐款"
       },
       "step3": {
-        "title": "Make Impact",
-        "description": "Your donation unlocks the service and supports a great cause"
+        "title": "产生影响",
+        "description": "您的捐款解锁服务并支持伟大事业"
       }
     },
     "recent_activity": {
-      "title": "Recent Community Activity",
-      "someone_donated": "Someone donated",
-      "via_service": "via",
-      "hours_ago": "hours ago",
-      "minutes_ago": "minutes ago"
+      "title": "最近社区活动",
+      "someone_donated": "有人捐赠了",
+      "via_service": "通过",
+      "hours_ago": "小时前",
+      "minutes_ago": "分钟前",
+      "days_ago": "天前"
     }
   },
   "dashboard": {
-    "title": "Dashboard",
-    "welcome": "Welcome",
+    "title": "仪表板",
+    "welcome": "欢迎回来",
+    "profileReady": "您的个人资料已设置并准备就绪。",
+    "completeProfile": "完成您的个人资料以开始使用。",
+    "serviceProvider": "服务提供者",
+    "supporter": "支持者",
+    "getStarted": "开始",
+    "setupPrompt": "设置您的个人资料以开始使用捐赠驱动：",
+    "createProfile": "创建您的个人资料",
+    "providerDashboard": "提供者仪表板",
+    "providerDescription": "管理您的服务和捐款",
+    "manageServices": "管理服务",
+    "createNewService": "创建新服务",
+    "becomeProvider": "成为提供者",
+    "providerOffer": "提供服务并支持慈善机构",
+    "enableProviderRole": "启用提供者角色",
+    "supporterDashboard": "支持者仪表板",
+    "supporterDescription": "跟踪您的捐款和影响",
+    "myDonations": "我的捐款",
+    "browseServices": "浏览服务",
+    "becomeSupporter": "成为支持者",
+    "supporterOffer": "支持服务和慈善机构",
+    "enableSupporterRole": "启用支持者角色",
+    "accountSettings": "账户设置",
+    "accountDescription": "管理您的账户偏好",
+    "editProfile": "编辑个人资料",
+    "privacySettings": "隐私设置",
+    "profileManagement": "个人资料管理",
+    "yourProfile": "您的个人资料",
+    "name": "姓名",
+    "username": "用户名",
+    "location": "位置",
+    "roles": "角色",
+    "providerAndSupporter": "提供者和支持者",
+    "providerRole": "提供者",
+    "supporterRole": "支持者",
+    "noRoles": "无",
     "provider_section": {
-      "title": "As a Provider",
-      "create_service": "Create Service",
-      "manage_services": "Manage Services",
-      "view_requests": "View Requests"
+      "title": "作为提供者",
+      "create_service": "创建服务",
+      "update_service": "更新服务",
+      "creating": "创建中...",
+      "updating": "更新中...",
+      "manage_services": "管理服务",
+      "view_requests": "查看请求"
     },
     "supporter_section": {
-      "title": "As a Supporter",
-      "browse_services": "Browse Services",
-      "donation_history": "Donation History"
+      "title": "作为支持者",
+      "browse_services": "浏览服务",
+      "donation_history": "捐款历史"
     },
     "profile_section": {
-      "title": "Profile Management",
-      "edit_profile": "Edit Profile",
-      "account_settings": "Account Settings"
+      "title": "个人资料管理",
+      "edit_profile": "编辑个人资料",
+      "account_settings": "账户设置"
     }
   },
   "profile": {
     "setup": {
-      "title": "Set Up Your Profile",
-      "subtitle": "Create your profile to start using Powered by Donation as a service provider, supporter, or both.",
-      "create_profile": "Create Your Profile",
-      "update_profile": "Update Your Profile",
+      "title": "设置您的个人资料",
+      "subtitle": "创建您的个人资料以开始使用捐赠驱动作为服务提供者、支持者或两者。",
+      "create_profile": "创建您的个人资料",
+      "update_profile": "更新您的个人资料",
       "roles": {
-        "title": "Your Role(s)",
+        "title": "您的角色",
         "provider": {
-          "title": "Service Provider",
-          "description": "Offer services and help charities"
+          "title": "服务提供者",
+          "description": "提供服务并帮助慈善机构"
         },
         "supporter": {
-          "title": "Supporter",
-          "description": "Find services and make charitable donations"
+          "title": "支持者",
+          "description": "寻找服务并进行慈善捐款"
         }
       },
       "form": {
-        "full_name": "Full Name",
-        "full_name_placeholder": "Your full name",
-        "username": "Username (Optional)",
-        "username_placeholder": "Choose a unique username",
-        "username_help": "For public profile URL (optional)",
-        "bio": "Bio",
-        "bio_placeholder": "Tell others about yourself and your interests...",
-        "location": "Location",
-        "location_placeholder": "City, State/Country",
-        "phone": "Phone Number",
-        "phone_placeholder": "Your phone number",
-        "create_profile": "Create Profile",
-        "update_profile": "Update Profile",
-        "saving": "Saving...",
-        "success_created": "Profile created successfully!",
-        "success_updated": "Profile updated successfully!",
-        "error_name_required": "Name is required",
-        "error_role_required": "You must be either a provider, supporter, or both",
-        "error_save_failed": "Failed to save profile"
+        "full_name": "全名",
+        "full_name_placeholder": "您的全名",
+        "username": "用户名（可选）",
+        "username_placeholder": "选择一个唯一的用户名",
+        "username_help": "用于公共个人资料URL（可选）",
+        "bio": "个人简介",
+        "bio_placeholder": "告诉他人关于您自己和您的兴趣...",
+        "location": "位置",
+        "location_placeholder": "城市，州/国家",
+        "phone": "电话号码",
+        "phone_placeholder": "您的电话号码",
+        "create_profile": "创建个人资料",
+        "update_profile": "更新个人资料",
+        "saving": "保存中...",
+        "success_created": "个人资料创建成功！",
+        "success_updated": "个人资料更新成功！",
+        "error_name_required": "姓名是必需的",
+        "error_role_required": "您必须是提供者、支持者或两者",
+        "error_save_failed": "保存个人资料失败"
       }
     }
   },
@@ -127,23 +166,23 @@
     }
   },
   "common": {
-    "loading": "Loading...",
-    "error": "Error",
-    "success": "Success",
-    "cancel": "Cancel",
-    "save": "Save",
-    "delete": "Delete",
-    "edit": "Edit",
-    "view": "View",
-    "back": "Back",
-    "next": "Next",
-    "previous": "Previous",
-    "search": "Search",
-    "filter": "Filter",
-    "sort": "Sort",
-    "clear": "Clear",
-    "apply": "Apply",
-    "reset": "Reset"
+    "loading": "加载中...",
+    "error": "错误",
+    "success": "成功",
+    "cancel": "取消",
+    "save": "保存",
+    "delete": "删除",
+    "edit": "编辑",
+    "view": "查看",
+    "back": "返回",
+    "next": "下一个",
+    "previous": "上一个",
+    "search": "搜索",
+    "filter": "筛选",
+    "sort": "排序",
+    "clear": "清除",
+    "apply": "应用",
+    "reset": "重置"
   },
   "auth": {
     "login": {
@@ -249,17 +288,47 @@
     }
   },
   "language": {
-    "select": "Select Language",
+    "select": "选择语言",
+    "ar": "العربية",
+    "de": "Deutsch",
+    "el": "Ελληνικά",
     "en": "English",
     "es": "Español",
     "fr": "Français",
-    "de": "Deutsch",
+    "hi": "हिन्दी",
     "it": "Italiano",
-    "pt": "Português",
-    "zh": "中文",
     "ja": "日本語",
     "ko": "한국어",
-    "ar": "العربية",
-    "tr": "Türkçe"
+    "pa": "ਪੰਜਾਬੀ",
+    "pt": "Português",
+    "tl": "Filipino",
+    "tr": "Türkçe",
+    "vi": "Tiếng Việt",
+    "yue": "粵語",
+    "zh": "中文"
+  },
+  "deleteProfile": {
+    "title": "删除个人资料",
+    "description": "这将永久删除您的个人资料和所有相关数据。此操作无法撤销。",
+    "providerWarning": "⚠️ 作为提供者，这也会删除您的所有服务和服务历史。",
+    "supporterWarning": "⚠️ 作为支持者，这将删除您的捐款历史和服务请求。",
+    "deleteButton": "删除个人资料",
+    "confirmTitle": "确认删除个人资料",
+    "confirmDescription": "您确定要删除\"{name}\"的个人资料吗？此操作是永久性的，将会：",
+    "confirmList": {
+      "deleteInfo": "删除您的个人资料信息",
+      "removeServices": "移除您的所有服务",
+      "deleteHistory": "删除您的捐款历史",
+      "signOut": "将您从平台注销",
+      "cannotUndo": "无法撤销"
+    },
+    "confirmButton": "是的，删除我的个人资料",
+    "deleting": "删除中...",
+    "cancel": "取消",
+    "errors": {
+      "activeServices": "您有活跃服务时无法删除个人资料。请先停用所有服务。",
+      "activeRequests": "您有活跃服务请求或待处理捐款时无法删除个人资料。如需帮助请联系支持。",
+      "deleteFailed": "删除个人资料失败"
+    }
   }
 }

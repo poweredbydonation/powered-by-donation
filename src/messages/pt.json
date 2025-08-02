@@ -1,144 +1,246 @@
 {
   "nav": {
-    "home": "Home",
-    "browse": "Browse Services",
-    "search": "Search",
-    "dashboard": "Dashboard",
-    "login": "Login",
-    "logout": "Logout",
-    "profile": "Profile"
+    "home": "Início",
+    "browse": "Explorar Serviços",
+    "search": "Pesquisar",
+    "dashboard": "Painel",
+    "login": "Entrar",
+    "logout": "Sair",
+    "profile": "Perfil"
   },
   "home": {
     "title": "Powered by Donation",
-    "subtitle": "Service marketplace where donations to charities unlock professional services",
+    "subtitle": "Marketplace de serviços onde doações para instituições de caridade desbloqueiam serviços profissionais",
     "hero": {
-      "title": "Connect Services with Charitable Impact",
-      "subtitle": "Browse professional services. Make donations to registered charities. Build community connections.",
-      "browse_services": "Browse Services",
-      "how_it_works": "How It Works"
+      "title": "Conecte Serviços com Impacto Beneficente",
+      "subtitle": "Explore serviços profissionais. Faça doações para instituições de caridade registradas. Construa conexões comunitárias.",
+      "browse_services": "Explorar Serviços",
+      "how_it_works": "Como Funciona"
     },
     "how_it_works": {
-      "title": "How It Works",
+      "title": "Como Funciona",
       "step1": {
-        "title": "Browse Services",
-        "description": "Find professional services offered by community providers"
+        "title": "Explorar Serviços",
+        "description": "Encontre serviços profissionais oferecidos por provedores da comunidade"
       },
       "step2": {
-        "title": "Choose a Charity",
-        "description": "Select from registered charities to receive your donation"
+        "title": "Escolha uma Instituição de Caridade",
+        "description": "Selecione entre instituições de caridade registradas para receber sua doação"
       },
       "step3": {
-        "title": "Make Impact",
-        "description": "Your donation unlocks the service and supports a great cause"
+        "title": "Gere Impacto",
+        "description": "Sua doação desbloqueia o serviço e apoia uma grande causa"
       }
     },
     "recent_activity": {
-      "title": "Recent Community Activity",
-      "someone_donated": "Someone donated",
+      "title": "Atividade Recente da Comunidade",
+      "someone_donated": "Alguém doou",
       "via_service": "via",
-      "hours_ago": "hours ago",
-      "minutes_ago": "minutes ago"
+      "hours_ago": "horas atrás",
+      "minutes_ago": "minutos atrás",
+      "days_ago": "dia atrás"
     }
   },
   "dashboard": {
-    "title": "Dashboard",
-    "welcome": "Welcome",
+    "title": "Painel",
+    "welcome": "Bem-vindo de volta",
+    "profileReady": "Seu perfil está configurado e pronto para usar.",
+    "completeProfile": "Complete seu perfil para começar.",
+    "serviceProvider": "Provedor de Serviços",
+    "supporter": "Apoiador",
+    "getStarted": "Começar",
+    "setupPrompt": "Configure seu perfil para começar a usar o Powered by Donation:",
+    "createProfile": "Criar Seu Perfil",
+    "providerDashboard": "Painel do Provedor",
+    "providerDescription": "Gerencie seus serviços e doações",
+    "manageServices": "Gerenciar Serviços",
+    "createNewService": "Criar Novo Serviço",
+    "becomeProvider": "Tornar-se Provedor",
+    "providerOffer": "Ofereça serviços e apoie instituições de caridade",
+    "enableProviderRole": "Ativar Função de Provedor",
+    "supporterDashboard": "Painel do Apoiador",
+    "supporterDescription": "Acompanhe suas doações e impacto",
+    "myDonations": "Minhas Doações",
+    "browseServices": "Explorar Serviços",
+    "becomeSupporter": "Tornar-se Apoiador",
+    "supporterOffer": "Apoie serviços e instituições de caridade",
+    "enableSupporterRole": "Ativar Função de Apoiador",
+    "accountSettings": "Configurações da Conta",
+    "accountDescription": "Gerencie suas preferências de conta",
+    "editProfile": "Editar Perfil",
+    "privacySettings": "Configurações de Privacidade",
+    "profileManagement": "Gerenciamento de Perfil",
+    "yourProfile": "Seu Perfil",
+    "name": "Nome",
+    "username": "Nome de usuário",
+    "location": "Localização",
+    "roles": "Funções",
+    "providerAndSupporter": "Provedor e Apoiador",
+    "providerRole": "Provedor",
+    "supporterRole": "Apoiador",
+    "noRoles": "Nenhuma",
     "provider_section": {
-      "title": "As a Provider",
-      "create_service": "Create Service",
-      "manage_services": "Manage Services",
-      "view_requests": "View Requests"
+      "title": "Como Provedor",
+      "create_service": "Criar Serviço",
+      "update_service": "Atualizar Serviço",
+      "creating": "Criando...",
+      "updating": "Atualizando...",
+      "manage_services": "Gerenciar Serviços",
+      "view_requests": "Ver Solicitações"
     },
     "supporter_section": {
-      "title": "As a Supporter",
-      "browse_services": "Browse Services",
-      "donation_history": "Donation History"
+      "title": "Como Apoiador",
+      "browse_services": "Explorar Serviços",
+      "donation_history": "Histórico de Doações"
     },
     "profile_section": {
-      "title": "Profile Management",
-      "edit_profile": "Edit Profile",
-      "account_settings": "Account Settings"
+      "title": "Gerenciamento de Perfil",
+      "edit_profile": "Editar Perfil",
+      "account_settings": "Configurações da Conta"
     }
   },
   "profile": {
     "setup": {
-      "title": "Set Up Your Profile",
-      "subtitle": "Create your profile to start using Powered by Donation as a service provider, supporter, or both.",
-      "create_profile": "Create Your Profile",
-      "update_profile": "Update Your Profile",
+      "title": "Configure Seu Perfil",
+      "subtitle": "Crie seu perfil para começar a usar o Powered by Donation como provedor de serviços, apoiador, ou ambos.",
+      "create_profile": "Criar Seu Perfil",
+      "update_profile": "Atualizar Seu Perfil",
       "roles": {
-        "title": "Your Role(s)",
+        "title": "Sua(s) Função(ões)",
         "provider": {
-          "title": "Service Provider",
-          "description": "Offer services and help charities"
+          "title": "Provedor de Serviços",
+          "description": "Ofereça serviços e ajude instituições de caridade"
         },
         "supporter": {
-          "title": "Supporter",
-          "description": "Find services and make charitable donations"
+          "title": "Apoiador",
+          "description": "Encontre serviços e faça doações beneficentes"
         }
       },
       "form": {
-        "full_name": "Full Name",
-        "full_name_placeholder": "Your full name",
-        "username": "Username (Optional)",
-        "username_placeholder": "Choose a unique username",
-        "username_help": "For public profile URL (optional)",
-        "bio": "Bio",
-        "bio_placeholder": "Tell others about yourself and your interests...",
-        "location": "Location",
-        "location_placeholder": "City, State/Country",
-        "phone": "Phone Number",
-        "phone_placeholder": "Your phone number",
-        "create_profile": "Create Profile",
-        "update_profile": "Update Profile",
-        "saving": "Saving...",
-        "success_created": "Profile created successfully!",
-        "success_updated": "Profile updated successfully!",
-        "error_name_required": "Name is required",
-        "error_role_required": "You must be either a provider, supporter, or both",
-        "error_save_failed": "Failed to save profile"
+        "full_name": "Nome Completo",
+        "full_name_placeholder": "Seu nome completo",
+        "username": "Nome de Usuário (Opcional)",
+        "username_placeholder": "Escolha um nome de usuário único",
+        "username_help": "Para URL de perfil público (opcional)",
+        "bio": "Biografia",
+        "bio_placeholder": "Conte aos outros sobre você e seus interesses...",
+        "location": "Localização",
+        "location_placeholder": "Cidade, Estado/País",
+        "phone": "Número de Telefone",
+        "phone_placeholder": "Seu número de telefone",
+        "create_profile": "Criar Perfil",
+        "update_profile": "Atualizar Perfil",
+        "saving": "Salvando...",
+        "success_created": "Perfil criado com sucesso!",
+        "success_updated": "Perfil atualizado com sucesso!",
+        "error_name_required": "Nome é obrigatório",
+        "error_role_required": "Você deve ser provedor, apoiador, ou ambos",
+        "error_save_failed": "Falha ao salvar perfil"
       }
     }
   },
   "services": {
     "browse": {
-      "title": "Browse Services",
-      "subtitle": "Find professional services and support charities",
-      "no_services": "No services found",
-      "load_more": "Load More"
+      "title": "Explorar Serviços",
+      "subtitle": "Encontre serviços profissionais e apoie instituições de caridade",
+      "no_services": "Nenhum serviço encontrado",
+      "load_more": "Carregar Mais",
+      "allLocations": "Todas as Localizações",
+      "provider": "Provedor",
+      "communityImpact": {
+        "title": "Impacto Comunitário",
+        "activeServices": "Serviços Ativos",
+        "totalDonationPotential": "Potencial Total de Doações",
+        "activeProviders": "Provedores Ativos",
+        "donationsNote": "Todas as doações vão diretamente para instituições de caridade registradas via JustGiving"
+      },
+      "callToAction": {
+        "title": "Quer oferecer seus serviços?",
+        "description": "Junte-se à nossa comunidade de provedores e ajude instituições de caridade enquanto mostra suas habilidades.",
+        "button": "Começar"
+      }
     },
     "create": {
-      "title": "Create New Service",
-      "subtitle": "Offer your skills to help charities receive donations"
+      "title": "Criar Novo Serviço",
+      "subtitle": "Ofereça suas habilidades para ajudar instituições de caridade a receber doações"
     }
   },
   "common": {
-    "loading": "Loading...",
-    "error": "Error",
-    "success": "Success",
-    "cancel": "Cancel",
-    "save": "Save",
-    "delete": "Delete",
-    "edit": "Edit",
-    "view": "View",
-    "back": "Back",
-    "next": "Next",
-    "previous": "Previous",
-    "search": "Search",
-    "filter": "Filter",
-    "sort": "Sort",
-    "clear": "Clear",
-    "apply": "Apply",
-    "reset": "Reset"
+    "loading": "Carregando...",
+    "error": "Erro",
+    "success": "Sucesso",
+    "cancel": "Cancelar",
+    "save": "Salvar",
+    "delete": "Excluir",
+    "edit": "Editar",
+    "view": "Visualizar",
+    "back": "Voltar",
+    "next": "Próximo",
+    "previous": "Anterior",
+    "search": "Pesquisar",
+    "filter": "Filtrar",
+    "sort": "Ordenar",
+    "clear": "Limpar",
+    "apply": "Aplicar",
+    "reset": "Redefinir"
   },
   "auth": {
     "login": {
-      "title": "Login",
-      "subtitle": "Sign in to your account"
+      "title": "Entrar",
+      "subtitle": "Entre na sua conta",
+      "email": "Email",
+      "password": "Senha",
+      "email_placeholder": "seu@email.com",
+      "password_placeholder": "Sua senha",
+      "sign_in_button": "Entrar",
+      "signing_in": "Entrando...",
+      "or_continue_with": "Ou continue com",
+      "no_account": "Não tem uma conta?",
+      "sign_up_link": "Registrar-se",
+      "forgot_password": "Esqueceu a senha?",
+      "remember_me": "Lembrar de mim"
     },
     "logout": {
-      "title": "Logout",
-      "confirm": "Are you sure you want to logout?"
+      "title": "Sair",
+      "confirm": "Tem certeza de que deseja sair?"
+    },
+    "signup": {
+      "title": "Criar Conta",
+      "fields": {
+        "email": "Email",
+        "password": "Senha",
+        "confirmPassword": "Confirmar Senha"
+      },
+      "placeholders": {
+        "email": "seu@email.com",
+        "password": "Pelo menos 6 caracteres",
+        "confirmPassword": "Confirme sua senha"
+      },
+      "buttons": {
+        "create": "Criar Conta",
+        "creating": "Criando conta..."
+      },
+      "errors": {
+        "passwordMismatch": "As senhas não coincidem",
+        "passwordTooShort": "A senha deve ter pelo menos 6 caracteres"
+      },
+      "success": {
+        "title": "Verifique Seu Email!",
+        "message": "Enviamos um link de confirmação para",
+        "instruction": "Por favor, verifique seu email e clique no link para ativar sua conta.",
+        "backToLogin": "Voltar ao Login"
+      },
+      "divider": "Ou continue com",
+      "socialButtons": {
+        "google": "Registrar-se com Google",
+        "microsoft": "Registrar-se com Microsoft",
+        "github": "Registrar-se com GitHub",
+        "apple": "Registrar-se com Apple"
+      },
+      "footer": {
+        "hasAccount": "Já tem uma conta?",
+        "signIn": "Entrar"
+      }
     }
   },
   "footer": {
@@ -186,17 +288,47 @@
     }
   },
   "language": {
-    "select": "Select Language",
+    "select": "Selecionar Idioma",
+    "ar": "العربية",
+    "de": "Deutsch",
+    "el": "Ελληνικά",
     "en": "English",
     "es": "Español",
     "fr": "Français",
-    "de": "Deutsch",
+    "hi": "हिन्दी",
     "it": "Italiano",
-    "pt": "Português",
-    "zh": "中文",
     "ja": "日本語",
     "ko": "한국어",
-    "ar": "العربية",
-    "tr": "Türkçe"
+    "pa": "ਪੰਜਾਬੀ",
+    "pt": "Português",
+    "tl": "Filipino",
+    "tr": "Türkçe",
+    "vi": "Tiếng Việt",
+    "yue": "粵語",
+    "zh": "中文"
+  },
+  "deleteProfile": {
+    "title": "Excluir Perfil",
+    "description": "Isso excluirá permanentemente seu perfil e todos os dados associados. Esta ação não pode ser desfeita.",
+    "providerWarning": "⚠️ Como provedor, isso também excluirá todos os seus serviços e histórico de serviços.",
+    "supporterWarning": "⚠️ Como apoiador, isso excluirá seu histórico de doações e solicitações de serviços.",
+    "deleteButton": "Excluir Perfil",
+    "confirmTitle": "Confirmar Exclusão do Perfil",
+    "confirmDescription": "Tem certeza de que deseja excluir seu perfil para \"{name}\"? Esta ação é permanente e irá:",
+    "confirmList": {
+      "deleteInfo": "Excluir suas informações de perfil",
+      "removeServices": "Remover todos os seus serviços",
+      "deleteHistory": "Excluir seu histórico de doações",
+      "signOut": "Desconectá-lo da plataforma",
+      "cannotUndo": "Não pode ser desfeita"
+    },
+    "confirmButton": "Sim, Excluir Meu Perfil",
+    "deleting": "Excluindo...",
+    "cancel": "Cancelar",
+    "errors": {
+      "activeServices": "Você não pode excluir seu perfil enquanto tiver serviços ativos. Por favor, desative todos os serviços primeiro.",
+      "activeRequests": "Você não pode excluir seu perfil enquanto tiver solicitações de serviços ativas ou doações pendentes. Entre em contato com o suporte se precisar de ajuda.",
+      "deleteFailed": "Falha ao excluir perfil"
+    }
   }
 }
