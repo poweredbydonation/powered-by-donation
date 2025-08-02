@@ -20,12 +20,7 @@ export default function MultilingualNavbar({ locale, messages }: MultilingualNav
 
   useEffect(() => {
     setMounted(true)
-    console.log('MultilingualNavbar mounted - Locale:', locale, 'Tagline:', messages?.nav?.tagline, 'Should show:', locale !== 'en' && messages?.nav?.tagline)
   }, [])
-
-  useEffect(() => {
-    console.log('MultilingualNavbar props changed - Locale:', locale, 'Tagline:', messages?.nav?.tagline, 'Should show:', locale !== 'en' && !!messages?.nav?.tagline)
-  }, [locale, messages?.nav?.tagline])
 
   const handleSignOut = async () => {
     try {
