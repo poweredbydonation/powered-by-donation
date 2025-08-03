@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { Service, ServiceLocation } from '@/types/database'
 import MultilingualNavbar from '@/components/MultilingualNavbar'
 import ServiceDonationFlow from '@/components/services/ServiceDonationFlow'
+import ServiceLocationMap from '@/components/ServiceLocationMap'
 import { getMessages } from 'next-intl/server'
 
 interface ServicePageProps {
@@ -238,6 +239,18 @@ export default async function ServicePage({ params }: ServicePageProps) {
               </div>
             </div>
           </div>
+
+          {/* Service Location Map */}
+          {locations.some(loc => (loc.type === 'physical' || loc.type === 'hybrid') && loc.latitude && loc.longitude) && (
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-8">
+              <div className="p-8">
+                <h2 className="text-2xl font-bold text-gray-900 mb-6">Service Location</h2>
+                <ServiceLocationMap 
+                  locations={locations}
+                />
+              </div>
+            </div>
+          )}
 
           {/* Provider Information */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-8">
