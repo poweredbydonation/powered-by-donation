@@ -1,19 +1,19 @@
-import { type NextRequest } from 'next/server'
-import { updateSession } from './src/lib/supabase/middleware'
+import { NextRequest, NextResponse } from 'next/server'
 
-export async function middleware(request: NextRequest) {
-  return await updateSession(request)
+export function middleware(request: NextRequest) {
+  console.log('🔥 MIDDLEWARE RUNNING:', request.nextUrl.pathname)
+  
+  // Super simple test - just redirect root to /en
+  if (request.nextUrl.pathname === '/') {
+    console.log('🔥 REDIRECTING ROOT TO /en')
+    return NextResponse.redirect(new URL('/en', request.url))
+  }
+  
+  console.log('🔥 MIDDLEWARE CONTINUING')
+  return NextResponse.next()
 }
 
 export const config = {
-  matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * Feel free to modify this pattern to include more paths.
-     */
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
-  ],
+  // Match absolutely everything to test
+  matcher: ['/(.*)','/']
 }
