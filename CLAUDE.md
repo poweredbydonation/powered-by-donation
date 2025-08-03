@@ -70,6 +70,38 @@ Charity pages at `/charity/[slug]` showcase service-driven donations with comple
 
 See [README-seo.md](./README-seo.md) for complete SEO strategy and implementation details.
 
+## JustGiving Integration
+
+### Donation Flow Implementation
+The platform integrates with JustGiving's staging environment for secure charitable donations:
+
+#### Core Components:
+- **JustGiving Client** (`src/lib/justgiving/client.ts`): Handles API calls and URL generation
+- **Donation Flow** (`src/components/services/ServiceDonationFlow.tsx`): User donation interface
+- **Success Page** (`src/app/[locale]/donation-success/page.tsx`): Post-donation confirmation
+
+#### URL Format:
+```
+https://link.staging.justgiving.com/v1/charity/donate/charityId/{id}?
+donationValue={amount}&
+currency=GBP&
+exiturl={returnUrl}&
+reference={serviceReference}&
+skipGiftAid=true
+```
+
+#### Key Features:
+- **Staging Environment**: Uses `link.staging.justgiving.com` for testing
+- **Fixed Amounts**: Exact donation values, not minimums
+- **Localized Returns**: Redirects to `/[locale]/donation-success` 
+- **Donation Tracking**: JustGiving provides `jgDonationId` for confirmation
+- **International Support**: `skipGiftAid=true` for non-UK donors
+
+#### Environment Variables:
+- `NEXT_PUBLIC_JUSTGIVING_CHARITY_CHECKOUT_URL`: Override default staging URL
+- `NEXT_PUBLIC_APP_URL`: Base URL for donation return redirects
+- `JUSTGIVING_API_KEY`: API access for charity validation (defaults to staging key)
+
 ## User Experience & Internationalization
 
 ### Design Philosophy
@@ -86,7 +118,7 @@ Browse services freely without signup - view pricing, charity requirements, prov
 Sign up → Create services → Set fixed pricing → Choose charity requirements → Receive donations → Give/receive feedback
 
 #### Supporter Journey
-Browse services → View fixed pricing → Choose charity → Sign up → Donate via JustGiving → Give feedback → Build reputation
+Browse services → View fixed pricing → Choose charity → Sign up → Donate via JustGiving → Confirmation page → Give feedback → Build reputation
 
 ### Internationalization: 17 Language Support
 Complete translation coverage using next-intl with centralized language configuration in `src/config/languages.ts`.
