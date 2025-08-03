@@ -219,6 +219,13 @@ export default function BrowsePage({ params }: BrowsePageProps) {
             {/* Location Filter */}
             <ServiceLocationFilter 
               onFilterChange={setLocationFilter}
+              services={services.map(service => ({
+                id: service.id,
+                title: service.title,
+                service_locations: Array.isArray(service.service_locations) 
+                  ? service.service_locations as ServiceLocation[]
+                  : []
+              }))}
             />
           </div>
 

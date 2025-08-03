@@ -3,6 +3,7 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
 import { APIProvider, Map, Marker, useMap } from '@vis.gl/react-google-maps'
 import { MapPin, Globe, Monitor, Navigation } from 'lucide-react'
+import { ServiceLocation } from '@/types/database'
 
 interface Location {
   lat: number
@@ -15,13 +16,21 @@ interface LocationFilter {
   radius?: number
 }
 
+interface ServiceWithLocation {
+  id: string
+  title: string
+  service_locations: ServiceLocation[]
+}
+
 interface ServiceLocationFilterProps {
   onFilterChange: (filter: LocationFilter) => void
+  services?: ServiceWithLocation[]
   className?: string
 }
 
 export default function ServiceLocationFilter({
   onFilterChange,
+  services = [],
   className = ''
 }: ServiceLocationFilterProps) {
   const [selectedType, setSelectedType] = useState<'all' | 'remote' | 'physical' | 'hybrid'>('all')
@@ -109,8 +118,8 @@ export default function ServiceLocationFilter({
     }
   }
 
-  // Circle component that uses the map instance
-  const CircleOverlay = ({ center, radius }: { center: Location, radius: number }) => {
+  // User search circle component
+  const UserSearchCircle = ({ center, radius }: { center: Location, radius: number }) => {
     const map = useMap()
     const circleRef = useRef<google.maps.Circle | null>(null)
 
@@ -121,7 +130,7 @@ export default function ServiceLocationFilter({
           circleRef.current.setMap(null)
         }
 
-        // Create new circle
+        // Create new circle for user search area
         circleRef.current = new google.maps.Circle({
           center,
           radius: radius * 1000, // Convert km to meters
@@ -140,6 +149,72 @@ export default function ServiceLocationFilter({
         }
       }
     }, [map, center, radius])
+
+    return null
+  }
+
+  // Service location circles component
+  const ServiceLocationCircles = () => {
+    const map = useMap()
+    const circlesRef = useRef<google.maps.Circle[]>([])
+    const markersRef = useRef<google.maps.Marker[]>([])
+
+    useEffect(() => {
+      if (map && typeof window !== 'undefined' && window.google) {
+        // Clear existing circles and markers
+        circlesRef.current.forEach(circle => circle.setMap(null))
+        markersRef.current.forEach(marker => marker.setMap(null))
+        circlesRef.current = []
+        markersRef.current = []
+
+        // Add service location circles
+        services.forEach(service => {
+          if (Array.isArray(service.service_locations)) {
+            service.service_locations.forEach(location => {
+              if (location.latitude && location.longitude && location.type !== 'remote') {
+                // Create service marker
+                const marker = new google.maps.Marker({
+                  position: { lat: location.latitude, lng: location.longitude },
+                  map,
+                  title: service.title,
+                  icon: {
+                    url: 'data:image/svg+xml;base64,' + btoa(`
+                      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="10" cy="10" r="8" fill="#DC2626" stroke="#ffffff" stroke-width="2"/>
+                        <circle cx="10" cy="10" r="3" fill="#ffffff"/>
+                      </svg>
+                    `),
+                    scaledSize: new google.maps.Size(20, 20),
+                    anchor: new google.maps.Point(10, 10),
+                  }
+                })
+                markersRef.current.push(marker)
+
+                // Create service coverage circle if radius exists
+                if (location.radius && location.radius > 0) {
+                  const circle = new google.maps.Circle({
+                    center: { lat: location.latitude, lng: location.longitude },
+                    radius: location.radius * 1000, // Convert km to meters
+                    strokeColor: "#DC2626", // Red color for services
+                    strokeOpacity: 0.8,
+                    strokeWeight: 2,
+                    fillColor: "#DC2626",
+                    fillOpacity: 0.15,
+                    map,
+                  })
+                  circlesRef.current.push(circle)
+                }
+              }
+            })
+          }
+        })
+      }
+
+      return () => {
+        circlesRef.current.forEach(circle => circle.setMap(null))
+        markersRef.current.forEach(marker => marker.setMap(null))
+      }
+    }, [map, services, selectedType])
 
     return null
   }
@@ -216,9 +291,21 @@ export default function ServiceLocationFilter({
         <div className="space-y-4">
           <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
             <h4 className="font-medium text-blue-900 mb-2">Find Services Near You</h4>
-            <p className="text-sm text-blue-700">
+            <p className="text-sm text-blue-700 mb-3">
               Click on the map to set your location and adjust the radius to find nearby services.
             </p>
+            
+            {/* Map Legend */}
+            <div className="flex flex-wrap gap-4 text-xs">
+              <div className="flex items-center">
+                <div className="w-3 h-3 rounded-full bg-blue-500 mr-2"></div>
+                <span className="text-blue-700">Your search area</span>
+              </div>
+              <div className="flex items-center">
+                <div className="w-3 h-3 rounded-full bg-red-600 mr-2"></div>
+                <span className="text-blue-700">Service locations & coverage</span>
+              </div>
+            </div>
           </div>
 
           {/* Map Container */}
@@ -254,8 +341,11 @@ export default function ServiceLocationFilter({
                     position={center}
                   />
                   
-                  {/* Search Radius Circle */}
-                  <CircleOverlay center={center} radius={radius} />
+                  {/* User Search Area Circle */}
+                  <UserSearchCircle center={center} radius={radius} />
+                  
+                  {/* Service Location Circles */}
+                  <ServiceLocationCircles />
                 </Map>
               </APIProvider>
             </div>
