@@ -109,10 +109,8 @@ export interface ServiceLocation {
   area?: string; // "Sydney CBD", "Melbourne Eastern Suburbs"
   radius?: number; // km from base location
   travel_fee?: number; // Optional travel cost
-  coordinates?: {
-    lat: number;
-    lng: number;
-  };
+  latitude?: number; // Direct latitude property
+  longitude?: number; // Direct longitude property
 }
 
 // Supporter Happiness Requirements (for supporter_happiness_requirements JSONB field)

@@ -6,6 +6,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { createClient } from '@/lib/supabase/client'
 import { CharityRequirementType, ServiceLocation, Service } from '@/types/database'
 import CharitySelector from './CharitySelector'
+import ServiceLocationPicker from '@/components/ServiceLocationPicker'
 
 interface SelectedCharity {
   justgiving_charity_id: string
@@ -39,6 +40,8 @@ export default function ServiceCreationForm({
   const [address, setAddress] = useState('')
   const [area, setArea] = useState('')
   const [radius, setRadius] = useState('')
+  const [latitude, setLatitude] = useState<number | null>(null)
+  const [longitude, setLongitude] = useState<number | null>(null)
   
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -80,10 +83,23 @@ export default function ServiceCreationForm({
           setAddress(firstLocation.address || '')
           setArea(firstLocation.area || '')
           setRadius(firstLocation.radius?.toString() || '')
+          if (firstLocation.latitude) setLatitude(firstLocation.latitude)
+          if (firstLocation.longitude) setLongitude(firstLocation.longitude)
         }
       }
     }
   }, [initialData, mode])
+
+  // Handle location picker changes
+  const handleLocationChange = (location: { lat: number; lng: number }, newRadius: number, newAddress?: string) => {
+    setLatitude(location.lat)
+    setLongitude(location.lng)
+    setRadius(newRadius.toString())
+    if (newAddress) {
+      setAddress(newAddress)
+      setArea(newAddress) // Use address as area for now
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -119,6 +135,8 @@ export default function ServiceCreationForm({
         ...(locationType !== 'remote' && address && { address }),
         ...(locationType !== 'remote' && area && { area }),
         ...(locationType !== 'remote' && radius && { radius: parseInt(radius) }),
+        ...(locationType !== 'remote' && latitude && { latitude }),
+        ...(locationType !== 'remote' && longitude && { longitude }),
       }
 
       // Prepare preferred charities data
@@ -371,51 +389,19 @@ export default function ServiceCreationForm({
           </label>
         </div>
 
-        {/* Physical location fields */}
+        {/* Physical location picker */}
         {(locationType === 'physical' || locationType === 'hybrid') && (
-          <div className="space-y-4 pl-6 border-l-2 border-gray-200">
-            <div>
-              <label htmlFor="area" className="block text-sm font-medium text-gray-700 mb-1">
-                Service Area
-              </label>
-              <input
-                type="text"
-                id="area"
-                value={area}
-                onChange={(e) => setArea(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="e.g. Sydney CBD, Melbourne Eastern Suburbs"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-1">
-                Address (Optional)
-              </label>
-              <input
-                type="text"
-                id="address"
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="123 Main St, Sydney NSW"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="radius" className="block text-sm font-medium text-gray-700 mb-1">
-                Service Radius (km)
-              </label>
-              <input
-                type="number"
-                id="radius"
-                value={radius}
-                onChange={(e) => setRadius(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="25"
-                min="1"
-              />
-            </div>
+          <div className="pl-6 border-l-2 border-gray-200">
+            <ServiceLocationPicker
+              initialLocation={
+                latitude && longitude 
+                  ? { lat: latitude, lng: longitude }
+                  : undefined
+              }
+              initialRadius={radius ? parseInt(radius) : undefined}
+              onLocationChange={handleLocationChange}
+              className="mt-4"
+            />
           </div>
         )}
       </div>
