@@ -162,7 +162,7 @@ class JustGivingAPI {
    */
   getCharityDonationUrl(charityId: number, amount?: number, reference?: string): string {
     const baseUrl = process.env.NEXT_PUBLIC_JUSTGIVING_CHARITY_CHECKOUT_URL || 'https://link.staging.justgiving.com'
-    const exitUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+    const returnUrl = process.env.NEXT_PUBLIC_JUSTGIVING_RETURN_URL || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
     
     // JustGiving staging URL format: https://link.staging.justgiving.com/v1/charity/donate/charityId/{charityId}
     let url = `${baseUrl}/v1/charity/donate/charityId/${charityId}`
@@ -172,7 +172,7 @@ class JustGivingAPI {
       params.append('donationValue', amount.toString())
     }
     params.append('currency', 'GBP') // JustGiving requires currency
-    params.append('exiturl', `${exitUrl}/en/donation-success?jgDonationId=JUSTGIVING-DONATION-ID`)
+    params.append('exiturl', `${returnUrl}/en/donation-success?jgDonationId=JUSTGIVING-DONATION-ID`)
     if (reference) {
       params.append('reference', reference)
     }
