@@ -4,6 +4,8 @@
 // Enum Types
 export type CharityRequirementType = 'any_charity' | 'specific_charities';
 
+export type CurrencyCode = 'GBP' | 'USD' | 'CAD' | 'AUD' | 'EUR';
+
 export type ServiceStatus = 
   | 'pending' 
   | 'success' 
@@ -31,6 +33,7 @@ export interface User {
   location?: string;
   phone?: string;
   avatar_url?: string;
+  preferred_currency?: CurrencyCode;
   created_at?: Date;
 }
 
