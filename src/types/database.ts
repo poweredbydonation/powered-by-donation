@@ -51,7 +51,8 @@ export interface Service {
   user_id: string; // UUID (foreign key to users table)
   title: string;
   description?: string;
-  donation_amount: number; // Fixed amount required
+  donation_amount: number; // Always AUD amount from pricing tier
+  pricing_tier_id?: number; // Foreign key to pricing_tiers table
   charity_requirement_type: CharityRequirementType;
   preferred_charities?: Record<string, unknown>; // JSONB - Array of JustGiving charity IDs
   available_from: Date;

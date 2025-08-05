@@ -94,7 +94,11 @@ export default function ServiceCreationForm({
       setDescription(initialData.description || '')
       setCharityRequirementType(initialData.charity_requirement_type || 'any_charity')
       
-      // TODO: Set selected tier based on donation_amount when in edit mode
+      // Set selected tier if available
+      if (initialData.pricing_tier_id) {
+        // The tier will be set when pricing tiers are loaded in PricingTierSlider
+        // We'll need to enhance PricingTierSlider to handle initial selection
+      }
       
       // Handle dates
       if (initialData.available_from) {
@@ -197,7 +201,8 @@ export default function ServiceCreationForm({
         ...(mode === 'create' && { user_id: user.id }),
         title: title.trim(),
         description: description.trim() || null,
-        donation_amount: selectedTier ? getTierPrice(selectedTier, userCurrency) : 0,
+        donation_amount: selectedTier ? selectedTier.price_aud : 0, // Always store AUD amount
+        pricing_tier_id: selectedTier ? selectedTier.id : null,
         charity_requirement_type: charityRequirementType,
         preferred_charities: preferredCharities.length > 0 ? preferredCharities : null,
         available_from: availableFrom,

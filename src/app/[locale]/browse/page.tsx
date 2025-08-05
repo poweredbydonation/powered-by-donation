@@ -3,10 +3,12 @@
 import { useState, useEffect } from 'react'
 import MultilingualNavbar from '@/components/MultilingualNavbar'
 import ServiceLocationFilter from '@/components/ServiceLocationFilter'
+import ServicePrice from '@/components/services/ServicePrice'
 import { Search, MapPin, Heart, Star } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
-import { Service, ServiceLocation } from '@/types/database'
+import { Service, ServiceLocation, CurrencyCode } from '@/types/database'
 import { isServiceWithinRadius } from '@/lib/utils/distance'
+import { useAuth } from '@/hooks/useAuth'
 
 interface BrowsePageProps {
   params: {
@@ -29,12 +31,14 @@ interface LocationFilter {
 
 export default function BrowsePage({ params }: BrowsePageProps) {
   const locale = params.locale
+  const { user } = useAuth()
   const [services, setServices] = useState<ServiceWithProvider[]>([])
   const [filteredServices, setFilteredServices] = useState<ServiceWithProvider[]>([])
   const [loading, setLoading] = useState(true)
   const [messages, setMessages] = useState<any>({})
   const [searchQuery, setSearchQuery] = useState('')
   const [locationFilter, setLocationFilter] = useState<LocationFilter>({ type: 'all' })
+  const [userCurrency, setUserCurrency] = useState<CurrencyCode>('AUD')
 
   useEffect(() => {
     // Load messages
@@ -49,11 +53,29 @@ export default function BrowsePage({ params }: BrowsePageProps) {
       }
     }
 
+    // Fetch user's currency
+    async function fetchUserCurrency() {
+      if (!user) return
+      
+      const supabase = createClient()
+      try {
+        const { data: userProfile } = await supabase
+          .from('users')
+          .select('preferred_currency')
+          .eq('id', user.id)
+          .single()
+        
+        if (userProfile?.preferred_currency) {
+          setUserCurrency(userProfile.preferred_currency)
+        }
+      } catch (err) {
+        // Keep default AUD
+      }
+    }
+
     // Fetch services
     async function fetchServices() {
       const supabase = createClient()
-      
-      console.log('🔍 Starting to fetch services...')
       
       const { data, error } = await supabase
         .from('services')
@@ -67,15 +89,8 @@ export default function BrowsePage({ params }: BrowsePageProps) {
         .order('created_at', { ascending: false })
 
       if (error) {
-        console.error('❌ Error fetching services:', error)
-        console.error('Error details:', JSON.stringify(error, null, 2))
         setServices([])
       } else {
-        console.log('✅ Fetched services successfully:', data)
-        console.log('📊 Number of services:', data?.length || 0)
-        if (data && data.length > 0) {
-          console.log('🔍 First service sample:', data[0])
-        }
         const servicesData = data || []
         setServices(servicesData)
         setFilteredServices(servicesData)
@@ -85,8 +100,9 @@ export default function BrowsePage({ params }: BrowsePageProps) {
     }
 
     loadMessages()
+    fetchUserCurrency()
     fetchServices()
-  }, [locale])
+  }, [locale, user])
 
   // Filter services based on search query and location filter
   useEffect(() => {
@@ -332,9 +348,11 @@ export default function BrowsePage({ params }: BrowsePageProps) {
                   </div>
                   
                   <div className="flex items-center justify-between">
-                    <div className="text-2xl font-bold text-green-600">
-                      ${service.donation_amount}
-                    </div>
+                    <ServicePrice
+                      pricingTierId={service.pricing_tier_id}
+                      userCurrency={userCurrency}
+                      className="text-2xl font-bold text-green-600"
+                    />
                     <a 
                       href={`/${locale}/services/${generateSlug(service.title)}`}
                       className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm inline-block text-center"
@@ -365,10 +383,11 @@ export default function BrowsePage({ params }: BrowsePageProps) {
               </div>
               <div>
                 <div className="text-2xl font-bold text-green-600">
-                  ${filteredServices.reduce((total, service) => total + service.donation_amount, 0).toLocaleString()}
+                  {new Set(filteredServices.map(service => service.charity_requirement_type)).size === 1 && 
+                   filteredServices[0]?.charity_requirement_type === 'any_charity' ? 'Any' : 'Multiple'}
                 </div>
                 <div className="text-sm text-gray-500">
-                  {messages.services?.browse?.communityImpact?.totalDonationPotential || 'Total Donation Potential'}
+                  Charity Options
                 </div>
               </div>
               <div>

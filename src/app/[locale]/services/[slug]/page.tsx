@@ -1,11 +1,14 @@
-import { Metadata } from 'next'
+'use client'
+
+import { useState, useEffect } from 'react'
 import { notFound } from 'next/navigation'
-import { createClient } from '@/lib/supabase/server'
-import { Service, ServiceLocation } from '@/types/database'
+import { createClient } from '@/lib/supabase/client'
+import { Service, ServiceLocation, CurrencyCode } from '@/types/database'
 import MultilingualNavbar from '@/components/MultilingualNavbar'
 import ServiceDonationFlow from '@/components/services/ServiceDonationFlow'
 import ServiceLocationMap from '@/components/ServiceLocationMap'
-import { getMessages } from 'next-intl/server'
+import ServicePrice from '@/components/services/ServicePrice'
+import { useAuth } from '@/hooks/useAuth'
 
 interface ServicePageProps {
   params: {
@@ -30,65 +33,81 @@ function generateSlug(title: string): string {
   return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
 }
 
-async function getServiceBySlug(slug: string): Promise<ServiceWithProvider | null> {
-  const supabase = createClient()
-  
-  const { data: services, error } = await supabase
-    .from('services')
-    .select(`
-      *,
-      user:users (
-        id,
-        name,
-        bio,
-        avatar_url,
-        location,
-        created_at
-      )
-    `)
-    .eq('is_active', true)
-    .eq('show_in_directory', true)
-
-  if (error) {
-    console.error('Error fetching services:', error)
-    return null
-  }
-
-  // Find service by matching slug
-  const service = services?.find(s => generateSlug(s.title) === slug)
-  return service || null
-}
-
-export async function generateMetadata({ params }: ServicePageProps): Promise<Metadata> {
-  const service = await getServiceBySlug(params.slug)
-  
-  if (!service) {
-    return {
-      title: 'Service Not Found | Powered by Donation'
-    }
-  }
-
-  const donationAmount = new Intl.NumberFormat('en-AU', {
-    style: 'currency',
-    currency: 'AUD',
-    minimumFractionDigits: 0,
-  }).format(service.donation_amount)
-
-  return {
-    title: `${service.title} - ${donationAmount} | Powered by Donation`,
-    description: service.description || `Support ${service.user.name}'s ${service.title} service with a ${donationAmount} donation to charity`,
-    openGraph: {
-      title: `${service.title} - ${donationAmount}`,
-      description: service.description || `Support this service with a ${donationAmount} donation to charity`,
-      type: 'website',
-    }
-  }
-}
-
-export default async function ServicePage({ params }: ServicePageProps) {
+export default function ServicePage({ params }: ServicePageProps) {
   const { locale, slug } = params
-  const messages = await getMessages({ locale })
-  const service = await getServiceBySlug(slug)
+  const { user } = useAuth()
+  const [service, setService] = useState<ServiceWithProvider | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [messages, setMessages] = useState<any>({})
+  const [userCurrency, setUserCurrency] = useState<CurrencyCode>('AUD')
+
+  useEffect(() => {
+    async function loadData() {
+      const supabase = createClient()
+      
+      // Load messages
+      try {
+        const msgs = (await import(`../../../../messages/${locale}.json`)).default
+        setMessages(msgs)
+      } catch (error) {
+        const msgs = (await import(`../../../../messages/en.json`)).default
+        setMessages(msgs)
+      }
+
+      // Fetch user's currency
+      if (user) {
+        try {
+          const { data: userProfile } = await supabase
+            .from('users')
+            .select('preferred_currency')
+            .eq('id', user.id)
+            .single()
+          
+          if (userProfile?.preferred_currency) {
+            setUserCurrency(userProfile.preferred_currency)
+          }
+        } catch (err) {
+          // Keep default AUD
+        }
+      }
+
+      // Fetch service
+      const { data: services, error } = await supabase
+        .from('services')
+        .select(`
+          *,
+          user:users (
+            id,
+            name,
+            bio,
+            avatar_url,
+            location,
+            created_at
+          )
+        `)
+        .eq('is_active', true)
+        .eq('show_in_directory', true)
+
+      if (error) {
+        setService(null)
+      } else {
+        const foundService = services?.find(s => generateSlug(s.title) === slug)
+        setService(foundService || null)
+      }
+      
+      setLoading(false)
+    }
+
+    loadData()
+  }, [locale, slug, user])
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    )
+  }
 
   if (!service) {
     notFound()
@@ -98,13 +117,6 @@ export default async function ServicePage({ params }: ServicePageProps) {
   const locations = Array.isArray(service.service_locations) 
     ? service.service_locations as ServiceLocation[]
     : []
-
-  // Format donation amount
-  const donationAmount = new Intl.NumberFormat('en-AU', {
-    style: 'currency',
-    currency: 'AUD',
-    minimumFractionDigits: 0,
-  }).format(service.donation_amount)
 
   // Get availability status
   const now = new Date()
@@ -218,6 +230,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
                       id: service.id,
                       title: service.title,
                       donation_amount: service.donation_amount,
+                      pricing_tier_id: service.pricing_tier_id,
                       charity_requirement_type: service.charity_requirement_type,
                       preferred_charities: service.preferred_charities ? 
                         (Array.isArray(service.preferred_charities) ? 
@@ -232,6 +245,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
                         name: service.user.name
                       }
                     }}
+                    userCurrency={userCurrency}
                     isAvailable={isAvailable}
                     isFull={isFull}
                   />
