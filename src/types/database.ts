@@ -164,3 +164,18 @@ export interface PublicDonationActivity {
   created_at: Date;
   donor_name: 'Anonymous'; // Always anonymous per CLAUDE.md privacy model
 }
+
+// Pricing Tiers for standardized service pricing
+export interface PricingTier {
+  id: number;
+  tier_name: string;
+  tier_order: number;
+  use_case: string;
+  price_aud: number;
+  price_usd: number;
+  price_eur: number;
+  price_gbp: number;
+  price_cad: number;
+  is_active?: boolean;
+  created_at?: Date;
+}

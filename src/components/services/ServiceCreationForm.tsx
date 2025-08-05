@@ -4,9 +4,10 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/hooks/useAuth'
 import { createClient } from '@/lib/supabase/client'
-import { CharityRequirementType, ServiceLocation, Service } from '@/types/database'
+import { CharityRequirementType, ServiceLocation, Service, PricingTier, CurrencyCode } from '@/types/database'
 import CharitySelector from './CharitySelector'
 import ServiceLocationPicker from '@/components/ServiceLocationPicker'
+import PricingTierSlider from '@/components/forms/PricingTierSlider'
 
 interface SelectedCharity {
   justgiving_charity_id: string
@@ -28,7 +29,8 @@ export default function ServiceCreationForm({
 }: ServiceCreationFormProps) {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
-  const [donationAmount, setDonationAmount] = useState('')
+  const [selectedTier, setSelectedTier] = useState<PricingTier | null>(null)
+  const [userCurrency, setUserCurrency] = useState<CurrencyCode>('GBP')
   const [charityRequirementType, setCharityRequirementType] = useState<CharityRequirementType>('any_charity')
   const [selectedCharities, setSelectedCharities] = useState<SelectedCharity[]>([])
   const [availableFrom, setAvailableFrom] = useState('')
@@ -50,13 +52,49 @@ export default function ServiceCreationForm({
   const router = useRouter()
   const supabase = createClient()
 
+  // Helper function to get price for user's currency
+  const getTierPrice = (tier: PricingTier, currency: CurrencyCode): number => {
+    switch (currency) {
+      case 'GBP': return tier.price_gbp
+      case 'USD': return tier.price_usd
+      case 'CAD': return tier.price_cad
+      case 'AUD': return tier.price_aud
+      case 'EUR': return tier.price_eur
+      default: return tier.price_gbp
+    }
+  }
+
+  // Fetch user's preferred currency
+  useEffect(() => {
+    const fetchUserCurrency = async () => {
+      if (!user) return
+      
+      try {
+        const { data: userProfile } = await supabase
+          .from('users')
+          .select('preferred_currency')
+          .eq('id', user.id)
+          .single()
+        
+        if (userProfile?.preferred_currency) {
+          setUserCurrency(userProfile.preferred_currency)
+        }
+      } catch (err) {
+        console.error('Error fetching user currency:', err)
+      }
+    }
+
+    fetchUserCurrency()
+  }, [user, supabase])
+
   // Initialize form with existing data when in edit mode
   useEffect(() => {
     if (initialData && mode === 'edit') {
       setTitle(initialData.title || '')
       setDescription(initialData.description || '')
-      setDonationAmount(initialData.donation_amount?.toString() || '')
       setCharityRequirementType(initialData.charity_requirement_type || 'any_charity')
+      
+      // TODO: Set selected tier based on donation_amount when in edit mode
       
       // Handle dates
       if (initialData.available_from) {
@@ -109,6 +147,11 @@ export default function ServiceCreationForm({
     setError(null)
 
     try {
+      // Validate pricing tier selection
+      if (!selectedTier) {
+        throw new Error('Please select a pricing tier for your service.')
+      }
+
       // Validate charity requirements
       if (charityRequirementType === 'specific_charities' && selectedCharities.length === 0) {
         throw new Error('Please select at least one charity when using specific charity requirements.')
@@ -154,7 +197,7 @@ export default function ServiceCreationForm({
         ...(mode === 'create' && { user_id: user.id }),
         title: title.trim(),
         description: description.trim() || null,
-        donation_amount: parseFloat(donationAmount),
+        donation_amount: selectedTier ? getTierPrice(selectedTier, userCurrency) : 0,
         charity_requirement_type: charityRequirementType,
         preferred_charities: preferredCharities.length > 0 ? preferredCharities : null,
         available_from: availableFrom,
@@ -244,28 +287,12 @@ export default function ServiceCreationForm({
           />
         </div>
 
-        <div>
-          <label htmlFor="donationAmount" className="block text-sm font-medium text-gray-700 mb-1">
-            Fixed Donation Amount (AUD) *
-          </label>
-          <div className="relative">
-            <span className="absolute left-3 top-2 text-gray-500">$</span>
-            <input
-              type="number"
-              id="donationAmount"
-              value={donationAmount}
-              onChange={(e) => setDonationAmount(e.target.value)}
-              className="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="50"
-              min="1"
-              step="0.01"
-              required
-            />
-          </div>
-          <p className="text-sm text-gray-500 mt-1">
-            Supporters will donate exactly this amount to their chosen charity
-          </p>
-        </div>
+        <PricingTierSlider
+          selectedTierId={selectedTier?.id || null}
+          onTierSelect={setSelectedTier}
+          userCurrency={userCurrency}
+          className="mb-6"
+        />
       </div>
 
       {/* Charity Requirements */}
