@@ -123,6 +123,14 @@ Browse services → View fixed pricing → Choose charity → Sign up → Donate
 ### Internationalization: 17 Language Support
 Complete translation coverage using next-intl with centralized language configuration in `src/config/languages.ts`.
 
+#### Routing Patterns: Correct next-intl Implementation
+There are NO routing consistency issues to fix. The codebase is using:
+- **Server components**: `<a href="">` (correct)
+- **Client components with same-locale navigation**: `<Link>` from next-intl (correct)
+- **Client components with cross-locale navigation**: `<a href="">` (correct)
+
+The routing is actually perfectly consistent and follows next-intl best practices. Different navigation patterns serve different purposes: same-locale navigation uses next-intl Link for SPA behavior, while cross-locale navigation uses anchor tags for proper internationalization context switching.
+
 See [README-internationalization.md](./README-internationalization.md) for complete i18n implementation details.
 
 ## Development Information
