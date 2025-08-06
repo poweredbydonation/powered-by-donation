@@ -20,17 +20,35 @@
     },
     "how_it_works": {
       "title": "How It Works",
-      "step1": {
-        "title": "Browse Services",
-        "description": "Find professional services offered by community fundraisers"
+      "for_donors": {
+        "title": "For Donors",
+        "step1": {
+          "title": "Browse Free Services",
+          "description": "Find skills offered by community fundraisers"
+        },
+        "step2": {
+          "title": "Choose Your Charity",
+          "description": "Select which charity receives your donation"
+        },
+        "step3": {
+          "title": "Receive & Impact",
+          "description": "Get your service while supporting your chosen cause"
+        }
       },
-      "step2": {
-        "title": "Choose a Charity",
-        "description": "Select from registered charities to receive your donation"
-      },
-      "step3": {
-        "title": "Make Impact",
-        "description": "Your donation unlocks the service and supports a great cause"
+      "for_fundraisers": {
+        "title": "For Fundraisers",
+        "step1": {
+          "title": "Offer Free Services",
+          "description": "List your skills to support your fundraising goal"
+        },
+        "step2": {
+          "title": "Choose Your Charity",
+          "description": "Set which charity receives donations"
+        },
+        "step3": {
+          "title": "Deliver & Impact",
+          "description": "Provide services while reaching your fundraising target"
+        }
       }
     },
     "recent_activity": {

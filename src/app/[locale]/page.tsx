@@ -56,44 +56,107 @@ export default async function HomePage({ params }: HomePageProps) {
             </h2>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {/* Step 1 */}
-            <div className="text-center">
-              <div className="bg-blue-100 p-4 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                <Monitor className="h-8 w-8 text-blue-600" />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                {t('how_it_works.step1.title')}
+          <div className="grid md:grid-cols-2 gap-12">
+            {/* For Donors */}
+            <div>
+              <h3 className="text-2xl font-semibold text-gray-900 mb-8 text-center">
+                {t('how_it_works.for_donors.title')}
               </h3>
-              <p className="text-gray-600">
-                {t('how_it_works.step1.description')}
-              </p>
+              
+              <div className="space-y-6">
+                <div className="flex items-start space-x-4">
+                  <div className="bg-blue-100 p-2 rounded-full flex-shrink-0">
+                    <Monitor className="h-6 w-6 text-blue-600" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-gray-900 mb-1">
+                      {t('how_it_works.for_donors.step1.title')}
+                    </h4>
+                    <p className="text-gray-600">
+                      {t('how_it_works.for_donors.step1.description')}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start space-x-4">
+                  <div className="bg-green-100 p-2 rounded-full flex-shrink-0">
+                    <TrendingUp className="h-6 w-6 text-green-600" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-gray-900 mb-1">
+                      {t('how_it_works.for_donors.step2.title')}
+                    </h4>
+                    <p className="text-gray-600">
+                      {t('how_it_works.for_donors.step2.description')}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start space-x-4">
+                  <div className="bg-purple-100 p-2 rounded-full flex-shrink-0">
+                    <Camera className="h-6 w-6 text-purple-600" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-gray-900 mb-1">
+                      {t('how_it_works.for_donors.step3.title')}
+                    </h4>
+                    <p className="text-gray-600">
+                      {t('how_it_works.for_donors.step3.description')}
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            {/* Step 2 */}
-            <div className="text-center">
-              <div className="bg-green-100 p-4 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                <TrendingUp className="h-8 w-8 text-green-600" />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                {t('how_it_works.step2.title')}
+            {/* For Fundraisers */}
+            <div>
+              <h3 className="text-2xl font-semibold text-gray-900 mb-8 text-center">
+                {t('how_it_works.for_fundraisers.title')}
               </h3>
-              <p className="text-gray-600">
-                {t('how_it_works.step2.description')}
-              </p>
-            </div>
+              
+              <div className="space-y-6">
+                <div className="flex items-start space-x-4">
+                  <div className="bg-orange-100 p-2 rounded-full flex-shrink-0">
+                    <Monitor className="h-6 w-6 text-orange-600" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-gray-900 mb-1">
+                      {t('how_it_works.for_fundraisers.step1.title')}
+                    </h4>
+                    <p className="text-gray-600">
+                      {t('how_it_works.for_fundraisers.step1.description')}
+                    </p>
+                  </div>
+                </div>
 
-            {/* Step 3 */}
-            <div className="text-center">
-              <div className="bg-purple-100 p-4 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                <Camera className="h-8 w-8 text-purple-600" />
+                <div className="flex items-start space-x-4">
+                  <div className="bg-red-100 p-2 rounded-full flex-shrink-0">
+                    <TrendingUp className="h-6 w-6 text-red-600" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-gray-900 mb-1">
+                      {t('how_it_works.for_fundraisers.step2.title')}
+                    </h4>
+                    <p className="text-gray-600">
+                      {t('how_it_works.for_fundraisers.step2.description')}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start space-x-4">
+                  <div className="bg-indigo-100 p-2 rounded-full flex-shrink-0">
+                    <Camera className="h-6 w-6 text-indigo-600" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-gray-900 mb-1">
+                      {t('how_it_works.for_fundraisers.step3.title')}
+                    </h4>
+                    <p className="text-gray-600">
+                      {t('how_it_works.for_fundraisers.step3.description')}
+                    </p>
+                  </div>
+                </div>
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                {t('how_it_works.step3.title')}
-              </h3>
-              <p className="text-gray-600">
-                {t('how_it_works.step3.description')}
-              </p>
             </div>
           </div>
         </div>
