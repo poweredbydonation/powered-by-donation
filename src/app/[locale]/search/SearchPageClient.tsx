@@ -11,7 +11,7 @@ import ServiceSort, { SortOption, sortServices } from '@/components/services/Ser
 import Link from 'next/link'
 import { formatCurrency } from '@/lib/currency'
 
-type ServiceWithProvider = Service & {
+type ServiceWithFundraiser = Service & {
   user: {
     name: string
     bio?: string
@@ -21,8 +21,8 @@ type ServiceWithProvider = Service & {
 
 function SearchResults({ locale, messages }: { locale: string, messages: any }) {
   const searchParams = useSearchParams()
-  const [services, setServices] = useState<ServiceWithProvider[]>([])
-  const [filteredServices, setFilteredServices] = useState<ServiceWithProvider[]>([])
+  const [services, setServices] = useState<ServiceWithFundraiser[]>([])
+  const [filteredServices, setFilteredServices] = useState<ServiceWithFundraiser[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   
@@ -240,7 +240,7 @@ function SearchResults({ locale, messages }: { locale: string, messages: any }) 
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6 p-6">
             <div className="max-w-2xl">
               <label htmlFor="search" className="block text-sm font-medium text-gray-700 mb-2">
-                Search services, providers, or descriptions
+                Search services, fundraisers, or descriptions
               </label>
               <input
                 type="text"
@@ -329,7 +329,7 @@ function SearchResults({ locale, messages }: { locale: string, messages: any }) 
                   <div className="text-2xl font-bold text-purple-600">
                     {new Set(filteredServices.map(s => s.user_id)).size}
                   </div>
-                  <div className="text-sm text-gray-500">Unique Providers</div>
+                  <div className="text-sm text-gray-500">Unique Fundraisers</div>
                 </div>
                 <div>
                   <div className="text-2xl font-bold text-orange-600">

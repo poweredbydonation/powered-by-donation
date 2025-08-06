@@ -16,7 +16,7 @@ interface BrowsePageProps {
   }
 }
 
-type ServiceWithProvider = Service & {
+type ServiceWithFundraiser = Service & {
   users: {
     id: string
     name: string
@@ -32,8 +32,8 @@ interface LocationFilter {
 export default function BrowsePage({ params }: BrowsePageProps) {
   const locale = params.locale
   const { user } = useAuth()
-  const [services, setServices] = useState<ServiceWithProvider[]>([])
-  const [filteredServices, setFilteredServices] = useState<ServiceWithProvider[]>([])
+  const [services, setServices] = useState<ServiceWithFundraiser[]>([])
+  const [filteredServices, setFilteredServices] = useState<ServiceWithFundraiser[]>([])
   const [loading, setLoading] = useState(true)
   const [messages, setMessages] = useState<any>({})
   const [searchQuery, setSearchQuery] = useState('')
@@ -227,7 +227,7 @@ export default function BrowsePage({ params }: BrowsePageProps) {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder={messages.common?.search || 'Search services, providers, or descriptions...'}
+                placeholder={messages.common?.search || 'Search services, fundraisers, or descriptions...'}
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
@@ -334,7 +334,7 @@ export default function BrowsePage({ params }: BrowsePageProps) {
                   
                   <div className="space-y-2 mb-4">
                     <div className="flex items-center text-sm text-gray-500">
-                      <span className="font-medium">{messages.services?.browse?.provider || 'Provider'}:</span>
+                      <span className="font-medium">{messages.services?.browse?.fundraiser || 'Fundraiser'}:</span>
                       <span className="ml-1">{service.users.name}</span>
                     </div>
                     <div className="flex items-center text-sm text-gray-500">
@@ -395,7 +395,7 @@ export default function BrowsePage({ params }: BrowsePageProps) {
                   {new Set(filteredServices.map(service => service.users.id)).size}
                 </div>
                 <div className="text-sm text-gray-500">
-                  {messages.services?.browse?.communityImpact?.activeProviders || 'Active Providers'}
+                  {messages.services?.browse?.communityImpact?.activeFundraisers || 'Active Fundraisers'}
                 </div>
               </div>
             </div>
@@ -404,13 +404,13 @@ export default function BrowsePage({ params }: BrowsePageProps) {
             </p>
           </div>
 
-          {/* Call to Action for Providers */}
+          {/* Call to Action for Fundraisers */}
           <div className="mt-12 bg-blue-50 rounded-lg p-8 text-center">
             <h3 className="text-2xl font-bold text-gray-900 mb-4">
               {messages.services?.browse?.callToAction?.title || 'Want to offer your services?'}
             </h3>
             <p className="text-gray-600 mb-6">
-              {messages.services?.browse?.callToAction?.description || 'Join our community of providers and help charities while showcasing your skills.'}
+              {messages.services?.browse?.callToAction?.description || 'Join our community of fundraisers and help charities while showcasing your skills.'}
             </p>
             <a 
               href={`/${locale}/dashboard`}

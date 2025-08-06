@@ -17,7 +17,7 @@ interface ServicePageProps {
   }
 }
 
-type ServiceWithProvider = Service & {
+type ServiceWithFundraiser = Service & {
   user: {
     id: string
     name: string
@@ -36,7 +36,7 @@ function generateSlug(title: string): string {
 export default function ServicePage({ params }: ServicePageProps) {
   const { locale, slug } = params
   const { user } = useAuth()
-  const [service, setService] = useState<ServiceWithProvider | null>(null)
+  const [service, setService] = useState<ServiceWithFundraiser | null>(null)
   const [loading, setLoading] = useState(true)
   const [messages, setMessages] = useState<any>({})
   const [userCurrency, setUserCurrency] = useState<CurrencyCode>('AUD')
@@ -124,8 +124,8 @@ export default function ServicePage({ params }: ServicePageProps) {
   const availableUntil = service.available_until ? new Date(service.available_until) : null
   
   const isAvailable = now >= availableFrom && (!availableUntil || now <= availableUntil)
-  const isFull = Boolean(service.max_supporters && service.current_supporters && 
-    service.current_supporters >= service.max_supporters)
+  const isFull = Boolean(service.max_donors && service.current_donors && 
+    service.current_donors >= service.max_donors)
 
   const getLocationDisplay = (location: ServiceLocation) => {
     switch (location.type) {
@@ -211,10 +211,10 @@ export default function ServicePage({ params }: ServicePageProps) {
                         {availableUntil && (
                           <div>Available until: <span className="font-medium">{availableUntil.toLocaleDateString()}</span></div>
                         )}
-                        {service.max_supporters && (
+                        {service.max_donors && (
                           <div>
                             Capacity: <span className="font-medium">
-                              {service.current_supporters || 0} / {service.max_supporters} supporters
+                              {service.current_donors || 0} / {service.max_donors} donors
                             </span>
                           </div>
                         )}
@@ -240,7 +240,7 @@ export default function ServicePage({ params }: ServicePageProps) {
                             description?: string
                             logo_url?: string
                           }> : null) : null,
-                      provider: {
+                      fundraiser: {
                         id: service.user.id,
                         name: service.user.name
                       }
@@ -266,10 +266,10 @@ export default function ServicePage({ params }: ServicePageProps) {
             </div>
           )}
 
-          {/* Provider Information */}
+          {/* Fundraiser Information */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-8">
             <div className="p-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">About the Provider</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">About the Fundraiser</h2>
               <div className="flex items-start space-x-6">
                 {service.user.avatar_url && (
                   <img 
@@ -288,7 +288,7 @@ export default function ServicePage({ params }: ServicePageProps) {
                     </p>
                   )}
                   <div className="text-sm text-gray-500">
-                    Provider since {new Date(service.user.created_at).toLocaleDateString()}
+                    Fundraiser since {new Date(service.user.created_at).toLocaleDateString()}
                   </div>
                 </div>
               </div>
@@ -306,7 +306,7 @@ export default function ServicePage({ params }: ServicePageProps) {
                   </svg>
                 </div>
                 <p className="text-gray-500">
-                  Anonymous donation activity will appear here once supporters begin using this service.
+                  Anonymous donation activity will appear here once donors begin using this service.
                 </p>
               </div>
             </div>

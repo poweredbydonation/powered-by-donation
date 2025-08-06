@@ -47,28 +47,28 @@
     "welcome": "Bienvenido de nuevo",
     "profileReady": "Tu perfil está configurado y listo para usar.",
     "completeProfile": "Completa tu perfil para comenzar.",
-    "serviceProvider": "Proveedor de Servicios",
-    "supporter": "Partidario",
+    "fundraiser": "Recaudador de Fondos",
+    "donor": "Donante",
     "getStarted": "Comenzar",
     "setupPrompt": "Configura tu perfil para comenzar a usar Powered by Donation:",
     "createProfile": "Crear Tu Perfil",
-    "providerDashboard": "Panel del Proveedor",
-    "providerDescription": "Gestiona tus servicios y donaciones",
+    "fundraiserDashboard": "Panel del Recaudador de Fondos",
+    "fundraiserDescription": "Gestiona tus servicios y donaciones",
     "manageServices": "Gestionar Servicios",
     "createNewService": "Crear Nuevo Servicio",
-    "becomeProvider": "Convertirse en Proveedor",
-    "providerOffer": "Ofrece servicios y apoya organizaciones benéficas",
-    "enableProviderRole": "Activar Rol de Proveedor",
-    "supporterDashboard": "Panel del Partidario",
-    "supporterDescription": "Rastrea tus donaciones e impacto",
+    "becomeFundraiser": "Convertirse en Recaudador de Fondos",
+    "fundraiserOffer": "Ofrece servicios y apoya organizaciones benéficas",
+    "enableFundraiserRole": "Activar Rol de Recaudador de Fondos",
+    "donorDashboard": "Panel del Donante",
+    "donorDescription": "Rastrea tus donaciones e impacto",
     "myDonations": "Mis Donaciones",
     "browseServices": "Explorar Servicios",
-    "becomeSupporter": "Convertirse en Partidario",
-    "supporterOffer": "Apoya servicios y organizaciones benéficas",
-    "enableSupporterRole": "Activar Rol de Partidario",
+    "becomeDonor": "Convertirse en Donante",
+    "donorOffer": "Apoya servicios y organizaciones benéficas",
+    "enableDonorRole": "Activar Rol de Donante",
     "services": {
       "title": "Mis Servicios",
-      "subtitle": "Gestiona tus ofertas de servicios y rastrea la participación de partidarios",
+      "subtitle": "Gestiona tus ofertas de servicios y rastrea la participación de donantes",
       "create_service": "Crear Nuevo Servicio",
       "create_first_service": "Crear Tu Primer Servicio",
       "edit": "Editar",
@@ -82,7 +82,7 @@
       },
       "empty": {
         "title": "Aún no hay servicios",
-        "description": "Crea tu primer servicio para comenzar a conectarte con partidarios y ayudar a organizaciones benéficas."
+        "description": "Crea tu primer servicio para comenzar a conectarte con donantes y ayudar a organizaciones benéficas."
       },
       "status": {
         "active": "Activo",
@@ -121,12 +121,12 @@
     "username": "Nombre de Usuario",
     "location": "Ubicación",
     "roles": "Roles",
-    "providerAndSupporter": "Proveedor y Partidario",
-    "providerRole": "Proveedor",
-    "supporterRole": "Partidario",
+    "fundraiserAndDonor": "Recaudador de Fondos y Donante",
+    "fundraiserRole": "Recaudador de Fondos",
+    "donorRole": "Donante",
     "noRoles": "Ninguno",
-    "provider_section": {
-      "title": "Como Proveedor",
+    "fundraiser_section": {
+      "title": "Como Recaudador de Fondos",
       "create_service": "Crear Servicio",
       "update_service": "Actualizar Servicio",
       "creating": "Creando...",
@@ -134,8 +134,8 @@
       "manage_services": "Gestionar Servicios",
       "view_requests": "Ver Solicitudes"
     },
-    "supporter_section": {
-      "title": "Como Partidario",
+    "donor_section": {
+      "title": "Como Donante",
       "browse_services": "Explorar Servicios",
       "donation_history": "Historial de Donaciones"
     },
@@ -148,17 +148,17 @@
   "profile": {
     "setup": {
       "title": "Configurar Tu Perfil",
-      "subtitle": "Crea tu perfil para comenzar a usar Powered by Donation como proveedor de servicios, partidario, o ambos.",
+      "subtitle": "Crea tu perfil para comenzar a usar Powered by Donation como recaudador de fondos, donante, o ambos.",
       "create_profile": "Crear Tu Perfil",
       "update_profile": "Actualizar Tu Perfil",
       "roles": {
         "title": "Tu(s) Rol(es)",
-        "provider": {
-          "title": "Proveedor de Servicios",
+        "fundraiser": {
+          "title": "Recaudador de Fondos",
           "description": "Ofrece servicios y ayuda a organizaciones benéficas"
         },
-        "supporter": {
-          "title": "Partidario",
+        "donor": {
+          "title": "Donante",
           "description": "Encuentra servicios y haz donaciones benéficas"
         }
       },
@@ -180,7 +180,7 @@
         "success_created": "¡Perfil creado exitosamente!",
         "success_updated": "¡Perfil actualizado exitosamente!",
         "error_name_required": "El nombre es requerido",
-        "error_role_required": "Debes ser proveedor, partidario, o ambos",
+        "error_role_required": "Debes ser recaudador de fondos, donante, o ambos",
         "error_save_failed": "Error al guardar el perfil"
       }
     }
@@ -192,17 +192,17 @@
       "no_services": "No se encontraron servicios",
       "load_more": "Cargar Más",
       "allLocations": "Todas las Ubicaciones",
-      "provider": "Proveedor",
+      "fundraiser": "Recaudador de Fondos",
       "communityImpact": {
         "title": "Impacto Comunitario",
         "activeServices": "Servicios Activos",
         "totalDonationPotential": "Potencial Total de Donaciones",
-        "activeProviders": "Proveedores Activos",
+        "activeFundraisers": "Recaudadores de Fondos Activos",
         "donationsNote": "Todas las donaciones van directamente a organizaciones benéficas registradas a través de JustGiving"
       },
       "callToAction": {
         "title": "¿Quieres ofrecer tus servicios?",
-        "description": "Únete a nuestra comunidad de proveedores y ayuda a las organizaciones benéficas mientras muestras tus habilidades.",
+        "description": "Únete a nuestra comunidad de recaudadores de fondos y ayuda a las organizaciones benéficas mientras muestras tus habilidades.",
         "button": "Comenzar"
       }
     },
@@ -308,7 +308,7 @@
       "platform": {
         "title": "Plataforma",
         "browse_services": "Explorar Servicios",
-        "service_providers": "Proveedores de Servicios",
+        "fundraisers": "Recaudadores de Fondos",
         "featured_charities": "Organizaciones Benéficas Destacadas",
         "how_it_works": "Cómo Funciona"
       },
@@ -356,8 +356,8 @@
   "deleteProfile": {
     "title": "Eliminar Perfil",
     "description": "Esto eliminará permanentemente tu perfil y todos los datos asociados. Esta acción no se puede deshacer.",
-    "providerWarning": "⚠️ Como proveedor, esto también eliminará todos tus servicios e historial de servicios.",
-    "supporterWarning": "⚠️ Como partidario, esto eliminará tu historial de donaciones y solicitudes de servicios.",
+    "fundraiserWarning": "⚠️ Como recaudador de fondos, esto también eliminará todos tus servicios e historial de servicios.",
+    "donorWarning": "⚠️ Como donante, esto eliminará tu historial de donaciones y solicitudes de servicios.",
     "deleteButton": "Eliminar Perfil",
     "confirmTitle": "Confirmar Eliminación de Perfil",
     "confirmDescription": "¿Estás seguro de que quieres eliminar tu perfil para \"{name}\"? Esta acción es permanente y:",

@@ -9,7 +9,7 @@ export type CurrencyCode = 'GBP' | 'USD' | 'CAD' | 'AUD' | 'EUR';
 export type ServiceStatus = 
   | 'pending' 
   | 'success' 
-  | 'provider_review' 
+  | 'fundraiser_review' 
   | 'acknowledged_feedback' 
   | 'disputed_feedback' 
   | 'unresponsive_to_feedback';
@@ -27,8 +27,8 @@ export interface User {
   email: string;
   name: string;
   username?: string;
-  is_provider?: boolean;
-  is_supporter?: boolean;
+  is_fundraiser?: boolean;
+  is_donor?: boolean;
   bio?: string;
   location?: string;
   phone?: string;
@@ -38,12 +38,21 @@ export interface User {
 }
 
 // Legacy interfaces for backward compatibility (deprecated - use User instead)
+export interface Fundraiser extends User {
+  is_fundraiser: true;
+}
+
+export interface Donor extends User {
+  is_donor: true;
+}
+
+// Old interfaces - deprecated but kept for backward compatibility
 export interface Provider extends User {
-  is_provider: true;
+  is_fundraiser: true; // Updated to use new column name
 }
 
 export interface Supporter extends User {
-  is_supporter: true;
+  is_donor: true; // Updated to use new column name
 }
 
 export interface Service {
@@ -57,13 +66,13 @@ export interface Service {
   preferred_charities?: Record<string, unknown>; // JSONB - Array of JustGiving charity IDs
   available_from: Date;
   available_until?: Date;
-  max_supporters?: number;
-  current_supporters?: number;
+  max_donors?: number;
+  current_donors?: number;
   service_locations: Record<string, unknown>; // JSONB - Array of location options
   show_in_directory?: boolean;
   is_active?: boolean;
   created_at?: Date;
-  happiness_rate?: number; // % supporter satisfaction (calculated from service_requests)
+  happiness_rate?: number; // % donor satisfaction (calculated from service_requests)
 }
 
 export interface CharityCache {
@@ -87,23 +96,23 @@ export interface CharityCache {
 
 export interface ServiceRequest {
   id: string; // UUID
-  supporter_id: string; // UUID (foreign key to users table)
-  provider_id: string; // UUID (foreign key to users table)
+  donor_id: string; // UUID (foreign key to users table)
+  fundraiser_id: string; // UUID (foreign key to users table)
   service_id: string; // UUID (foreign key to services)
   justgiving_charity_id: string;
   donation_amount: number;
   charity_name?: string;
   status?: ServiceStatus;
-  supporter_satisfaction?: SatisfactionStatus;
-  provider_feedback_response?: FeedbackResponse;
+  donor_satisfaction?: SatisfactionStatus;
+  fundraiser_feedback_response?: FeedbackResponse;
   satisfaction_check_sent_at?: Date;
-  supporter_responded_at?: Date;
-  provider_feedback_sent_at?: Date;
-  provider_responded_at?: Date;
+  donor_responded_at?: Date;
+  fundraiser_feedback_sent_at?: Date;
+  fundraiser_responded_at?: Date;
   created_at?: Date;
-  provider_rates_supporter?: HappinessRating;
-  supporter_rates_provider?: HappinessRating;
-  supporter_rates_service?: HappinessRating;
+  fundraiser_rates_donor?: HappinessRating;
+  donor_rates_fundraiser?: HappinessRating;
+  donor_rates_service?: HappinessRating;
 }
 
 // Service Location Structure (for service_locations JSONB field)
@@ -117,10 +126,16 @@ export interface ServiceLocation {
   longitude?: number; // Direct longitude property
 }
 
-// Supporter Happiness Requirements (for supporter_happiness_requirements JSONB field)
+// Donor Happiness Requirements (for donor_happiness_requirements JSONB field)
+export interface DonorHappinessRequirements {
+  min_received_happiness?: number; // Donor must be X% liked by fundraisers
+  min_total_interactions?: number; // Donor must have X+ completed services
+}
+
+// Legacy interface - deprecated
 export interface SupporterHappinessRequirements {
-  min_received_happiness?: number; // Supporter must be X% liked by providers
-  min_total_interactions?: number; // Supporter must have X+ completed services
+  min_received_happiness?: number;
+  min_total_interactions?: number;
 }
 
 // Charity Page Data (for public charity pages)
@@ -149,12 +164,12 @@ export interface CharityPageData {
 // Public Platform Statistics (anonymous aggregate data)
 export interface PlatformStats {
   total_services: number;
-  total_providers: number;
+  total_fundraisers: number;
   services_this_month: number;
   donations_this_month: number;
   total_amount_this_month: number;
   charities_supported: number;
-  active_providers: number;
+  active_fundraisers: number;
 }
 
 // Anonymous Donation Activity (for public display)

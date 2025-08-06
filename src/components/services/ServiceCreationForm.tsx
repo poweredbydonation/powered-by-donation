@@ -35,7 +35,7 @@ export default function ServiceCreationForm({
   const [selectedCharities, setSelectedCharities] = useState<SelectedCharity[]>([])
   const [availableFrom, setAvailableFrom] = useState('')
   const [availableUntil, setAvailableUntil] = useState('')
-  const [maxSupporters, setMaxSupporters] = useState('')
+  const [maxDonors, setMaxDonors] = useState('')
   
   // Location handling
   const [locationType, setLocationType] = useState<'remote' | 'physical' | 'hybrid'>('remote')
@@ -107,8 +107,8 @@ export default function ServiceCreationForm({
       if (initialData.available_until) {
         setAvailableUntil(new Date(initialData.available_until).toISOString().split('T')[0])
       }
-      if (initialData.max_supporters) {
-        setMaxSupporters(initialData.max_supporters.toString())
+      if (initialData.max_donors) {
+        setMaxDonors(initialData.max_donors.toString())
       }
 
       // Handle preferred charities
@@ -161,10 +161,10 @@ export default function ServiceCreationForm({
         throw new Error('Please select at least one charity when using specific charity requirements.')
       }
 
-      // Check if user has provider role
+      // Check if user has fundraiser role
       const { data: userData, error: userError } = await supabase
         .from('users')
-        .select('id, is_provider')
+        .select('id, is_fundraiser')
         .eq('id', user.id)
         .single()
 
@@ -172,8 +172,8 @@ export default function ServiceCreationForm({
         throw new Error('User profile not found. Please complete your profile setup first.')
       }
 
-      if (!userData.is_provider) {
-        throw new Error('You need to enable your provider role to create services. Please update your profile first.')
+      if (!userData.is_fundraiser) {
+        throw new Error('You need to enable your fundraiser role to create services. Please update your profile first.')
       }
 
       // Build service location object
@@ -207,7 +207,7 @@ export default function ServiceCreationForm({
         preferred_charities: preferredCharities.length > 0 ? preferredCharities : null,
         available_from: availableFrom,
         available_until: availableUntil || null,
-        max_supporters: maxSupporters ? parseInt(maxSupporters) : null,
+        max_donors: maxDonors ? parseInt(maxDonors) : null,
         service_locations: [serviceLocation],
         ...(mode === 'create' && { 
           show_in_directory: true,
@@ -321,7 +321,7 @@ export default function ServiceCreationForm({
             />
             <div>
               <div className="font-medium">Any JustGiving Charity</div>
-              <div className="text-sm text-gray-500">Supporters can donate to any registered charity</div>
+              <div className="text-sm text-gray-500">Donors can donate to any registered charity</div>
             </div>
           </label>
           
@@ -336,7 +336,7 @@ export default function ServiceCreationForm({
             />
             <div>
               <div className="font-medium">Specific Charities</div>
-              <div className="text-sm text-gray-500">Choose which charities supporters can donate to</div>
+              <div className="text-sm text-gray-500">Choose which charities donors can donate to</div>
             </div>
           </label>
         </div>
@@ -347,7 +347,7 @@ export default function ServiceCreationForm({
             <div>
               <h4 className="text-md font-medium text-gray-900 mb-2">Select Preferred Charities</h4>
               <p className="text-sm text-gray-600 mb-4">
-                Search and select up to 5 charities that supporters can choose from. 
+                Search and select up to 5 charities that donors can choose from. 
                 All charities are verified JustGiving registered charities.
               </p>
               
@@ -361,7 +361,7 @@ export default function ServiceCreationForm({
               {charityRequirementType === 'specific_charities' && selectedCharities.length === 0 && (
                 <div className="mt-3 p-3 bg-yellow-50 border border-yellow-200 rounded-md">
                   <p className="text-sm text-yellow-800">
-                    Please select at least one charity for supporters to donate to.
+                    Please select at least one charity for donors to donate to.
                   </p>
                 </div>
               )}
@@ -472,20 +472,20 @@ export default function ServiceCreationForm({
         </div>
 
         <div>
-          <label htmlFor="maxSupporters" className="block text-sm font-medium text-gray-700 mb-1">
-            Maximum Supporters (Optional)
+          <label htmlFor="maxDonors" className="block text-sm font-medium text-gray-700 mb-1">
+            Maximum Donors (Optional)
           </label>
           <input
             type="number"
-            id="maxSupporters"
-            value={maxSupporters}
-            onChange={(e) => setMaxSupporters(e.target.value)}
+            id="maxDonors"
+            value={maxDonors}
+            onChange={(e) => setMaxDonors(e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Leave empty for unlimited"
             min="1"
           />
           <p className="text-sm text-gray-500 mt-1">
-            Limit how many supporters can use this service
+            Limit how many donors can use this service
           </p>
         </div>
       </div>

@@ -15,7 +15,7 @@ interface LocationPageProps {
   }
 }
 
-type ServiceWithProvider = Service & {
+type ServiceWithFundraiser = Service & {
   user: {
     name: string
     bio?: string
@@ -73,7 +73,7 @@ function formatLocationSlug(location: string): string {
   return location.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
 }
 
-async function getServicesByLocation(location: string): Promise<ServiceWithProvider[]> {
+async function getServicesByLocation(location: string): Promise<ServiceWithFundraiser[]> {
   const supabase = createClient()
   const formattedLocation = formatLocationName(location)
 
@@ -137,13 +137,13 @@ export async function generateMetadata({ params }: LocationPageProps): Promise<M
 
   return {
     title: `${locationName} Services | Powered by Donation`,
-    description: `Discover ${services.length} ${locationDescription} where providers offer their skills in exchange for charitable donations. Total donation potential: ${formattedAmount}`,
+    description: `Discover ${services.length} ${locationDescription} where fundraisers offer their skills in exchange for charitable donations. Total donation potential: ${formattedAmount}`,
     openGraph: {
       title: `${locationName} Services - ${services.length} Available`,
-      description: `Support local providers in ${locationName} while helping charities. ${services.length} services available with ${formattedAmount} donation potential.`,
+      description: `Support local fundraisers in ${locationName} while helping charities. ${services.length} services available with ${formattedAmount} donation potential.`,
       type: 'website',
     },
-    keywords: `${locationName.toLowerCase()}, local services, charity, donations, JustGiving, ${locationName.toLowerCase()} providers, community support`
+    keywords: `${locationName.toLowerCase()}, local services, charity, donations, JustGiving, ${locationName.toLowerCase()} fundraisers, community support`
   }
 }
 
@@ -155,7 +155,7 @@ export default async function LocationPage({ params }: LocationPageProps) {
 
   // Calculate location statistics
   const totalDonationPotential = services.reduce((sum, service) => sum + service.donation_amount, 0)
-  const activeProviders = new Set(services.map(s => s.user_id)).size
+  const activeFundraisers = new Set(services.map(s => s.user_id)).size
   const averageDonation = services.length > 0 ? Math.round(totalDonationPotential / services.length) : 0
 
   // Get service types breakdown
@@ -204,9 +204,9 @@ export default async function LocationPage({ params }: LocationPageProps) {
                   <p className="text-lg text-gray-600 leading-relaxed">
                     {isRemoteLocation ? (
                       `Discover ${locationName.toLowerCase()} services available anywhere in Australia. 
-                       Connect with skilled providers offering their expertise in exchange for charitable donations.`
+                       Connect with skilled fundraisers offering their expertise in exchange for charitable donations.`
                     ) : (
-                      `Find local services in ${locationName} where skilled providers offer their expertise 
+                      `Find local services in ${locationName} where skilled fundraisers offer their expertise 
                        in exchange for charitable donations. Support your community while helping charities.`
                     )}
                   </p>
@@ -230,8 +230,8 @@ export default async function LocationPage({ params }: LocationPageProps) {
                         <div className="text-sm text-gray-600">Total Donation Potential</div>
                       </div>
                       <div>
-                        <div className="text-2xl font-bold text-purple-600">{activeProviders}</div>
-                        <div className="text-sm text-gray-600">Active Providers</div>
+                        <div className="text-2xl font-bold text-purple-600">{activeFundraisers}</div>
+                        <div className="text-sm text-gray-600">Active Fundraisers</div>
                       </div>
                       {averageDonation > 0 && (
                         <div>
@@ -321,7 +321,7 @@ export default async function LocationPage({ params }: LocationPageProps) {
                 </h3>
                 <p className="text-gray-500 mb-6 max-w-md mx-auto">
                   We don't have any services available in {locationName} right now, 
-                  but new providers join regularly. You might find what you're looking for in nearby areas or remote services!
+                  but new fundraisers join regularly. You might find what you're looking for in nearby areas or remote services!
                 </p>
                 <div className="flex flex-col sm:flex-row gap-3 justify-center">
                   <Link

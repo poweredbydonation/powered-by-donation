@@ -74,9 +74,9 @@ export default function DonationSuccessContent({
                   <span className="text-blue-600 text-sm font-medium">2</span>
                 </div>
                 <div>
-                  <div className="font-medium text-gray-900">Provider Connection</div>
+                  <div className="font-medium text-gray-900">Fundraiser Connection</div>
                   <div className="text-gray-600 text-sm">
-                    The service provider will be notified and will contact you directly to arrange the service
+                    The service fundraiser will be notified and will contact you directly to arrange the service
                   </div>
                 </div>
               </div>

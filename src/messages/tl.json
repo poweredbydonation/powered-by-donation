@@ -22,7 +22,7 @@
       "title": "Paano Ito Gumagana",
       "step1": {
         "title": "Mag-browse ng mga Serbisyo",
-        "description": "Hanapin ang mga propesyonal na serbisyong inaalok ng mga community provider"
+        "description": "Hanapin ang mga propesyonal na serbisyong inaalok ng mga community fundraiser"
       },
       "step2": {
         "title": "Pumili ng Charity",
@@ -47,28 +47,28 @@
     "welcome": "Maligayang pagbabalik",
     "profileReady": "Ang inyong profile ay naka-setup na at handa na.",
     "completeProfile": "Kumpletuhin ang inyong profile upang makapagsimula.",
-    "serviceProvider": "Service Provider",
-    "supporter": "Supporter",
+    "serviceProvider": "Service Fundraiser",
+    "supporter": "Donor",
     "getStarted": "Magsimula",
     "setupPrompt": "I-setup ang inyong profile upang magsimulang gamitin ang Powered by Donation:",
     "createProfile": "Lumikha ng Inyong Profile",
-    "providerDashboard": "Provider Dashboard",
+    "providerDashboard": "Fundraiser Dashboard",
     "providerDescription": "I-manage ang inyong mga serbisyo at donasyon",
     "manageServices": "I-manage ang mga Serbisyo",
     "createNewService": "Lumikha ng Bagong Serbisyo",
-    "becomeProvider": "Maging Provider",
+    "becomeProvider": "Maging Fundraiser",
     "providerOffer": "Mag-offer ng mga serbisyo at sumuporta sa mga charity",
-    "enableProviderRole": "I-enable ang Provider Role",
-    "supporterDashboard": "Supporter Dashboard",
+    "enableProviderRole": "I-enable ang Fundraiser Role",
+    "supporterDashboard": "Donor Dashboard",
     "supporterDescription": "I-track ang inyong mga donasyon at impact",
     "myDonations": "Aking mga Donasyon",
     "browseServices": "Mag-browse ng mga Serbisyo",
-    "becomeSupporter": "Maging Supporter",
+    "becomeSupporter": "Maging Donor",
     "supporterOffer": "Sumuporta sa mga serbisyo at charity",
-    "enableSupporterRole": "I-enable ang Supporter Role",
+    "enableSupporterRole": "I-enable ang Donor Role",
     "services": {
       "title": "Aking mga Serbisyo",
-      "subtitle": "I-manage ang inyong mga alok na serbisyo at i-track ang supporter engagement",
+      "subtitle": "I-manage ang inyong mga alok na serbisyo at i-track ang donor engagement",
       "create_service": "Lumikha ng Bagong Serbisyo",
       "create_first_service": "Lumikha ng Inyong Unang Serbisyo",
       "edit": "I-edit",
@@ -82,7 +82,7 @@
       },
       "empty": {
         "title": "Walang mga serbisyo pa",
-        "description": "Lumikha ng inyong unang serbisyo upang magsimulang makipag-ugnayan sa mga supporter at makatulong sa mga charity."
+        "description": "Lumikha ng inyong unang serbisyo upang magsimulang makipag-ugnayan sa mga donor at makatulong sa mga charity."
       },
       "status": {
         "active": "Aktibo",
@@ -121,12 +121,12 @@
     "username": "Username",
     "location": "Lokasyon",
     "roles": "Mga Role",
-    "providerAndSupporter": "Provider at Supporter",
-    "providerRole": "Provider",
-    "supporterRole": "Supporter",
+    "providerAndSupporter": "Fundraiser at Donor",
+    "providerRole": "Fundraiser",
+    "supporterRole": "Donor",
     "noRoles": "Wala",
-    "provider_section": {
-      "title": "Bilang Provider",
+    "fundraiser_section": {
+      "title": "Bilang Fundraiser",
       "create_service": "Lumikha ng Serbisyo",
       "update_service": "I-update ang Serbisyo",
       "creating": "Ginagawa...",
@@ -134,8 +134,8 @@
       "manage_services": "I-manage ang mga Serbisyo",
       "view_requests": "Tingnan ang mga Request"
     },
-    "supporter_section": {
-      "title": "Bilang Supporter",
+    "donor_section": {
+      "title": "Bilang Donor",
       "browse_services": "Mag-browse ng mga Serbisyo",
       "donation_history": "Kasaysayan ng Donasyon"
     },
@@ -148,17 +148,17 @@
   "profile": {
     "setup": {
       "title": "I-setup ang Inyong Profile",
-      "subtitle": "Lumikha ng inyong profile upang magsimulang gamitin ang Powered by Donation bilang service provider, supporter, o pareho.",
+      "subtitle": "Lumikha ng inyong profile upang magsimulang gamitin ang Powered by Donation bilang service fundraiser, donor, o pareho.",
       "create_profile": "Lumikha ng Inyong Profile",
       "update_profile": "I-update ang Inyong Profile",
       "roles": {
         "title": "Inyong Role(s)",
-        "provider": {
-          "title": "Service Provider",
+        "fundraiser": {
+          "title": "Service Fundraiser",
           "description": "Mag-offer ng mga serbisyo at tumulong sa mga charity"
         },
-        "supporter": {
-          "title": "Supporter",
+        "donor": {
+          "title": "Donor",
           "description": "Maghanap ng mga serbisyo at gumawa ng charitable donations"
         }
       },
@@ -180,7 +180,7 @@
         "success_created": "Matagumpay na nalikha ang profile!",
         "success_updated": "Matagumpay na na-update ang profile!",
         "error_name_required": "Kailangan ang pangalan",
-        "error_role_required": "Dapat kayong maging provider, supporter, o pareho",
+        "error_role_required": "Dapat kayong maging fundraiser, donor, o pareho",
         "error_save_failed": "Hindi na-save ang profile"
       }
     }
@@ -192,17 +192,17 @@
       "no_services": "Walang nahanap na serbisyo",
       "load_more": "Mag-load ng Higit Pa",
       "allLocations": "Lahat ng Lokasyon",
-      "provider": "Provider",
+      "provider": "Fundraiser",
       "communityImpact": {
         "title": "Community Impact",
         "activeServices": "Aktibong mga Serbisyo",
         "totalDonationPotential": "Kabuuang Donation Potential",
-        "activeProviders": "Aktibong mga Provider",
+        "activeProviders": "Aktibong mga Fundraiser",
         "donationsNote": "Lahat ng donasyon ay direktang napupunta sa mga rehistradong charity sa pamamagitan ng JustGiving"
       },
       "callToAction": {
         "title": "Gusto ninyong mag-offer ng inyong mga serbisyo?",
-        "description": "Sumali sa aming komunidad ng mga provider at tumulong sa mga charity habang ipinapakita ang inyong mga kasanayan.",
+        "description": "Sumali sa aming komunidad ng mga fundraiser at tumulong sa mga charity habang ipinapakita ang inyong mga kasanayan.",
         "button": "Magsimula"
       }
     },
@@ -308,7 +308,7 @@
       "platform": {
         "title": "Platform",
         "browse_services": "I-browse ang mga Serbisyo",
-        "service_providers": "Mga Service Provider",
+        "service_providers": "Mga Service Fundraiser",
         "featured_charities": "Featured na mga Charity",
         "how_it_works": "Paano Ito Gumagana"
       },
@@ -356,8 +356,8 @@
   "deleteProfile": {
     "title": "Tanggalin ang Profile",
     "description": "Ito ay permanenteng magtatatanggal ng inyong profile at lahat ng kaugnay na data. Hindi na ito mababawi.",
-    "providerWarning": "⚠️ Bilang provider, matatanggal din ang lahat ng inyong mga serbisyo at kasaysayan ng serbisyo.",
-    "supporterWarning": "⚠️ Bilang supporter, matatanggal ang inyong kasaysayan ng donasyon at mga service request.",
+    "providerWarning": "⚠️ Bilang fundraiser, matatanggal din ang lahat ng inyong mga serbisyo at kasaysayan ng serbisyo.",
+    "supporterWarning": "⚠️ Bilang donor, matatanggal ang inyong kasaysayan ng donasyon at mga service request.",
     "deleteButton": "Tanggalin ang Profile",
     "confirmTitle": "I-confirm ang Pagtanggal ng Profile",
     "confirmDescription": "Sigurado kayong gustong tanggalin ang inyong profile para kay \"{name}\"? Ang aksyong ito ay permanente at:",

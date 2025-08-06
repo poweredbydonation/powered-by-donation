@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useAuth } from '@/hooks/useAuth'
 import { createClient } from '@/lib/supabase/client'
 
-export default function SupporterSetupForm() {
+export default function FundraiserSetupForm() {
   const [name, setName] = useState('')
   const [bio, setBio] = useState('')
   const [loading, setLoading] = useState(false)
@@ -28,10 +28,10 @@ export default function SupporterSetupForm() {
         .insert({
           id: user.id,
           email: user.email,
-          name: name.trim() || null,
+          name: name.trim(),
           bio: bio.trim() || null,
-          is_provider: false,
-          is_supporter: true
+          is_fundraiser: true,
+          is_donor: true
         })
 
       if (insertError) {
@@ -41,7 +41,7 @@ export default function SupporterSetupForm() {
       // Force reload to ensure fresh data is displayed
       window.location.href = '/dashboard'
     } catch (err: any) {
-      setError(err.message || 'Failed to create supporter profile')
+      setError(err.message || 'Failed to create fundraiser profile')
     } finally {
       setLoading(false)
     }
@@ -52,19 +52,20 @@ export default function SupporterSetupForm() {
       {/* Name Field */}
       <div>
         <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-          Display Name (Optional)
+          Fundraiser Name *
         </label>
         <input
           id="name"
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
+          required
           maxLength={100}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
-          placeholder="Your name (leave blank to stay anonymous)"
+          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+          placeholder="Your name or business name"
         />
         <p className="mt-1 text-sm text-gray-500">
-          Optional - you can support services anonymously
+          This will be displayed to potential donors
         </p>
       </div>
 
@@ -77,26 +78,16 @@ export default function SupporterSetupForm() {
           id="bio"
           value={bio}
           onChange={(e) => setBio(e.target.value)}
-          rows={3}
-          maxLength={300}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
-          placeholder="Tell others about what causes you care about..."
+          rows={4}
+          maxLength={500}
+          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+          placeholder="Tell donors about yourself and your services..."
         />
         <p className="mt-1 text-sm text-gray-500">
-          {bio.length}/300 characters
+          {bio.length}/500 characters
         </p>
       </div>
 
-      {/* Privacy Information */}
-      <div className="border-t border-gray-200 pt-6">
-        <div className="p-4 bg-blue-50 rounded-md">
-          <h3 className="text-lg font-medium text-blue-900 mb-2">Privacy Promise</h3>
-          <p className="text-sm text-blue-700">
-            Your donations are always displayed anonymously to the public. 
-            Only providers and charities you support will know your identity to thank you.
-          </p>
-        </div>
-      </div>
 
       {/* Error Display */}
       {error && (
@@ -116,10 +107,10 @@ export default function SupporterSetupForm() {
         </button>
         <button
           type="submit"
-          disabled={loading}
-          className="px-6 py-2 text-sm font-medium text-white bg-green-600 border border-transparent rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
+          disabled={loading || !name.trim()}
+          className="px-6 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {loading ? 'Creating Profile...' : 'Create Supporter Profile'}
+          {loading ? 'Creating Profile...' : 'Create Fundraiser Profile'}
         </button>
       </div>
     </form>

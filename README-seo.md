@@ -2,7 +2,7 @@
 
 ## Overview
 
-The platform implements a comprehensive SEO strategy focused on service discovery, charity impact, and provider visibility. Our approach prioritizes static generation, structured data, and performance optimization to achieve maximum search visibility.
+The platform implements a comprehensive SEO strategy focused on service discovery, charity impact, and fundraiser visibility. Our approach prioritizes static generation, structured data, and performance optimization to achieve maximum search visibility.
 
 ## Page Structure for Maximum SEO
 
@@ -10,8 +10,8 @@ The platform implements a comprehensive SEO strategy focused on service discover
 - **Services**: `/services/[slug]` - Individual service pages (SSG)
 - **Categories**: `/services/category/[category]` - Service category landing pages
 - **Locations**: `/services/location/[location]` - Location-based services
-- **Providers**: `/provider/[slug]` - Provider profile pages
-- **Supporters**: `/supporter/[slug]` - Supporter profile pages  
+- **Fundraisers**: `/fundraiser/[slug]` - Fundraiser profile pages
+- **Donors**: `/donor/[slug]` - Donor profile pages  
 - **Charities**: `/charity/[slug]` - Charity impact pages showing service-driven donations (SSG)
 - **Browse**: `/browse` - Main browsing page with filters
 - **Search**: `/search?category=X&location=Y&amount=Z&happiness=90` - Filtered search results with quality filters
@@ -33,9 +33,9 @@ The platform implements a comprehensive SEO strategy focused on service discover
 /services/location/melbourne
 /services/location/brisbane
 
-# Provider profiles
-/provider/john-smith-web-designer
-/provider/sarah-jones-tutor
+# Fundraiser profiles
+/fundraiser/john-smith-web-designer
+/fundraiser/sarah-jones-tutor
 
 # Charity pages
 /charity/cancer-research-uk
@@ -61,7 +61,7 @@ The platform implements a comprehensive SEO strategy focused on service discover
 ### Service Page Meta Tags
 ```typescript
 interface ServiceSEO {
-  title: `${service.title} | $${service.donation_amount} | ${provider.name} | Powered by Donation`
+  title: `${service.title} | $${service.donation_amount} | ${fundraiser.name} | Powered by Donation`
   description: `Support ${service.title} with a $${service.donation_amount} donation to your chosen charity. ${service.description.substring(0, 120)}...`
   
   openGraph: {
@@ -111,16 +111,16 @@ interface CharitySEO {
 }
 ```
 
-### Provider Profile Meta Tags
+### Fundraiser Profile Meta Tags
 ```typescript
-interface ProviderSEO {
-  title: `${provider.name} | ${provider.services.length} Services | Powered by Donation`
-  description: `${provider.name} offers ${provider.services.length} services for charitable donations. ${provider.bio ? provider.bio.substring(0, 120) + '...' : 'Support their services through donations to verified charities.'}`
+interface FundraiserSEO {
+  title: `${fundraiser.name} | ${fundraiser.services.length} Services | Powered by Donation`
+  description: `${fundraiser.name} offers ${fundraiser.services.length} services for charitable donations. ${fundraiser.bio ? fundraiser.bio.substring(0, 120) + '...' : 'Support their services through donations to verified charities.'}`
   
   openGraph: {
-    title: `${provider.name} - Service Provider`
-    description: `${provider.services.length} services available for charitable donations`
-    url: `https://poweredbydonation.com/provider/${provider.slug}`
+    title: `${fundraiser.name} - Service Fundraiser`
+    description: `${fundraiser.services.length} services available for charitable donations`
+    url: `https://poweredbydonation.com/fundraiser/${fundraiser.slug}`
     type: 'profile'
   }
 }
@@ -138,7 +138,7 @@ interface ProviderSEO {
   "provider": {
     "@type": "Person",
     "name": "John Smith",
-    "url": "https://poweredbydonation.com/provider/john-smith"
+    "url": "https://poweredbydonation.com/fundraiser/john-smith"
   },
   "offers": {
     "@type": "Offer",
@@ -212,13 +212,13 @@ interface ProviderSEO {
 const servicePageContent = {
   hero: {
     title: service.title,
-    subtitle: `$${service.donation_amount} donation • ${provider.name}`,
+    subtitle: `$${service.donation_amount} donation • ${fundraiser.name}`,
     cta: "Support with Donation"
   },
   
   description: {
     main: service.description,
-    provider_bio: provider.bio,
+    fundraiser_bio: fundraiser.bio,
     location_info: service.locations,
     charity_requirements: service.charity_type
   },
@@ -228,7 +228,7 @@ const servicePageContent = {
     steps: [
       "Choose this service",
       `Donate $${service.donation_amount} to your chosen charity`,
-      "Connect with ${provider.name}",
+      "Connect with ${fundraiser.name}",
       "Receive your service"
     ]
   },
@@ -239,16 +239,16 @@ const servicePageContent = {
       : "Preferred Charities",
     description: service.charity_type === 'any_charity'
       ? "Donate to any registered charity on JustGiving"
-      : "Choose from provider's preferred charities",
+      : "Choose from fundraiser's preferred charities",
     charities: service.preferred_charities
   },
   
-  provider_section: {
-    title: `About ${provider.name}`,
-    bio: provider.bio,
-    happiness_rate: provider.happiness_rate,
-    total_services: provider.services.length,
-    cta: `View all services by ${provider.name}`
+  fundraiser_section: {
+    title: `About ${fundraiser.name}`,
+    bio: fundraiser.bio,
+    happiness_rate: fundraiser.happiness_rate,
+    total_services: fundraiser.services.length,
+    cta: `View all services by ${fundraiser.name}`
   }
 }
 ```
@@ -268,13 +268,13 @@ const charityPageContent = {
       `${stats.this_month_count} donations this month`,
       `$${stats.this_month_amount} raised this month`,
       `${Object.keys(service_categories).length} service categories`,
-      `${stats.total_donations_count} total supporters`
+      `${stats.total_donations_count} total donors`
     ]
   },
   
   services_section: {
     title: "Services Supporting This Charity",
-    description: "Browse services where providers have chosen to support this charity",
+    description: "Browse services where fundraisers have chosen to support this charity",
     categories: service_categories,
     cta_link: `/search?charity=${charity.slug}`
   },
@@ -310,7 +310,7 @@ const generateSitemap = async () => {
   
   const services = await getPublicServices()
   const charities = await getActiveCharities()
-  const providers = await getPublicProviders()
+  const fundraisers = await getPublicFundraisers()
   
   const servicePages = services.map(service => 
     `https://poweredbydonation.com/services/${service.slug}`
@@ -320,11 +320,11 @@ const generateSitemap = async () => {
     `https://poweredbydonation.com/charity/${charity.slug}`
   )
   
-  const providerPages = providers.map(provider => 
-    `https://poweredbydonation.com/provider/${provider.slug}`
+  const fundraiserPages = fundraisers.map(fundraiser => 
+    `https://poweredbydonation.com/fundraiser/${fundraiser.slug}`
   )
   
-  return [...staticPages, ...servicePages, ...charityPages, ...providerPages]
+  return [...staticPages, ...servicePages, ...charityPages, ...fundraiserPages]
 }
 ```
 
@@ -334,7 +334,7 @@ User-agent: *
 Allow: /
 Allow: /services/
 Allow: /charity/
-Allow: /provider/
+Allow: /fundraiser/
 Allow: /browse
 Allow: /search
 
@@ -406,8 +406,8 @@ getTTFB(sendToAnalytics)
 - **Provider credibility** established
 
 ### Internal Linking Strategy
-- **Service to provider**: Link each service to provider profile
-- **Provider to services**: Link provider to all their services
+- **Service to fundraiser**: Link each service to fundraiser profile
+- **Fundraiser to services**: Link fundraiser to all their services
 - **Charity to services**: Link charity pages to supporting services
 - **Category clustering**: Link related services within categories
 - **Location clustering**: Link services by geographic area
@@ -429,4 +429,4 @@ getTTFB(sendToAnalytics)
 
 ---
 
-*This SEO strategy ensures maximum visibility for service providers, optimal charity discovery, and strong search performance across all key pages and user journeys.*
+*This SEO strategy ensures maximum visibility for service fundraisers, optimal charity discovery, and strong search performance across all key pages and user journeys.*

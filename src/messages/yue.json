@@ -22,7 +22,7 @@
       "title": "運作方式",
       "step1": {
         "title": "瀏覽服務",
-        "description": "搵由社區提供者提供嘅專業服務"
+        "description": "搵由社區籌款者提供嘅專業服務"
       },
       "step2": {
         "title": "選擇慈善機構",
@@ -47,28 +47,28 @@
     "welcome": "歡迎返嚟",
     "profileReady": "你嘅個人檔案已經設定好，可以開始使用。",
     "completeProfile": "完成你嘅個人檔案開始使用。",
-    "serviceProvider": "服務提供者",
-    "supporter": "支持者",
+    "serviceProvider": "籌款者",
+    "supporter": "捐贈者",
     "getStarted": "開始使用",
     "setupPrompt": "設定你嘅個人檔案開始使用Powered by Donation：",
     "createProfile": "建立你嘅個人檔案",
-    "providerDashboard": "提供者控制面板",
+    "providerDashboard": "籌款者控制面板",
     "providerDescription": "管理你嘅服務同捐款",
     "manageServices": "管理服務",
     "createNewService": "建立新服務",
-    "becomeProvider": "成為提供者",
+    "becomeProvider": "成為籌款者",
     "providerOffer": "提供服務同支持慈善機構",
-    "enableProviderRole": "啟用提供者角色",
-    "supporterDashboard": "支持者控制面板",
+    "enableProviderRole": "啟用籌款者角色",
+    "supporterDashboard": "捐贈者控制面板",
     "supporterDescription": "追蹤你嘅捐款同影響",
     "myDonations": "我嘅捐款",
     "browseServices": "瀏覽服務",
-    "becomeSupporter": "成為支持者",
+    "becomeSupporter": "成為捐贈者",
     "supporterOffer": "支持服務同慈善機構",
-    "enableSupporterRole": "啟用支持者角色",
+    "enableSupporterRole": "啟用捐贈者角色",
     "services": {
       "title": "我嘅服務",
-      "subtitle": "管理你嘅服務提供同追蹤支持者參與",
+      "subtitle": "管理你嘅服務提供同追蹤捐贈者參與",
       "create_service": "建立新服務",
       "create_first_service": "建立你嘅第一個服務",
       "edit": "編輯",
@@ -82,7 +82,7 @@
       },
       "empty": {
         "title": "暫時冇服務",
-        "description": "建立你嘅第一個服務開始同支持者連結並幫助慈善機構。"
+        "description": "建立你嘅第一個服務開始同捐贈者連結並幫助慈善機構。"
       },
       "status": {
         "active": "活躍",
@@ -121,12 +121,12 @@
     "username": "用戶名",
     "location": "位置",
     "roles": "角色",
-    "providerAndSupporter": "提供者同支持者",
-    "providerRole": "提供者",
-    "supporterRole": "支持者",
+    "providerAndSupporter": "籌款者同捐贈者",
+    "providerRole": "籌款者",
+    "supporterRole": "捐贈者",
     "noRoles": "無",
     "provider_section": {
-      "title": "作為提供者",
+      "title": "作為籌款者",
       "create_service": "建立服務",
       "update_service": "更新服務",
       "creating": "建立緊...",
@@ -135,7 +135,7 @@
       "view_requests": "查看要求"
     },
     "supporter_section": {
-      "title": "作為支持者",
+      "title": "作為捐贈者",
       "browse_services": "瀏覽服務",
       "donation_history": "捐款歷史"
     },
@@ -148,17 +148,17 @@
   "profile": {
     "setup": {
       "title": "設定你嘅個人檔案",
-      "subtitle": "建立你嘅個人檔案開始使用Powered by Donation作為服務提供者、支持者或兩者皆是。",
+      "subtitle": "建立你嘅個人檔案開始使用Powered by Donation作為服務籌款者、捐贈者或兩者皆是。",
       "create_profile": "建立你嘅個人檔案",
       "update_profile": "更新你嘅個人檔案",
       "roles": {
         "title": "你嘅角色",
         "provider": {
-          "title": "服務提供者",
+          "title": "服務籌款者",
           "description": "提供服務同幫助慈善機構"
         },
         "supporter": {
-          "title": "支持者",
+          "title": "捐贈者",
           "description": "搵服務同進行慈善捐款"
         }
       },
@@ -180,7 +180,7 @@
         "success_created": "個人檔案建立成功！",
         "success_updated": "個人檔案更新成功！",
         "error_name_required": "姓名係必須嘅",
-        "error_role_required": "你必須係提供者、支持者或兩者皆是",
+        "error_role_required": "你必須係籌款者、捐贈者或兩者皆是",
         "error_save_failed": "儲存個人檔案失敗"
       }
     }
@@ -192,17 +192,17 @@
       "no_services": "搵唔到服務",
       "load_more": "載入更多",
       "allLocations": "所有位置",
-      "provider": "提供者",
+      "provider": "籌款者",
       "communityImpact": {
         "title": "社區影響",
         "activeServices": "活躍服務",
         "totalDonationPotential": "總捐款潛力",
-        "activeProviders": "活躍提供者",
+        "activeProviders": "活躍籌款者",
         "donationsNote": "所有捐款都直接透過JustGiving去到註冊慈善機構"
       },
       "callToAction": {
         "title": "想提供你嘅服務？",
-        "description": "加入我哋嘅提供者社區，幫助慈善機構同時展示你嘅技能。",
+        "description": "加入我哋嘅籌款者社區，幫助慈善機構同時展示你嘅技能。",
         "button": "開始使用"
       }
     },
@@ -308,7 +308,7 @@
       "platform": {
         "title": "平台",
         "browse_services": "瀏覽服務",
-        "service_providers": "服務提供者",
+        "service_providers": "服務籌款者",
         "featured_charities": "精選慈善機構",
         "how_it_works": "點樣運作"
       },
@@ -356,8 +356,8 @@
   "deleteProfile": {
     "title": "刪除個人檔案",
     "description": "呢個會永久刪除你嘅個人檔案同所有相關資料。呢個動作係無得撤銷嘅。",
-    "providerWarning": "⚠️ 作為提供者，呢個亦會刪除你所有嘅服務同服務歷史。",
-    "supporterWarning": "⚠️ 作為支持者，呢個會刪除你嘅捐款歷史同服務要求。",
+    "providerWarning": "⚠️ 作為籌款者，呢個亦會刪除你所有嘅服務同服務歷史。",
+    "supporterWarning": "⚠️ 作為捐贈者，呢個會刪除你嘅捐款歷史同服務要求。",
     "deleteButton": "刪除個人檔案",
     "confirmTitle": "確認刪除個人檔案",
     "confirmDescription": "你確定要刪除\"{name}\"嘅個人檔案？呢個動作係永久嘅，會：",

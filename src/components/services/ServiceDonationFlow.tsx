@@ -21,7 +21,7 @@ interface ServiceDonationFlowProps {
       description?: string
       logo_url?: string
     }> | null
-    provider: {
+    fundraiser: {
       id: string
       name: string
     }
@@ -224,7 +224,7 @@ export default function ServiceDonationFlow({
         <div className="flex items-center justify-between text-sm">
           <span className="text-gray-600">Charity choice:</span>
           <span className="font-medium">
-            {service.charity_requirement_type === 'any_charity' ? 'Your choice' : 'Provider selected'}
+            {service.charity_requirement_type === 'any_charity' ? 'Your choice' : 'Fundraiser selected'}
           </span>
         </div>
         <div className="flex items-center justify-between text-sm">
@@ -290,7 +290,7 @@ export default function ServiceDonationFlow({
               
               <div className="space-y-3">
                 <p className="text-sm text-gray-600">
-                  This provider has selected these preferred charities:
+                  This fundraiser has selected these preferred charities:
                 </p>
                 
                 {service.preferred_charities?.map((charity) => (
@@ -388,7 +388,7 @@ export default function ServiceDonationFlow({
             </Link> or{' '}
             <Link href="/login" className="font-medium hover:underline">
               login
-            </Link> to connect with the provider after your donation
+            </Link> to connect with the fundraiser after your donation
           </p>
         </div>
       )}

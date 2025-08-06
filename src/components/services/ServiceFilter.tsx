@@ -149,7 +149,7 @@ export default function ServiceFilter({ filters, onFiltersChange, onClearFilters
             >
               <option value="all">Any requirement</option>
               <option value="any_charity">Choose any charity</option>
-              <option value="specific_charities">Provider's preferred charities</option>
+              <option value="specific_charities">Fundraiser's preferred charities</option>
             </select>
           </div>
         </div>
@@ -200,7 +200,7 @@ export default function ServiceFilter({ filters, onFiltersChange, onClearFilters
         {/* Happiness Rating */}
         <div className="mt-6">
           <label htmlFor="minHappiness" className="block text-sm font-medium text-gray-700 mb-2">
-            Minimum Provider Rating
+            Minimum Fundraiser Rating
           </label>
           <select
             id="minHappiness"
@@ -215,7 +215,7 @@ export default function ServiceFilter({ filters, onFiltersChange, onClearFilters
             <option value="60">60% or higher</option>
           </select>
           <p className="mt-1 text-xs text-gray-500">
-            Based on supporter satisfaction ratings
+            Based on donor satisfaction ratings
           </p>
         </div>
       </div>

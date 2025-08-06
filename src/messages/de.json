@@ -47,28 +47,28 @@
     "welcome": "Willkommen zurück",
     "profileReady": "Ihr Profil ist eingerichtet und einsatzbereit.",
     "completeProfile": "Vervollständigen Sie Ihr Profil, um zu beginnen.",
-    "serviceProvider": "Service-Anbieter",
-    "supporter": "Unterstützer",
+    "fundraiser": "Spendensammler",
+    "donor": "Spender",
     "getStarted": "Loslegen",
     "setupPrompt": "Richten Sie Ihr Profil ein, um Powered by Donation zu nutzen:",
     "createProfile": "Ihr Profil Erstellen",
-    "providerDashboard": "Anbieter-Übersicht",
-    "providerDescription": "Verwalten Sie Ihre Services und Spenden",
+    "fundraiserDashboard": "Spendensammler-Übersicht",
+    "fundraiserDescription": "Verwalten Sie Ihre Services und Spenden",
     "manageServices": "Services Verwalten",
     "createNewService": "Neuen Service Erstellen",
-    "becomeProvider": "Anbieter Werden",
-    "providerOffer": "Services anbieten und Wohltätigkeitsorganisationen unterstützen",
-    "enableProviderRole": "Anbieter-Rolle Aktivieren",
-    "supporterDashboard": "Unterstützer-Übersicht",
-    "supporterDescription": "Verfolgen Sie Ihre Spenden und Ihren Einfluss",
+    "becomeFundraiser": "Spendensammler Werden",
+    "fundraiserOffer": "Services anbieten und Wohltätigkeitsorganisationen unterstützen",
+    "enableFundraiserRole": "Spendensammler-Rolle Aktivieren",
+    "donorDashboard": "Spender-Übersicht",
+    "donorDescription": "Verfolgen Sie Ihre Spenden und Ihren Einfluss",
     "myDonations": "Meine Spenden",
     "browseServices": "Services Durchsuchen",
-    "becomeSupporter": "Unterstützer Werden",
-    "supporterOffer": "Services und Wohltätigkeitsorganisationen unterstützen",
-    "enableSupporterRole": "Unterstützer-Rolle Aktivieren",
+    "becomeDonor": "Spender Werden",
+    "donorOffer": "Services und Wohltätigkeitsorganisationen unterstützen",
+    "enableDonorRole": "Spender-Rolle Aktivieren",
     "services": {
       "title": "Meine Services",
-      "subtitle": "Verwalten Sie Ihre Service-Angebote und verfolgen Sie das Engagement der Unterstützer",
+      "subtitle": "Verwalten Sie Ihre Service-Angebote und verfolgen Sie das Engagement der Spender",
       "create_service": "Neuen Service Erstellen",
       "create_first_service": "Ihren Ersten Service Erstellen",
       "edit": "Bearbeiten",
@@ -82,7 +82,7 @@
       },
       "empty": {
         "title": "Noch keine Services",
-        "description": "Erstellen Sie Ihren ersten Service, um mit Unterstützern in Kontakt zu treten und Wohltätigkeitsorganisationen zu helfen."
+        "description": "Erstellen Sie Ihren ersten Service, um mit Spendern in Kontakt zu treten und Wohltätigkeitsorganisationen zu helfen."
       },
       "status": {
         "active": "Aktiv",
@@ -121,12 +121,12 @@
     "username": "Benutzername",
     "location": "Standort",
     "roles": "Rollen",
-    "providerAndSupporter": "Anbieter & Unterstützer",
-    "providerRole": "Anbieter",
-    "supporterRole": "Unterstützer",
+    "fundraiserAndDonor": "Spendensammler & Spender",
+    "fundraiserRole": "Spendensammler",
+    "donorRole": "Spender",
     "noRoles": "Keine",
-    "provider_section": {
-      "title": "Als Anbieter",
+    "fundraiser_section": {
+      "title": "Als Spendensammler",
       "create_service": "Service Erstellen",
       "update_service": "Service Aktualisieren",
       "creating": "Erstellen...",
@@ -134,8 +134,8 @@
       "manage_services": "Services Verwalten",
       "view_requests": "Anfragen Anzeigen"
     },
-    "supporter_section": {
-      "title": "Als Unterstützer",
+    "donor_section": {
+      "title": "Als Spender",
       "browse_services": "Services Durchsuchen",
       "donation_history": "Spendenhistorie"
     },
@@ -148,17 +148,17 @@
   "profile": {
     "setup": {
       "title": "Ihr Profil Einrichten",
-      "subtitle": "Erstellen Sie Ihr Profil, um Powered by Donation als Service-Anbieter, Unterstützer oder beides zu nutzen.",
+      "subtitle": "Erstellen Sie Ihr Profil, um Powered by Donation als Spendensammler, Spender oder beides zu nutzen.",
       "create_profile": "Ihr Profil Erstellen",
       "update_profile": "Ihr Profil Aktualisieren",
       "roles": {
         "title": "Ihre Rolle(n)",
-        "provider": {
-          "title": "Service-Anbieter",
+        "fundraiser": {
+          "title": "Spendensammler",
           "description": "Services anbieten und Wohltätigkeitsorganisationen helfen"
         },
-        "supporter": {
-          "title": "Unterstützer",
+        "donor": {
+          "title": "Spender",
           "description": "Services finden und wohltätige Spenden tätigen"
         }
       },
@@ -180,7 +180,7 @@
         "success_created": "Profil erfolgreich erstellt!",
         "success_updated": "Profil erfolgreich aktualisiert!",
         "error_name_required": "Name ist erforderlich",
-        "error_role_required": "Sie müssen entweder Anbieter, Unterstützer oder beides sein",
+        "error_role_required": "Sie müssen entweder Spendensammler, Spender oder beides sein",
         "error_save_failed": "Profil konnte nicht gespeichert werden"
       }
     }
@@ -192,17 +192,17 @@
       "no_services": "Keine Services gefunden",
       "load_more": "Mehr Laden",
       "allLocations": "Alle Standorte",
-      "provider": "Anbieter",
+      "fundraiser": "Spendensammler",
       "communityImpact": {
         "title": "Gemeinschaftseinfluss",
         "activeServices": "Aktive Services",
         "totalDonationPotential": "Gesamtes Spendenpotenzial",
-        "activeProviders": "Aktive Anbieter",
+        "activeFundraisers": "Aktive Spendensammler",
         "donationsNote": "Alle Spenden gehen direkt an registrierte Wohltätigkeitsorganisationen über JustGiving"
       },
       "callToAction": {
         "title": "Möchten Sie Ihre Services anbieten?",
-        "description": "Treten Sie unserer Anbietergemeinschaft bei und helfen Sie Wohltätigkeitsorganisationen, während Sie Ihre Fähigkeiten präsentieren.",
+        "description": "Treten Sie unserer Spendensammlergemeinschaft bei und helfen Sie Wohltätigkeitsorganisationen, während Sie Ihre Fähigkeiten präsentieren.",
         "button": "Loslegen"
       }
     },
@@ -308,7 +308,7 @@
       "platform": {
         "title": "Plattform",
         "browse_services": "Services Durchsuchen",
-        "service_providers": "Service-Anbieter",
+        "fundraisers": "Spendensammler",
         "featured_charities": "Ausgewählte Wohltätigkeitsorganisationen",
         "how_it_works": "Wie es Funktioniert"
       },
@@ -356,8 +356,8 @@
   "deleteProfile": {
     "title": "Profil Löschen",
     "description": "Dies wird Ihr Profil und alle zugehörigen Daten dauerhaft löschen. Diese Aktion kann nicht rückgängig gemacht werden.",
-    "providerWarning": "⚠️ Als Anbieter werden dadurch auch alle Ihre Services und Ihre Service-Historie gelöscht.",
-    "supporterWarning": "⚠️ Als Unterstützer werden dadurch Ihre Spendenhistorie und Service-Anfragen gelöscht.",
+    "fundraiserWarning": "⚠️ Als Spendensammler werden dadurch auch alle Ihre Services und Ihre Service-Historie gelöscht.",
+    "donorWarning": "⚠️ Als Spender werden dadurch Ihre Spendenhistorie und Service-Anfragen gelöscht.",
     "deleteButton": "Profil Löschen",
     "confirmTitle": "Profil-Löschung Bestätigen",
     "confirmDescription": "Sind Sie sicher, dass Sie Ihr Profil für \"{name}\" löschen möchten? Diese Aktion ist dauerhaft und wird:",

@@ -22,7 +22,7 @@
       "title": "How It Works",
       "step1": {
         "title": "Browse Services",
-        "description": "Find professional services offered by community providers"
+        "description": "Find professional services offered by community fundraisers"
       },
       "step2": {
         "title": "Choose a Charity",
@@ -47,28 +47,40 @@
     "welcome": "Welcome back",
     "profileReady": "Your profile is set up and ready to go.",
     "completeProfile": "Complete your profile to get started.",
-    "serviceProvider": "Service Provider",
-    "supporter": "Supporter",
+    "serviceFundraiser": "Service Fundraiser",
+    "donor": "Donor",
+    "serviceFundraiser": "Service Fundraiser",
+    "donor": "Donor",
     "getStarted": "Get Started",
     "setupPrompt": "Set up your profile to start using Powered by Donation:",
     "createProfile": "Create Your Profile",
-    "providerDashboard": "Provider Dashboard",
-    "providerDescription": "Manage your services and donations",
+    "fundraiserDashboard": "Fundraiser Dashboard",
+    "fundraiserDescription": "Manage your services and donations",
+    "fundraiserDashboard": "Fundraiser Dashboard",
+    "fundraiserDescription": "Manage your services and donations",
     "manageServices": "Manage Services",
     "createNewService": "Create New Service",
-    "becomeProvider": "Become a Provider",
-    "providerOffer": "Offer services and support charities",
-    "enableProviderRole": "Enable Provider Role",
-    "supporterDashboard": "Supporter Dashboard",
-    "supporterDescription": "Track your donations and impact",
+    "becomeFundraiser": "Become a Fundraiser",
+    "fundraiserOffer": "Offer services and support charities",
+    "enableFundraiserRole": "Enable Fundraiser Role",
+    "becomeFundraiser": "Become a Fundraiser",
+    "fundraiserOffer": "Offer services and support charities",
+    "enableFundraiserRole": "Enable Fundraiser Role",
+    "donorDashboard": "Donor Dashboard",
+    "donorDescription": "Track your donations and impact",
+    "donorDashboard": "Donor Dashboard",
+    "donorDescription": "Track your donations and impact",
     "myDonations": "My Donations",
     "browseServices": "Browse Services",
-    "becomeSupporter": "Become a Supporter",
-    "supporterOffer": "Support services and charities",
-    "enableSupporterRole": "Enable Supporter Role",
+    "becomeDonor": "Become a Donor",
+    "donorOffer": "Support services and charities",
+    "enableDonorRole": "Enable Donor Role",
+    "becomeDonor": "Become a Donor",
+    "donorOffer": "Support services and charities",
+    "enableDonorRole": "Enable Donor Role",
     "services": {
       "title": "My Services",
-      "subtitle": "Manage your service offerings and track supporter engagement",
+      "subtitle": "Manage your service offerings and track donor engagement",
       "create_service": "Create New Service",
       "create_first_service": "Create Your First Service",
       "edit": "Edit",
@@ -82,7 +94,7 @@
       },
       "empty": {
         "title": "No services yet",
-        "description": "Create your first service to start connecting with supporters and helping charities."
+        "description": "Create your first service to start connecting with donors and helping charities."
       },
       "status": {
         "active": "Active",
@@ -121,12 +133,12 @@
     "username": "Username",
     "location": "Location",
     "roles": "Roles",
-    "providerAndSupporter": "Provider & Supporter",
-    "providerRole": "Provider",
-    "supporterRole": "Supporter",
+    "fundraiserAndDonor": "Fundraiser & Donor",
+    "fundraiserRole": "Fundraiser",
+    "donorRole": "Donor",
     "noRoles": "None",
-    "provider_section": {
-      "title": "As a Provider",
+    "fundraiser_section": {
+      "title": "As a Fundraiser",
       "create_service": "Create Service",
       "update_service": "Update Service",
       "creating": "Creating...",
@@ -134,8 +146,8 @@
       "manage_services": "Manage Services",
       "view_requests": "View Requests"
     },
-    "supporter_section": {
-      "title": "As a Supporter",
+    "donor_section": {
+      "title": "As a Donor",
       "browse_services": "Browse Services",
       "donation_history": "Donation History"
     },
@@ -148,17 +160,17 @@
   "profile": {
     "setup": {
       "title": "Set Up Your Profile",
-      "subtitle": "Create your profile to start using Powered by Donation as a service provider, supporter, or both.",
+      "subtitle": "Create your profile to start using Powered by Donation as a service fundraiser, donor, or both.",
       "create_profile": "Create Your Profile",
       "update_profile": "Update Your Profile",
       "roles": {
         "title": "Your Role(s)",
-        "provider": {
-          "title": "Service Provider",
+        "fundraiser": {
+          "title": "Service Fundraiser",
           "description": "Offer services and help charities"
         },
-        "supporter": {
-          "title": "Supporter",
+        "donor": {
+          "title": "Donor",
           "description": "Find services and make charitable donations"
         }
       },
@@ -180,7 +192,7 @@
         "success_created": "Profile created successfully!",
         "success_updated": "Profile updated successfully!",
         "error_name_required": "Name is required",
-        "error_role_required": "You must be either a provider, supporter, or both",
+        "error_role_required": "You must be either a fundraiser, donor, or both",
         "error_save_failed": "Failed to save profile"
       }
     }
@@ -192,17 +204,17 @@
       "no_services": "No services found",
       "load_more": "Load More",
       "allLocations": "All Locations",
-      "provider": "Provider",
+      "fundraiser": "Fundraiser",
       "communityImpact": {
         "title": "Community Impact",
         "activeServices": "Active Services",
         "totalDonationPotential": "Total Donation Potential",
-        "activeProviders": "Active Providers",
+        "activeFundraisers": "Active Fundraisers",
         "donationsNote": "All donations go directly to registered charities via JustGiving"
       },
       "callToAction": {
         "title": "Want to offer your services?",
-        "description": "Join our community of providers and help charities while showcasing your skills.",
+        "description": "Join our community of fundraisers and help charities while showcasing your skills.",
         "button": "Get Started"
       }
     },
@@ -308,7 +320,7 @@
       "platform": {
         "title": "Platform",
         "browse_services": "Browse Services",
-        "service_providers": "Service Providers",
+        "service_fundraisers": "Become a Fundraiser",
         "featured_charities": "Featured Charities",
         "how_it_works": "How It Works"
       },
@@ -356,8 +368,8 @@
   "deleteProfile": {
     "title": "Delete Profile",
     "description": "This will permanently delete your profile and all associated data. This action cannot be undone.",
-    "providerWarning": "⚠️ As a provider, this will also delete all your services and service history.",
-    "supporterWarning": "⚠️ As a supporter, this will delete your donation history and service requests.",
+    "fundraiserWarning": "⚠️ As a fundraiser, this will also delete all your services and service history.",
+    "donorWarning": "⚠️ As a donor, this will delete your donation history and service requests.",
     "deleteButton": "Delete Profile",
     "confirmTitle": "Confirm Profile Deletion",
     "confirmDescription": "Are you sure you want to delete your profile for \"{name}\"? This action is permanent and will:",

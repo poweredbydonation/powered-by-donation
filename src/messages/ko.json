@@ -22,7 +22,7 @@
       "title": "작동 원리",
       "step1": {
         "title": "서비스 둘러보기",
-        "description": "커뮤니티 제공자가 제공하는 전문 서비스를 찾아보세요"
+        "description": "커뮤니티 모금자가 제공하는 전문 서비스를 찾아보세요"
       },
       "step2": {
         "title": "자선단체 선택",
@@ -47,28 +47,28 @@
     "welcome": "다시 오신 것을 환영합니다",
     "profileReady": "귀하의 프로필이 설정되어 사용할 준비가 되었습니다.",
     "completeProfile": "시작하려면 프로필을 완성하세요.",
-    "serviceProvider": "서비스 제공자",
-    "supporter": "후원자",
+    "serviceProvider": "모금자",
+    "supporter": "기부자",
     "getStarted": "시작하기",
     "setupPrompt": "Powered by Donation 사용을 시작하려면 프로필을 설정하세요:",
     "createProfile": "프로필 만들기",
-    "providerDashboard": "제공자 대시보드",
+    "providerDashboard": "모금자 대시보드",
     "providerDescription": "서비스와 기부를 관리하세요",
     "manageServices": "서비스 관리",
     "createNewService": "새 서비스 만들기",
-    "becomeProvider": "제공자 되기",
+    "becomeProvider": "모금자 되기",
     "providerOffer": "서비스를 제공하고 자선단체를 지원하세요",
-    "enableProviderRole": "제공자 역할 활성화",
-    "supporterDashboard": "후원자 대시보드",
+    "enableProviderRole": "모금자 역할 활성화",
+    "supporterDashboard": "기부자 대시보드",
     "supporterDescription": "기부와 영향력을 추적하세요",
     "myDonations": "내 기부",
     "browseServices": "서비스 둘러보기",
-    "becomeSupporter": "후원자 되기",
+    "becomeSupporter": "기부자 되기",
     "supporterOffer": "서비스와 자선단체를 지원하세요",
-    "enableSupporterRole": "후원자 역할 활성화",
+    "enableSupporterRole": "기부자 역할 활성화",
     "services": {
       "title": "내 서비스",
-      "subtitle": "서비스 제공을 관리하고 후원자 참여를 추적하세요",
+      "subtitle": "서비스 제공을 관리하고 기부자 참여를 추적하세요",
       "create_service": "새 서비스 만들기",
       "create_first_service": "첫 번째 서비스 만들기",
       "edit": "편집",
@@ -82,7 +82,7 @@
       },
       "empty": {
         "title": "아직 서비스가 없습니다",
-        "description": "첫 번째 서비스를 만들어 후원자와 연결되고 자선단체를 도우세요."
+        "description": "첫 번째 서비스를 만들어 기부자와 연결되고 자선단체를 도우세요."
       },
       "status": {
         "active": "활성",
@@ -121,12 +121,12 @@
     "username": "사용자명",
     "location": "위치",
     "roles": "역할",
-    "providerAndSupporter": "제공자 및 후원자",
-    "providerRole": "제공자",
-    "supporterRole": "후원자",
+    "providerAndSupporter": "모금자 및 기부자",
+    "providerRole": "모금자",
+    "supporterRole": "기부자",
     "noRoles": "없음",
     "provider_section": {
-      "title": "제공자로서",
+      "title": "모금자로서",
       "create_service": "서비스 만들기",
       "update_service": "서비스 업데이트",
       "creating": "생성 중...",
@@ -135,7 +135,7 @@
       "view_requests": "요청 보기"
     },
     "supporter_section": {
-      "title": "후원자로서",
+      "title": "기부자로서",
       "browse_services": "서비스 둘러보기",
       "donation_history": "기부 내역"
     },
@@ -148,17 +148,17 @@
   "profile": {
     "setup": {
       "title": "프로필 설정",
-      "subtitle": "서비스 제공자, 후원자 또는 둘 다로 Powered by Donation을 사용하려면 프로필을 만드세요.",
+      "subtitle": "모금자, 기부자 또는 둘 다로 Powered by Donation을 사용하려면 프로필을 만드세요.",
       "create_profile": "프로필 만들기",
       "update_profile": "프로필 업데이트",
       "roles": {
         "title": "귀하의 역할",
         "provider": {
-          "title": "서비스 제공자",
+          "title": "모금자",
           "description": "서비스를 제공하고 자선단체를 도우세요"
         },
         "supporter": {
-          "title": "후원자",
+          "title": "기부자",
           "description": "서비스를 찾고 자선 기부를 하세요"
         }
       },
@@ -180,7 +180,7 @@
         "success_created": "프로필이 성공적으로 생성되었습니다!",
         "success_updated": "프로필이 성공적으로 업데이트되었습니다!",
         "error_name_required": "이름이 필요합니다",
-        "error_role_required": "제공자, 후원자 또는 둘 다여야 합니다",
+        "error_role_required": "모금자, 기부자 또는 둘 다여야 합니다",
         "error_save_failed": "프로필 저장에 실패했습니다"
       }
     }
@@ -192,17 +192,17 @@
       "no_services": "서비스를 찾을 수 없습니다",
       "load_more": "더 보기",
       "allLocations": "모든 위치",
-      "provider": "제공자",
+      "provider": "모금자",
       "communityImpact": {
         "title": "커뮤니티 임팩트",
         "activeServices": "활성 서비스",
         "totalDonationPotential": "총 기부 잠재력",
-        "activeProviders": "활성 제공자",
+        "activeProviders": "활성 모금자",
         "donationsNote": "모든 기부금은 JustGiving을 통해 등록된 자선단체로 직접 전달됩니다"
       },
       "callToAction": {
         "title": "서비스를 제공하고 싶으신가요?",
-        "description": "제공자 커뮤니티에 참여하여 자선단체를 도우며 기술을 선보이세요.",
+        "description": "모금자 커뮤니티에 참여하여 자선단체를 도우며 기술을 선보이세요.",
         "button": "시작하기"
       }
     },
@@ -308,7 +308,7 @@
       "platform": {
         "title": "플랫폼",
         "browse_services": "서비스 둘러보기",
-        "service_providers": "서비스 제공자",
+        "service_providers": "모금자",
         "featured_charities": "주목받는 자선단체",
         "how_it_works": "작동 원리"
       },
@@ -356,8 +356,8 @@
   "deleteProfile": {
     "title": "프로필 삭제",
     "description": "이렇게 하면 프로필과 관련된 모든 데이터가 영구적으로 삭제됩니다. 이 작업은 취소할 수 없습니다.",
-    "providerWarning": "⚠️ 제공자로서 모든 서비스와 서비스 내역도 삭제됩니다.",
-    "supporterWarning": "⚠️ 후원자로서 기부 내역과 서비스 요청이 삭제됩니다.",
+    "providerWarning": "⚠️ 모금자로서 모든 서비스와 서비스 내역도 삭제됩니다.",
+    "supporterWarning": "⚠️ 기부자로서 기부 내역과 서비스 요청이 삭제됩니다.",
     "deleteButton": "프로필 삭제",
     "confirmTitle": "프로필 삭제 확인",
     "confirmDescription": "\"{name}\" 프로필을 삭제하시겠습니까? 이 작업은 영구적이며 다음과 같은 결과를 가져옵니다:",

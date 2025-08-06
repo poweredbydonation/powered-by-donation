@@ -122,8 +122,8 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link href={`/${locale}/providers`} className="hover:text-gray-900">
-                  {t('navigation.platform.service_providers')}
+                <Link href={`/${locale}/dashboard`} className="hover:text-gray-900">
+                  {t('navigation.platform.service_fundraisers')}
                 </Link>
               </li>
               <li>

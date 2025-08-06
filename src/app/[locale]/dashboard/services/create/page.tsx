@@ -6,7 +6,7 @@ import { getMessages } from 'next-intl/server'
 
 export const metadata: Metadata = {
   title: 'Create Service | Powered by Donation',
-  description: 'Create a new service offering and help supporters make meaningful charitable donations',
+  description: 'Create a new service offering and help donors make meaningful charitable donations',
 }
 
 interface CreateServicePageProps {
@@ -28,7 +28,7 @@ export default async function CreateServicePage({ params }: CreateServicePagePro
               <div className="mb-8">
                 <h1 className="text-3xl font-bold text-gray-900">Create New Service</h1>
                 <p className="mt-2 text-gray-600">
-                  Offer your skills and help supporters make charitable donations. Set your fixed pricing, location options, and charity requirements.
+                  Offer your skills and help donors make charitable donations. Set your fixed pricing, location options, and charity requirements.
                 </p>
               </div>
               

@@ -11,7 +11,7 @@ import { createClient } from '@/lib/supabase/client'
 import { Service, ServiceLocation } from '@/types/database'
 
 type UserService = Service & {
-  provider: {
+  fundraiser: {
     name: string
   }
 }
@@ -119,7 +119,7 @@ export default function ServicesPage() {
       return { status: 'expired', text: t('services.status.expired'), color: 'text-red-600' }
     }
     
-    if (service.max_supporters && service.current_supporters && service.current_supporters >= service.max_supporters) {
+    if (service.max_donors && service.current_donors && service.current_donors >= service.max_donors) {
       return { status: 'full', text: t('services.status.full'), color: 'text-red-600' }
     }
     
@@ -258,11 +258,11 @@ export default function ServicesPage() {
                               </div>
                             </div>
                             
-                            {service.max_supporters && (
+                            {service.max_donors && (
                               <div>
                                 <span className="text-gray-500">{t('services.fields.capacity')}:</span>
                                 <div className="font-medium">
-                                  {service.current_supporters || 0} / {service.max_supporters}
+                                  {service.current_donors || 0} / {service.max_donors}
                                 </div>
                               </div>
                             )}

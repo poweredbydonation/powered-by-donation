@@ -22,7 +22,7 @@
       "title": "工作原理",
       "step1": {
         "title": "浏览服务",
-        "description": "寻找社区提供者提供的专业服务"
+        "description": "寻找社区募捐者提供的专业服务"
       },
       "step2": {
         "title": "选择慈善机构",
@@ -47,28 +47,28 @@
     "welcome": "欢迎回来",
     "profileReady": "您的个人资料已设置并准备就绪。",
     "completeProfile": "完成您的个人资料以开始使用。",
-    "serviceProvider": "服务提供者",
-    "supporter": "支持者",
+    "serviceProvider": "募捐者",
+    "supporter": "捐赠者",
     "getStarted": "开始",
     "setupPrompt": "设置您的个人资料以开始使用捐赠驱动：",
     "createProfile": "创建您的个人资料",
-    "providerDashboard": "提供者仪表板",
+    "providerDashboard": "募捐者仪表板",
     "providerDescription": "管理您的服务和捐款",
     "manageServices": "管理服务",
     "createNewService": "创建新服务",
-    "becomeProvider": "成为提供者",
+    "becomeProvider": "成为募捐者",
     "providerOffer": "提供服务并支持慈善机构",
-    "enableProviderRole": "启用提供者角色",
-    "supporterDashboard": "支持者仪表板",
+    "enableProviderRole": "启用募捐者角色",
+    "supporterDashboard": "捐赠者仪表板",
     "supporterDescription": "跟踪您的捐款和影响",
     "myDonations": "我的捐款",
     "browseServices": "浏览服务",
-    "becomeSupporter": "成为支持者",
+    "becomeSupporter": "成为捐赠者",
     "supporterOffer": "支持服务和慈善机构",
-    "enableSupporterRole": "启用支持者角色",
+    "enableSupporterRole": "启用捐赠者角色",
     "services": {
       "title": "我的服务",
-      "subtitle": "管理您的服务提供并跟踪支持者参与",
+      "subtitle": "管理您的服务提供并跟踪捐赠者参与",
       "create_service": "创建新服务",
       "create_first_service": "创建您的第一个服务",
       "edit": "编辑",
@@ -82,7 +82,7 @@
       },
       "empty": {
         "title": "暂无服务",
-        "description": "创建您的第一个服务，开始与支持者联系并帮助慈善机构。"
+        "description": "创建您的第一个服务，开始与捐赠者联系并帮助慈善机构。"
       },
       "status": {
         "active": "活跃",
@@ -121,12 +121,12 @@
     "username": "用户名",
     "location": "位置",
     "roles": "角色",
-    "providerAndSupporter": "提供者和支持者",
-    "providerRole": "提供者",
-    "supporterRole": "支持者",
+    "providerAndSupporter": "募捐者和捐赠者",
+    "providerRole": "募捐者",
+    "supporterRole": "捐赠者",
     "noRoles": "无",
     "provider_section": {
-      "title": "作为提供者",
+      "title": "作为募捐者",
       "create_service": "创建服务",
       "update_service": "更新服务",
       "creating": "创建中...",
@@ -135,7 +135,7 @@
       "view_requests": "查看请求"
     },
     "supporter_section": {
-      "title": "作为支持者",
+      "title": "作为捐赠者",
       "browse_services": "浏览服务",
       "donation_history": "捐款历史"
     },
@@ -148,17 +148,17 @@
   "profile": {
     "setup": {
       "title": "设置您的个人资料",
-      "subtitle": "创建您的个人资料以开始使用捐赠驱动作为服务提供者、支持者或两者。",
+      "subtitle": "创建您的个人资料以开始使用捐赠驱动作为募捐者、捐赠者或两者。",
       "create_profile": "创建您的个人资料",
       "update_profile": "更新您的个人资料",
       "roles": {
         "title": "您的角色",
         "provider": {
-          "title": "服务提供者",
+          "title": "募捐者",
           "description": "提供服务并帮助慈善机构"
         },
         "supporter": {
-          "title": "支持者",
+          "title": "捐赠者",
           "description": "寻找服务并进行慈善捐款"
         }
       },
@@ -180,7 +180,7 @@
         "success_created": "个人资料创建成功！",
         "success_updated": "个人资料更新成功！",
         "error_name_required": "姓名是必需的",
-        "error_role_required": "您必须是提供者、支持者或两者",
+        "error_role_required": "您必须是募捐者、捐赠者或两者",
         "error_save_failed": "保存个人资料失败"
       }
     }
@@ -192,17 +192,17 @@
       "no_services": "未找到服务",
       "load_more": "加载更多",
       "allLocations": "所有地点",
-      "provider": "提供者",
+      "provider": "募捐者",
       "communityImpact": {
         "title": "社区影响",
         "activeServices": "活跃服务",
         "totalDonationPotential": "总捐赠潜力",
-        "activeProviders": "活跃提供者",
+        "activeProviders": "活跃募捐者",
         "donationsNote": "所有捐款通过JustGiving直接捐给注册慈善机构"
       },
       "callToAction": {
         "title": "想要提供您的服务吗？",
-        "description": "加入我们的提供者社区，在展示您的技能的同时帮助慈善机构。",
+        "description": "加入我们的募捐者社区，在展示您的技能的同时帮助慈善机构。",
         "button": "开始"
       }
     },
@@ -308,7 +308,7 @@
       "platform": {
         "title": "平台",
         "browse_services": "浏览服务",
-        "service_providers": "服务提供者",
+        "service_providers": "募捐者",
         "featured_charities": "特色慈善机构",
         "how_it_works": "工作原理"
       },
@@ -356,8 +356,8 @@
   "deleteProfile": {
     "title": "删除个人资料",
     "description": "这将永久删除您的个人资料和所有相关数据。此操作无法撤销。",
-    "providerWarning": "⚠️ 作为提供者，这也会删除您的所有服务和服务历史。",
-    "supporterWarning": "⚠️ 作为支持者，这将删除您的捐款历史和服务请求。",
+    "providerWarning": "⚠️ 作为募捐者，这也会删除您的所有服务和服务历史。",
+    "supporterWarning": "⚠️ 作为捐赠者，这将删除您的捐款历史和服务请求。",
     "deleteButton": "删除个人资料",
     "confirmTitle": "确认删除个人资料",
     "confirmDescription": "您确定要删除\"{name}\"的个人资料吗？此操作是永久性的，将会：",
