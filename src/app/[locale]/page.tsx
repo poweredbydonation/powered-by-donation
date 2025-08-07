@@ -21,49 +21,13 @@ export default async function HomePage({ params }: HomePageProps) {
       {/* Hero Section */}
       <div className="bg-gradient-to-br from-blue-50 to-indigo-100">
         <div className="max-w-4xl mx-auto px-6 py-16 text-center">
-          <h1 className="text-5xl font-bold text-gray-900 mb-6">
-            {t('title')}
-          </h1>
           
-          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-            {t('subtitle')}
-          </p>
-          
-          <div className="space-x-4">
-            <a 
-              href={`/${locale}/browse`}
-              className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors inline-block"
-            >
-              {t('hero.browse_services')}
-            </a>
-            
-            <a 
-              href={`/${locale}/dashboard`}
-              className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-50 border border-blue-600 transition-colors inline-block"
-            >
-              {tNav('dashboard')}
-            </a>
-          </div>
-        </div>
-      </div>
-
-      {/* How It Works Section */}
-      <div className="py-16 bg-white">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              {t('how_it_works.title')}
-            </h2>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-12">
+          <div className="grid md:grid-cols-2 gap-12 max-w-6xl mx-auto">
             {/* For Donors */}
-            <div>
-              <h3 className="text-2xl font-semibold text-gray-900 mb-8 text-center">
-                {t('how_it_works.for_donors.title')}
-              </h3>
+            <div className="text-center flex flex-col">
+              <h2 className="text-2xl font-semibold text-gray-800 mb-6">For Donors</h2>
               
-              <div className="space-y-6">
+              <div className="space-y-6 mb-8 text-left flex-grow">
                 <div className="flex items-start space-x-4">
                   <div className="bg-blue-100 p-2 rounded-full flex-shrink-0">
                     <Monitor className="h-6 w-6 text-blue-600" />
@@ -106,15 +70,20 @@ export default async function HomePage({ params }: HomePageProps) {
                   </div>
                 </div>
               </div>
-            </div>
 
+              <a 
+                href={`/${locale}/browse`}
+                className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors inline-block"
+              >
+                {t('hero.donate_get_service')}
+              </a>
+            </div>
+            
             {/* For Fundraisers */}
-            <div>
-              <h3 className="text-2xl font-semibold text-gray-900 mb-8 text-center">
-                {t('how_it_works.for_fundraisers.title')}
-              </h3>
+            <div className="text-center flex flex-col">
+              <h2 className="text-2xl font-semibold text-gray-800 mb-6">For Fundraisers</h2>
               
-              <div className="space-y-6">
+              <div className="space-y-6 mb-8 text-left flex-grow">
                 <div className="flex items-start space-x-4">
                   <div className="bg-orange-100 p-2 rounded-full flex-shrink-0">
                     <Monitor className="h-6 w-6 text-orange-600" />
@@ -157,10 +126,18 @@ export default async function HomePage({ params }: HomePageProps) {
                   </div>
                 </div>
               </div>
+
+              <a 
+                href={`/${locale}/dashboard/services/create`}
+                className="bg-green-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors inline-block"
+              >
+                {t('hero.offer_service_fundraise')}
+              </a>
             </div>
           </div>
         </div>
       </div>
+
 
       {/* Recent Activity Examples */}
       <div className="py-16 bg-gray-50">

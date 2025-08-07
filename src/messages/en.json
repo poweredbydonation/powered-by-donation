@@ -11,11 +11,13 @@
   },
   "home": {
     "title": "Powered by Donation",
-    "subtitle": "Service marketplace where donations to charities unlock professional services",
+    "subtitle": "",
     "hero": {
       "title": "Connect Services with Charitable Impact",
       "subtitle": "Browse professional services. Make donations to registered charities. Build community connections.",
       "browse_services": "Browse Services",
+      "donate_get_service": "Donate and Get Free Service",
+      "offer_service_fundraise": "Offer Free Service and Fundraise",
       "how_it_works": "How It Works"
     },
     "how_it_works": {
