@@ -22,7 +22,7 @@
       "title": "ਇਹ ਕਿਵੇਂ ਕੰਮ ਕਰਦਾ ਹੈ",
       "step1": {
         "title": "ਸੇਵਾਵਾਂ ਬ੍ਰਾਊਜ਼ ਕਰੋ",
-        "description": "ਕਮਿਉਨਿਟੀ ਪ੍ਰਦਾਤਾਵਾਂ ਦੁਆਰਾ ਪੇਸ਼ ਕੀਤੀਆਂ ਪੇਸ਼ੇਵਰ ਸੇਵਾਵਾਂ ਲੱਭੋ"
+        "description": "ਕਮਿਉਨਿਟੀ ਫੰਡਰੇਜਰਾਂ ਦੁਆਰਾ ਪੇਸ਼ ਕੀਤੀਆਂ ਪੇਸ਼ੇਵਰ ਸੇਵਾਵਾਂ ਲੱਭੋ"
       },
       "step2": {
         "title": "ਇੱਕ ਚੈਰਿਟੀ ਚੁਣੋ",
@@ -47,25 +47,70 @@
     "welcome": "ਮੁੜ ਸੁਆਗਤ",
     "profileReady": "ਤੁਹਾਡਾ ਪ੍ਰੋਫਾਈਲ ਸੈੱਟ ਅਪ ਹੈ ਅਤੇ ਜਾਣ ਲਈ ਤਿਆਰ ਹੈ।",
     "completeProfile": "ਸ਼ੁਰੂ ਕਰਨ ਲਈ ਆਪਣਾ ਪ੍ਰੋਫਾਈਲ ਪੂਰਾ ਕਰੋ।",
-    "serviceProvider": "ਸੇਵਾ ਪ੍ਰਦਾਤਾ",
-    "supporter": "ਸਮਰਥਕ",
+    "serviceProvider": "ਫੰਡਰੇਜਰ",
+    "supporter": "ਦਾਨੀ",
     "getStarted": "ਸ਼ੁਰੂ ਕਰੋ",
     "setupPrompt": "Powered by Donation ਵਰਤਣਾ ਸ਼ੁਰੂ ਕਰਨ ਲਈ ਆਪਣਾ ਪ੍ਰੋਫਾਈਲ ਸੈੱਟ ਅਪ ਕਰੋ:",
     "createProfile": "ਆਪਣਾ ਪ੍ਰੋਫਾਈਲ ਬਣਾਓ",
-    "providerDashboard": "ਪ੍ਰਦਾਤਾ ਡੈਸ਼ਬੋਰਡ",
+    "providerDashboard": "ਫੰਡਰੇਜਰ ਡੈਸ਼ਬੋਰਡ",
     "providerDescription": "ਆਪਣੀਆਂ ਸੇਵਾਵਾਂ ਅਤੇ ਦਾਨ ਦਾ ਪ੍ਰਬੰਧਨ ਕਰੋ",
     "manageServices": "ਸੇਵਾਵਾਂ ਦਾ ਪ੍ਰਬੰਧਨ ਕਰੋ",
     "createNewService": "ਨਵੀਂ ਸੇਵਾ ਬਣਾਓ",
-    "becomeProvider": "ਪ੍ਰਦਾਤਾ ਬਣੋ",
+    "becomeProvider": "ਫੰਡਰੇਜਰ ਬਣੋ",
     "providerOffer": "ਸੇਵਾਵਾਂ ਦੀ ਪੇਸ਼ਕਸ਼ ਕਰੋ ਅਤੇ ਚੈਰਿਟੀਆਂ ਦਾ ਸਮਰਥਨ ਕਰੋ",
-    "enableProviderRole": "ਪ੍ਰਦਾਤਾ ਰੋਲ ਚਾਲੂ ਕਰੋ",
-    "supporterDashboard": "ਸਮਰਥਕ ਡੈਸ਼ਬੋਰਡ",
+    "enableProviderRole": "ਫੰਡਰੇਜਰ ਰੋਲ ਚਾਲੂ ਕਰੋ",
+    "supporterDashboard": "ਦਾਨੀ ਡੈਸ਼ਬੋਰਡ",
     "supporterDescription": "ਆਪਣੇ ਦਾਨ ਅਤੇ ਪ੍ਰਭਾਵ ਨੂੰ ਟਰੈਕ ਕਰੋ",
     "myDonations": "ਮੇਰੇ ਦਾਨ",
     "browseServices": "ਸੇਵਾਵਾਂ ਬ੍ਰਾਊਜ਼ ਕਰੋ",
-    "becomeSupporter": "ਸਮਰਥਕ ਬਣੋ",
+    "becomeSupporter": "ਦਾਨੀ ਬਣੋ",
     "supporterOffer": "ਸੇਵਾਵਾਂ ਅਤੇ ਚੈਰਿਟੀਆਂ ਦਾ ਸਮਰਥਨ ਕਰੋ",
-    "enableSupporterRole": "ਸਮਰਥਕ ਰੋਲ ਚਾਲੂ ਕਰੋ",
+    "enableSupporterRole": "ਦਾਨੀ ਰੋਲ ਚਾਲੂ ਕਰੋ",
+    "services": {
+      "title": "ਮੇਰੀਆਂ ਸੇਵਾਵਾਂ",
+      "subtitle": "ਆਪਣੀਆਂ ਸੇਵਾ ਪੇਸ਼ਕਸ਼ਾਂ ਦਾ ਪ੍ਰਬੰਧਨ ਕਰੋ ਅਤੇ ਦਾਨੀ ਸ਼ਮੂਲੀਅਤ ਨੂੰ ਟਰੈਕ ਕਰੋ",
+      "create_service": "ਨਵੀਂ ਸੇਵਾ ਬਣਾਓ",
+      "create_first_service": "ਆਪਣੀ ਪਹਿਲੀ ਸੇਵਾ ਬਣਾਓ",
+      "edit": "ਸੰਪਾਦਿਤ ਕਰੋ",
+      "view": "ਦੇਖੋ",
+      "loading": {
+        "title": "ਸੇਵਾਵਾਂ ਲੋਡ ਹੋ ਰਹੀਆਂ ਹਨ..."
+      },
+      "errors": {
+        "title": "ਸੇਵਾਵਾਂ ਲੋਡ ਕਰਨ ਵਿੱਚ ਗਲਤੀ",
+        "load_failed": "ਤੁਹਾਡੀਆਂ ਸੇਵਾਵਾਂ ਲੋਡ ਕਰਨ ਵਿੱਚ ਅਸਫਲ। ਕਿਰਪਾ ਕਰਕੇ ਬਾਅਦ ਵਿੱਚ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।"
+      },
+      "empty": {
+        "title": "ਅਜੇ ਕੋਈ ਸੇਵਾ ਨਹੀਂ",
+        "description": "ਦਾਨੀਆਂ ਨਾਲ ਜੁੜਨਾ ਅਤੇ ਚੈਰਿਟੀਆਂ ਦੀ ਮਦਦ ਕਰਨਾ ਸ਼ੁਰੂ ਕਰਨ ਲਈ ਆਪਣੀ ਪਹਿਲੀ ਸੇਵਾ ਬਣਾਓ।"
+      },
+      "status": {
+        "active": "ਸਰਗਰਮ",
+        "inactive": "ਨਿਸ਼ਕਿਰਿਆ",
+        "upcoming": "ਆਉਣ ਵਾਲੀ",
+        "expired": "ਮਿਆਦ ਖਤਮ",
+        "full": "ਭਰੀ ਹੋਈ"
+      },
+      "fields": {
+        "donation": "ਦਾਨ",
+        "location": "ਸਥਾਨ",
+        "charity": "ਚੈਰਿਟੀ",
+        "capacity": "ਸਮਰੱਥਾ"
+      },
+      "location": {
+        "remote": "ਰਿਮੋਟ",
+        "hybrid": "ਹਾਈਬ੍ਰਿਡ",
+        "physical": "ਸਰੀਰਕ",
+        "tbd": "ਸਥਾਨ ਤੈਅ ਕਰਨਾ ਬਾਕੀ"
+      },
+      "charity": {
+        "any_charity": "ਕੋਈ ਵੀ ਚੈਰਿਟੀ",
+        "specific_charities": "ਖਾਸ ਚੈਰਿਟੀਆਂ"
+      },
+      "availability": {
+        "starts": "ਸ਼ੁਰੂ ਹੁੰਦੀ ਹੈ"
+      }
+    },
     "accountSettings": "ਖਾਤਾ ਸੈਟਿੰਗਾਂ",
     "accountDescription": "ਆਪਣੀਆਂ ਖਾਤਾ ਤਰਜੀਹਾਂ ਦਾ ਪ੍ਰਬੰਧਨ ਕਰੋ",
     "editProfile": "ਪ੍ਰੋਫਾਈਲ ਸੰਪਾਦਿਤ ਕਰੋ",
@@ -76,12 +121,12 @@
     "username": "ਯੂਜ਼ਰਨੇਮ",
     "location": "ਸਥਾਨ",
     "roles": "ਰੋਲ",
-    "providerAndSupporter": "ਪ੍ਰਦਾਤਾ ਅਤੇ ਸਮਰਥਕ",
-    "providerRole": "ਪ੍ਰਦਾਤਾ",
-    "supporterRole": "ਸਮਰਥਕ",
+    "providerAndSupporter": "ਫੰਡਰੇਜਰ ਅਤੇ ਦਾਨੀ",
+    "providerRole": "ਫੰਡਰੇਜਰ",
+    "supporterRole": "ਦਾਨੀ",
     "noRoles": "ਕੋਈ ਨਹੀਂ",
     "provider_section": {
-      "title": "ਪ੍ਰਦਾਤਾ ਵਜੋਂ",
+      "title": "ਫੰਡਰੇਜਰ ਵਜੋਂ",
       "create_service": "ਸੇਵਾ ਬਣਾਓ",
       "update_service": "ਸੇਵਾ ਅਪਡੇਟ ਕਰੋ",
       "creating": "ਬਣਾ ਰਹੇ ਹਾਂ...",
@@ -90,7 +135,7 @@
       "view_requests": "ਬੇਨਤੀਆਂ ਦੇਖੋ"
     },
     "supporter_section": {
-      "title": "ਸਮਰਥਕ ਵਜੋਂ",
+      "title": "ਦਾਨੀ ਵਜੋਂ",
       "browse_services": "ਸੇਵਾਵਾਂ ਬ੍ਰਾਊਜ਼ ਕਰੋ",
       "donation_history": "ਦਾਨ ਇਤਿਹਾਸ"
     },
@@ -103,17 +148,17 @@
   "profile": {
     "setup": {
       "title": "ਆਪਣਾ ਪ੍ਰੋਫਾਈਲ ਸੈੱਟ ਅਪ ਕਰੋ",
-      "subtitle": "ਸੇਵਾ ਪ੍ਰਦਾਤਾ, ਸਮਰਥਕ, ਜਾਂ ਦੋਵੇਂ ਵਜੋਂ Powered by Donation ਵਰਤਣਾ ਸ਼ੁਰੂ ਕਰਨ ਲਈ ਆਪਣਾ ਪ੍ਰੋਫਾਈਲ ਬਣਾਓ।",
+      "subtitle": "ਸੇਵਾ ਫੰਡਰੇਜਰ, ਦਾਨੀ, ਜਾਂ ਦੋਵੇਂ ਵਜੋਂ Powered by Donation ਵਰਤਣਾ ਸ਼ੁਰੂ ਕਰਨ ਲਈ ਆਪਣਾ ਪ੍ਰੋਫਾਈਲ ਬਣਾਓ।",
       "create_profile": "ਆਪਣਾ ਪ੍ਰੋਫਾਈਲ ਬਣਾਓ",
       "update_profile": "ਆਪਣਾ ਪ੍ਰੋਫਾਈਲ ਅਪਡੇਟ ਕਰੋ",
       "roles": {
         "title": "ਤੁਹਾਡਾ ਰੋਲ",
         "provider": {
-          "title": "ਸੇਵਾ ਪ੍ਰਦਾਤਾ",
+          "title": "ਸੇਵਾ ਫੰਡਰੇਜਰ",
           "description": "ਸੇਵਾਵਾਂ ਦੀ ਪੇਸ਼ਕਸ਼ ਕਰੋ ਅਤੇ ਚੈਰਿਟੀਆਂ ਦੀ ਮਦਦ ਕਰੋ"
         },
         "supporter": {
-          "title": "ਸਮਰਥਕ",
+          "title": "ਦਾਨੀ",
           "description": "ਸੇਵਾਵਾਂ ਲੱਭੋ ਅਤੇ ਚੈਰਿਟੇਬਲ ਦਾਨ ਕਰੋ"
         }
       },
@@ -135,7 +180,7 @@
         "success_created": "ਪ੍ਰੋਫਾਈਲ ਸਫਲਤਾਪੂਰਵਕ ਬਣਾਇਆ ਗਿਆ!",
         "success_updated": "ਪ੍ਰੋਫਾਈਲ ਸਫਲਤਾਪੂਰਵਕ ਅਪਡੇਟ ਕੀਤਾ ਗਿਆ!",
         "error_name_required": "ਨਾਮ ਲਾਜ਼ਮੀ ਹੈ",
-        "error_role_required": "ਤੁਹਾਨੂੰ ਪ੍ਰਦਾਤਾ, ਸਮਰਥਕ, ਜਾਂ ਦੋਵੇਂ ਹੋਣਾ ਚਾਹੀਦਾ ਹੈ",
+        "error_role_required": "ਤੁਹਾਨੂੰ ਫੰਡਰੇਜਰ, ਦਾਨੀ, ਜਾਂ ਦੋਵੇਂ ਹੋਣਾ ਚਾਹੀਦਾ ਹੈ",
         "error_save_failed": "ਪ੍ਰੋਫਾਈਲ ਸੇਵ ਕਰਨ ਵਿੱਚ ਅਸਫਲ"
       }
     }
@@ -147,17 +192,17 @@
       "no_services": "ਕੋਈ ਸੇਵਾ ਨਹੀਂ ਮਿਲੀ",
       "load_more": "ਹੋਰ ਲੋਡ ਕਰੋ",
       "allLocations": "ਸਾਰੇ ਸਥਾਨ",
-      "provider": "ਪ੍ਰਦਾਤਾ",
+      "provider": "ਫੰਡਰੇਜਰ",
       "communityImpact": {
         "title": "ਕਮਿਉਨਿਟੀ ਪ੍ਰਭਾਵ",
         "activeServices": "ਸਰਗਰਮ ਸੇਵਾਵਾਂ",
         "totalDonationPotential": "ਕੁੱਲ ਦਾਨ ਸੰਭਾਵਨਾ",
-        "activeProviders": "ਸਰਗਰਮ ਪ੍ਰਦਾਤਾ",
+        "activeProviders": "ਸਰਗਰਮ ਫੰਡਰੇਜਰ",
         "donationsNote": "ਸਾਰੇ ਦਾਨ JustGiving ਰਾਹੀਂ ਸਿੱਧੇ ਰਜਿਸਟਰਡ ਚੈਰਿਟੀਆਂ ਨੂੰ ਜਾਂਦੇ ਹਨ"
       },
       "callToAction": {
         "title": "ਆਪਣੀਆਂ ਸੇਵਾਵਾਂ ਦੀ ਪੇਸ਼ਕਸ਼ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ?",
-        "description": "ਸਾਡੇ ਪ੍ਰਦਾਤਾਵਾਂ ਦੇ ਭਾਈਚਾਰੇ ਵਿੱਚ ਸ਼ਾਮਲ ਹੋਵੋ ਅਤੇ ਆਪਣੇ ਹੁਨਰ ਦਿਖਾਉਂਦੇ ਹੋਏ ਚੈਰਿਟੀਆਂ ਦੀ ਮਦਦ ਕਰੋ।",
+        "description": "ਸਾਡੇ ਫੰਡਰੇਜਰਾਂ ਦੇ ਭਾਈਚਾਰੇ ਵਿੱਚ ਸ਼ਾਮਲ ਹੋਵੋ ਅਤੇ ਆਪਣੇ ਹੁਨਰ ਦਿਖਾਉਂਦੇ ਹੋਏ ਚੈਰਿਟੀਆਂ ਦੀ ਮਦਦ ਕਰੋ।",
         "button": "ਸ਼ੁਰੂ ਕਰੋ"
       }
     },
@@ -263,7 +308,7 @@
       "platform": {
         "title": "ਪਲੇਟਫਾਰਮ",
         "browse_services": "ਸੇਵਾਵਾਂ ਬ੍ਰਾਊਜ਼ ਕਰੋ",
-        "service_providers": "ਸੇਵਾ ਪ੍ਰਦਾਤਾ",
+        "service_providers": "ਸੇਵਾ ਫੰਡਰੇਜਰ",
         "featured_charities": "ਫੀਚਰਡ ਚੈਰਿਟੀਜ਼",
         "how_it_works": "ਇਹ ਕਿਵੇਂ ਕੰਮ ਕਰਦਾ ਹੈ"
       },
@@ -311,8 +356,8 @@
   "deleteProfile": {
     "title": "ਪ੍ਰੋਫਾਈਲ ਮਿਟਾਓ",
     "description": "ਇਸ ਨਾਲ ਤੁਹਾਡਾ ਪ੍ਰੋਫਾਈਲ ਅਤੇ ਸਾਰਾ ਸੰਬੰਧਿਤ ਡੇਟਾ ਸਥਾਈ ਤੌਰ 'ਤੇ ਮਿਟ ਜਾਵੇਗਾ। ਇਸ ਕਿਰਿਆ ਨੂੰ ਵਾਪਸ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਦਾ।",
-    "providerWarning": "⚠️ ਪ੍ਰਦਾਤਾ ਵਜੋਂ, ਇਸ ਨਾਲ ਤੁਹਾਡੀਆਂ ਸਾਰੀਆਂ ਸੇਵਾਵਾਂ ਅਤੇ ਸੇਵਾ ਇਤਿਹਾਸ ਵੀ ਮਿਟ ਜਾਵੇਗਾ।",
-    "supporterWarning": "⚠️ ਸਮਰਥਕ ਵਜੋਂ, ਇਸ ਨਾਲ ਤੁਹਾਡਾ ਦਾਨ ਇਤਿਹਾਸ ਅਤੇ ਸੇਵਾ ਬੇਨਤੀਆਂ ਮਿਟ ਜਾਣਗੀਆਂ।",
+    "providerWarning": "⚠️ ਫੰਡਰੇਜਰ ਵਜੋਂ, ਇਸ ਨਾਲ ਤੁਹਾਡੀਆਂ ਸਾਰੀਆਂ ਸੇਵਾਵਾਂ ਅਤੇ ਸੇਵਾ ਇਤਿਹਾਸ ਵੀ ਮਿਟ ਜਾਵੇਗਾ।",
+    "supporterWarning": "⚠️ ਦਾਨੀ ਵਜੋਂ, ਇਸ ਨਾਲ ਤੁਹਾਡਾ ਦਾਨ ਇਤਿਹਾਸ ਅਤੇ ਸੇਵਾ ਬੇਨਤੀਆਂ ਮਿਟ ਜਾਣਗੀਆਂ।",
     "deleteButton": "ਪ੍ਰੋਫਾਈਲ ਮਿਟਾਓ",
     "confirmTitle": "ਪ੍ਰੋਫਾਈਲ ਮਿਟਾਉਣ ਦੀ ਪੁਸ਼ਟੀ ਕਰੋ",
     "confirmDescription": "ਕੀ ਤੁਸੀਂ ਯਕੀਨੀ ਤੌਰ 'ਤੇ \"{name}\" ਲਈ ਆਪਣਾ ਪ੍ਰੋਫਾਈਲ ਮਿਟਾਉਣਾ ਚਾਹੁੰਦੇ ਹੋ? ਇਹ ਕਿਰਿਆ ਸਥਾਈ ਹੈ ਅਤੇ ਇਸ ਨਾਲ:",

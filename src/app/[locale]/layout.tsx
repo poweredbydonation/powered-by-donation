@@ -17,7 +17,7 @@ export default async function LocaleLayout({
 
   return (
     <AuthProvider>
-      <NextIntlClientProvider messages={messages}>
+      <NextIntlClientProvider messages={messages} locale={locale}>
         <div className="min-h-screen flex flex-col">
           <div className="flex-grow">
             {children}

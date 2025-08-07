@@ -22,7 +22,7 @@
       "title": "仕組み",
       "step1": {
         "title": "サービスを探す",
-        "description": "コミュニティプロバイダーが提供するプロフェッショナルサービスを見つける"
+        "description": "コミュニティ資金調達者が提供するプロフェッショナルサービスを見つける"
       },
       "step2": {
         "title": "チャリティーを選ぶ",
@@ -47,25 +47,70 @@
     "welcome": "おかえりなさい",
     "profileReady": "プロフィールが設定され、準備完了です。",
     "completeProfile": "開始するためにプロフィールを完成させてください。",
-    "serviceProvider": "サービスプロバイダー",
-    "supporter": "サポーター",
+    "fundraiser": "資金調達者",
+    "donor": "寄付者",
     "getStarted": "開始する",
     "setupPrompt": "Powered by Donationの使用を開始するためにプロフィールを設定してください：",
     "createProfile": "プロフィールを作成",
-    "providerDashboard": "プロバイダーダッシュボード",
-    "providerDescription": "サービスと寄付を管理",
+    "fundraiserDashboard": "資金調達者ダッシュボード",
+    "fundraiserDescription": "サービスと寄付を管理",
     "manageServices": "サービスを管理",
     "createNewService": "新しいサービスを作成",
-    "becomeProvider": "プロバイダーになる",
-    "providerOffer": "サービスを提供してチャリティーをサポート",
-    "enableProviderRole": "プロバイダーロールを有効にする",
-    "supporterDashboard": "サポーターダッシュボード",
-    "supporterDescription": "寄付とインパクトを追跡",
+    "becomeFundraiser": "資金調達者になる",
+    "fundraiserOffer": "サービスを提供してチャリティーをサポート",
+    "enableFundraiserRole": "資金調達者ロールを有効にする",
+    "donorDashboard": "寄付者ダッシュボード",
+    "donorDescription": "寄付とインパクトを追跡",
     "myDonations": "私の寄付",
     "browseServices": "サービスを探す",
-    "becomeSupporter": "サポーターになる",
-    "supporterOffer": "サービスとチャリティーをサポート",
-    "enableSupporterRole": "サポーターロールを有効にする",
+    "becomeDonor": "寄付者になる",
+    "donorOffer": "サービスとチャリティーをサポート",
+    "enableDonorRole": "寄付者ロールを有効にする",
+    "services": {
+      "title": "マイサービス",
+      "subtitle": "サービス提供を管理し、寄付者の参加を追跡",
+      "create_service": "新しいサービスを作成",
+      "create_first_service": "最初のサービスを作成",
+      "edit": "編集",
+      "view": "表示",
+      "loading": {
+        "title": "サービス読み込み中..."
+      },
+      "errors": {
+        "title": "サービス読み込みエラー",
+        "load_failed": "サービスの読み込みに失敗しました。後でもう一度お試しください。"
+      },
+      "empty": {
+        "title": "まだサービスがありません",
+        "description": "寄付者とのつながりを始め、チャリティーを支援するために最初のサービスを作成しましょう。"
+      },
+      "status": {
+        "active": "アクティブ",
+        "inactive": "非アクティブ",
+        "upcoming": "開始予定",
+        "expired": "期限切れ",
+        "full": "満員"
+      },
+      "fields": {
+        "donation": "寄付",
+        "location": "場所",
+        "charity": "チャリティー",
+        "capacity": "定員"
+      },
+      "location": {
+        "remote": "リモート",
+        "hybrid": "ハイブリッド",
+        "physical": "対面",
+        "tbd": "場所未定"
+      },
+      "charity": {
+        "any_charity": "任意のチャリティー",
+        "specific_charities": "特定のチャリティー"
+      },
+      "availability": {
+        "starts": "開始"
+      }
+    },
     "accountSettings": "アカウント設定",
     "accountDescription": "アカウントの設定を管理",
     "editProfile": "プロフィール編集",
@@ -76,12 +121,12 @@
     "username": "ユーザー名",
     "location": "場所",
     "roles": "ロール",
-    "providerAndSupporter": "プロバイダー＆サポーター",
-    "providerRole": "プロバイダー",
-    "supporterRole": "サポーター",
+    "fundraiserAndDonor": "資金調達者＆寄付者",
+    "fundraiserRole": "資金調達者",
+    "donorRole": "寄付者",
     "noRoles": "なし",
-    "provider_section": {
-      "title": "プロバイダーとして",
+    "fundraiser_section": {
+      "title": "資金調達者として",
       "create_service": "サービスを作成",
       "update_service": "サービスを更新",
       "creating": "作成中...",
@@ -89,8 +134,8 @@
       "manage_services": "サービスを管理",
       "view_requests": "リクエストを表示"
     },
-    "supporter_section": {
-      "title": "サポーターとして",
+    "donor_section": {
+      "title": "寄付者として",
       "browse_services": "サービスを探す",
       "donation_history": "寄付履歴"
     },
@@ -103,17 +148,17 @@
   "profile": {
     "setup": {
       "title": "プロフィールを設定",
-      "subtitle": "サービスプロバイダー、サポーター、またはその両方としてPowered by Donationの使用を開始するためにプロフィールを作成してください。",
+      "subtitle": "資金調達者、寄付者、またはその両方としてPowered by Donationの使用を開始するためにプロフィールを作成してください。",
       "create_profile": "プロフィールを作成",
       "update_profile": "プロフィールを更新",
       "roles": {
         "title": "あなたのロール",
-        "provider": {
-          "title": "サービスプロバイダー",
+        "fundraiser": {
+          "title": "資金調達者",
           "description": "サービスを提供してチャリティーを支援"
         },
-        "supporter": {
-          "title": "サポーター",
+        "donor": {
+          "title": "寄付者",
           "description": "サービスを見つけてチャリティー寄付を行う"
         }
       },
@@ -135,7 +180,7 @@
         "success_created": "プロフィールが正常に作成されました！",
         "success_updated": "プロフィールが正常に更新されました！",
         "error_name_required": "名前は必須です",
-        "error_role_required": "プロバイダー、サポーター、またはその両方である必要があります",
+        "error_role_required": "資金調達者、寄付者、またはその両方である必要があります",
         "error_save_failed": "プロフィールの保存に失敗しました"
       }
     }
@@ -147,17 +192,17 @@
       "no_services": "サービスが見つかりません",
       "load_more": "さらに読み込む",
       "allLocations": "すべての場所",
-      "provider": "プロバイダー",
+      "fundraiser": "資金調達者",
       "communityImpact": {
         "title": "コミュニティインパクト",
         "activeServices": "アクティブサービス",
         "totalDonationPotential": "総寄付ポテンシャル",
-        "activeProviders": "アクティブプロバイダー",
+        "activeFundraisers": "アクティブ資金調達者",
         "donationsNote": "すべての寄付はJustGiving経由で登録チャリティーに直接送られます"
       },
       "callToAction": {
         "title": "サービスを提供したいですか？",
-        "description": "プロバイダーコミュニティに参加して、スキルを披露しながらチャリティーを支援しましょう。",
+        "description": "資金調達者コミュニティに参加して、スキルを披露しながらチャリティーを支援しましょう。",
         "button": "開始する"
       }
     },
@@ -263,7 +308,7 @@
       "platform": {
         "title": "プラットフォーム",
         "browse_services": "サービスを探す",
-        "service_providers": "サービスプロバイダー",
+        "fundraisers": "資金調達者",
         "featured_charities": "注目のチャリティー",
         "how_it_works": "仕組み"
       },
@@ -311,8 +356,8 @@
   "deleteProfile": {
     "title": "プロフィールを削除",
     "description": "これによりプロフィールと関連するすべてのデータが永久に削除されます。この操作は元に戻せません。",
-    "providerWarning": "⚠️ プロバイダーとして、すべてのサービスとサービス履歴も削除されます。",
-    "supporterWarning": "⚠️ サポーターとして、寄付履歴とサービスリクエストが削除されます。",
+    "fundraiserWarning": "⚠️ 資金調達者として、すべてのサービスとサービス履歴も削除されます。",
+    "donorWarning": "⚠️ 寄付者として、寄付履歴とサービスリクエストが削除されます。",
     "deleteButton": "プロフィールを削除",
     "confirmTitle": "プロフィール削除を確認",
     "confirmDescription": "\"{name}\"のプロフィールを削除してもよろしいですか？この操作は永続的で:",

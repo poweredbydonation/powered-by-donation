@@ -15,7 +15,7 @@ interface CategoryPageProps {
   }
 }
 
-type ServiceWithProvider = Service & {
+type ServiceWithFundraiser = Service & {
   user: {
     name: string
     bio?: string
@@ -54,7 +54,7 @@ function formatCategorySlug(category: string): string {
   return category.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
 }
 
-async function getServicesByCategory(category: string): Promise<ServiceWithProvider[]> {
+async function getServicesByCategory(category: string): Promise<ServiceWithFundraiser[]> {
   const supabase = createClient()
   const formattedCategory = formatCategoryName(category)
 
@@ -103,10 +103,10 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
 
   return {
     title: `${categoryName} Services | Powered by Donation`,
-    description: `Discover ${services.length} ${categoryName.toLowerCase()} services where providers offer their skills in exchange for charitable donations. Total donation potential: ${formattedAmount}`,
+    description: `Discover ${services.length} ${categoryName.toLowerCase()} services where fundraisers offer their skills in exchange for charitable donations. Total donation potential: ${formattedAmount}`,
     openGraph: {
       title: `${categoryName} Services - ${services.length} Available`,
-      description: `Support ${categoryName.toLowerCase()} providers while helping charities. ${services.length} services available with ${formattedAmount} donation potential.`,
+      description: `Support ${categoryName.toLowerCase()} fundraisers while helping charities. ${services.length} services available with ${formattedAmount} donation potential.`,
       type: 'website',
     },
     keywords: `${categoryName.toLowerCase()}, charity, donations, services, JustGiving, ${categoryName.toLowerCase()} help, volunteer services`
@@ -127,7 +127,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
 
   // Calculate category statistics
   const totalDonationPotential = services.reduce((sum, service) => sum + service.donation_amount, 0)
-  const activeProviders = new Set(services.map(s => s.user_id)).size
+  const activeFundraisers = new Set(services.map(s => s.user_id)).size
   const averageDonation = services.length > 0 ? Math.round(totalDonationPotential / services.length) : 0
 
   const formatCurrency = (amount: number) => {
@@ -162,7 +162,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
                   </h1>
                   
                   <p className="text-lg text-gray-600 leading-relaxed">
-                    Discover {categoryName.toLowerCase()} services where skilled providers offer their expertise 
+                    Discover {categoryName.toLowerCase()} services where skilled fundraisers offer their expertise 
                     in exchange for charitable donations. Support causes you care about while getting professional help.
                   </p>
                 </div>
@@ -185,8 +185,8 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
                         <div className="text-sm text-gray-600">Total Donation Potential</div>
                       </div>
                       <div>
-                        <div className="text-2xl font-bold text-purple-600">{activeProviders}</div>
-                        <div className="text-sm text-gray-600">Active Providers</div>
+                        <div className="text-2xl font-bold text-purple-600">{activeFundraisers}</div>
+                        <div className="text-sm text-gray-600">Active Fundraisers</div>
                       </div>
                       {averageDonation > 0 && (
                         <div>
@@ -246,7 +246,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
                 </h3>
                 <p className="text-gray-500 mb-6 max-w-md mx-auto">
                   We don't have any {categoryName.toLowerCase()} services available right now, 
-                  but new providers join regularly. Check back soon or browse other categories!
+                  but new fundraisers join regularly. Check back soon or browse other categories!
                 </p>
                 <Link
                   href="/browse"

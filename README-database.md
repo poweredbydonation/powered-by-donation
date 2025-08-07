@@ -2,13 +2,13 @@
 
 ## Overview
 
-The platform uses a unified user system with Supabase PostgreSQL database, supporting both provider and supporter roles through a single `users` table. This design simplifies authentication, reduces complexity, and enables seamless role switching.
+The platform uses a unified user system with Supabase PostgreSQL database, supporting both fundraiser and donor roles through a single `users` table. This design simplifies authentication, reduces complexity, and enables seamless role switching.
 
 ## Core Entity Tables
 
 ### Users Table (Unified System)
 ```sql
--- Unified users table replacing providers and supporters
+-- Unified users table replacing fundraisers and donors
 CREATE TABLE users (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   auth_id UUID UNIQUE REFERENCES auth.users(id) ON DELETE CASCADE,
@@ -21,8 +21,8 @@ CREATE TABLE users (
   contact_info JSONB DEFAULT '{}'::jsonb,
   
   -- Profile type flags
-  is_provider BOOLEAN DEFAULT false,
-  is_supporter BOOLEAN DEFAULT false,
+  is_fundraiser BOOLEAN DEFAULT false,
+  is_donor BOOLEAN DEFAULT false,
   
   -- Privacy controls
   show_bio BOOLEAN DEFAULT true,
@@ -45,7 +45,7 @@ CREATE TABLE users (
 -- Services with availability, capacity, and charity requirements
 CREATE TABLE services (
   id UUID PRIMARY KEY,
-  provider_id UUID REFERENCES users(id),
+  fundraiser_id UUID REFERENCES users(id),
   title TEXT NOT NULL,
   description TEXT,
   
@@ -59,8 +59,8 @@ CREATE TABLE services (
   -- Availability and capacity
   available_from DATE NOT NULL,           -- Service available from this date
   available_until DATE,                   -- Optional end date (NULL = ongoing)
-  max_supporters INTEGER,                 -- Optional capacity limit (NULL = unlimited)
-  current_supporters INTEGER DEFAULT 0,   -- Track current bookings
+  max_donors INTEGER,                     -- Optional capacity limit (NULL = unlimited)
+  current_donors INTEGER DEFAULT 0,       -- Track current bookings
   
   -- Location options
   service_locations JSONB NOT NULL,       -- Array of location options
@@ -70,7 +70,7 @@ CREATE TABLE services (
   is_active BOOLEAN DEFAULT true,
   
   -- Quality metrics
-  happiness_rate INTEGER DEFAULT 0,       -- % supporter satisfaction for this service
+  happiness_rate INTEGER DEFAULT 0,       -- % donor satisfaction for this service
   
   created_at TIMESTAMP DEFAULT NOW()
 );
@@ -81,8 +81,8 @@ CREATE TABLE services (
 -- Service request tracking with satisfaction feedback
 CREATE TABLE service_requests (
   id UUID PRIMARY KEY,
-  supporter_id UUID REFERENCES users(id),
-  provider_id UUID REFERENCES users(id),
+  donor_id UUID REFERENCES users(id),
+  fundraiser_id UUID REFERENCES users(id),
   service_id UUID REFERENCES services(id),
   justgiving_charity_id TEXT NOT NULL,
   donation_amount DECIMAL NOT NULL,       -- Fixed amount from service
@@ -90,19 +90,19 @@ CREATE TABLE service_requests (
   
   -- Status and feedback tracking
   status service_status DEFAULT 'pending',
-  supporter_satisfaction TEXT,            -- 'happy', 'unhappy', 'timeout'
-  provider_feedback_response TEXT,        -- 'will_improve', 'disagree', 'timeout'
+  donor_satisfaction TEXT,                -- 'happy', 'unhappy', 'timeout'
+  fundraiser_feedback_response TEXT,      -- 'will_improve', 'disagree', 'timeout'
   
   -- Mutual feedback system
-  provider_rates_supporter TEXT,          -- 'happy', 'unhappy', null
-  supporter_rates_provider TEXT,          -- 'happy', 'unhappy', null  
-  supporter_rates_service TEXT,           -- 'happy', 'unhappy', null
+  fundraiser_rates_donor TEXT,            -- 'happy', 'unhappy', null
+  donor_rates_fundraiser TEXT,            -- 'happy', 'unhappy', null  
+  donor_rates_service TEXT,               -- 'happy', 'unhappy', null
   
   -- Timing for follow-ups
   satisfaction_check_sent_at TIMESTAMP,
-  supporter_responded_at TIMESTAMP,
-  provider_feedback_sent_at TIMESTAMP,
-  provider_responded_at TIMESTAMP,
+  donor_responded_at TIMESTAMP,
+  fundraiser_feedback_sent_at TIMESTAMP,
+  fundraiser_responded_at TIMESTAMP,
   
   created_at TIMESTAMP DEFAULT NOW()
 );
@@ -151,12 +151,12 @@ CREATE TYPE charity_requirement_enum AS ENUM (
 ### Service Status Flow
 ```sql
 CREATE TYPE service_status AS ENUM (
-  'pending',                    -- Donation made, provider notified
-  'success',                    -- Supporter happy or timeout (positive outcome)
-  'provider_review',            -- Supporter unhappy, waiting for provider response
-  'acknowledged_feedback',      -- Provider accepts feedback
-  'disputed_feedback',          -- Provider disputes feedback
-  'unresponsive_to_feedback'    -- Provider ignored feedback
+  'pending',                    -- Donation made, fundraiser notified
+  'success',                    -- Donor happy or timeout (positive outcome)
+  'fundraiser_review',          -- Donor unhappy, waiting for fundraiser response
+  'acknowledged_feedback',      -- Fundraiser accepts feedback
+  'disputed_feedback',          -- Fundraiser disputes feedback
+  'unresponsive_to_feedback'    -- Fundraiser ignored feedback
 );
 ```
 
@@ -199,7 +199,7 @@ interface ServiceCategories {
 ## Service Quality Assurance System
 
 ### Core Philosophy
-- **Balanced feedback** - Both providers and supporters rate each other's experience
+- **Balanced feedback** - Both fundraisers and donors rate each other's experience
 - **Happiness-based metrics** - Simple happy/unhappy ratings for all interactions
 - **Quality control** - Happiness metrics enable filtering and service access requirements
 - **Donor-centric approach** - Maintains charitable giving focus while ensuring quality experiences
@@ -207,46 +207,46 @@ interface ServiceCategories {
 
 ### Mutual Feedback System
 Both parties provide feedback after each service interaction:
-- **Provider rates supporter**: "How was your experience with this supporter?"
-- **Supporter rates provider**: "How was your experience with this provider?"
-- **Supporter rates service**: "How was your experience with this service?"
+- **Fundraiser rates donor**: "How was your experience with this donor?"
+- **Donor rates fundraiser**: "How was your experience with this fundraiser?"
+- **Donor rates service**: "How was your experience with this service?"
 
 ### Happiness Metrics Calculated
 
-#### Provider Metrics:
-- **Received Happiness**: Percentage of supporters who rated them 'happy'
-- **Sent Happiness**: Percentage of supporters this provider rated 'happy'
+#### Fundraiser Metrics:
+- **Received Happiness**: Percentage of donors who rated them 'happy'
+- **Sent Happiness**: Percentage of donors this fundraiser rated 'happy'
 
-#### Supporter Metrics:
-- **Received Happiness**: Percentage of providers who rated them 'happy'
+#### Donor Metrics:
+- **Received Happiness**: Percentage of fundraisers who rated them 'happy'
 - **Sent Happiness**: Percentage of experiences they rated 'happy'
 
 #### Service Metrics:
-- **Happiness Rate**: Percentage of supporters who rated the service 'happy'
+- **Happiness Rate**: Percentage of donors who rated the service 'happy'
 
 ### Quality-Based Filtering & Access Control
 
 #### Browse Filtering:
 - Filter services by minimum happiness rate (e.g., show only 90%+ rated services)
-- Filter providers by minimum supporter satisfaction
-- Filter by provider selectivity (how happy they are with supporters)
+- Filter fundraisers by minimum donor satisfaction
+- Filter by fundraiser selectivity (how happy they are with donors)
 
 #### Service Access Requirements:
-Providers can set supporter requirements for their services:
-- Minimum supporter reputation (e.g., 85%+ provider satisfaction required)
+Fundraisers can set donor requirements for their services:
+- Minimum donor reputation (e.g., 85%+ fundraiser satisfaction required)
 - Minimum platform experience (e.g., 5+ completed services required)
 - Combines with existing charity and capacity requirements
 
 ### Service Status Flow
 
-| Supporter Response | Provider Response | Final Status | Notes |
+| Donor Response | Fundraiser Response | Final Status | Notes |
 |-------------------|-------------------|--------------|-------|
-| 😊 **Happy** | *Not Required* | **SUCCESS** | Positive provider experience |
+| 😊 **Happy** | *Not Required* | **SUCCESS** | Positive fundraiser experience |
 | ⏰ **Timeout** | *Not Required* | **SUCCESS** | No complaints = assume satisfied |
-| 😞 **Unhappy** | *Pending* | **PROVIDER_REVIEW** | Provider experience issue |
-| 😞 **Unhappy** | ✅ **Will Improve** | **ACKNOWLEDGED_FEEDBACK** | Provider accepts feedback |
-| 😞 **Unhappy** | ❌ **Disagree** | **DISPUTED_FEEDBACK** | Provider disputes feedback |
-| 😞 **Unhappy** | ⏰ **Timeout** | **UNRESPONSIVE_TO_FEEDBACK** | Provider ignored feedback |
+| 😞 **Unhappy** | *Pending* | **FUNDRAISER_REVIEW** | Fundraiser experience issue |
+| 😞 **Unhappy** | ✅ **Will Improve** | **ACKNOWLEDGED_FEEDBACK** | Fundraiser accepts feedback |
+| 😞 **Unhappy** | ❌ **Disagree** | **DISPUTED_FEEDBACK** | Fundraiser disputes feedback |
+| 😞 **Unhappy** | ⏰ **Timeout** | **UNRESPONSIVE_TO_FEEDBACK** | Fundraiser ignored feedback |
 
 ## Service Creation & Management
 
@@ -267,15 +267,15 @@ interface ServiceCreation {
   // Availability
   available_from: Date                 // Required start date
   available_until?: Date              // Optional end date
-  max_supporters?: number             // Optional capacity limit
+  max_donors?: number                 // Optional capacity limit
   
   // Location options
   service_locations: ServiceLocation[] // At least one location required
   
-  // Supporter happiness requirements (optional)
-  supporter_happiness_requirements?: {
-    min_received_happiness?: number     // Supporter must be X% liked by providers
-    min_total_interactions?: number     // Supporter must have X+ completed services
+  // Donor happiness requirements (optional)
+  donor_happiness_requirements?: {
+    min_received_happiness?: number     // Donor must be X% liked by fundraisers
+    min_total_interactions?: number     // Donor must have X+ completed services
   }
 }
 ```
@@ -286,7 +286,7 @@ interface ServiceCreation {
 - **Always Anonymous**: No public donor names or persistent identities
 - **Aggregate Statistics**: Platform activity shown in totals only
 - **Optional Recognition**: Users choose when to get personal credit
-- **Private Connections**: Donor names shared with providers & charities only
+- **Private Connections**: Donor names shared with fundraisers & charities only
 
 ### Privacy Data Structures
 ```typescript
@@ -312,7 +312,7 @@ interface PlatformStats {
 interface OptionalSharing {
   social_media_share: boolean    // "I donated $50 to Cancer Research via @PoweredByDonation"
   pdf_certificate: boolean       // Downloadable donation certificate
-  provider_connection: boolean   // Always true - providers can thank donors
+  fundraiser_connection: boolean // Always true - fundraisers can thank donors
   charity_connection: boolean    // Always true - charities can follow up
 }
 ```
@@ -403,13 +403,13 @@ const emailStrategy = {
   mutualFeedback: {
     timing: "24-48 hours after expected service completion",
     
-    // Provider feedback
-    providerEmail: {
-      subject: "How was your experience with your supporter?",
+    // Fundraiser feedback
+    fundraiserEmail: {
+      subject: "How was your experience with your donor?",
       message: `
-        Hi ${provider_name}! A supporter donated $${amount} to ${charity} for your ${service_title}.
+        Hi ${fundraiser_name}! A donor donated $${amount} to ${charity} for your ${service_title}.
         
-        How was your experience with this supporter?
+        How was your experience with this donor?
         😊 Happy - responsive and respectful
         😞 Unhappy - had some concerns
         
@@ -417,21 +417,21 @@ const emailStrategy = {
       `
     },
     
-    // Supporter feedback  
-    supporterEmail: {
-      subject: "How was your experience with ${provider_name}?",
+    // Donor feedback  
+    donorEmail: {
+      subject: "How was your experience with ${fundraiser_name}?",
       message: `
-        Hi! Your $${amount} donation to ${charity} helped support ${provider_name}'s service.
+        Hi! Your $${amount} donation to ${charity} helped support ${fundraiser_name}'s service.
         
-        How was your experience with this provider?
-        😊 Happy with this provider
-        😞 Unhappy with this provider
+        How was your experience with this fundraiser?
+        😊 Happy with this fundraiser
+        😞 Unhappy with this fundraiser
         
         How was the service itself?
         😊 Happy with the service
         😞 Unhappy with the service
         
-        Remember: Your donation went to ${charity} regardless - this helps us maintain quality providers.
+        Remember: Your donation went to ${charity} regardless - this helps us maintain quality fundraisers.
       `
     },
     
@@ -448,9 +448,9 @@ const emailStrategy = {
 - Anonymous browsing for all public content
 
 ### Service Access Control
-- Providers can only manage their own services
-- Supporters can view all active services
-- Service requests link supporters and providers appropriately
+- Fundraisers can only manage their own services
+- Donors can view all active services
+- Service requests link donors and fundraisers appropriately
 
 ### Charity Data Protection
 - All charity statistics are anonymized

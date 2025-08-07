@@ -1,10 +1,14 @@
-import { Metadata } from 'next'
+'use client'
+
+import { useState, useEffect } from 'react'
 import { notFound } from 'next/navigation'
-import { createClient } from '@/lib/supabase/server'
-import { Service, ServiceLocation } from '@/types/database'
+import { createClient } from '@/lib/supabase/client'
+import { Service, ServiceLocation, CurrencyCode } from '@/types/database'
 import MultilingualNavbar from '@/components/MultilingualNavbar'
 import ServiceDonationFlow from '@/components/services/ServiceDonationFlow'
-import { getMessages } from 'next-intl/server'
+import ServiceLocationMap from '@/components/ServiceLocationMap'
+import ServicePrice from '@/components/services/ServicePrice'
+import { useAuth } from '@/hooks/useAuth'
 
 interface ServicePageProps {
   params: {
@@ -13,7 +17,7 @@ interface ServicePageProps {
   }
 }
 
-type ServiceWithProvider = Service & {
+type ServiceWithFundraiser = Service & {
   user: {
     id: string
     name: string
@@ -29,65 +33,81 @@ function generateSlug(title: string): string {
   return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
 }
 
-async function getServiceBySlug(slug: string): Promise<ServiceWithProvider | null> {
-  const supabase = createClient()
-  
-  const { data: services, error } = await supabase
-    .from('services')
-    .select(`
-      *,
-      user:users (
-        id,
-        name,
-        bio,
-        avatar_url,
-        location,
-        created_at
-      )
-    `)
-    .eq('is_active', true)
-    .eq('show_in_directory', true)
-
-  if (error) {
-    console.error('Error fetching services:', error)
-    return null
-  }
-
-  // Find service by matching slug
-  const service = services?.find(s => generateSlug(s.title) === slug)
-  return service || null
-}
-
-export async function generateMetadata({ params }: ServicePageProps): Promise<Metadata> {
-  const service = await getServiceBySlug(params.slug)
-  
-  if (!service) {
-    return {
-      title: 'Service Not Found | Powered by Donation'
-    }
-  }
-
-  const donationAmount = new Intl.NumberFormat('en-AU', {
-    style: 'currency',
-    currency: 'AUD',
-    minimumFractionDigits: 0,
-  }).format(service.donation_amount)
-
-  return {
-    title: `${service.title} - ${donationAmount} | Powered by Donation`,
-    description: service.description || `Support ${service.user.name}'s ${service.title} service with a ${donationAmount} donation to charity`,
-    openGraph: {
-      title: `${service.title} - ${donationAmount}`,
-      description: service.description || `Support this service with a ${donationAmount} donation to charity`,
-      type: 'website',
-    }
-  }
-}
-
-export default async function ServicePage({ params }: ServicePageProps) {
+export default function ServicePage({ params }: ServicePageProps) {
   const { locale, slug } = params
-  const messages = await getMessages({ locale })
-  const service = await getServiceBySlug(slug)
+  const { user } = useAuth()
+  const [service, setService] = useState<ServiceWithFundraiser | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [messages, setMessages] = useState<any>({})
+  const [userCurrency, setUserCurrency] = useState<CurrencyCode>('AUD')
+
+  useEffect(() => {
+    async function loadData() {
+      const supabase = createClient()
+      
+      // Load messages
+      try {
+        const msgs = (await import(`../../../../messages/${locale}.json`)).default
+        setMessages(msgs)
+      } catch (error) {
+        const msgs = (await import(`../../../../messages/en.json`)).default
+        setMessages(msgs)
+      }
+
+      // Fetch user's currency
+      if (user) {
+        try {
+          const { data: userProfile } = await supabase
+            .from('users')
+            .select('preferred_currency')
+            .eq('id', user.id)
+            .single()
+          
+          if (userProfile?.preferred_currency) {
+            setUserCurrency(userProfile.preferred_currency)
+          }
+        } catch (err) {
+          // Keep default AUD
+        }
+      }
+
+      // Fetch service
+      const { data: services, error } = await supabase
+        .from('services')
+        .select(`
+          *,
+          user:users (
+            id,
+            name,
+            bio,
+            avatar_url,
+            location,
+            created_at
+          )
+        `)
+        .eq('is_active', true)
+        .eq('show_in_directory', true)
+
+      if (error) {
+        setService(null)
+      } else {
+        const foundService = services?.find(s => generateSlug(s.title) === slug)
+        setService(foundService || null)
+      }
+      
+      setLoading(false)
+    }
+
+    loadData()
+  }, [locale, slug, user])
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    )
+  }
 
   if (!service) {
     notFound()
@@ -98,21 +118,14 @@ export default async function ServicePage({ params }: ServicePageProps) {
     ? service.service_locations as ServiceLocation[]
     : []
 
-  // Format donation amount
-  const donationAmount = new Intl.NumberFormat('en-AU', {
-    style: 'currency',
-    currency: 'AUD',
-    minimumFractionDigits: 0,
-  }).format(service.donation_amount)
-
   // Get availability status
   const now = new Date()
   const availableFrom = new Date(service.available_from)
   const availableUntil = service.available_until ? new Date(service.available_until) : null
   
   const isAvailable = now >= availableFrom && (!availableUntil || now <= availableUntil)
-  const isFull = Boolean(service.max_supporters && service.current_supporters && 
-    service.current_supporters >= service.max_supporters)
+  const isFull = Boolean(service.max_donors && service.current_donors && 
+    service.current_donors >= service.max_donors)
 
   const getLocationDisplay = (location: ServiceLocation) => {
     switch (location.type) {
@@ -198,10 +211,10 @@ export default async function ServicePage({ params }: ServicePageProps) {
                         {availableUntil && (
                           <div>Available until: <span className="font-medium">{availableUntil.toLocaleDateString()}</span></div>
                         )}
-                        {service.max_supporters && (
+                        {service.max_donors && (
                           <div>
                             Capacity: <span className="font-medium">
-                              {service.current_supporters || 0} / {service.max_supporters} supporters
+                              {service.current_donors || 0} / {service.max_donors} donors
                             </span>
                           </div>
                         )}
@@ -217,6 +230,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
                       id: service.id,
                       title: service.title,
                       donation_amount: service.donation_amount,
+                      pricing_tier_id: service.pricing_tier_id,
                       charity_requirement_type: service.charity_requirement_type,
                       preferred_charities: service.preferred_charities ? 
                         (Array.isArray(service.preferred_charities) ? 
@@ -226,11 +240,12 @@ export default async function ServicePage({ params }: ServicePageProps) {
                             description?: string
                             logo_url?: string
                           }> : null) : null,
-                      provider: {
+                      fundraiser: {
                         id: service.user.id,
                         name: service.user.name
                       }
                     }}
+                    userCurrency={userCurrency}
                     isAvailable={isAvailable}
                     isFull={isFull}
                   />
@@ -239,10 +254,22 @@ export default async function ServicePage({ params }: ServicePageProps) {
             </div>
           </div>
 
-          {/* Provider Information */}
+          {/* Service Location Map */}
+          {locations.some(loc => (loc.type === 'physical' || loc.type === 'hybrid') && loc.latitude && loc.longitude) && (
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-8">
+              <div className="p-8">
+                <h2 className="text-2xl font-bold text-gray-900 mb-6">Service Location</h2>
+                <ServiceLocationMap 
+                  locations={locations}
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Fundraiser Information */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-8">
             <div className="p-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">About the Provider</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">About the Fundraiser</h2>
               <div className="flex items-start space-x-6">
                 {service.user.avatar_url && (
                   <img 
@@ -261,7 +288,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
                     </p>
                   )}
                   <div className="text-sm text-gray-500">
-                    Provider since {new Date(service.user.created_at).toLocaleDateString()}
+                    Fundraiser since {new Date(service.user.created_at).toLocaleDateString()}
                   </div>
                 </div>
               </div>
@@ -279,7 +306,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
                   </svg>
                 </div>
                 <p className="text-gray-500">
-                  Anonymous donation activity will appear here once supporters begin using this service.
+                  Anonymous donation activity will appear here once donors begin using this service.
                 </p>
               </div>
             </div>

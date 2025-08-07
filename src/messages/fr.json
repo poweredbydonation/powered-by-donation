@@ -22,7 +22,7 @@
       "title": "Comment ça Marche",
       "step1": {
         "title": "Parcourir les Services",
-        "description": "Trouvez des services professionnels offerts par des fournisseurs communautaires"
+        "description": "Trouvez des services professionnels offerts par des collecteurs de fonds communautaires"
       },
       "step2": {
         "title": "Choisir une Œuvre Caritative",
@@ -47,25 +47,70 @@
     "welcome": "Bon retour",
     "profileReady": "Votre profil est configuré et prêt à utiliser.",
     "completeProfile": "Complétez votre profil pour commencer.",
-    "serviceProvider": "Fournisseur de Services",
-    "supporter": "Supporteur",
+    "fundraiser": "Collecteur de Fonds",
+    "donor": "Donateur",
     "getStarted": "Commencer",
     "setupPrompt": "Configurez votre profil pour commencer à utiliser Powered by Donation :",
     "createProfile": "Créer Votre Profil",
-    "providerDashboard": "Tableau de Bord Fournisseur",
-    "providerDescription": "Gérez vos services et dons",
+    "fundraiserDashboard": "Tableau de Bord Collecteur de Fonds",
+    "fundraiserDescription": "Gérez vos services et dons",
     "manageServices": "Gérer les Services",
     "createNewService": "Créer un Nouveau Service",
-    "becomeProvider": "Devenir Fournisseur",
-    "providerOffer": "Offrir des services et soutenir des œuvres caritatives",
-    "enableProviderRole": "Activer le Rôle de Fournisseur",
-    "supporterDashboard": "Tableau de Bord Supporteur",
-    "supporterDescription": "Suivez vos dons et votre impact",
+    "becomeFundraiser": "Devenir Collecteur de Fonds",
+    "fundraiserOffer": "Offrir des services et soutenir des œuvres caritatives",
+    "enableFundraiserRole": "Activer le Rôle de Collecteur de Fonds",
+    "donorDashboard": "Tableau de Bord Donateur",
+    "donorDescription": "Suivez vos dons et votre impact",
     "myDonations": "Mes Dons",
     "browseServices": "Parcourir les Services",
-    "becomeSupporter": "Devenir Supporteur",
-    "supporterOffer": "Soutenir des services et des œuvres caritatives",
-    "enableSupporterRole": "Activer le Rôle de Supporteur",
+    "becomeDonor": "Devenir Donateur",
+    "donorOffer": "Soutenir des services et des œuvres caritatives",
+    "enableDonorRole": "Activer le Rôle de Donateur",
+    "services": {
+      "title": "Mes Services",
+      "subtitle": "Gérez vos offres de services et suivez l'engagement des donateurs",
+      "create_service": "Créer un Nouveau Service",
+      "create_first_service": "Créer Votre Premier Service",
+      "edit": "Modifier",
+      "view": "Voir",
+      "loading": {
+        "title": "Chargement des services..."
+      },
+      "errors": {
+        "title": "Erreur lors du chargement des services",
+        "load_failed": "Impossible de charger vos services. Veuillez réessayer plus tard."
+      },
+      "empty": {
+        "title": "Aucun service pour le moment",
+        "description": "Créez votre premier service pour commencer à vous connecter avec les donateurs et aider les œuvres caritatives."
+      },
+      "status": {
+        "active": "Actif",
+        "inactive": "Inactif",
+        "upcoming": "À venir",
+        "expired": "Expiré",
+        "full": "Complet"
+      },
+      "fields": {
+        "donation": "Don",
+        "location": "Localisation",
+        "charity": "Œuvre Caritative",
+        "capacity": "Capacité"
+      },
+      "location": {
+        "remote": "À distance",
+        "hybrid": "Hybride",
+        "physical": "Physique",
+        "tbd": "Localisation à déterminer"
+      },
+      "charity": {
+        "any_charity": "N'importe quelle œuvre caritative",
+        "specific_charities": "Œuvres caritatives spécifiques"
+      },
+      "availability": {
+        "starts": "Commence"
+      }
+    },
     "accountSettings": "Paramètres du Compte",
     "accountDescription": "Gérez vos préférences de compte",
     "editProfile": "Modifier le Profil",
@@ -76,12 +121,12 @@
     "username": "Nom d'utilisateur",
     "location": "Localisation",
     "roles": "Rôles",
-    "providerAndSupporter": "Fournisseur et Supporteur",
-    "providerRole": "Fournisseur",
-    "supporterRole": "Supporteur",
+    "fundraiserAndDonor": "Collecteur de Fonds et Donateur",
+    "fundraiserRole": "Collecteur de Fonds",
+    "donorRole": "Donateur",
     "noRoles": "Aucun",
-    "provider_section": {
-      "title": "En tant que Fournisseur",
+    "fundraiser_section": {
+      "title": "En tant que Collecteur de Fonds",
       "create_service": "Créer un Service",
       "update_service": "Mettre à Jour le Service",
       "creating": "Création...",
@@ -89,8 +134,8 @@
       "manage_services": "Gérer les Services",
       "view_requests": "Voir les Demandes"
     },
-    "supporter_section": {
-      "title": "En tant que Supporteur",
+    "donor_section": {
+      "title": "En tant que Donateur",
       "browse_services": "Parcourir les Services",
       "donation_history": "Historique des Dons"
     },
@@ -103,17 +148,17 @@
   "profile": {
     "setup": {
       "title": "Configurez Votre Profil",
-      "subtitle": "Créez votre profil pour commencer à utiliser Powered by Donation en tant que fournisseur de services, supporteur, ou les deux.",
+      "subtitle": "Créez votre profil pour commencer à utiliser Powered by Donation en tant que collecteur de fonds, donateur, ou les deux.",
       "create_profile": "Créer Votre Profil",
       "update_profile": "Mettre à Jour Votre Profil",
       "roles": {
         "title": "Votre/Vos Rôle(s)",
-        "provider": {
-          "title": "Fournisseur de Services",
+        "fundraiser": {
+          "title": "Collecteur de Fonds",
           "description": "Offrir des services et aider les œuvres caritatives"
         },
-        "supporter": {
-          "title": "Supporteur",
+        "donor": {
+          "title": "Donateur",
           "description": "Trouver des services et faire des dons caritatifs"
         }
       },
@@ -135,7 +180,7 @@
         "success_created": "Profil créé avec succès !",
         "success_updated": "Profil mis à jour avec succès !",
         "error_name_required": "Le nom est requis",
-        "error_role_required": "Vous devez être soit un fournisseur, un supporteur, ou les deux",
+        "error_role_required": "Vous devez être soit un collecteur de fonds, un donateur, ou les deux",
         "error_save_failed": "Échec de la sauvegarde du profil"
       }
     }
@@ -147,17 +192,17 @@
       "no_services": "Aucun service trouvé",
       "load_more": "Charger Plus",
       "allLocations": "Toutes les Localisations",
-      "provider": "Fournisseur",
+      "fundraiser": "Collecteur de Fonds",
       "communityImpact": {
         "title": "Impact Communautaire",
         "activeServices": "Services Actifs",
         "totalDonationPotential": "Potentiel Total de Don",
-        "activeProviders": "Fournisseurs Actifs",
+        "activeFundraisers": "Collecteurs de Fonds Actifs",
         "donationsNote": "Tous les dons vont directement aux organisations caritatives enregistrées via JustGiving"
       },
       "callToAction": {
         "title": "Vous voulez offrir vos services ?",
-        "description": "Rejoignez notre communauté de fournisseurs et aidez les œuvres caritatives tout en montrant vos compétences.",
+        "description": "Rejoignez notre communauté de collecteurs de fonds et aidez les œuvres caritatives tout en montrant vos compétences.",
         "button": "Commencer"
       }
     },
@@ -263,7 +308,7 @@
       "platform": {
         "title": "Plateforme",
         "browse_services": "Parcourir les Services",
-        "service_providers": "Fournisseurs de Services",
+        "fundraisers": "Collecteurs de Fonds",
         "featured_charities": "Œuvres Caritatives en Vedette",
         "how_it_works": "Comment ça Marche"
       },
@@ -311,8 +356,8 @@
   "deleteProfile": {
     "title": "Supprimer le Profil",
     "description": "Ceci supprimera définitivement votre profil et toutes les données associées. Cette action ne peut pas être annulée.",
-    "providerWarning": "⚠️ En tant que fournisseur, ceci supprimera également tous vos services et historique de services.",
-    "supporterWarning": "⚠️ En tant que supporteur, ceci supprimera votre historique de dons et demandes de services.",
+    "fundraiserWarning": "⚠️ En tant que collecteur de fonds, ceci supprimera également tous vos services et historique de services.",
+    "donorWarning": "⚠️ En tant que donateur, ceci supprimera votre historique de dons et demandes de services.",
     "deleteButton": "Supprimer le Profil",
     "confirmTitle": "Confirmer la Suppression du Profil",
     "confirmDescription": "Êtes-vous sûr de vouloir supprimer votre profil pour \"{name}\" ? Cette action est permanente et va :",

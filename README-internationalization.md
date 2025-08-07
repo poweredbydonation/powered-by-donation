@@ -32,7 +32,7 @@ Language selection is based on:
 - **Australian census data** for established communities
 - **Growing demographic trends** in major cities
 - **Charitable giving patterns** within communities
-- **Service provider diversity** across regions
+- **Service fundraiser diversity** across regions
 
 ## Implementation Architecture
 
@@ -95,7 +95,7 @@ const translationStructure = {
     // Homepage content
     hero: {
       title: "Support Services Through Charity",
-      subtitle: "Connect with service providers while supporting your favorite charities"
+      subtitle: "Connect with service fundraisers while supporting your favorite charities"
     },
     features: {
       // Feature descriptions
@@ -105,13 +105,13 @@ const translationStructure = {
     // Dashboard interface
     title: "Dashboard",
     welcome: "Welcome back",
-    providers: {
-      title: "Provider Dashboard",
+    fundraisers: {
+      title: "Fundraiser Dashboard",
       services: "My Services",
       create: "Create Service"
     },
-    supporters: {
-      title: "Supporter Dashboard", 
+    donors: {
+      title: "Donor Dashboard", 
       donations: "My Donations",
       history: "Donation History"
     }
@@ -135,8 +135,8 @@ const translationStructure = {
     signin: "Sign In",
     signup: "Sign Up",
     signout: "Sign Out",
-    provider: "Service Provider",
-    supporter: "Supporter"
+    fundraiser: "Service Fundraiser",
+    donor: "Donor"
   },
   browse: {
     // Browse/search interface
@@ -241,7 +241,7 @@ src/messages/
   "home": {
     "hero": {
       "title": "Support Services Through Charity",
-      "subtitle": "Connect with service providers while supporting your favorite charities",
+      "subtitle": "Connect with service fundraisers while supporting your favorite charities",
       "cta": "Browse Services"
     },
     "features": {
@@ -262,8 +262,8 @@ src/messages/
   "dashboard": {
     "title": "Dashboard",
     "welcome": "Welcome back, {name}",
-    "providers": {
-      "title": "Provider Dashboard",
+    "fundraisers": {
+      "title": "Fundraiser Dashboard",
       "services": "My Services",
       "create": "Create New Service",
       "earnings": "Total Donations Received"
@@ -302,7 +302,7 @@ export const routing = {
     '/dashboard': '/dashboard',
     '/services/[slug]': '/services/[slug]',
     '/charity/[slug]': '/charity/[slug]',
-    '/provider/[slug]': '/provider/[slug]'
+    '/fundraiser/[slug]': '/fundraiser/[slug]'
   }
 }
 

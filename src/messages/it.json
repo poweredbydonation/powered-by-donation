@@ -1,9 +1,9 @@
 {
   "nav": {
-    "home": "Home",
+    "home": "Inizio",
     "browse": "Esplora Servizi",
     "search": "Cerca",
-    "dashboard": "Dashboard",
+    "dashboard": "Pannello di Controllo",
     "login": "Accedi",
     "logout": "Esci",
     "profile": "Profilo",
@@ -22,7 +22,7 @@
       "title": "Come Funziona",
       "step1": {
         "title": "Esplora Servizi",
-        "description": "Trova servizi professionali offerti dai fornitori della comunità"
+        "description": "Trova servizi professionali offerti dai raccoglitori di fondi della comunità"
       },
       "step2": {
         "title": "Scegli un Ente di Beneficenza",
@@ -43,29 +43,74 @@
     }
   },
   "dashboard": {
-    "title": "Dashboard",
+    "title": "Pannello di Controllo",
     "welcome": "Bentornato",
     "profileReady": "Il tuo profilo è configurato e pronto.",
     "completeProfile": "Completa il tuo profilo per iniziare.",
-    "serviceProvider": "Fornitore di Servizi",
-    "supporter": "Sostenitore",
+    "fundraiser": "Raccoglitore di Fondi",
+    "donor": "Donatore",
     "getStarted": "Inizia",
     "setupPrompt": "Configura il tuo profilo per iniziare a utilizzare Powered by Donation:",
     "createProfile": "Crea il Tuo Profilo",
-    "providerDashboard": "Dashboard Fornitore",
-    "providerDescription": "Gestisci i tuoi servizi e donazioni",
+    "fundraiserDashboard": "Pannello Raccoglitore di Fondi",
+    "fundraiserDescription": "Gestisci i tuoi servizi e donazioni",
     "manageServices": "Gestisci Servizi",
     "createNewService": "Crea Nuovo Servizio",
-    "becomeProvider": "Diventa Fornitore",
-    "providerOffer": "Offri servizi e supporta enti di beneficenza",
-    "enableProviderRole": "Attiva Ruolo Fornitore",
-    "supporterDashboard": "Dashboard Sostenitore",
-    "supporterDescription": "Tieni traccia delle tue donazioni e impatto",
+    "becomeFundraiser": "Diventa Raccoglitore di Fondi",
+    "fundraiserOffer": "Offri servizi e supporta enti di beneficenza",
+    "enableFundraiserRole": "Attiva Ruolo Raccoglitore di Fondi",
+    "donorDashboard": "Pannello Donatore",
+    "donorDescription": "Tieni traccia delle tue donazioni e impatto",
     "myDonations": "Le Mie Donazioni",
     "browseServices": "Esplora Servizi",
-    "becomeSupporter": "Diventa Sostenitore",
-    "supporterOffer": "Supporta servizi ed enti di beneficenza",
-    "enableSupporterRole": "Attiva Ruolo Sostenitore",
+    "becomeDonor": "Diventa Donatore",
+    "donorOffer": "Supporta servizi ed enti di beneficenza",
+    "enableDonorRole": "Attiva Ruolo Donatore",
+    "services": {
+      "title": "I Miei Servizi",
+      "subtitle": "Gestisci le tue offerte di servizi e tieni traccia del coinvolgimento dei donatori",
+      "create_service": "Crea Nuovo Servizio",
+      "create_first_service": "Crea il Tuo Primo Servizio",
+      "edit": "Modifica",
+      "view": "Visualizza",
+      "loading": {
+        "title": "Caricamento servizi..."
+      },
+      "errors": {
+        "title": "Errore nel caricamento dei servizi",
+        "load_failed": "Impossibile caricare i tuoi servizi. Riprova più tardi."
+      },
+      "empty": {
+        "title": "Nessun servizio ancora",
+        "description": "Crea il tuo primo servizio per iniziare a collegarti con i donatori e aiutare gli enti di beneficenza."
+      },
+      "status": {
+        "active": "Attivo",
+        "inactive": "Inattivo",
+        "upcoming": "Prossimo",
+        "expired": "Scaduto",
+        "full": "Completo"
+      },
+      "fields": {
+        "donation": "Donazione",
+        "location": "Posizione",
+        "charity": "Ente di Beneficenza",
+        "capacity": "Capacità"
+      },
+      "location": {
+        "remote": "Remoto",
+        "hybrid": "Ibrido",
+        "physical": "Fisico",
+        "tbd": "Posizione da definire"
+      },
+      "charity": {
+        "any_charity": "Qualsiasi ente di beneficenza",
+        "specific_charities": "Enti di beneficenza specifici"
+      },
+      "availability": {
+        "starts": "Inizia"
+      }
+    },
     "accountSettings": "Impostazioni Account",
     "accountDescription": "Gestisci le preferenze del tuo account",
     "editProfile": "Modifica Profilo",
@@ -76,12 +121,12 @@
     "username": "Nome Utente",
     "location": "Posizione",
     "roles": "Ruoli",
-    "providerAndSupporter": "Fornitore e Sostenitore",
-    "providerRole": "Fornitore",
-    "supporterRole": "Sostenitore",
+    "fundraiserAndDonor": "Raccoglitore di Fondi e Donatore",
+    "fundraiserRole": "Raccoglitore di Fondi",
+    "donorRole": "Donatore",
     "noRoles": "Nessuno",
-    "provider_section": {
-      "title": "Come Fornitore",
+    "fundraiser_section": {
+      "title": "Come Raccoglitore di Fondi",
       "create_service": "Crea Servizio",
       "update_service": "Aggiorna Servizio",
       "creating": "Creazione...",
@@ -89,8 +134,8 @@
       "manage_services": "Gestisci Servizi",
       "view_requests": "Visualizza Richieste"
     },
-    "supporter_section": {
-      "title": "Come Sostenitore",
+    "donor_section": {
+      "title": "Come Donatore",
       "browse_services": "Esplora Servizi",
       "donation_history": "Cronologia Donazioni"
     },
@@ -103,17 +148,17 @@
   "profile": {
     "setup": {
       "title": "Configura il Tuo Profilo",
-      "subtitle": "Crea il tuo profilo per iniziare a utilizzare Powered by Donation come fornitore di servizi, sostenitore o entrambi.",
+      "subtitle": "Crea il tuo profilo per iniziare a utilizzare Powered by Donation come raccoglitore di fondi, donatore o entrambi.",
       "create_profile": "Crea il Tuo Profilo",
       "update_profile": "Aggiorna il Tuo Profilo",
       "roles": {
         "title": "I Tuoi Ruoli",
-        "provider": {
-          "title": "Fornitore di Servizi",
+        "fundraiser": {
+          "title": "Raccoglitore di Fondi",
           "description": "Offri servizi e aiuta gli enti di beneficenza"
         },
-        "supporter": {
-          "title": "Sostenitore",
+        "donor": {
+          "title": "Donatore",
           "description": "Trova servizi e fai donazioni benefiche"
         }
       },
@@ -135,7 +180,7 @@
         "success_created": "Profilo creato con successo!",
         "success_updated": "Profilo aggiornato con successo!",
         "error_name_required": "Il nome è obbligatorio",
-        "error_role_required": "Devi essere un fornitore, sostenitore o entrambi",
+        "error_role_required": "Devi essere un raccoglitore di fondi, donatore o entrambi",
         "error_save_failed": "Impossibile salvare il profilo"
       }
     }
@@ -147,17 +192,17 @@
       "no_services": "Nessun servizio trovato",
       "load_more": "Carica Altri",
       "allLocations": "Tutte le Posizioni",
-      "provider": "Fornitore",
+      "fundraiser": "Raccoglitore di Fondi",
       "communityImpact": {
         "title": "Impatto della Comunità",
         "activeServices": "Servizi Attivi",
         "totalDonationPotential": "Potenziale Totale di Donazione",
-        "activeProviders": "Fornitori Attivi",
+        "activeFundraisers": "Raccoglitori di Fondi Attivi",
         "donationsNote": "Tutte le donazioni vanno direttamente agli enti di beneficenza registrati tramite JustGiving"
       },
       "callToAction": {
         "title": "Vuoi offrire i tuoi servizi?",
-        "description": "Unisciti alla nostra comunità di fornitori e aiuta gli enti di beneficenza mostrando le tue competenze.",
+        "description": "Unisciti alla nostra comunità di raccoglitori di fondi e aiuta gli enti di beneficenza mostrando le tue competenze.",
         "button": "Inizia"
       }
     },
@@ -263,7 +308,7 @@
       "platform": {
         "title": "Piattaforma",
         "browse_services": "Esplora Servizi",
-        "service_providers": "Fornitori di Servizi",
+        "fundraisers": "Raccoglitori di Fondi",
         "featured_charities": "Enti di Beneficenza in Evidenza",
         "how_it_works": "Come Funziona"
       },
@@ -311,8 +356,8 @@
   "deleteProfile": {
     "title": "Elimina Profilo",
     "description": "Questo eliminerà permanentemente il tuo profilo e tutti i dati associati. Questa azione non può essere annullata.",
-    "providerWarning": "⚠️ Come fornitore, questo eliminerà anche tutti i tuoi servizi e la cronologia dei servizi.",
-    "supporterWarning": "⚠️ Come sostenitore, questo eliminerà la tua cronologia delle donazioni e le richieste di servizio.",
+    "fundraiserWarning": "⚠️ Come raccoglitore di fondi, questo eliminerà anche tutti i tuoi servizi e la cronologia dei servizi.",
+    "donorWarning": "⚠️ Come donatore, questo eliminerà la tua cronologia delle donazioni e le richieste di servizio.",
     "deleteButton": "Elimina Profilo",
     "confirmTitle": "Conferma Eliminazione Profilo",
     "confirmDescription": "Sei sicuro di voler eliminare il tuo profilo per \"{name}\"? Questa azione è permanente e:",

@@ -7,7 +7,7 @@ import { getMessages } from 'next-intl/server'
 
 export const metadata = {
   title: 'Profile Setup - Powered by Donation',
-  description: 'Set up your profile to start using Powered by Donation as a provider, supporter, or both',
+  description: 'Set up your profile to start using Powered by Donation as a fundraiser, donor, or both',
 }
 
 interface ProfileSetupPageProps {
@@ -46,7 +46,7 @@ export default async function ProfileSetupPage({ params }: ProfileSetupPageProps
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-gray-900 mb-4">Set Up Your Profile</h1>
             <p className="text-lg text-gray-600">
-              Create your profile to start using Powered by Donation as a service provider, supporter, or both.
+              Create your profile to start using Powered by Donation as a service fundraiser, donor, or both.
             </p>
           </div>
 

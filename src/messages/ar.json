@@ -22,7 +22,7 @@
       "title": "كيف يعمل",
       "step1": {
         "title": "تصفح الخدمات",
-        "description": "اعثر على خدمات مهنية يقدمها مزودو الخدمات في المجتمع"
+        "description": "اعثر على خدمات مهنية يقدمها جامعو الأموال في المجتمع"
       },
       "step2": {
         "title": "اختر جمعية خيرية",
@@ -47,25 +47,70 @@
     "welcome": "مرحباً بعودتك",
     "profileReady": "ملفك الشخصي جاهز للاستخدام.",
     "completeProfile": "أكمل ملفك الشخصي للبدء.",
-    "serviceProvider": "مزود الخدمة",
-    "supporter": "الداعم",
+    "serviceProvider": "جامع الأموال",
+    "supporter": "المتبرع",
     "getStarted": "ابدأ",
     "setupPrompt": "قم بإعداد ملفك الشخصي لبدء استخدام مدعوم بالتبرع:",
     "createProfile": "إنشاء ملفك الشخصي",
-    "providerDashboard": "لوحة تحكم المزود",
+    "providerDashboard": "لوحة تحكم جامع الأموال",
     "providerDescription": "إدارة خدماتك وتبرعاتك",
     "manageServices": "إدارة الخدمات",
     "createNewService": "إنشاء خدمة جديدة",
-    "becomeProvider": "كن مزود خدمة",
+    "becomeProvider": "كن جامع أموال",
     "providerOffer": "قدم خدمات وادعم الجمعيات الخيرية",
-    "enableProviderRole": "تفعيل دور المزود",
-    "supporterDashboard": "لوحة تحكم الداعم",
+    "enableProviderRole": "تفعيل دور جامع الأموال",
+    "supporterDashboard": "لوحة تحكم المتبرع",
     "supporterDescription": "تتبع تبرعاتك وأثرك",
     "myDonations": "تبرعاتي",
     "browseServices": "تصفح الخدمات",
-    "becomeSupporter": "كن داعماً",
+    "becomeSupporter": "كن متبرعاً",
     "supporterOffer": "ادعم الخدمات والجمعيات الخيرية",
-    "enableSupporterRole": "تفعيل دور الداعم",
+    "enableSupporterRole": "تفعيل دور المتبرع",
+    "services": {
+      "title": "خدماتي",
+      "subtitle": "إدارة عروض الخدمات الخاصة بك وتتبع مشاركة المتبرعين",
+      "create_service": "إنشاء خدمة جديدة",
+      "create_first_service": "أنشئ خدمتك الأولى",
+      "edit": "تعديل",
+      "view": "عرض",
+      "loading": {
+        "title": "جاري تحميل الخدمات..."
+      },
+      "errors": {
+        "title": "خطأ في تحميل الخدمات",
+        "load_failed": "فشل في تحميل خدماتك. يرجى المحاولة مرة أخرى لاحقاً."
+      },
+      "empty": {
+        "title": "لا توجد خدمات بعد",
+        "description": "أنشئ خدمتك الأولى لبدء التواصل مع المتبرعين ومساعدة الجمعيات الخيرية."
+      },
+      "status": {
+        "active": "نشط",
+        "inactive": "غير نشط",
+        "upcoming": "قادم",
+        "expired": "منتهي الصلاحية",
+        "full": "مكتمل"
+      },
+      "fields": {
+        "donation": "التبرع",
+        "location": "الموقع",
+        "charity": "الجمعية الخيرية",
+        "capacity": "السعة"
+      },
+      "location": {
+        "remote": "عن بُعد",
+        "hybrid": "مختلط",
+        "physical": "فعلي",
+        "tbd": "موقع سيحدد لاحقاً"
+      },
+      "charity": {
+        "any_charity": "أي جمعية خيرية",
+        "specific_charities": "جمعيات خيرية محددة"
+      },
+      "availability": {
+        "starts": "يبدأ"
+      }
+    },
     "accountSettings": "إعدادات الحساب",
     "accountDescription": "إدارة تفضيلات حسابك",
     "editProfile": "تعديل الملف الشخصي",
@@ -76,12 +121,12 @@
     "username": "اسم المستخدم",
     "location": "الموقع",
     "roles": "الأدوار",
-    "providerAndSupporter": "مزود وداعم",
-    "providerRole": "مزود",
-    "supporterRole": "داعم",
+    "providerAndSupporter": "جامع أموال ومتبرع",
+    "providerRole": "جامع أموال",
+    "supporterRole": "متبرع",
     "noRoles": "لا يوجد",
     "provider_section": {
-      "title": "كمزود خدمة",
+      "title": "كجامع أموال",
       "create_service": "إنشاء خدمة",
       "update_service": "تحديث خدمة",
       "creating": "جاري الإنشاء...",
@@ -90,7 +135,7 @@
       "view_requests": "عرض الطلبات"
     },
     "supporter_section": {
-      "title": "كداعم",
+      "title": "كمتبرع",
       "browse_services": "تصفح الخدمات",
       "donation_history": "تاريخ التبرعات"
     },
@@ -103,17 +148,17 @@
   "profile": {
     "setup": {
       "title": "إعداد ملفك الشخصي",
-      "subtitle": "أنشئ ملفك الشخصي لبدء استخدام مدعوم بالتبرع كمزود خدمة، أو داعم، أو كليهما.",
+      "subtitle": "أنشئ ملفك الشخصي لبدء استخدام مدعوم بالتبرع كجامع أموال، أو متبرع، أو كليهما.",
       "create_profile": "إنشاء ملفك الشخصي",
       "update_profile": "تحديث ملفك الشخصي",
       "roles": {
         "title": "دورك (أدوارك)",
         "provider": {
-          "title": "مزود الخدمة",
+          "title": "جامع الأموال",
           "description": "قدم خدمات وساعد الجمعيات الخيرية"
         },
         "supporter": {
-          "title": "الداعم",
+          "title": "المتبرع",
           "description": "اعثر على خدمات وتبرع للجمعيات الخيرية"
         }
       },
@@ -135,7 +180,7 @@
         "success_created": "تم إنشاء الملف الشخصي بنجاح!",
         "success_updated": "تم تحديث الملف الشخصي بنجاح!",
         "error_name_required": "الاسم مطلوب",
-        "error_role_required": "يجب أن تكون مزوداً أو داعماً أو كليهما",
+        "error_role_required": "يجب أن تكون جامع أموال أو متبرعاً أو كليهما",
         "error_save_failed": "فشل في حفظ الملف الشخصي"
       }
     }
@@ -147,17 +192,17 @@
       "no_services": "لم يتم العثور على خدمات",
       "load_more": "تحميل المزيد",
       "allLocations": "جميع المواقع",
-      "provider": "المزود",
+      "provider": "جامع الأموال",
       "communityImpact": {
         "title": "الأثر المجتمعي",
         "activeServices": "الخدمات النشطة",
         "totalDonationPotential": "إجمالي إمكانية التبرع",
-        "activeProviders": "المزودون النشطون",
+        "activeProviders": "جامعو الأموال النشطون",
         "donationsNote": "جميع التبرعات تذهب مباشرة للجمعيات الخيرية المعتمدة عبر JustGiving"
       },
       "callToAction": {
         "title": "هل تريد تقديم خدماتك؟",
-        "description": "انضم لمجتمع المزودين لدينا وساعد الجمعيات الخيرية بينما تعرض مهاراتك.",
+        "description": "انضم لمجتمع جامعي الأموال لدينا وساعد الجمعيات الخيرية بينما تعرض مهاراتك.",
         "button": "ابدأ"
       }
     },
@@ -263,7 +308,7 @@
       "platform": {
         "title": "المنصة",
         "browse_services": "تصفح الخدمات",
-        "service_providers": "مزودو الخدمات",
+        "service_providers": "جامعو الأموال",
         "featured_charities": "الجمعيات الخيرية المميزة",
         "how_it_works": "كيف يعمل"
       },
@@ -311,8 +356,8 @@
   "deleteProfile": {
     "title": "حذف الملف الشخصي",
     "description": "سيؤدي هذا إلى حذف ملفك الشخصي وجميع البيانات المرتبطة به نهائياً. لا يمكن التراجع عن هذا الإجراء.",
-    "providerWarning": "⚠️ كمزود، سيؤدي هذا أيضاً إلى حذف جميع خدماتك وتاريخ الخدمات.",
-    "supporterWarning": "⚠️ كداعم، سيؤدي هذا إلى حذف تاريخ تبرعاتك وطلبات الخدمة.",
+    "providerWarning": "⚠️ كجامع أموال، سيؤدي هذا أيضاً إلى حذف جميع خدماتك وتاريخ الخدمات.",
+    "supporterWarning": "⚠️ كمتبرع، سيؤدي هذا إلى حذف تاريخ تبرعاتك وطلبات الخدمة.",
     "deleteButton": "حذف الملف الشخصي",
     "confirmTitle": "تأكيد حذف الملف الشخصي",
     "confirmDescription": "هل أنت متأكد من أنك تريد حذف ملفك الشخصي لـ \"{name}\"؟ هذا الإجراء دائم وسوف:",

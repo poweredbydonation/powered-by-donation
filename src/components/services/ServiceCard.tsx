@@ -44,8 +44,8 @@ export default function ServiceCard({ service }: ServiceCardProps) {
     ? 'Any registered charity'
     : 'Specific charities'
 
-  // Provider name with fallback
-  const providerName = service.user?.name || 'Unknown Provider'
+  // Fundraiser name with fallback
+  const fundraiserName = service.user?.name || 'Unknown Fundraiser'
 
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md hover:border-gray-300 transition-all duration-200">
@@ -90,13 +90,13 @@ export default function ServiceCard({ service }: ServiceCardProps) {
           </div>
         </div>
 
-        {/* Provider and Charity Info */}
+        {/* Fundraiser and Charity Info */}
         <div className="flex items-center justify-between pt-4 border-t border-gray-100">
           <div className="flex items-center">
             <div className="text-sm">
               <span className="text-gray-500">by </span>
               <span className="font-medium text-gray-900">
-                {providerName}
+                {fundraiserName}
               </span>
             </div>
           </div>
@@ -108,10 +108,10 @@ export default function ServiceCard({ service }: ServiceCardProps) {
 
         {/* Availability Status */}
         <div className="mt-3">
-          {service.max_supporters && service.current_supporters !== undefined ? (
+          {service.max_donors && service.current_donors !== undefined ? (
             <div className="text-xs text-gray-500">
-              {service.current_supporters} / {service.max_supporters} supporters
-              {service.current_supporters >= service.max_supporters && (
+              {service.current_donors} / {service.max_donors} donors
+              {service.current_donors >= service.max_donors && (
                 <span className="ml-2 text-red-600 font-medium">Full</span>
               )}
             </div>

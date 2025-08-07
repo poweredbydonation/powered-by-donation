@@ -21,83 +21,137 @@ export default async function HomePage({ params }: HomePageProps) {
       {/* Hero Section */}
       <div className="bg-gradient-to-br from-blue-50 to-indigo-100">
         <div className="max-w-4xl mx-auto px-6 py-16 text-center">
-          <h1 className="text-5xl font-bold text-gray-900 mb-6">
-            {t('title')}
-          </h1>
           
-          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-            {t('subtitle')}
-          </p>
-          
-          <div className="space-x-4">
-            <a 
-              href={`/${locale}/browse`}
-              className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors inline-block"
-            >
-              {t('hero.browse_services')}
-            </a>
+          <div className="grid md:grid-cols-2 gap-12 max-w-6xl mx-auto">
+            {/* For Donors */}
+            <div className="flex flex-col">
+              <div className="flex items-start space-x-4">
+                <div className="w-10"></div>
+                <h2 className="text-2xl font-semibold text-gray-800 mb-6 text-left">For Donors</h2>
+              </div>
+              
+              <div className="space-y-6 mb-8 flex-grow text-left">
+                <div className="flex items-start space-x-4">
+                  <div className="bg-blue-100 p-2 rounded-full flex-shrink-0">
+                    <Monitor className="h-6 w-6 text-blue-600" />
+                  </div>
+                  <div className="text-left">
+                    <h4 className="font-semibold text-gray-900 mb-1">
+                      {t('how_it_works.for_donors.step1.title')}
+                    </h4>
+                    <p className="text-gray-600">
+                      {t('how_it_works.for_donors.step1.description')}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start space-x-4">
+                  <div className="bg-green-100 p-2 rounded-full flex-shrink-0">
+                    <TrendingUp className="h-6 w-6 text-green-600" />
+                  </div>
+                  <div className="text-left">
+                    <h4 className="font-semibold text-gray-900 mb-1">
+                      {t('how_it_works.for_donors.step2.title')}
+                    </h4>
+                    <p className="text-gray-600">
+                      {t('how_it_works.for_donors.step2.description')}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start space-x-4">
+                  <div className="bg-purple-100 p-2 rounded-full flex-shrink-0">
+                    <Camera className="h-6 w-6 text-purple-600" />
+                  </div>
+                  <div className="text-left">
+                    <h4 className="font-semibold text-gray-900 mb-1">
+                      {t('how_it_works.for_donors.step3.title')}
+                    </h4>
+                    <p className="text-gray-600">
+                      {t('how_it_works.for_donors.step3.description')}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-start space-x-4">
+                <div className="w-10"></div>
+                <a 
+                  href={`/${locale}/browse`}
+                  className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors inline-block w-fit text-center"
+                  style={{ minWidth: '280px' }}
+                >
+                  {t('hero.donate_get_service')}
+                </a>
+              </div>
+            </div>
             
-            <a 
-              href={`/${locale}/dashboard`}
-              className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-50 border border-blue-600 transition-colors inline-block"
-            >
-              {tNav('dashboard')}
-            </a>
+            {/* For Fundraisers */}
+            <div className="flex flex-col">
+              <div className="flex items-start space-x-4">
+                <div className="w-10"></div>
+                <h2 className="text-2xl font-semibold text-gray-800 mb-6 text-left">For Fundraisers</h2>
+              </div>
+              
+              <div className="space-y-6 mb-8 flex-grow text-left">
+                <div className="flex items-start space-x-4">
+                  <div className="bg-orange-100 p-2 rounded-full flex-shrink-0">
+                    <Monitor className="h-6 w-6 text-orange-600" />
+                  </div>
+                  <div className="text-left">
+                    <h4 className="font-semibold text-gray-900 mb-1">
+                      {t('how_it_works.for_fundraisers.step1.title')}
+                    </h4>
+                    <p className="text-gray-600">
+                      {t('how_it_works.for_fundraisers.step1.description')}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start space-x-4">
+                  <div className="bg-red-100 p-2 rounded-full flex-shrink-0">
+                    <TrendingUp className="h-6 w-6 text-red-600" />
+                  </div>
+                  <div className="text-left">
+                    <h4 className="font-semibold text-gray-900 mb-1">
+                      {t('how_it_works.for_fundraisers.step2.title')}
+                    </h4>
+                    <p className="text-gray-600">
+                      {t('how_it_works.for_fundraisers.step2.description')}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start space-x-4">
+                  <div className="bg-indigo-100 p-2 rounded-full flex-shrink-0">
+                    <Camera className="h-6 w-6 text-indigo-600" />
+                  </div>
+                  <div className="text-left">
+                    <h4 className="font-semibold text-gray-900 mb-1">
+                      {t('how_it_works.for_fundraisers.step3.title')}
+                    </h4>
+                    <p className="text-gray-600">
+                      {t('how_it_works.for_fundraisers.step3.description')}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-start space-x-4">
+                <div className="w-10"></div>
+                <a 
+                  href={`/${locale}/dashboard/services/create`}
+                  className="bg-green-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors inline-block w-fit text-center"
+                  style={{ minWidth: '280px' }}
+                >
+                  {t('hero.offer_service_fundraise')}
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* How It Works Section */}
-      <div className="py-16 bg-white">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              {t('how_it_works.title')}
-            </h2>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {/* Step 1 */}
-            <div className="text-center">
-              <div className="bg-blue-100 p-4 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                <Monitor className="h-8 w-8 text-blue-600" />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                {t('how_it_works.step1.title')}
-              </h3>
-              <p className="text-gray-600">
-                {t('how_it_works.step1.description')}
-              </p>
-            </div>
-
-            {/* Step 2 */}
-            <div className="text-center">
-              <div className="bg-green-100 p-4 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                <TrendingUp className="h-8 w-8 text-green-600" />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                {t('how_it_works.step2.title')}
-              </h3>
-              <p className="text-gray-600">
-                {t('how_it_works.step2.description')}
-              </p>
-            </div>
-
-            {/* Step 3 */}
-            <div className="text-center">
-              <div className="bg-purple-100 p-4 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                <Camera className="h-8 w-8 text-purple-600" />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                {t('how_it_works.step3.title')}
-              </h3>
-              <p className="text-gray-600">
-                {t('how_it_works.step3.description')}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
 
       {/* Recent Activity Examples */}
       <div className="py-16 bg-gray-50">

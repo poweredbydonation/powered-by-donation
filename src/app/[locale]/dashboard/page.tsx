@@ -46,8 +46,8 @@ export default async function DashboardPage({ params }: DashboardPageProps) {
               </p>
               {userProfile && (
                 <div className="mt-2 text-sm text-blue-600">
-                  {userProfile.is_provider && <span className="mr-4">✓ {t('serviceProvider')}</span>}
-                  {userProfile.is_supporter && <span>✓ {t('supporter')}</span>}
+                  {userProfile.is_fundraiser && <span className="mr-4">✓ {t('serviceFundraiser')}</span>}
+                  {userProfile.is_donor && <span>✓ {t('donor')}</span>}
                 </div>
               )}
             </div>
@@ -67,11 +67,11 @@ export default async function DashboardPage({ params }: DashboardPageProps) {
             )}
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {/* Provider Section */}
-              {userProfile?.is_provider ? (
+              {/* Fundraiser Section */}
+              {userProfile?.is_fundraiser ? (
                 <div className="bg-blue-50 rounded-lg p-4">
-                  <h3 className="font-semibold text-blue-900 mb-2">{t('providerDashboard')}</h3>
-                  <p className="text-blue-700 text-sm mb-3">{t('providerDescription')}</p>
+                  <h3 className="font-semibold text-blue-900 mb-2">{t('fundraiserDashboard')}</h3>
+                  <p className="text-blue-700 text-sm mb-3">{t('fundraiserDescription')}</p>
                   <div className="space-y-2">
                     <Link 
                       href={`/${locale}/dashboard/services`}
@@ -89,22 +89,22 @@ export default async function DashboardPage({ params }: DashboardPageProps) {
                 </div>
               ) : (
                 <div className="bg-gray-50 rounded-lg p-4">
-                  <h3 className="font-semibold text-gray-900 mb-2">{t('becomeProvider')}</h3>
-                  <p className="text-gray-600 text-sm mb-3">{t('providerOffer')}</p>
+                  <h3 className="font-semibold text-gray-900 mb-2">{t('becomeFundraiser')}</h3>
+                  <p className="text-gray-600 text-sm mb-3">{t('fundraiserOffer')}</p>
                   <Link 
                     href={`/${locale}/dashboard/profile`}
                     className="text-blue-600 hover:text-blue-800 text-sm"
                   >
-                    → {t('enableProviderRole')}
+                    → {t('enableFundraiserRole')}
                   </Link>
                 </div>
               )}
 
-              {/* Supporter Section */}
-              {userProfile?.is_supporter ? (
+              {/* Donor Section */}
+              {userProfile?.is_donor ? (
                 <div className="bg-green-50 rounded-lg p-4">
-                  <h3 className="font-semibold text-green-900 mb-2">{t('supporterDashboard')}</h3>
-                  <p className="text-green-700 text-sm mb-3">{t('supporterDescription')}</p>
+                  <h3 className="font-semibold text-green-900 mb-2">{t('donorDashboard')}</h3>
+                  <p className="text-green-700 text-sm mb-3">{t('donorDescription')}</p>
                   <div className="space-y-2">
                     <Link 
                       href={`/${locale}/dashboard/donations`}
@@ -122,13 +122,13 @@ export default async function DashboardPage({ params }: DashboardPageProps) {
                 </div>
               ) : (
                 <div className="bg-gray-50 rounded-lg p-4">
-                  <h3 className="font-semibold text-gray-900 mb-2">{t('becomeSupporter')}</h3>
-                  <p className="text-gray-600 text-sm mb-3">{t('supporterOffer')}</p>
+                  <h3 className="font-semibold text-gray-900 mb-2">{t('becomeDonor')}</h3>
+                  <p className="text-gray-600 text-sm mb-3">{t('donorOffer')}</p>
                   <Link 
                     href={`/${locale}/dashboard/profile`}
                     className="text-blue-600 hover:text-blue-800 text-sm"
                   >
-                    → {t('enableSupporterRole')}
+                    → {t('enableDonorRole')}
                   </Link>
                 </div>
               )}
@@ -165,9 +165,9 @@ export default async function DashboardPage({ params }: DashboardPageProps) {
                     {userProfile.username && <p><strong>{t('username')}:</strong> {userProfile.username}</p>}
                     {userProfile.location && <p><strong>{t('location')}:</strong> {userProfile.location}</p>}
                     <p><strong>{t('roles')}:</strong> 
-                      {userProfile.is_provider && userProfile.is_supporter ? ` ${t('providerAndSupporter')}` :
-                       userProfile.is_provider ? ` ${t('providerRole')}` :
-                       userProfile.is_supporter ? ` ${t('supporterRole')}` : ` ${t('noRoles')}`}
+                      {userProfile.is_fundraiser && userProfile.is_donor ? ` ${t('fundraiserAndDonor')}` :
+                       userProfile.is_fundraiser ? ` ${t('fundraiserRole')}` :
+                       userProfile.is_donor ? ` ${t('donorRole')}` : ` ${t('noRoles')}`}
                     </p>
                   </div>
                   <div className="flex gap-4">

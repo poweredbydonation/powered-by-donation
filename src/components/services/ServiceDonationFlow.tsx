@@ -5,12 +5,15 @@ import { useAuth } from '@/hooks/useAuth'
 import { ExternalLink, Heart, Shield, CheckCircle } from 'lucide-react'
 import Link from 'next/link'
 import CharitySearchModal from './CharitySearchModal'
+import ServicePrice from './ServicePrice'
+import { CurrencyCode } from '@/types/database'
 
 interface ServiceDonationFlowProps {
   service: {
     id: string
     title: string
     donation_amount: number
+    pricing_tier_id?: number
     charity_requirement_type: 'any_charity' | 'specific_charities'
     preferred_charities: Array<{
       charity_id: string
@@ -18,11 +21,12 @@ interface ServiceDonationFlowProps {
       description?: string
       logo_url?: string
     }> | null
-    provider: {
+    fundraiser: {
       id: string
       name: string
     }
   }
+  userCurrency: CurrencyCode
   isAvailable: boolean
   isFull: boolean
 }
@@ -36,6 +40,7 @@ interface SelectedCharityOption {
 
 export default function ServiceDonationFlow({ 
   service, 
+  userCurrency,
   isAvailable, 
   isFull 
 }: ServiceDonationFlowProps) {
@@ -203,9 +208,12 @@ export default function ServiceDonationFlow({
     <div className="bg-gradient-to-br from-green-50 to-blue-50 rounded-lg border border-green-200 p-6 sticky top-8">
       {/* Donation Amount Header */}
       <div className="text-center mb-6">
-        <div className="text-3xl font-bold text-green-600 mb-2">
-          {formatCurrency(service.donation_amount)}
-        </div>
+        <ServicePrice
+          pricingTierId={service.pricing_tier_id}
+          userCurrency={userCurrency}
+          className="text-3xl font-bold text-green-600 mb-2 block"
+          showTierName={false}
+        />
         <div className="text-sm text-gray-600">
           Fixed donation amount
         </div>
@@ -216,7 +224,7 @@ export default function ServiceDonationFlow({
         <div className="flex items-center justify-between text-sm">
           <span className="text-gray-600">Charity choice:</span>
           <span className="font-medium">
-            {service.charity_requirement_type === 'any_charity' ? 'Your choice' : 'Provider selected'}
+            {service.charity_requirement_type === 'any_charity' ? 'Your choice' : 'Fundraiser selected'}
           </span>
         </div>
         <div className="flex items-center justify-between text-sm">
@@ -282,7 +290,7 @@ export default function ServiceDonationFlow({
               
               <div className="space-y-3">
                 <p className="text-sm text-gray-600">
-                  This provider has selected these preferred charities:
+                  This fundraiser has selected these preferred charities:
                 </p>
                 
                 {service.preferred_charities?.map((charity) => (
@@ -380,7 +388,7 @@ export default function ServiceDonationFlow({
             </Link> or{' '}
             <Link href="/login" className="font-medium hover:underline">
               login
-            </Link> to connect with the provider after your donation
+            </Link> to connect with the fundraiser after your donation
           </p>
         </div>
       )}

@@ -12,21 +12,21 @@
 - ✅ TypeScript types for full type safety and development support
 - ✅ Row Level Security (RLS) policies for privacy compliance
 - ✅ Database functions for automatic stats calculation and happiness metrics
-- ✅ Authentication system with Supabase OAuth providers
+- ✅ Authentication system with Supabase OAuth providers (technical OAuth providers, not domain-related)
 
 #### ✅ **Week 1.5 COMPLETED**: User Profile Management System
-- ✅ Smart dashboard with role detection (provider/supporter profiles)
-- ✅ Complete provider profile creation and management system
-- ✅ Complete supporter profile creation and management system
+- ✅ Smart dashboard with role detection (fundraiser/donor profiles)
+- ✅ Complete fundraiser profile creation and management system
+- ✅ Complete donor profile creation and management system
 - ✅ Profile editing functionality with tabbed interface
 - ✅ Profile deletion with safety checks and confirmation dialogs
-- ✅ Privacy controls for both provider and supporter profiles
+- ✅ Privacy controls for both fundraiser and donor profiles
 - ✅ Real-time dashboard updates (no manual refresh needed)
 - ✅ Account settings and profile management interface
 
 #### ✅ **Week 2 COMPLETED**: Service marketplace + fixed pricing system + charity requirements
 - ✅ Service creation form with suburb-level location handling
-- ✅ Service management dashboard for providers
+- ✅ Service management dashboard for fundraisers
 - ✅ Fixed pricing system implementation (exact donation amounts)
 - ✅ Charity requirement selection (any charity vs specific charities)
 - ✅ Location options (remote, physical, hybrid service delivery)
@@ -43,11 +43,14 @@
 - ✅ CharitySearchModal with popular charity suggestions and full search functionality
 - ✅ Updated service creation form with charity selection UI
 - ✅ Comprehensive test interfaces for donation flow and charity cache management
+- ✅ Fixed JustGiving staging URL format with proper parameters (donationValue, currency, exiturl)
+- ✅ Added donation success page with JustGiving donation ID confirmation
+- ✅ End-to-end donation flow testing and validation completed
 
 #### ✅ **Week 5 COMPLETED**: Internationalization + unified user system
 - ✅ Complete internationalization system with next-intl
 - ✅ 17 language support: English, Chinese, Arabic, Vietnamese, Cantonese, Punjabi, Greek, Italian, Filipino, Hindi, Spanish, Turkish, German, French, Japanese, Korean, Portuguese
-- ✅ Unified user system replacing separate providers/supporters tables
+- ✅ Unified user system replacing separate fundraisers/donors tables
 - ✅ Database migration to consolidated users table with dual role support
 - ✅ Updated authentication and profile management for unified system
 - ✅ Comprehensive translation keys for all user-facing content
@@ -55,7 +58,7 @@
 - ✅ Proper locale routing and middleware configuration
 
 #### ⏳ **Remaining Timeline**:
-- **Week 6**: Provider-supporter connections + satisfaction feedback system
+- **Week 6**: Fundraiser-donor connections + satisfaction feedback system
 - **Week 7**: Email automation + service status tracking  
 - **Week 8**: Social sharing features + advanced reputation system
 - **Week 9**: Testing, optimization, production deployment

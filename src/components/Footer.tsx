@@ -100,7 +100,7 @@ const Footer = () => {
           {/* Brand */}
           <div className="md:col-span-1">
             <div className="flex items-center space-x-2 mb-4">
-              <span className="font-semibold text-xl text-gray-900">PbD</span>
+              <span className="font-semibold text-xl text-gray-900">PD</span>
             </div>
             <p className="text-gray-600 text-sm mb-4">
               {t('brand.tagline')}
@@ -122,8 +122,8 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link href={`/${locale}/providers`} className="hover:text-gray-900">
-                  {t('navigation.platform.service_providers')}
+                <Link href={`/${locale}/dashboard`} className="hover:text-gray-900">
+                  {t('navigation.platform.service_fundraisers')}
                 </Link>
               </li>
               <li>
