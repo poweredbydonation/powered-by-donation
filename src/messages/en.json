@@ -7,7 +7,7 @@
     "login": "Login",
     "logout": "Logout",
     "profile": "Profile",
-    "tagline": ""
+    "tagline": "Donation-based service platform"
   },
   "home": {
     "title": "Powered by Donation",
@@ -333,7 +333,7 @@
       }
     },
     "brand": {
-      "tagline": "Connecting services with charitable giving. Building community through generosity.",
+      "tagline": "Donation-based service platform",
       "abn": "ABN: 17 927 784 658"
     },
     "navigation": {

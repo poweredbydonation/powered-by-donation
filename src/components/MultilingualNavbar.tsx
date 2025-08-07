@@ -73,7 +73,7 @@ export default function MultilingualNavbar({ locale, messages }: MultilingualNav
               <span className="hidden sm:inline">Powered by Donation</span>
               <span className="sm:hidden">PD</span>
             </a>
-            {locale !== 'en' && messages?.nav?.tagline && messages.nav.tagline.trim() !== '' && (
+            {messages?.nav?.tagline && messages.nav.tagline.trim() !== '' && (
               <div className="text-sm text-gray-600 mt-1 hidden sm:block">
                 {messages.nav.tagline}
               </div>
