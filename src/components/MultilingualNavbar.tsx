@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { usePathname } from 'next/navigation'
 import { Menu, X, ChevronDown } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
@@ -18,6 +18,8 @@ export default function MultilingualNavbar({ locale, messages }: MultilingualNav
   const [mounted, setMounted] = useState(false)
   const pathname = usePathname()
   const { user, signOut, loading } = useAuth()
+  const langDropdownRef = useRef<HTMLDivElement>(null)
+  const profileDropdownRef = useRef<HTMLDivElement>(null)
   
   console.log('=== MULTILINGUAL NAVBAR DEBUG ===')
   console.log('MultilingualNavbar received locale prop:', locale)
@@ -25,6 +27,22 @@ export default function MultilingualNavbar({ locale, messages }: MultilingualNav
 
   useEffect(() => {
     setMounted(true)
+  }, [])
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (langDropdownRef.current && !langDropdownRef.current.contains(event.target as Node)) {
+        setIsLangOpen(false)
+      }
+      if (profileDropdownRef.current && !profileDropdownRef.current.contains(event.target as Node)) {
+        setIsProfileOpen(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
   }, [])
 
   const handleSignOut = async () => {
@@ -92,7 +110,7 @@ export default function MultilingualNavbar({ locale, messages }: MultilingualNav
               </a>
               
               {/* Language Dropdown */}
-              <div className="relative flex justify-center">
+              <div ref={langDropdownRef} className="relative flex justify-center">
                 <button
                   onClick={() => setIsLangOpen(!isLangOpen)}
                   className="flex items-center text-gray-700 hover:text-blue-600 transition-colors"
@@ -128,7 +146,7 @@ export default function MultilingualNavbar({ locale, messages }: MultilingualNav
             ) : user ? (
               <>
                 {/* Profile Photo Dropdown */}
-                <div className="relative">
+                <div ref={profileDropdownRef} className="relative">
                   <button
                     onClick={() => setIsProfileOpen(!isProfileOpen)}
                     className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center hover:bg-blue-200 transition-colors"
@@ -169,21 +187,12 @@ export default function MultilingualNavbar({ locale, messages }: MultilingualNav
                 </div>
               </>
             ) : (
-              <>
-                <a 
-                  href={`/${locale}/dashboard`}
-                  className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
-                >
-                  {messages?.nav?.dashboard || 'Dashboard'}
-                </a>
-
-                <a 
-                  href={`/${locale}/login`}
-                  className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium"
-                >
-                  {messages?.nav?.login || 'Login'}
-                </a>
-              </>
+              <a 
+                href={`/${locale}/login`}
+                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+              >
+                {messages?.nav?.login || 'Login'}
+              </a>
             )}
           </div>
 
@@ -206,14 +215,6 @@ export default function MultilingualNavbar({ locale, messages }: MultilingualNav
                 onClick={() => setIsMenuOpen(false)}
               >
                 {messages?.nav?.browse || 'Browse Services'}
-              </a>
-              
-              <a 
-                href={`/${locale}/dashboard`}
-                className="block text-gray-700 hover:text-blue-600 font-medium transition-colors"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                {messages?.nav?.dashboard || 'Dashboard'}
               </a>
 
               {/* Mobile Authentication */}
