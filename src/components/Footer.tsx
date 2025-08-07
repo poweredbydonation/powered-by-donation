@@ -100,7 +100,7 @@ const Footer = () => {
           {/* Brand */}
           <div className="md:col-span-1">
             <div className="flex items-center space-x-2 mb-4">
-              <span className="font-semibold text-xl text-gray-900">PbD</span>
+              <span className="font-semibold text-xl text-gray-900">PD</span>
             </div>
             <p className="text-gray-600 text-sm mb-4">
               {t('brand.tagline')}
