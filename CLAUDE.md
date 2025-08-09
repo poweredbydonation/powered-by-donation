@@ -364,11 +364,11 @@ See [README-development.md](./README-development.md) for complete development se
 #### **MILESTONE 5: User Platform Preferences**
 **Goal**: Implement user platform selection and filtering
 
-##### M5.1: Update User Profile & Signup ⏳ PENDING  
-- [ ] Add preferred_platform field to profile settings
-- [ ] Update signup flow to ask for platform preference
-- [ ] Add platform switching functionality
-- [ ] **Test**: Users can set and change platform preferences
+##### M5.1: Update User Profile & Signup ✅ COMPLETED  
+- [x] Add preferred_platform field to profile settings
+- [x] Update signup flow to ask for platform preference
+- [x] Add platform switching functionality
+- [x] **Test**: Users can set and change platform preferences
 
 ##### M5.2: Implement Browse Filtering ⏳ PENDING
 - [ ] Hard filter authenticated users by preferred_platform
@@ -484,8 +484,8 @@ See [README-development.md](./README-development.md) for complete development se
 - ❌ BLOCKED - Task blocked by issue
 - 📝 TESTING - Task awaiting user testing/confirmation
 
-### **CURRENT STATUS**: Core Infrastructure + Automated Polling Complete ✅
-**Completed Milestones**: M1 (Database), M2 (JustGiving API), M3 (Platform APIs), M6.1 (Frontend Flow), M7 (Polling & Status Tracking)
+### **CURRENT STATUS**: Core Infrastructure + Automated Polling + User Platform Preferences Complete ✅
+**Completed Milestones**: M1 (Database), M2 (JustGiving API), M3 (Platform APIs), M5.1 (User Platform Preferences), M6.1 (Frontend Flow), M7 (Polling & Status Tracking)
 
 #### **MAJOR COMPLETION - Session 2025-01-08** 🎉
 ✅ **Database Migration Applied**: All dual platform tables and sequences working
@@ -528,10 +528,27 @@ See [README-development.md](./README-development.md) for complete development se
 - **Backup**: 5-minute cron job handles missed cases (users who don't return to success page)
 - **Result**: Best of both worlds - instant feedback + guaranteed processing
 
+#### **MAJOR COMPLETION - Session 2025-08-09 (M5.1)** 🎉
+✅ **User Platform Preferences**: Full user platform selection system implemented
+✅ **Profile Settings**: Added preferred_platform field with JustGiving/Every.org options
+✅ **Signup Flow Integration**: Platform preference captured during profile setup process
+✅ **Platform Switching**: Users can change platform preference in profile settings
+✅ **Database Integration**: preferred_platform field properly typed and saved
+✅ **Build Validation**: TypeScript compilation and Next.js build successful
+✅ **Database Verification**: Live test confirms database writes working correctly
+
+**Live Implementation Results**:
+- Profile form includes platform selector with "JustGiving (Available Now)" and "Every.org (Coming Soon)" options
+- Default platform set to 'justgiving' for new users
+- Platform preference properly integrated with existing UnifiedUserProfileForm
+- Signup flow redirects to profile setup where platform is selected
+- No TypeScript errors or build issues
+- **Database Test Confirmed**: User profile successfully updated from 'justgiving' to 'every_org' and persisted in database
+
 **Next Priority Tasks**:
-1. **M5.1**: User platform preferences implementation  
-2. **M4.2-M4.3**: Service management updates for platform awareness
-3. **M8.1**: Pending donations banner component
+1. **M4.1**: Update service creation flow for platform awareness
+2. **M4.2-M4.3**: Service management and display updates for platform awareness
+3. **M5.2**: Browse filtering by platform for authenticated/anonymous users
 
 ---
 

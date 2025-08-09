@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { User, CurrencyCode } from '@/types/database'
+import { User, CurrencyCode, DonationPlatform } from '@/types/database'
 
 interface UnifiedUserProfileFormProps {
   user: any // Supabase Auth User
@@ -20,6 +20,7 @@ export default function UnifiedUserProfileForm({ user, existingProfile, onProfil
   const [phone, setPhone] = useState(existingProfile?.phone || '')
   const [avatarUrl, setAvatarUrl] = useState(existingProfile?.avatar_url || '')
   const [preferredCurrency, setPreferredCurrency] = useState<CurrencyCode>(existingProfile?.preferred_currency || 'GBP')
+  const [preferredPlatform, setPreferredPlatform] = useState<DonationPlatform>(existingProfile?.preferred_platform || 'justgiving')
   
   // Role toggles
   const [isFundraiser, setIsFundraiser] = useState(existingProfile?.is_fundraiser || false)
@@ -60,6 +61,7 @@ export default function UnifiedUserProfileForm({ user, existingProfile, onProfil
         phone: phone.trim() || null,
         avatar_url: avatarUrl.trim() || null,
         preferred_currency: preferredCurrency,
+        preferred_platform: preferredPlatform,
         is_fundraiser: isFundraiser,
         is_donor: isDonor
       }
@@ -249,6 +251,25 @@ export default function UnifiedUserProfileForm({ user, existingProfile, onProfil
           </select>
           <p className="text-sm text-gray-500 mt-1">
             This will be used for displaying donation amounts and pricing
+          </p>
+        </div>
+
+        <div>
+          <label htmlFor="platform" className="block text-sm font-medium text-gray-700 mb-2">
+            Preferred Donation Platform *
+          </label>
+          <select
+            id="platform"
+            value={preferredPlatform}
+            onChange={(e) => setPreferredPlatform(e.target.value as DonationPlatform)}
+            required
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="justgiving">JustGiving (Available Now)</option>
+            <option value="every_org">Every.org (Coming Soon)</option>
+          </select>
+          <p className="text-sm text-gray-500 mt-1">
+            Choose your preferred platform for charitable donations. This affects which services you can access.
           </p>
         </div>
 
