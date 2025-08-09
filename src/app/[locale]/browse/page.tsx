@@ -446,9 +446,20 @@ export default function BrowsePage({ params }: BrowsePageProps) {
               <div key={service.id} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
                 <div className="p-6">
                   <div className="flex justify-between items-start mb-3">
-                    <h3 className="text-lg font-semibold text-gray-900 line-clamp-2">
-                      {service.title}
-                    </h3>
+                    <div className="flex-1 pr-2">
+                      <h3 className="text-lg font-semibold text-gray-900 line-clamp-2">
+                        {service.title}
+                      </h3>
+                      <div className="mt-1">
+                        <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                          service.platform === 'justgiving' 
+                            ? 'bg-blue-100 text-blue-800' 
+                            : 'bg-green-100 text-green-800'
+                        }`}>
+                          {service.platform === 'justgiving' ? 'JustGiving' : 'Every.org'}
+                        </span>
+                      </div>
+                    </div>
                     {/* Remove rating for now since we don't have happiness ratings yet */}
                   </div>
                   

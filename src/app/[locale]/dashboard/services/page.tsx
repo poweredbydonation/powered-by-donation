@@ -8,9 +8,9 @@ import AuthGuard from '@/components/auth/AuthGuard'
 import MultilingualNavbar from '@/components/MultilingualNavbar'
 import { useAuth } from '@/hooks/useAuth'
 import { createClient } from '@/lib/supabase/client'
-import { Service, ServiceLocation } from '@/types/database'
+import { Service, ServiceLocation, ServiceWithPlatformFields } from '@/types/database'
 
-type UserService = Service & {
+type UserService = ServiceWithPlatformFields & {
   fundraiser: {
     name: string
   }
@@ -216,10 +216,20 @@ export default function ServicesPage() {
                     <div className="p-6">
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
-                          <div className="flex items-center space-x-3 mb-2">
+                          <div className="flex items-center flex-wrap gap-2 mb-2">
                             <h3 className="text-xl font-semibold text-gray-900">
                               {service.title}
                             </h3>
+                            
+                            {/* Platform badge */}
+                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                              service.platform === 'justgiving' 
+                                ? 'text-blue-800 bg-blue-100' 
+                                : 'text-green-800 bg-green-100'
+                            }`}>
+                              {service.platform === 'justgiving' ? 'JustGiving' : 'Every.org'}
+                            </span>
+                            
                             <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${availability.color} bg-opacity-10`}>
                               {availability.text}
                             </span>

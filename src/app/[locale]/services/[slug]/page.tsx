@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { Service, ServiceLocation, CurrencyCode } from '@/types/database'
+import { Service, ServiceLocation, CurrencyCode, ServiceWithPlatformFields } from '@/types/database'
 import MultilingualNavbar from '@/components/MultilingualNavbar'
 import ServiceDonationFlow from '@/components/services/ServiceDonationFlow'
 import ServiceLocationMap from '@/components/ServiceLocationMap'
@@ -17,7 +17,7 @@ interface ServicePageProps {
   }
 }
 
-type ServiceWithFundraiser = Service & {
+type ServiceWithFundraiser = ServiceWithPlatformFields & {
   user: {
     id: string
     name: string
@@ -157,7 +157,16 @@ export default function ServicePage({ params }: ServicePageProps) {
                     </h1>
                     
                     {/* Service status badges */}
-                    <div className="flex items-center space-x-2 mb-4">
+                    <div className="flex items-center flex-wrap gap-2 mb-4">
+                      {/* Platform badge */}
+                      <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+                        service.platform === 'justgiving' 
+                          ? 'bg-blue-100 text-blue-800' 
+                          : 'bg-green-100 text-green-800'
+                      }`}>
+                        {service.platform === 'justgiving' ? 'JustGiving' : 'Every.org'}
+                      </span>
+                      
                       {isAvailable && !isFull ? (
                         <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium text-green-800 bg-green-100">
                           Available Now
@@ -172,7 +181,7 @@ export default function ServicePage({ params }: ServicePageProps) {
                         </span>
                       )}
                       
-                      <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium text-blue-800 bg-blue-100">
+                      <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium text-purple-800 bg-purple-100">
                         {service.charity_requirement_type === 'any_charity' ? 'Any Charity' : 'Specific Charities'}
                       </span>
                     </div>
@@ -240,6 +249,9 @@ export default function ServicePage({ params }: ServicePageProps) {
                             description?: string
                             logo_url?: string
                           }> : null) : null,
+                      platform: service.platform,
+                      organization_id: service.organization_id,
+                      organization_name: service.organization_name,
                       fundraiser: {
                         id: service.user.id,
                         name: service.user.name

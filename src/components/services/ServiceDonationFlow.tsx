@@ -6,7 +6,7 @@ import { ExternalLink, Heart, Shield, CheckCircle } from 'lucide-react'
 import Link from 'next/link'
 import CharitySearchModal from './CharitySearchModal'
 import ServicePrice from './ServicePrice'
-import { CurrencyCode } from '@/types/database'
+import { CurrencyCode, DonationPlatform } from '@/types/database'
 
 interface ServiceDonationFlowProps {
   service: {
@@ -21,6 +21,9 @@ interface ServiceDonationFlowProps {
       description?: string
       logo_url?: string
     }> | null
+    platform?: DonationPlatform
+    organization_id?: string
+    organization_name?: string
     fundraiser: {
       id: string
       name: string
