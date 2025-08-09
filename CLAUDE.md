@@ -415,12 +415,13 @@ See [README-development.md](./README-development.md) for complete development se
 #### **MILESTONE 8: Pending Donations & Notifications**
 **Goal**: Implement pending donation tracking and fundraiser notifications
 
-##### M8.1: Create Pending Donations Banner Component ⏳ PENDING
-- [ ] Create `src/components/PendingDonationsBanner.tsx`
-- [ ] Show "You have pending donation(s) - click to check status"
-- [ ] Add global banner to layout for authenticated users
-- [ ] Link to donation status page
-- [ ] **Test**: Banner appears when user has pending donations
+##### M8.1: Create Pending Donations Banner Component ✅ COMPLETED
+- [x] Create `src/components/PendingDonationsBanner.tsx`
+- [x] Show "You have pending donation(s) - click to check status"
+- [x] Add global banner to layout for authenticated users
+- [x] Link to donation status page (`/dashboard/donations`)
+- [x] Create comprehensive donations dashboard with history and status tracking
+- [x] **Test**: Banner appears when user has pending donations
 
 ##### M8.2: Implement Fundraiser Notification System ⏳ PENDING
 - [ ] Add notification logic to cron function
@@ -600,10 +601,27 @@ See [README-development.md](./README-development.md) for complete development se
 - Consistent platform filtering across browse, dashboard, and service pages
 - Database persistence ensures platform preference survives sessions
 
+#### **MAJOR COMPLETION - Session 2025-08-09 (M8.1)** 🎉
+✅ **Pending Donations Banner System**: Complete donation tracking and user notification system implemented
+✅ **Global Banner Component**: PendingDonationsBanner added to layout with dismissible UI
+✅ **Donations Dashboard**: Comprehensive `/dashboard/donations` page with history and status tracking
+✅ **Real-time Data**: Fetches fresh pending donation counts and displays user-friendly notifications
+✅ **Internationalization**: Full locale support with dynamic routing
+✅ **Build Validation**: TypeScript compilation and Next.js build successful
+
+**Live Implementation Results**:
+- PendingDonationsBanner component queries service_requests table for user's pending donations
+- Global banner appears only for authenticated users with status = 'pending' donations
+- Dismissible banner with clear call-to-action linking to detailed donations dashboard
+- Profile menu notifications in both desktop dropdown and mobile menu with count badges
+- Comprehensive donations page with summary cards and responsive data display
+- Mobile-optimized card layout eliminates horizontal scrolling on small screens
+- Desktop table layout preserved for full data visibility on larger screens
+- Proper status badges (pending/completed/timed out) with formatted dates and amounts
+- Mobile-responsive design with accessibility considerations and touch-friendly interfaces
+
 **Next Priority Tasks**:
-1. **M6.2**: Update service pages for additional platform context
-2. **M8.1**: Create pending donations banner component
-3. **M8.2**: Implement fundraiser notification system
+1. **M8.2**: Implement fundraiser notification system
 
 ---
 

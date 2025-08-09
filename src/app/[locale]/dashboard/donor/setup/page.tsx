@@ -1,6 +1,12 @@
 import { redirect } from 'next/navigation'
 
-export default function DonorSetupRedirect() {
+interface DonorSetupPageProps {
+  params: {
+    locale: string
+  }
+}
+
+export default function DonorSetupRedirect({ params }: DonorSetupPageProps) {
   // Redirect to new unified profile setup
-  redirect('/dashboard/profile/setup')
+  redirect(`/${params.locale}/dashboard/profile/setup`)
 }

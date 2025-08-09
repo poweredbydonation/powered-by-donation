@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import { usePathname } from 'next/navigation'
 import { Menu, X, ChevronDown } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
+import { usePendingDonations } from '@/hooks/usePendingDonations'
 import { LANGUAGES, getOtherLanguages, getLanguageByCode } from '@/config/languages'
 import PlatformSelector from './PlatformSelector'
 
@@ -19,6 +20,7 @@ export default function MultilingualNavbar({ locale, messages }: MultilingualNav
   const [mounted, setMounted] = useState(false)
   const pathname = usePathname()
   const { user, signOut, loading } = useAuth()
+  const { pendingCount } = usePendingDonations()
   const langDropdownRef = useRef<HTMLDivElement>(null)
   const profileDropdownRef = useRef<HTMLDivElement>(null)
   
@@ -169,6 +171,25 @@ export default function MultilingualNavbar({ locale, messages }: MultilingualNav
                         <p className="text-sm text-gray-600">{user.email}</p>
                       </div>
                       <div className="p-2 space-y-1">
+                        {/* Pending Donations Notification */}
+                        {pendingCount > 0 && (
+                          <a
+                            href={`/${locale}/dashboard/donations`}
+                            className="block w-full bg-yellow-50 hover:bg-yellow-100 text-yellow-800 px-3 py-2 rounded text-sm font-medium transition-colors text-left border border-yellow-200"
+                            onClick={() => setIsProfileOpen(false)}
+                          >
+                            <div className="flex items-center justify-between">
+                              <span>Pending Donations</span>
+                              <span className="bg-yellow-200 text-yellow-800 text-xs px-2 py-1 rounded-full">
+                                {pendingCount}
+                              </span>
+                            </div>
+                            <div className="text-xs text-yellow-600 mt-1">
+                              Click to check status
+                            </div>
+                          </a>
+                        )}
+                        
                         <a
                           href={`/${locale}/dashboard`}
                           className="block w-full text-gray-700 hover:bg-gray-50 px-3 py-2 rounded text-sm font-medium transition-colors text-left"
@@ -239,6 +260,34 @@ export default function MultilingualNavbar({ locale, messages }: MultilingualNav
                     </div>
                     <span className="text-sm text-gray-700">{user.email}</span>
                   </div>
+                  
+                  {/* Mobile Pending Donations Notification */}
+                  {pendingCount > 0 && (
+                    <a
+                      href={`/${locale}/dashboard/donations`}
+                      className="block w-full bg-yellow-50 hover:bg-yellow-100 text-yellow-800 px-4 py-2 rounded-lg transition-colors font-medium text-left border border-yellow-200 mb-3"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span>Pending Donations</span>
+                        <span className="bg-yellow-200 text-yellow-800 text-xs px-2 py-1 rounded-full">
+                          {pendingCount}
+                        </span>
+                      </div>
+                      <div className="text-xs text-yellow-600 mt-1">
+                        Click to check status
+                      </div>
+                    </a>
+                  )}
+                  
+                  <a
+                    href={`/${locale}/dashboard`}
+                    className="block w-full bg-blue-50 hover:bg-blue-100 text-blue-600 hover:text-blue-700 px-4 py-2 rounded-lg transition-colors font-medium text-left mb-3"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {messages?.nav?.dashboard || 'Dashboard'}
+                  </a>
+                  
                   <button
                     onClick={() => {
                       handleSignOut()

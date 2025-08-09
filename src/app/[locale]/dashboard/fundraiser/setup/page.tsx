@@ -1,6 +1,12 @@
 import { redirect } from 'next/navigation'
 
-export default function FundraiserSetupRedirect() {
+interface FundraiserSetupPageProps {
+  params: {
+    locale: string
+  }
+}
+
+export default function FundraiserSetupRedirect({ params }: FundraiserSetupPageProps) {
   // Redirect to new unified profile setup
-  redirect('/dashboard/profile/setup')
+  redirect(`/${params.locale}/dashboard/profile/setup`)
 }
