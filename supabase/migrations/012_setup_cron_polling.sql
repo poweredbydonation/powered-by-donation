@@ -7,22 +7,17 @@ CREATE EXTENSION IF NOT EXISTS pg_cron;
 
 -- Create cron job to poll donation statuses every 5 minutes
 -- This will call the check-donations edge function to update pending donations
-SELECT cron.schedule(
-  'poll-donation-statuses', -- job name
-  '*/5 * * * *',            -- every 5 minutes
-  $$
-  SELECT extensions.http(
-    'POST',
-    'https://ktwlhjgomcbbjynfefys.supabase.co/functions/v1/check-donations',
-    '{}',
-    'application/json',
-    ARRAY[
-      extensions.http_header('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt0d2xoamdvbWNiYmp5bmZlZnlzIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1Mzc4OTI1MiwiZXhwIjoyMDY5MzY1MjUyfQ.OxKw6V1gpKaEhQ3A2-sXGvscVYCuY7AzPj3YXil5aUU'),
-      extensions.http_header('Content-Type', 'application/json')
-    ]
-  );
-  $$
-);
+-- NOTE: Service key must be configured separately via Supabase dashboard
+-- Go to Settings > Database > Cron Jobs and manually create the job with proper authentication
+-- 
+-- Manual setup required:
+-- 1. Go to Supabase Dashboard > Settings > Database > Cron Jobs
+-- 2. Create new job: poll-donation-statuses
+-- 3. Schedule: */5 * * * *
+-- 4. Command: SELECT extensions.http('POST', 'https://ktwlhjgomcbbjynfefys.supabase.co/functions/v1/check-donations', '{}', 'application/json', ARRAY[extensions.http_header('Authorization', 'Bearer [SERVICE_ROLE_KEY]'), extensions.http_header('Content-Type', 'application/json')]);
+-- 
+-- SECURITY: Replace [SERVICE_ROLE_KEY] with actual service role key from dashboard
+-- DO NOT commit service keys to version control
 
 -- Verify the cron job was created
 SELECT * FROM cron.job WHERE jobname = 'poll-donation-statuses';

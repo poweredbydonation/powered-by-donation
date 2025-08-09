@@ -501,12 +501,20 @@ See [README-development.md](./README-development.md) for complete development se
 ✅ **Status Updates**: Both test donations (PD-JG-1001, PD-JG-1002) automatically updated from 'pending' to 'success'
 ✅ **Edge Function**: Deployed with correct response parsing for staging API format
 ✅ **Production Ready**: Automated donation status tracking fully operational
+✅ **Security Fix**: Resolved exposed service key vulnerability and restored secure polling system
 
 **Live Test Results - Automated Polling**:
 - Cron job created: `poll-donation-statuses` running every 5 minutes
 - JustGiving API endpoint fixed: `https://api.staging.justgiving.com/{appId}/v1/donation/ref/{reference}`
 - Donations automatically detected: PD-JG-1001 (ID: 1500385693), PD-JG-1002 (ID: 1500385694)
 - Status updates successful: 2 checked, 2 updated, 0 timed out
+
+**Security Resolution - Session 2025-08-09** 🔒:
+- Removed hardcoded service key from migration file (012_setup_cron_polling.sql)
+- Generated fresh API key (sb_secret_*) to replace compromised JWT token
+- Disabled legacy API keys containing exposed credentials
+- Recreated cron job (`check-donations-cron-job`) using Supabase Edge Function type
+- Verified secure polling system operational with new authentication
 
 **Next Priority Tasks**:
 1. **M5.1**: User platform preferences implementation  
