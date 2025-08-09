@@ -5,7 +5,17 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import { useAuth } from '@/hooks/useAuth'
 import { useLocale } from 'next-intl'
-import { formatDistanceToNow } from 'date-fns'
+// Using built-in JavaScript date formatting instead of date-fns
+function getTimeAgo(date: Date): string {
+  const now = new Date()
+  const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000)
+  
+  if (diffInSeconds < 60) return `${diffInSeconds}s ago`
+  if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`
+  if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`
+  if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)}d ago`
+  return `${Math.floor(diffInSeconds / 604800)}w ago`
+}
 
 interface RecentDonation {
   id: string
@@ -111,7 +121,7 @@ export default function FundraiserNotificationsBanner() {
                 {/* Show the most recent donation */}
                 <span className="text-xs text-green-600 block sm:inline mt-1 sm:mt-0">
                   Latest: £{recentDonations[0].donation_amount} → {recentDonations[0].organization_name} • {' '}
-                  {formatDistanceToNow(new Date(recentDonations[0].created_at), { addSuffix: true })}
+                  {getTimeAgo(new Date(recentDonations[0].created_at))}
                 </span>
                 
                 <br className="sm:hidden" />
