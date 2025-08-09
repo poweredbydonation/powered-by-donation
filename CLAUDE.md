@@ -398,12 +398,12 @@ See [README-development.md](./README-development.md) for complete development se
 #### **MILESTONE 7: Polling & Status Tracking**
 **Goal**: Implement server-side donation status checking
 
-##### M7.1: Create Supabase Cron Function ⏳ PENDING
-- [ ] Create `supabase/functions/check-donations/index.ts`
-- [ ] Implement platform-aware polling logic  
-- [ ] Add JustGiving API integration for status checking using getDonationByReference()
-- [ ] Handle timeout scenarios and status updates
-- [ ] **Test**: Cron function polls and updates statuses correctly
+##### M7.1: Create Supabase Cron Function ✅ COMPLETED
+- [x] Create `supabase/functions/check-donations/index.ts`
+- [x] Implement platform-aware polling logic  
+- [x] Add JustGiving API integration for status checking using getDonationByReference()
+- [x] Handle timeout scenarios and status updates
+- [x] **Test**: Cron function polls and updates statuses correctly
 
 ##### M7.2: Setup Database Cron Job ⏳ PENDING
 - [ ] Configure pg_cron extension
@@ -502,7 +502,7 @@ See [README-development.md](./README-development.md) for complete development se
 - Successful redirect to donation success page with `jgDonationId=1500385693`
 
 **Next Priority Tasks**:
-1. **M7.1**: Server-side polling system for donation status tracking
+1. **M7.2**: Setup automated cron job for donation polling (5-minute intervals)
 2. **M5.1**: User platform preferences implementation  
 3. **M4.2-M4.3**: Service management updates for platform awareness
 
