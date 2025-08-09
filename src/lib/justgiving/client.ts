@@ -40,6 +40,22 @@ export interface FundraiserSearchResponse {
   totalItemsCount: number
 }
 
+export interface JustGivingDonation {
+  donationId: string
+  donationRef: string
+  donorName: string
+  donationAmount: number
+  currencyCode: string
+  donationDate: string
+  charityId: number
+  donationStatus: 'Accepted' | 'Pending' | 'Rejected'
+}
+
+export interface DonationByReferenceResponse {
+  donation: JustGivingDonation | null
+  found: boolean
+}
+
 class JustGivingAPI {
   private apiKey: string
   private baseUrl: string
@@ -155,6 +171,35 @@ class JustGivingAPI {
       .replace(/\s+/g, '-') // Replace spaces with hyphens
       .replace(/-+/g, '-') // Replace multiple hyphens with single
       .replace(/^-|-$/g, '') // Remove leading/trailing hyphens
+  }
+
+  /**
+   * Get donation status by reference ID
+   * Used by server-side polling to check if pending donations are completed
+   */
+  async getDonationByReference(reference: string): Promise<DonationByReferenceResponse> {
+    const endpoint = `/v1/donation/ref/${encodeURIComponent(reference)}`
+    
+    try {
+      const donation = await this.makeRequest<JustGivingDonation>(endpoint)
+      return {
+        donation,
+        found: true
+      }
+    } catch (error: any) {
+      // JustGiving returns 404 if donation not found yet (still pending)
+      if (error.message?.includes('status: 404')) {
+        console.log(`Donation with reference ${reference} not found yet (likely still pending)`)
+        return {
+          donation: null,
+          found: false
+        }
+      }
+      
+      // Re-throw other errors (network issues, auth problems, etc.)
+      console.error(`Error checking donation status for reference ${reference}:`, error)
+      throw error
+    }
   }
 
   /**

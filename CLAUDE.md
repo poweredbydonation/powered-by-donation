@@ -4,6 +4,34 @@
 
 **Powered by Donation** is a donation-service marketplace where service providers offer skills in exchange for charitable donations. Service seekers browse services and make donations to JustGiving charities. We facilitate connections but don't handle payments directly.
 
+### Market Position & Similar Platforms
+
+**Powered by Donation** operates in the established "charity-driven free services" market alongside several similar platforms:
+
+#### Similar Platforms:
+- **Catchafire**: Professionals provide free services to nonprofits
+- **Taproot Foundation**: Skilled volunteers offer free professional services to nonprofits  
+- **Vollie**: Free online professional services for charities and social enterprises
+
+#### Platform Comparison:
+
+| Feature | Powered by Donation | Catchafire | Taproot Foundation | Vollie |
+|---------|-------------------|------------|-------------------|---------|
+| **Service Recipients** | General consumers | Nonprofits only | Nonprofits only | Nonprofits/Social enterprises |
+| **Payment to Providers** | None (free services) | None (volunteering) | None (volunteering) | None (volunteering) |
+| **Charitable Impact** | Donors choose any charity | Benefits served nonprofit | Benefits served nonprofit | Benefits served nonprofit |
+| **Service Scope** | Any professional service | Nonprofit-focused needs | Business/strategy focus | Online skills-based |
+| **Geographic Focus** | Global (17 languages) | Global | US-focused | Australia-focused |
+| **Donation Structure** | Fixed amounts to chosen charity | Direct nonprofit benefit | Direct nonprofit benefit | Direct nonprofit benefit |
+| **Target Market** | Consumer-facing | B2B (business-to-nonprofit) | B2B (business-to-nonprofit) | B2B (business-to-nonprofit) |
+
+#### Our Differentiation:
+- **Consumer-focused**: Serves general public vs. nonprofit sector only
+- **Flexible charity choice**: Donors select from any JustGiving charity
+- **Fixed donation structure**: Clear, transparent pricing model
+- **Multilingual platform**: 17 languages for global accessibility
+- **Anonymous privacy model**: Protects donor identity while enabling recognition choice
+
 ### Core Values
 - **Australian Legal Compliance**: Privacy Act, Consumer Law, ACNC requirements
 - **Social Impact**: Connecting community needs with charitable giving
@@ -242,6 +270,241 @@ See [README-development.md](./README-development.md) for complete development se
 **Language Translation Progress**: 17/17 completed ✅
 - ✅ English, German, Spanish, French, Italian, Portuguese, Japanese, Turkish, Korean, Chinese, Arabic, Hindi, Filipino, Greek, Cantonese, Punjabi, Vietnamese
 - 🎉 ALL LANGUAGES COMPLETE
+
+---
+
+## CURRENT PROJECT: Dual Platform Sequential References Implementation
+
+### STATUS: STARTED - 2025-01-08
+
+**SCOPE**: Sequential reference generation (PD-JG-1000, PD-EV-1000), dual platform support (JustGiving + Every.org), server-side polling, unified donation tracking
+
+### Implementation Task List & Milestones
+
+#### **MILESTONE 1: Database Schema & Migration**
+**Goal**: Implement dual platform database structure with sequential references
+
+##### M1.1: Create Migration Script ✅ COMPLETED
+- [x] Create `supabase/migrations/002_dual_platform_references.sql`
+- [x] Add platform-specific sequences (donation_reference_jg_seq, donation_reference_ev_seq)
+- [x] Add platform fields to users and services tables
+- [x] Update service_requests table with new platform fields
+- [x] Create separate charity cache tables (justgiving/every_org)
+- [x] Create platform reference generation function
+- [x] **Test**: Migration applies without errors
+
+##### M1.2: Update TypeScript Types ✅ COMPLETED  
+- [x] Update `src/types/database.ts` with new platform types
+- [x] Add DonationPlatform type and interfaces
+- [x] Add computed field types for frontend optimization
+- [x] **Test**: TypeScript compilation succeeds
+
+##### M1.3: Apply Migration & Verify ✅ COMPLETED
+- [x] Apply migration to Supabase database
+- [x] Verify sequences work correctly (PD-JG-1001 generated successfully)
+- [x] Test reference generation function
+- [x] Confirm existing data migrated properly
+- [x] **Test**: Database queries work with new schema
+
+#### **MILESTONE 2: JustGiving API Enhancement**
+**Goal**: Add donation status checking capability
+
+##### M2.1: Enhance JustGiving Client ✅ COMPLETED
+- [x] Add `getDonationByReference()` method to `src/lib/justgiving/client.ts`
+- [x] Implement JustGiving API `/v1/donation/ref/{reference}` integration
+- [x] Add proper error handling for 404 (donation not found yet)
+- [x] Add response type interfaces for donation status
+- [x] **Test**: Can successfully query donation status by reference
+
+#### **MILESTONE 3: Platform-Specific APIs**
+**Goal**: Replace current API with platform-specific endpoints
+
+##### M3.1: Create JustGiving API Endpoint ✅ COMPLETED
+- [x] Create `src/app/api/just-giving/charity/[id]/route.ts`
+- [x] Implement service_requests record creation
+- [x] Add platform-specific reference generation (PD-JG-xxx)
+- [x] Integrate with JustGiving donation URL generation
+- [x] Add proper error handling
+- [x] **Test**: API creates records and returns donation URLs (PD-JG-1001 created successfully)
+
+##### M3.2: Create Every.org API Placeholder ✅ COMPLETED
+- [x] Create `src/app/api/every-org/non-profit/[id]/route.ts`  
+- [x] Implement "Coming Soon" response for Phase 1
+- [x] Structure ready for Phase 2 implementation
+- [x] **Test**: API returns appropriate coming soon message
+
+##### M3.3: Remove Legacy API Endpoint ✅ COMPLETED
+- [x] Keep legacy endpoint for backward compatibility
+- [x] Update frontend references to use new platform-specific endpoints
+- [x] **Test**: New endpoints working, legacy maintained for safety
+
+#### **MILESTONE 4: Service Management Updates**
+**Goal**: Update service creation and display for dual platforms
+
+##### M4.1: Update Service Creation Flow ⏳ PENDING
+- [ ] Modify service creation form to use user's preferred_platform
+- [ ] Update charity search to be platform-aware  
+- [ ] Store organization_data as JSON field
+- [ ] Store organization_name directly in service
+- [ ] Show "Every.org Coming Soon" for every_org users
+- [ ] **Test**: Service creation works with new schema
+
+##### M4.2: Update Service Display Logic ⏳ PENDING
+- [ ] Add computed platform_organization_id field in queries
+- [ ] Update service cards to show platform badges  
+- [ ] Update service detail pages with platform awareness
+- [ ] **Test**: Services display correctly with platform info
+
+##### M4.3: Update Service Dashboard ⏳ PENDING
+- [ ] Show mixed-platform services in unified list
+- [ ] Add platform badges to service listings
+- [ ] Update service management actions for platform awareness
+- [ ] **Test**: Dashboard shows all services with correct platform info
+
+#### **MILESTONE 5: User Platform Preferences**
+**Goal**: Implement user platform selection and filtering
+
+##### M5.1: Update User Profile & Signup ⏳ PENDING  
+- [ ] Add preferred_platform field to profile settings
+- [ ] Update signup flow to ask for platform preference
+- [ ] Add platform switching functionality
+- [ ] **Test**: Users can set and change platform preferences
+
+##### M5.2: Implement Browse Filtering ⏳ PENDING
+- [ ] Hard filter authenticated users by preferred_platform
+- [ ] Add platform filter dropdown for anonymous users
+- [ ] Update search functionality with platform awareness  
+- [ ] **Test**: Browse filtering works correctly for both user types
+
+##### M5.3: Add Cross-Platform Access Protection ⏳ PENDING
+- [ ] Redirect users accessing wrong platform services
+- [ ] Add helpful error messages for platform mismatches
+- [ ] **Test**: Cross-platform access properly blocked
+
+#### **MILESTONE 6: Frontend Donation Flow**
+**Goal**: Update frontend to use new platform-specific APIs
+
+##### M6.1: Update ServiceDonationFlow Component ✅ COMPLETED
+- [x] Modify to call platform-specific API endpoints
+- [x] Update donation URL generation logic
+- [x] Add platform-specific error handling
+- [x] **Test**: Donation flow works with new APIs (End-to-end test successful)
+
+##### M6.2: Update Service Pages ⏳ PENDING  
+- [ ] Update service display pages for platform awareness
+- [ ] Add platform-specific donation context
+- [ ] **Test**: Service pages work with both platforms
+
+#### **MILESTONE 7: Polling & Status Tracking**
+**Goal**: Implement server-side donation status checking
+
+##### M7.1: Create Supabase Cron Function ⏳ PENDING
+- [ ] Create `supabase/functions/check-donations/index.ts`
+- [ ] Implement platform-aware polling logic  
+- [ ] Add JustGiving API integration for status checking using getDonationByReference()
+- [ ] Handle timeout scenarios and status updates
+- [ ] **Test**: Cron function polls and updates statuses correctly
+
+##### M7.2: Setup Database Cron Job ⏳ PENDING
+- [ ] Configure pg_cron extension
+- [ ] Schedule 5-minute polling job
+- [ ] Test cron job execution
+- [ ] **Test**: Automated polling runs every 5 minutes
+
+#### **MILESTONE 8: Pending Donations & Notifications**
+**Goal**: Implement pending donation tracking and fundraiser notifications
+
+##### M8.1: Create Pending Donations Banner Component ⏳ PENDING
+- [ ] Create `src/components/PendingDonationsBanner.tsx`
+- [ ] Show "You have pending donation(s) - click to check status"
+- [ ] Add global banner to layout for authenticated users
+- [ ] Link to donation status page
+- [ ] **Test**: Banner appears when user has pending donations
+
+##### M8.2: Implement Fundraiser Notification System ⏳ PENDING
+- [ ] Add notification logic to cron function
+- [ ] Only notify fundraisers AFTER confirmed donations (status = 'success')
+- [ ] Send email/dashboard notifications to fundraisers
+- [ ] Include donation details and donor connection info
+- [ ] **Test**: Fundraisers get notified only on confirmed donations
+
+#### **MILESTONE 9: Charity Pages & Slugs**
+**Goal**: Update charity system for platform-specific slugs
+
+##### M9.1: Update Charity Page System ⏳ PENDING
+- [ ] Implement platform-prefixed slug system
+- [ ] Update charity page routing logic
+- [ ] Query appropriate charity cache table based on platform
+- [ ] **Test**: Charity pages work with new slug format
+
+#### **MILESTONE 10: Documentation & Testing**
+**Goal**: Update documentation and comprehensive testing
+
+##### M10.1: Update README Files ⏳ PENDING
+- [ ] Update README-database.md with new schema
+- [ ] Document dual platform architecture  
+- [ ] Add migration and setup instructions
+- [ ] **Test**: Documentation is accurate and complete
+
+##### M10.2: Comprehensive Testing ⏳ PENDING
+- [ ] Test complete donation flow end-to-end
+- [ ] Verify platform filtering works correctly  
+- [ ] Test cron job polling and status updates
+- [ ] Test error scenarios and edge cases
+- [ ] **Test**: All functionality works as expected
+
+#### **MILESTONE 11: Phase 2 Follow-up Tasks**
+**Goal**: Prepare for Every.org integration
+
+##### M11.1: Create Every.org Webhook Infrastructure ⏳ PENDING (PHASE 2)
+- [ ] Create `src/app/api/webhooks/every-org/route.ts`
+- [ ] Add webhook authentication and validation
+- [ ] Implement donation status update logic
+- [ ] Handle webhook payload parsing
+- [ ] **Test**: Webhook receives and processes Every.org notifications
+
+##### M11.2: Every.org Integration Completion ⏳ PENDING (PHASE 2)
+- [ ] Create `EveryOrgCharitySearch.tsx` component
+- [ ] Implement Every.org API integration
+- [ ] Enable Every.org service creation
+- [ ] Remove "Coming Soon" messages
+- [ ] **Test**: Full Every.org functionality works
+
+### Session Workflow
+1. **Session Start**: Check CLAUDE.md current task status
+2. **Work**: Complete 1-3 tasks based on complexity  
+3. **Test**: User tests completed tasks
+4. **Update**: Mark completed tasks in CLAUDE.md
+5. **Session End**: Wait for user confirmation before closing
+
+### Status Indicators
+- ⏳ PENDING - Task not started
+- 🔄 IN_PROGRESS - Task currently being worked on  
+- ✅ COMPLETED - Task finished and tested
+- ❌ BLOCKED - Task blocked by issue
+- 📝 TESTING - Task awaiting user testing/confirmation
+
+### **CURRENT STATUS**: Core Infrastructure Complete ✅
+**Completed Milestones**: M1 (Database), M2 (JustGiving API), M3 (Platform APIs), M6.1 (Frontend Flow)
+
+#### **MAJOR COMPLETION - Session 2025-01-08** 🎉
+✅ **Database Migration Applied**: All dual platform tables and sequences working
+✅ **Sequential References**: PD-JG-1001 successfully generated and tested
+✅ **Platform-Specific APIs**: JustGiving endpoint creates service requests with references
+✅ **Frontend Integration**: ServiceDonationFlow successfully using new API
+✅ **End-to-End Test**: Complete donation flow from service selection to JustGiving redirect
+✅ **Charity Sync Fixed**: Database table references updated for new schema
+
+**Live Test Results**:
+- Service request created with reference `PD-JG-1001`
+- JustGiving donation URL generated with reference tracking
+- Charity data synced to `justgiving_charity_cache`
+- Successful redirect to donation success page with `jgDonationId=1500385693`
+
+**Next Priority Tasks**:
+1. **M7.1**: Server-side polling system for donation status tracking
+2. **M5.1**: User platform preferences implementation  
+3. **M4.2-M4.3**: Service management updates for platform awareness
 
 ---
 

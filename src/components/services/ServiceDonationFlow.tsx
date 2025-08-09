@@ -112,11 +112,14 @@ export default function ServiceDonationFlow({
         throw new Error('Please select a charity to continue')
       }
 
-      const apiUrl = `/api/charities/${targetCharityId}`
+      // Use new platform-specific API endpoint for JustGiving
+      const apiUrl = `/api/just-giving/charity/${targetCharityId}`
       const requestBody = {
-        action: 'donation-url',
-        amount: service.donation_amount,
-        reference: `PoweredByDonation-${service.id}-${user?.id}`
+        serviceId: service.id,
+        donorId: user?.id,
+        fundraiserId: service.fundraiser.id,
+        donationAmount: service.donation_amount,
+        locale: 'en' // TODO: Get from user preferences
       }
       
       console.log('🚀 Making API request:', { apiUrl, requestBody })
@@ -134,11 +137,12 @@ export default function ServiceDonationFlow({
       console.log('📄 API response data:', data)
 
       if (data.success) {
+        console.log('✅ Service request created:', data.data.referenceId)
         console.log('✅ Redirecting to:', data.data.donationUrl)
         // Open JustGiving donation page in same window
         window.location.href = data.data.donationUrl
       } else {
-        throw new Error(data.error || 'Failed to generate donation URL')
+        throw new Error(data.error || 'Failed to create service request')
       }
     } catch (err) {
       console.error('❌ Donation URL generation error:', err)

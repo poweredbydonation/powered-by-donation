@@ -6,6 +6,8 @@ export type CharityRequirementType = 'any_charity' | 'specific_charities';
 
 export type CurrencyCode = 'GBP' | 'USD' | 'CAD' | 'AUD' | 'EUR';
 
+export type DonationPlatform = 'justgiving' | 'every_org';
+
 export type ServiceStatus = 
   | 'pending' 
   | 'success' 
@@ -34,6 +36,7 @@ export interface User {
   phone?: string;
   avatar_url?: string;
   preferred_currency?: CurrencyCode;
+  preferred_platform?: DonationPlatform;
   created_at?: Date;
 }
 
@@ -63,7 +66,11 @@ export interface Service {
   donation_amount: number; // Always AUD amount from pricing tier
   pricing_tier_id?: number; // Foreign key to pricing_tiers table
   charity_requirement_type: CharityRequirementType;
-  preferred_charities?: Record<string, unknown>; // JSONB - Array of JustGiving charity IDs
+  preferred_charities?: Record<string, unknown>; // JSONB - Array of platform organization IDs
+  platform?: DonationPlatform;
+  organization_id?: string; // Platform-specific charity/nonprofit ID
+  organization_name?: string; // Cached organization name
+  organization_data?: Record<string, unknown>; // JSONB - Full platform organization data
   available_from: Date;
   available_until?: Date;
   max_donors?: number;
@@ -75,8 +82,47 @@ export interface Service {
   happiness_rate?: number; // % donor satisfaction (calculated from service_requests)
 }
 
+// Legacy interface - use JustGivingCharityCache or EveryOrgNonprofitCache instead
 export interface CharityCache {
   justgiving_charity_id: string;
+  name: string;
+  description?: string;
+  category?: string;
+  logo_url?: string;
+  slug: string; // SEO-friendly URL slug
+  total_donations_count?: number;
+  total_amount_received?: number;
+  this_month_count?: number;
+  this_month_amount?: number;
+  service_categories?: Record<string, unknown>; // JSONB - Service category breakdown
+  is_active?: boolean;
+  is_featured?: boolean;
+  page_views?: number;
+  last_updated?: Date;
+  stats_last_updated?: Date;
+}
+
+export interface JustGivingCharityCache {
+  justgiving_charity_id: string;
+  name: string;
+  description?: string;
+  category?: string;
+  logo_url?: string;
+  slug: string; // SEO-friendly URL slug
+  total_donations_count?: number;
+  total_amount_received?: number;
+  this_month_count?: number;
+  this_month_amount?: number;
+  service_categories?: Record<string, unknown>; // JSONB - Service category breakdown
+  is_active?: boolean;
+  is_featured?: boolean;
+  page_views?: number;
+  last_updated?: Date;
+  stats_last_updated?: Date;
+}
+
+export interface EveryOrgNonprofitCache {
+  nonprofit_ein: string; // Every.org uses EIN as primary identifier
   name: string;
   description?: string;
   category?: string;
@@ -99,6 +145,14 @@ export interface ServiceRequest {
   donor_id: string; // UUID (foreign key to users table)
   fundraiser_id: string; // UUID (foreign key to users table)
   service_id: string; // UUID (foreign key to services)
+  platform?: DonationPlatform;
+  reference_id?: string; // PD-JG-1000 or PD-EV-1000
+  organization_id?: string; // Platform-specific organization ID
+  organization_name?: string; // Cached organization name
+  donation_url?: string; // Generated donation URL
+  external_donation_id?: string; // Platform's donation ID after completion
+  timeout_at?: Date; // When to timeout pending donations
+  // Legacy fields for backward compatibility
   justgiving_charity_id: string;
   donation_amount: number;
   charity_name?: string;
@@ -138,9 +192,10 @@ export interface SupporterHappinessRequirements {
   min_total_interactions?: number;
 }
 
-// Charity Page Data (for public charity pages)
-export interface CharityPageData {
-  justgiving_charity_id: string;
+// Organization Page Data (platform-aware for public charity/nonprofit pages)
+export interface OrganizationPageData {
+  platform: DonationPlatform;
+  organization_id: string; // justgiving_charity_id or nonprofit_ein
   name: string;
   description?: string;
   category?: string;
@@ -161,11 +216,19 @@ export interface CharityPageData {
   }>;
 }
 
+// Legacy interface for backward compatibility
+export interface CharityPageData extends OrganizationPageData {
+  justgiving_charity_id: string;
+  platform: 'justgiving';
+}
+
 // Public Platform Statistics (anonymous aggregate data)
 export interface PlatformStats {
   total_services: number;
   total_fundraisers: number;
   services_this_month: number;
+  justgiving_services: number;
+  every_org_services: number;
   donations_this_month: number;
   total_amount_this_month: number;
   charities_supported: number;
@@ -176,9 +239,12 @@ export interface PlatformStats {
 export interface PublicDonationActivity {
   donation_amount: number;
   service_title: string;
-  charity_name: string;
+  organization_name: string; // Platform-agnostic organization name
+  platform: DonationPlatform;
   created_at: Date;
   donor_name: 'Anonymous'; // Always anonymous per CLAUDE.md privacy model
+  // Legacy field for backward compatibility
+  charity_name?: string;
 }
 
 // Pricing Tiers for standardized service pricing
@@ -194,4 +260,50 @@ export interface PricingTier {
   price_cad: number;
   is_active?: boolean;
   created_at?: Date;
+}
+
+// Platform-specific organization search results
+export interface JustGivingCharity {
+  id: string;
+  name: string;
+  description?: string;
+  category?: string;
+  logo_url?: string;
+  website?: string;
+}
+
+export interface EveryOrgNonprofit {
+  ein: string;
+  name: string;
+  description?: string;
+  category?: string;
+  logo_url?: string;
+  website?: string;
+}
+
+// Unified organization interface for frontend
+export interface Organization {
+  id: string; // justgiving id or every.org ein
+  name: string;
+  description?: string;
+  category?: string;
+  logo_url?: string;
+  website?: string;
+  platform: DonationPlatform;
+}
+
+// Donation URL generation parameters
+export interface DonationUrlParams {
+  platform: DonationPlatform;
+  organization_id: string;
+  amount: number;
+  currency: CurrencyCode;
+  reference_id: string;
+  return_url: string;
+}
+
+// Platform-specific computed fields for services (used in queries)
+export interface ServiceWithPlatformFields extends Service {
+  platform_organization_id: string; // Computed field based on platform
+  platform_organization_name: string; // Computed field based on platform
 }
