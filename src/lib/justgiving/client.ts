@@ -178,7 +178,8 @@ class JustGivingAPI {
    * Used by server-side polling to check if pending donations are completed
    */
   async getDonationByReference(reference: string): Promise<DonationByReferenceResponse> {
-    const endpoint = `/v1/donation/ref/${encodeURIComponent(reference)}`
+    // JustGiving staging API requires appId: /{appId}/v1/donation/ref/{reference}
+    const endpoint = `/${this.apiKey}/v1/donation/ref/${encodeURIComponent(reference)}`
     
     try {
       const donation = await this.makeRequest<JustGivingDonation>(endpoint)

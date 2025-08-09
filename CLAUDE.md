@@ -405,11 +405,11 @@ See [README-development.md](./README-development.md) for complete development se
 - [x] Handle timeout scenarios and status updates
 - [x] **Test**: Cron function polls and updates statuses correctly
 
-##### M7.2: Setup Database Cron Job ⏳ PENDING
-- [ ] Configure pg_cron extension
-- [ ] Schedule 5-minute polling job
-- [ ] Test cron job execution
-- [ ] **Test**: Automated polling runs every 5 minutes
+##### M7.2: Setup Database Cron Job ✅ COMPLETED
+- [x] Configure pg_cron extension
+- [x] Schedule 5-minute polling job
+- [x] Test cron job execution
+- [x] **Test**: Automated polling runs every 5 minutes
 
 #### **MILESTONE 8: Pending Donations & Notifications**
 **Goal**: Implement pending donation tracking and fundraiser notifications
@@ -484,8 +484,8 @@ See [README-development.md](./README-development.md) for complete development se
 - ❌ BLOCKED - Task blocked by issue
 - 📝 TESTING - Task awaiting user testing/confirmation
 
-### **CURRENT STATUS**: Core Infrastructure Complete ✅
-**Completed Milestones**: M1 (Database), M2 (JustGiving API), M3 (Platform APIs), M6.1 (Frontend Flow)
+### **CURRENT STATUS**: Core Infrastructure + Automated Polling Complete ✅
+**Completed Milestones**: M1 (Database), M2 (JustGiving API), M3 (Platform APIs), M6.1 (Frontend Flow), M7 (Polling & Status Tracking)
 
 #### **MAJOR COMPLETION - Session 2025-01-08** 🎉
 ✅ **Database Migration Applied**: All dual platform tables and sequences working
@@ -495,16 +495,23 @@ See [README-development.md](./README-development.md) for complete development se
 ✅ **End-to-End Test**: Complete donation flow from service selection to JustGiving redirect
 ✅ **Charity Sync Fixed**: Database table references updated for new schema
 
-**Live Test Results**:
-- Service request created with reference `PD-JG-1001`
-- JustGiving donation URL generated with reference tracking
-- Charity data synced to `justgiving_charity_cache`
-- Successful redirect to donation success page with `jgDonationId=1500385693`
+#### **MAJOR COMPLETION - Session 2025-08-09** 🎉
+✅ **Automated Polling System**: 5-minute cron job successfully deployed and tested
+✅ **JustGiving API Integration**: Fixed staging API endpoint with correct appId format
+✅ **Status Updates**: Both test donations (PD-JG-1001, PD-JG-1002) automatically updated from 'pending' to 'success'
+✅ **Edge Function**: Deployed with correct response parsing for staging API format
+✅ **Production Ready**: Automated donation status tracking fully operational
+
+**Live Test Results - Automated Polling**:
+- Cron job created: `poll-donation-statuses` running every 5 minutes
+- JustGiving API endpoint fixed: `https://api.staging.justgiving.com/{appId}/v1/donation/ref/{reference}`
+- Donations automatically detected: PD-JG-1001 (ID: 1500385693), PD-JG-1002 (ID: 1500385694)
+- Status updates successful: 2 checked, 2 updated, 0 timed out
 
 **Next Priority Tasks**:
-1. **M7.2**: Setup automated cron job for donation polling (5-minute intervals)
-2. **M5.1**: User platform preferences implementation  
-3. **M4.2-M4.3**: Service management updates for platform awareness
+1. **M5.1**: User platform preferences implementation  
+2. **M4.2-M4.3**: Service management updates for platform awareness
+3. **M8.1**: Pending donations banner component
 
 ---
 

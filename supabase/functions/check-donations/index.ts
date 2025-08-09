@@ -48,8 +48,9 @@ class JustGivingAPI {
   }
 
   async getDonationByReference(reference: string): Promise<DonationByReferenceResponse> {
-    const endpoint = `/v1/donation/ref/${encodeURIComponent(reference)}`
-    const fullUrl = `${this.baseUrl}/${this.apiKey}${endpoint}`
+    // JustGiving staging API format: /{appId}/v1/donation/ref/{reference}
+    const endpoint = `/${this.apiKey}/v1/donation/ref/${encodeURIComponent(reference)}`
+    const fullUrl = `${this.baseUrl}${endpoint}`
     
     console.log(`Checking donation status for reference: ${reference}`)
     
@@ -78,7 +79,30 @@ class JustGivingAPI {
         throw new Error(`JustGiving API error! status: ${response.status}, message: ${errorText}`)
       }
       
-      const donation = await response.json() as JustGivingDonation
+      const responseData = await response.json()
+      console.log(`JustGiving API raw response:`, responseData)
+      
+      // JustGiving staging API returns: { donations: [...], pagination: {...} }
+      if (!responseData.donations || responseData.donations.length === 0) {
+        console.log(`No donations found for reference ${reference}`)
+        return {
+          donation: null,
+          found: false
+        }
+      }
+      
+      const donationData = responseData.donations[0] // Get first (and likely only) donation
+      const donation: JustGivingDonation = {
+        donationId: donationData.id.toString(),
+        donationRef: donationData.donationRef,
+        donorName: donationData.donorDisplayName || 'Anonymous',
+        donationAmount: parseFloat(donationData.amount),
+        currencyCode: donationData.currencyCode,
+        donationDate: donationData.donationDate,
+        charityId: donationData.charityId,
+        donationStatus: donationData.status as 'Accepted' | 'Pending' | 'Rejected'
+      }
+      
       console.log(`Found donation:`, donation)
       
       return {
