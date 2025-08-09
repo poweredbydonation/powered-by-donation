@@ -16,7 +16,7 @@ interface PendingDonation {
   created_at: string
 }
 
-export default function PendingDonationsBanner() {
+export default function DonorNotificationsBanner() {
   const { user } = useAuth()
   const locale = useLocale()
   const [pendingDonations, setPendingDonations] = useState<PendingDonation[]>([])

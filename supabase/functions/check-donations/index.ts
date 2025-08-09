@@ -19,6 +19,16 @@ interface ServiceRequest {
   created_at?: string
   organization_name?: string
   donation_amount: number
+  fundraiser_id?: string
+  service_id?: string
+  users?: {
+    id: string
+    name: string
+    email: string
+  }
+  services?: {
+    title: string
+  }
 }
 
 interface JustGivingDonation {
@@ -35,6 +45,84 @@ interface JustGivingDonation {
 interface DonationByReferenceResponse {
   donation: JustGivingDonation | null
   found: boolean
+}
+
+// Email notification service for fundraisers
+async function sendFundraiserNotification(request: ServiceRequest, donation: JustGivingDonation) {
+  if (!request.users?.email || !request.users?.name || !request.services?.title) {
+    console.log(`⚠️ Missing notification data for request ${request.id} - skipping email`)
+    return
+  }
+
+  try {
+    console.log(`📧 Sending fundraiser notification to ${request.users.email}`)
+    
+    // For now, we'll just log the notification content
+    // In production, this would use a service like Resend, SendGrid, or Supabase Edge Functions with SMTP
+    const emailData = {
+      to: request.users.email,
+      subject: `🎉 You received a £${request.donation_amount} donation!`,
+      html: `
+        <h2>Great news, ${request.users.name}!</h2>
+        <p>Someone just donated <strong>£${request.donation_amount}</strong> to <strong>${request.organization_name}</strong> for your service: <strong>"${request.services.title}"</strong></p>
+        
+        <h3>📋 Donation Details:</h3>
+        <ul>
+          <li><strong>Amount:</strong> £${request.donation_amount}</li>
+          <li><strong>Charity:</strong> ${request.organization_name}</li>
+          <li><strong>Service:</strong> ${request.services.title}</li>
+          <li><strong>Platform Reference:</strong> ${request.reference_id}</li>
+          <li><strong>External Donation ID:</strong> ${donation.donationId}</li>
+          <li><strong>Date:</strong> ${new Date(donation.donationDate).toLocaleDateString('en-GB')}</li>
+        </ul>
+
+        <h3>🤝 What happens next?</h3>
+        <p>The donor will receive your contact information so you can coordinate the service delivery. We'll follow up in a few days to collect feedback from both parties to maintain our platform's quality.</p>
+        
+        <p>Thank you for being part of Powered by Donation! 🙌</p>
+        
+        <hr>
+        <small>This donation was processed through JustGiving. Your donor chose to support ${request.organization_name} as part of this service exchange.</small>
+      `,
+      text: `
+Great news, ${request.users.name}!
+
+Someone just donated £${request.donation_amount} to ${request.organization_name} for your service: "${request.services.title}"
+
+Donation Details:
+- Amount: £${request.donation_amount}
+- Charity: ${request.organization_name}
+- Service: ${request.services.title}
+- Platform Reference: ${request.reference_id}
+- External Donation ID: ${donation.donationId}
+- Date: ${new Date(donation.donationDate).toLocaleDateString('en-GB')}
+
+What happens next?
+The donor will receive your contact information so you can coordinate the service delivery. We'll follow up in a few days to collect feedback from both parties to maintain our platform's quality.
+
+Thank you for being part of Powered by Donation!
+
+This donation was processed through JustGiving. Your donor chose to support ${request.organization_name} as part of this service exchange.
+      `
+    }
+    
+    console.log('📧 Email notification prepared:', {
+      to: emailData.to,
+      subject: emailData.subject,
+      reference_id: request.reference_id,
+      donation_amount: request.donation_amount,
+      service_title: request.services.title
+    })
+    
+    // TODO: Integrate with actual email service
+    // await sendEmail(emailData)
+    
+    console.log(`✅ Notification logged for ${request.users.email} (${request.reference_id})`)
+    
+  } catch (error) {
+    console.error(`❌ Failed to send notification for request ${request.id}:`, error)
+    // Don't throw - notification failures shouldn't stop the polling process
+  }
 }
 
 class JustGivingAPI {
@@ -125,10 +213,16 @@ async function checkPendingDonations() {
   
   console.log('🔍 Starting donation status check...')
   
-  // Query pending donations that haven't timed out yet
+  // Query pending donations that haven't timed out yet - include fundraiser and service info for notifications
   const { data: pendingRequests, error: queryError } = await supabase
     .from('service_requests')
-    .select('id, platform, reference_id, status, timeout_at, external_donation_id, created_at, organization_name, donation_amount')
+    .select(`
+      id, platform, reference_id, status, timeout_at, external_donation_id, created_at, organization_name, donation_amount,
+      fundraiser_id,
+      service_id,
+      users!service_requests_fundraiser_id_fkey(id, name, email),
+      services!inner(title)
+    `)
     .eq('status', 'pending')
     .not('reference_id', 'is', null)
     .or('timeout_at.is.null,timeout_at.gt.now()')
@@ -235,6 +329,12 @@ async function checkPendingDonations() {
       } else {
         console.log(`✅ Updated donation ${request.id} to status: ${newStatus}`)
         updatedCount++
+        
+        // 📧 Send notification to fundraiser ONLY for successful donations
+        if (newStatus === 'success') {
+          console.log(`🔔 Sending fundraiser notification for successful donation ${request.reference_id}`)
+          await sendFundraiserNotification(request, donation)
+        }
       }
       
     } catch (error) {

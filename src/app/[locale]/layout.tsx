@@ -3,7 +3,8 @@ import { getMessages } from 'next-intl/server';
 import { AuthProvider } from '@/context/AuthContext'
 import AuthDebug from '@/components/auth/AuthDebug'
 import Footer from '@/components/Footer'
-import PendingDonationsBanner from '@/components/PendingDonationsBanner'
+import DonorNotificationsBanner from '@/components/DonorNotificationsBanner'
+import FundraiserNotificationsBanner from '@/components/FundraiserNotificationsBanner'
 
 export default async function LocaleLayout({
   children,
@@ -20,7 +21,8 @@ export default async function LocaleLayout({
     <AuthProvider>
       <NextIntlClientProvider messages={messages} locale={locale}>
         <div className="min-h-screen flex flex-col">
-          <PendingDonationsBanner />
+          <DonorNotificationsBanner />
+          <FundraiserNotificationsBanner />
           <div className="flex-grow">
             {children}
           </div>
