@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { CheckCircle, Heart, ArrowRight } from 'lucide-react'
+import { CheckCircle, Heart, ArrowRight, Loader2 } from 'lucide-react'
 import Link from 'next/link'
 
 interface DonationSuccessContentProps {
@@ -9,16 +9,67 @@ interface DonationSuccessContentProps {
   locale: string
 }
 
+interface ConfirmationState {
+  status: 'loading' | 'confirmed' | 'error' | 'not_needed'
+  referenceId?: string
+  message?: string
+}
+
 export default function DonationSuccessContent({ 
   jgDonationId, 
   locale 
 }: DonationSuccessContentProps) {
   const [isAnimated, setIsAnimated] = useState(false)
+  const [confirmation, setConfirmation] = useState<ConfirmationState>({ 
+    status: jgDonationId ? 'loading' : 'not_needed' 
+  })
 
   useEffect(() => {
     // Trigger animation after component mounts
     setTimeout(() => setIsAnimated(true), 100)
-  }, [])
+
+    // Immediately confirm donation if we have JustGiving ID
+    if (jgDonationId) {
+      confirmDonation(jgDonationId)
+    }
+  }, [jgDonationId])
+
+  const confirmDonation = async (donationId: string) => {
+    try {
+      setConfirmation({ status: 'loading' })
+      
+      const response = await fetch('/api/donations/confirm', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ jgDonationId: donationId })
+      })
+
+      const result = await response.json()
+
+      if (response.ok) {
+        setConfirmation({
+          status: 'confirmed',
+          referenceId: result.reference_id,
+          message: result.already_confirmed 
+            ? 'Donation already confirmed by automatic system'
+            : 'Donation confirmed successfully'
+        })
+      } else {
+        setConfirmation({
+          status: 'error',
+          message: result.error || 'Failed to confirm donation'
+        })
+      }
+    } catch (error) {
+      console.error('Error confirming donation:', error)
+      setConfirmation({
+        status: 'error',
+        message: 'Network error - please try again later'
+      })
+    }
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -39,15 +90,65 @@ export default function DonationSuccessContent({
             </p>
           </div>
 
-          {/* Donation Details */}
+          {/* Donation Details & Confirmation Status */}
           {jgDonationId && (
-            <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
-              <div className="flex items-center space-x-2 text-green-800">
-                <Heart className="w-4 h-4" />
-                <span className="font-medium">JustGiving Donation ID:</span>
+            <div className="space-y-4 mb-6">
+              <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                <div className="flex items-center space-x-2 text-green-800">
+                  <Heart className="w-4 h-4" />
+                  <span className="font-medium">JustGiving Donation ID:</span>
+                </div>
+                <div className="text-green-700 font-mono text-sm mt-1">
+                  {jgDonationId}
+                </div>
               </div>
-              <div className="text-green-700 font-mono text-sm mt-1">
-                {jgDonationId}
+
+              {/* Confirmation Status */}
+              <div className={`rounded-lg p-4 ${
+                confirmation.status === 'loading' 
+                  ? 'bg-blue-50 border border-blue-200'
+                  : confirmation.status === 'confirmed'
+                    ? 'bg-green-50 border border-green-200'
+                    : confirmation.status === 'error'
+                      ? 'bg-red-50 border border-red-200'
+                      : 'hidden'
+              }`}>
+                <div className="flex items-center space-x-2">
+                  {confirmation.status === 'loading' && (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin text-blue-600" />
+                      <span className="font-medium text-blue-800">Confirming donation...</span>
+                    </>
+                  )}
+                  {confirmation.status === 'confirmed' && (
+                    <>
+                      <CheckCircle className="w-4 h-4 text-green-600" />
+                      <span className="font-medium text-green-800">Donation Confirmed!</span>
+                    </>
+                  )}
+                  {confirmation.status === 'error' && (
+                    <>
+                      <span className="font-medium text-red-800">Confirmation Status</span>
+                    </>
+                  )}
+                </div>
+                {confirmation.message && (
+                  <div className={`text-sm mt-1 ${
+                    confirmation.status === 'confirmed' 
+                      ? 'text-green-700'
+                      : confirmation.status === 'error'
+                        ? 'text-red-700'
+                        : 'text-blue-700'
+                  }`}>
+                    {confirmation.message}
+                  </div>
+                )}
+                {confirmation.referenceId && (
+                  <div className="text-sm mt-2">
+                    <span className="font-medium">Reference:</span>
+                    <span className="ml-2 font-mono">{confirmation.referenceId}</span>
+                  </div>
+                )}
               </div>
             </div>
           )}
