@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { Search, X, Check, ExternalLink } from 'lucide-react'
+import { DonationPlatform } from '@/types/database'
 
 interface JustGivingCharity {
   charityId: number
@@ -22,13 +23,15 @@ interface CharitySelectorProps {
   onCharitiesChange: (charities: SelectedCharity[]) => void
   maxCharities?: number
   disabled?: boolean
+  platform: DonationPlatform
 }
 
 export default function CharitySelector({ 
   selectedCharities, 
   onCharitiesChange, 
   maxCharities = 5,
-  disabled = false 
+  disabled = false,
+  platform
 }: CharitySelectorProps) {
   const [searchTerm, setSearchTerm] = useState('')
   const [searchResults, setSearchResults] = useState<JustGivingCharity[]>([])
@@ -76,6 +79,12 @@ export default function CharitySelector({
 
   const performSearch = async (query: string) => {
     if (disabled) return
+    
+    // Only support JustGiving for now
+    if (platform !== 'justgiving') {
+      setSearchError('Every.org integration coming soon')
+      return
+    }
     
     setIsSearching(true)
     setSearchError('')
@@ -154,11 +163,13 @@ export default function CharitySelector({
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             onFocus={() => searchTerm.length >= 2 && setShowDropdown(true)}
-            placeholder="Search for charities (e.g., 'cancer', 'children', 'environment')"
+            placeholder={platform === 'justgiving' 
+              ? "Search for charities (e.g., 'cancer', 'children', 'environment')" 
+              : "Every.org integration coming soon..."}
             className={`w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
               disabled ? 'bg-gray-100 cursor-not-allowed' : ''
             }`}
-            disabled={disabled}
+            disabled={disabled || platform !== 'justgiving'}
           />
           {isSearching && (
             <div className="absolute right-3 top-3">
@@ -168,7 +179,7 @@ export default function CharitySelector({
         </div>
 
         {/* Search Dropdown */}
-        {showDropdown && !disabled && (
+        {showDropdown && !disabled && platform === 'justgiving' && (
           <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-64 overflow-y-auto">
             {searchError ? (
               <div className="p-4 text-red-600 text-sm">{searchError}</div>

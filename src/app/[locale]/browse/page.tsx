@@ -6,7 +6,7 @@ import ServiceLocationFilter from '@/components/ServiceLocationFilter'
 import ServicePrice from '@/components/services/ServicePrice'
 import { Search, MapPin, Heart, Star } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
-import { Service, ServiceLocation, CurrencyCode } from '@/types/database'
+import { Service, ServiceLocation, CurrencyCode, DonationPlatform } from '@/types/database'
 import { isServiceWithinRadius } from '@/lib/utils/distance'
 import { useAuth } from '@/hooks/useAuth'
 
@@ -39,6 +39,8 @@ export default function BrowsePage({ params }: BrowsePageProps) {
   const [searchQuery, setSearchQuery] = useState('')
   const [locationFilter, setLocationFilter] = useState<LocationFilter>({ type: 'all' })
   const [userCurrency, setUserCurrency] = useState<CurrencyCode>('AUD')
+  const [userPlatform, setUserPlatform] = useState<DonationPlatform>('justgiving')
+  const [selectedPlatform, setSelectedPlatform] = useState<DonationPlatform>('justgiving')
 
   useEffect(() => {
     // Load messages
@@ -53,29 +55,36 @@ export default function BrowsePage({ params }: BrowsePageProps) {
       }
     }
 
-    // Fetch user's currency
-    async function fetchUserCurrency() {
+    // Fetch user's preferences
+    async function fetchUserPreferences() {
       if (!user) return
       
       const supabase = createClient()
       try {
         const { data: userProfile } = await supabase
           .from('users')
-          .select('preferred_currency')
+          .select('preferred_currency, preferred_platform')
           .eq('id', user.id)
           .single()
         
         if (userProfile?.preferred_currency) {
           setUserCurrency(userProfile.preferred_currency)
         }
+        if (userProfile?.preferred_platform) {
+          setUserPlatform(userProfile.preferred_platform)
+          setSelectedPlatform(userProfile.preferred_platform)
+        }
       } catch (err) {
-        // Keep default AUD
+        // Keep defaults
       }
     }
 
     // Fetch services
     async function fetchServices() {
       const supabase = createClient()
+      
+      // Use selectedPlatform for filtering (could be user's preference or anonymous user's selection)
+      const platformToFilter = user ? userPlatform : selectedPlatform
       
       const { data, error } = await supabase
         .from('services')
@@ -86,6 +95,7 @@ export default function BrowsePage({ params }: BrowsePageProps) {
             name
           )
         `)
+        .eq('platform', platformToFilter)
         .order('created_at', { ascending: false })
 
       if (error) {
@@ -100,9 +110,74 @@ export default function BrowsePage({ params }: BrowsePageProps) {
     }
 
     loadMessages()
-    fetchUserCurrency()
-    fetchServices()
+    fetchUserPreferences()
+    // Don't fetch services here - do it after userPlatform is loaded
   }, [locale, user])
+
+  // Fetch services when userPlatform is loaded (for authenticated users) or platform changes (for anonymous users)
+  useEffect(() => {
+    if (user) {
+      // For authenticated users, fetch when userPlatform changes
+      setLoading(true)
+      const fetchServices = async () => {
+        const supabase = createClient()
+        
+        const { data, error } = await supabase
+          .from('services')
+          .select(`
+            *,
+            users (
+              id,
+              name
+            )
+          `)
+          .eq('platform', userPlatform)
+          .order('created_at', { ascending: false })
+
+        if (error) {
+          setServices([])
+        } else {
+          const servicesData = data || []
+          setServices(servicesData)
+          setFilteredServices(servicesData)
+        }
+        
+        setLoading(false)
+      }
+      
+      fetchServices()
+    } else if (selectedPlatform) {
+      // For anonymous users, fetch when selectedPlatform changes
+      setLoading(true)
+      const fetchServices = async () => {
+        const supabase = createClient()
+        
+        const { data, error } = await supabase
+          .from('services')
+          .select(`
+            *,
+            users (
+              id,
+              name
+            )
+          `)
+          .eq('platform', selectedPlatform)
+          .order('created_at', { ascending: false })
+
+        if (error) {
+          setServices([])
+        } else {
+          const servicesData = data || []
+          setServices(servicesData)
+          setFilteredServices(servicesData)
+        }
+        
+        setLoading(false)
+      }
+      
+      fetchServices()
+    }
+  }, [user, userPlatform, selectedPlatform])
 
   // Filter services based on search query and location filter
   useEffect(() => {
@@ -218,8 +293,57 @@ export default function BrowsePage({ params }: BrowsePageProps) {
             </p>
           </div>
 
-          {/* Search and Location Filters */}
+          {/* Search and Filters */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8 space-y-6">
+            {/* Platform Filter (for anonymous users only) */}
+            {!user && (
+              <div>
+                <label htmlFor="platform-select" className="block text-sm font-medium text-gray-700 mb-2">
+                  Donation Platform
+                </label>
+                <select
+                  id="platform-select"
+                  value={selectedPlatform}
+                  onChange={(e) => setSelectedPlatform(e.target.value as DonationPlatform)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  <option value="justgiving">JustGiving (Available Now)</option>
+                  <option value="every_org">Every.org (Coming Soon)</option>
+                </select>
+                <p className="text-sm text-gray-500 mt-1">
+                  {selectedPlatform === 'every_org' 
+                    ? 'Every.org integration is in development. Currently showing no services.'
+                    : 'Showing services that support JustGiving charitable donations.'
+                  }
+                </p>
+              </div>
+            )}
+
+            {/* Platform Info for authenticated users */}
+            {user && (
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className="text-sm font-medium text-blue-800">
+                      Your Platform: {userPlatform === 'justgiving' ? 'JustGiving' : 'Every.org'}
+                    </h4>
+                    <p className="text-sm text-blue-700">
+                      {userPlatform === 'justgiving' 
+                        ? 'Showing services that support JustGiving charitable donations.'
+                        : 'Every.org integration coming soon. Switch to JustGiving to see available services.'
+                      }
+                    </p>
+                  </div>
+                  <a 
+                    href={`/${locale}/dashboard/profile`}
+                    className="text-sm text-blue-600 hover:text-blue-800 font-medium"
+                  >
+                    Change Platform
+                  </a>
+                </div>
+              </div>
+            )}
+
             {/* Search Bar */}
             <div className="relative">
               <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />

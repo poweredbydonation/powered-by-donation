@@ -370,11 +370,12 @@ See [README-development.md](./README-development.md) for complete development se
 - [x] Add platform switching functionality
 - [x] **Test**: Users can set and change platform preferences
 
-##### M5.2: Implement Browse Filtering ⏳ PENDING
-- [ ] Hard filter authenticated users by preferred_platform
-- [ ] Add platform filter dropdown for anonymous users
-- [ ] Update search functionality with platform awareness  
-- [ ] **Test**: Browse filtering works correctly for both user types
+##### M5.2: Implement Browse Filtering ✅ COMPLETED
+- [x] Hard filter authenticated users by preferred_platform
+- [x] Add platform filter dropdown for anonymous users
+- [x] Update search functionality with platform awareness  
+- [x] Fix race condition between user preferences and service fetching
+- [x] **Test**: Browse filtering works correctly for both user types
 
 ##### M5.3: Add Cross-Platform Access Protection ⏳ PENDING
 - [ ] Redirect users accessing wrong platform services
@@ -484,8 +485,8 @@ See [README-development.md](./README-development.md) for complete development se
 - ❌ BLOCKED - Task blocked by issue
 - 📝 TESTING - Task awaiting user testing/confirmation
 
-### **CURRENT STATUS**: Core Infrastructure + Automated Polling + User Platform Preferences Complete ✅
-**Completed Milestones**: M1 (Database), M2 (JustGiving API), M3 (Platform APIs), M5.1 (User Platform Preferences), M6.1 (Frontend Flow), M7 (Polling & Status Tracking)
+### **CURRENT STATUS**: Core Infrastructure + Automated Polling + User Platform Preferences + Browse Filtering Complete ✅
+**Completed Milestones**: M1 (Database), M2 (JustGiving API), M3 (Platform APIs), M4.1 (Service Creation Flow), M5.1 (User Platform Preferences), M5.2 (Browse Filtering), M6.1 (Frontend Flow), M7 (Polling & Status Tracking)
 
 #### **MAJOR COMPLETION - Session 2025-01-08** 🎉
 ✅ **Database Migration Applied**: All dual platform tables and sequences working
@@ -545,10 +546,26 @@ See [README-development.md](./README-development.md) for complete development se
 - No TypeScript errors or build issues
 - **Database Test Confirmed**: User profile successfully updated from 'justgiving' to 'every_org' and persisted in database
 
+#### **MAJOR COMPLETION - Session 2025-08-09 (M4.1 + M5.2)** 🎉
+✅ **Platform-Aware Service Creation**: Service creation form fully supports dual platforms
+✅ **Charity Search Integration**: Platform-specific charity selection with Every.org placeholder  
+✅ **Organization Data Storage**: JSON organization_data and organization_name fields properly populated
+✅ **Browse Page Filtering**: Complete platform filtering for authenticated and anonymous users
+✅ **Race Condition Fix**: Resolved timing issue between user preference loading and service fetching
+✅ **User Experience**: Clear platform indicators, switching options, and informative messaging
+
+**Live Implementation Results**:
+- Service creation respects user's preferred_platform with platform-specific UI
+- Every.org users see "Coming Soon" messaging and disabled functionality  
+- Browse page properly filters services by platform preference
+- Anonymous users get platform dropdown with real-time filtering
+- Authenticated Every.org users see 0 services (correct behavior)
+- All JustGiving functionality works seamlessly with new platform awareness
+
 **Next Priority Tasks**:
-1. **M4.1**: Update service creation flow for platform awareness
-2. **M4.2-M4.3**: Service management and display updates for platform awareness
-3. **M5.2**: Browse filtering by platform for authenticated/anonymous users
+1. **M4.2**: Update service display logic (service cards and detail pages) 
+2. **M4.3**: Update service dashboard for platform awareness
+3. **M6.2**: Update individual service pages for platform context
 
 ---
 
