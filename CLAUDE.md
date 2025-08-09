@@ -412,10 +412,21 @@ See [README-development.md](./README-development.md) for complete development se
 - [x] Test cron job execution
 - [x] **Test**: Automated polling runs every 5 minutes
 
-#### **MILESTONE 8: Pending Donations & Notifications**
+#### **MILESTONE 8: Charity Pages & Platform-Specific Organizations**
+**Goal**: Update charity/nonprofit system for platform-specific slugs and terminology
+
+##### M8.1: Update Charity/Nonprofit Page System ✅ COMPLETED
+- [x] Implement platform-specific URL structure (/[locale]/justgiving/charity/[slug], /[locale]/everyorg/nonprofit/[slug])
+- [x] Create JustGiving charity page route: /[locale]/justgiving/charity/[slug]/page.tsx
+- [x] Create Every.org nonprofit page route: /[locale]/everyorg/nonprofit/[slug]/page.tsx
+- [x] Query appropriate cache table based on platform (justgiving_charity_cache vs every_org_nonprofit_cache)
+- [x] Update terminology: JustGiving uses "charities", Every.org uses "nonprofits"
+- [x] **Test**: Both charity and nonprofit pages work with new platform-specific URL format
+
+#### **MILESTONE 9: Pending Donations & Notifications**
 **Goal**: Implement pending donation tracking and fundraiser notifications
 
-##### M8.1: Create Pending Donations Banner Component ✅ COMPLETED
+##### M9.1: Create Pending Donations Banner Component ✅ COMPLETED
 - [x] Create `src/components/PendingDonationsBanner.tsx`
 - [x] Show "You have pending donation(s) - click to check status"
 - [x] Add global banner to layout for authenticated users
@@ -423,21 +434,12 @@ See [README-development.md](./README-development.md) for complete development se
 - [x] Create comprehensive donations dashboard with history and status tracking
 - [x] **Test**: Banner appears when user has pending donations
 
-##### M8.2: Implement Fundraiser Notification System ⏳ PENDING
+##### M9.2: Implement Fundraiser Notification System ⏳ PENDING
 - [ ] Add notification logic to cron function
 - [ ] Only notify fundraisers AFTER confirmed donations (status = 'success')
 - [ ] Send email/dashboard notifications to fundraisers
 - [ ] Include donation details and donor connection info
 - [ ] **Test**: Fundraisers get notified only on confirmed donations
-
-#### **MILESTONE 9: Charity Pages & Slugs**
-**Goal**: Update charity system for platform-specific slugs
-
-##### M9.1: Update Charity Page System ⏳ PENDING
-- [ ] Implement platform-prefixed slug system
-- [ ] Update charity page routing logic
-- [ ] Query appropriate charity cache table based on platform
-- [ ] **Test**: Charity pages work with new slug format
 
 #### **MILESTONE 10: Documentation & Testing**
 **Goal**: Update documentation and comprehensive testing
@@ -602,26 +604,30 @@ See [README-development.md](./README-development.md) for complete development se
 - Database persistence ensures platform preference survives sessions
 
 #### **MAJOR COMPLETION - Session 2025-08-09 (M8.1)** 🎉
-✅ **Pending Donations Banner System**: Complete donation tracking and user notification system implemented
-✅ **Global Banner Component**: PendingDonationsBanner added to layout with dismissible UI
-✅ **Donations Dashboard**: Comprehensive `/dashboard/donations` page with history and status tracking
-✅ **Real-time Data**: Fetches fresh pending donation counts and displays user-friendly notifications
-✅ **Internationalization**: Full locale support with dynamic routing
+✅ **Platform-Specific Charity/Nonprofit Pages**: Complete dual-platform organization pages implemented
+✅ **JustGiving Charity Pages**: `/[locale]/justgiving/charity/[slug]/page.tsx` with platform-specific queries
+✅ **Every.org Nonprofit Pages**: `/[locale]/everyorg/nonprofit/[slug]/page.tsx` with nonprofit terminology
+✅ **Platform-Aware Database Queries**: Separate cache table queries (justgiving_charity_cache vs every_org_nonprofit_cache)
+✅ **Automated Charity Population**: Supabase cron job with Edge Function for JustGiving charity cache updates
 ✅ **Build Validation**: TypeScript compilation and Next.js build successful
 
 **Live Implementation Results**:
-- PendingDonationsBanner component queries service_requests table for user's pending donations
-- Global banner appears only for authenticated users with status = 'pending' donations
-- Dismissible banner with clear call-to-action linking to detailed donations dashboard
-- Profile menu notifications in both desktop dropdown and mobile menu with count badges
-- Comprehensive donations page with summary cards and responsive data display
-- Mobile-optimized card layout eliminates horizontal scrolling on small screens
-- Desktop table layout preserved for full data visibility on larger screens
-- Proper status badges (pending/completed/timed out) with formatted dates and amounts
-- Mobile-responsive design with accessibility considerations and touch-friendly interfaces
+- Platform-specific URL structure: `/en/justgiving/charity/[slug]` and `/en/everyorg/nonprofit/[slug]`
+- Real charity data from justgiving_charity_cache with 35 working charity pages
+- Platform badges (blue for JustGiving, green for Every.org) and external links
+- Anonymous donation statistics display with privacy notices
+- Service listings showing which services support each charity/nonprofit
+- Mobile-responsive design with loading states and error handling
+- **Edge Function**: `populate-justgiving-charity-cache` deployed with daily cron job
+- **Cron Schedule**: Automatic charity cache updates every 24 hours at 2 AM UTC
+
+**Working Charity Page Examples**:
+- `http://localhost:3000/en/justgiving/charity/the-demo-charity`
+- `http://localhost:3000/en/justgiving/charity/child-foundation`
+- `http://localhost:3000/en/justgiving/charity/anonymous-child`
 
 **Next Priority Tasks**:
-1. **M8.2**: Implement fundraiser notification system
+1. **M9.2**: Implement fundraiser notification system
 
 ---
 
