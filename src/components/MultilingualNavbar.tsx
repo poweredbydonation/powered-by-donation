@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import { Menu, X, ChevronDown } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
 import { LANGUAGES, getOtherLanguages, getLanguageByCode } from '@/config/languages'
+import PlatformSelector from './PlatformSelector'
 
 interface MultilingualNavbarProps {
   locale: string
@@ -100,7 +101,7 @@ export default function MultilingualNavbar({ locale, messages }: MultilingualNav
 
           {/* Desktop Navigation - Right Side */}
           <div className="hidden md:flex items-center space-x-6">
-            {/* Browse Services + Language (two rows) */}
+            {/* Browse Services + Platform + Language (two rows) */}
             <div className="flex flex-col justify-center space-y-1">
               <a 
                 href={`/${locale}/browse`}
@@ -109,32 +110,38 @@ export default function MultilingualNavbar({ locale, messages }: MultilingualNav
                 {messages?.nav?.browse || 'Browse Services'}
               </a>
               
-              {/* Language Dropdown */}
-              <div ref={langDropdownRef} className="relative flex justify-center">
-                <button
-                  onClick={() => setIsLangOpen(!isLangOpen)}
-                  className="flex items-center text-gray-700 hover:text-blue-600 transition-colors"
-                >
-                  <span className="bg-gray-100 hover:bg-gray-200 text-xs font-medium text-gray-700 px-2 py-1 rounded-full transition-colors">
-                    {currentLang.nativeName}
-                  </span>
-                </button>
+              {/* Platform + Language Selectors */}
+              <div className="flex items-center justify-center space-x-2">
+                {/* Platform Selector */}
+                <PlatformSelector />
                 
-                {isLangOpen && (
-                  <div className="absolute left-0 mt-2 w-40 bg-white rounded-lg shadow-lg border z-50">
-                    {otherLangs.map((lang) => (
-                      <a
-                        key={lang.code}
-                        href={`/${lang.code}${getPathWithoutLocale()}`}
-                        className="flex items-center space-x-2 px-4 py-2 hover:bg-gray-50 transition-colors"
-                        onClick={() => setIsLangOpen(false)}
-                      >
-                        <span className="text-lg">{lang.flag}</span>
-                        <span className="text-sm">{lang.nativeName}</span>
-                      </a>
-                    ))}
-                  </div>
-                )}
+                {/* Language Dropdown */}
+                <div ref={langDropdownRef} className="relative">
+                  <button
+                    onClick={() => setIsLangOpen(!isLangOpen)}
+                    className="flex items-center text-gray-700 hover:text-blue-600 transition-colors"
+                  >
+                    <span className="bg-gray-100 hover:bg-gray-200 text-xs font-medium text-gray-700 px-2 py-1 rounded-full transition-colors">
+                      {currentLang.nativeName}
+                    </span>
+                  </button>
+                  
+                  {isLangOpen && (
+                    <div className="absolute left-0 mt-2 w-40 bg-white rounded-lg shadow-lg border z-50">
+                      {otherLangs.map((lang) => (
+                        <a
+                          key={lang.code}
+                          href={`/${lang.code}${getPathWithoutLocale()}`}
+                          className="flex items-center space-x-2 px-4 py-2 hover:bg-gray-50 transition-colors"
+                          onClick={() => setIsLangOpen(false)}
+                        >
+                          <span className="text-lg">{lang.flag}</span>
+                          <span className="text-sm">{lang.nativeName}</span>
+                        </a>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
             
@@ -251,6 +258,14 @@ export default function MultilingualNavbar({ locale, messages }: MultilingualNav
                   {messages?.nav?.login || 'Login'}
                 </a>
               )}
+
+              {/* Mobile Platform Selector */}
+              <div className="border-t pt-4">
+                <div className="text-sm text-gray-500 mb-2">Platform:</div>
+                <div className="mb-4">
+                  <PlatformSelector />
+                </div>
+              </div>
 
               {/* Mobile Language Selector */}
               <div className="border-t pt-4">

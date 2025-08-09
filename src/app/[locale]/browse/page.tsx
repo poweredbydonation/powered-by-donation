@@ -39,7 +39,7 @@ export default function BrowsePage({ params }: BrowsePageProps) {
   const [searchQuery, setSearchQuery] = useState('')
   const [locationFilter, setLocationFilter] = useState<LocationFilter>({ type: 'all' })
   const [userCurrency, setUserCurrency] = useState<CurrencyCode>('AUD')
-  const [userPlatform, setUserPlatform] = useState<DonationPlatform>('justgiving')
+  const [userPlatform, setUserPlatform] = useState<DonationPlatform | null>(null)
   const [selectedPlatform, setSelectedPlatform] = useState<DonationPlatform>('justgiving')
 
   useEffect(() => {
@@ -70,44 +70,19 @@ export default function BrowsePage({ params }: BrowsePageProps) {
         if (userProfile?.preferred_currency) {
           setUserCurrency(userProfile.preferred_currency)
         }
-        if (userProfile?.preferred_platform) {
-          setUserPlatform(userProfile.preferred_platform)
-          setSelectedPlatform(userProfile.preferred_platform)
-        }
+        
+        // Always set userPlatform to something - either user's preference or default
+        const platform = userProfile?.preferred_platform || 'justgiving'
+        setUserPlatform(platform)
+        setSelectedPlatform(platform)
       } catch (err) {
-        // Keep defaults
+        // Set default platform even on error
+        setUserPlatform('justgiving')
+        setSelectedPlatform('justgiving')
       }
     }
 
-    // Fetch services
-    async function fetchServices() {
-      const supabase = createClient()
-      
-      // Use selectedPlatform for filtering (could be user's preference or anonymous user's selection)
-      const platformToFilter = user ? userPlatform : selectedPlatform
-      
-      const { data, error } = await supabase
-        .from('services')
-        .select(`
-          *,
-          users (
-            id,
-            name
-          )
-        `)
-        .eq('platform', platformToFilter)
-        .order('created_at', { ascending: false })
-
-      if (error) {
-        setServices([])
-      } else {
-        const servicesData = data || []
-        setServices(servicesData)
-        setFilteredServices(servicesData)
-      }
-      
-      setLoading(false)
-    }
+    // Legacy fetchServices function - removed (not used)
 
     loadMessages()
     fetchUserPreferences()
@@ -116,8 +91,8 @@ export default function BrowsePage({ params }: BrowsePageProps) {
 
   // Fetch services when userPlatform is loaded (for authenticated users) or platform changes (for anonymous users)
   useEffect(() => {
-    if (user) {
-      // For authenticated users, fetch when userPlatform changes
+    if (user && userPlatform !== null) {
+      // For authenticated users, fetch when userPlatform changes (and is loaded)
       setLoading(true)
       const fetchServices = async () => {
         const supabase = createClient()
@@ -131,15 +106,21 @@ export default function BrowsePage({ params }: BrowsePageProps) {
               name
             )
           `)
-          .eq('platform', userPlatform)
+          .eq('is_active', true)
+          .eq('show_in_directory', true)
           .order('created_at', { ascending: false })
 
         if (error) {
           setServices([])
         } else {
           const servicesData = data || []
-          setServices(servicesData)
-          setFilteredServices(servicesData)
+          // Filter by platform on client side to handle null/undefined platform values
+          const filteredByPlatform = servicesData.filter(service => {
+            const servicePlatform = service.platform || 'justgiving' // Default to justgiving for legacy services
+            return servicePlatform === userPlatform
+          })
+          setServices(filteredByPlatform)
+          setFilteredServices(filteredByPlatform)
         }
         
         setLoading(false)
@@ -161,15 +142,21 @@ export default function BrowsePage({ params }: BrowsePageProps) {
               name
             )
           `)
-          .eq('platform', selectedPlatform)
+          .eq('is_active', true)
+          .eq('show_in_directory', true)
           .order('created_at', { ascending: false })
 
         if (error) {
           setServices([])
         } else {
           const servicesData = data || []
-          setServices(servicesData)
-          setFilteredServices(servicesData)
+          // Filter by platform on client side to handle null/undefined platform values
+          const filteredByPlatform = servicesData.filter(service => {
+            const servicePlatform = service.platform || 'justgiving' // Default to justgiving for legacy services
+            return servicePlatform === selectedPlatform
+          })
+          setServices(filteredByPlatform)
+          setFilteredServices(filteredByPlatform)
         }
         
         setLoading(false)
