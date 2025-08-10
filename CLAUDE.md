@@ -38,6 +38,7 @@ Internationalization: next-intl with 17 language support
 8. **Translation keys** - Use next-intl for all user-facing text
 9. **Australian compliance** - Privacy Act, Consumer Law considerations
 10. **GitHub deployment** - All changes via Git push, not manual commands
+11. **Performance first** - Server-side filtering, pagination, strategic indexing
 
 ### Key Patterns
 - **Anonymous displays**: "Someone donated $50 via Web Design service"
@@ -79,6 +80,7 @@ Browse services → View fixed pricing → Choose charity → Sign up → Donate
 ## Current Status
 **Completed**: Provider→Fundraiser & Supporter→Donor terminology rename (100% complete)
 **Completed**: M11 - Browse Charities System with enhanced charity data fetching
+**Completed**: Performance optimization with server-side filtering, pagination, and city-based filtering
 **Active Project**: Enhanced charity database with detailed information (GetCharityById API)
 **Next Priority**: M12 (Phase 2 Every.org Integration)
 
@@ -89,9 +91,10 @@ Browse services → View fixed pricing → Choose charity → Sign up → Donate
 - **Coverage**: Complete database enhancement in ~4 days
 - **API Integration**: JustGiving GetCharityById with multi-approach authentication
 - **Complete Dataset**: 1745+ charities accessible (bypassed 1000-record client limit)
-- **Advanced Filtering**: Country, approval status, registration status, enhanced data availability
+- **Advanced Filtering**: Country, city, approval status, registration status, enhanced data availability
 - **Smart Search**: Name, description, location, registration number, keywords
-- **Pagination Strategy**: Multi-batch loading for complete dataset access
+- **Performance Optimized**: Server-side filtering, 24-item pagination, strategic database indexing
+- **Enhanced UI**: Larger charity logos, JustGiving profile links, responsive design
 
 **Detailed Progress**: See [PROJECT-STATUS.md](./PROJECT-STATUS.md) for complete milestone tracking, task lists, and implementation history
 

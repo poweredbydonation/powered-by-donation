@@ -44,6 +44,12 @@ The routing follows next-intl best practices: same-locale uses Link for SPA beha
 - **Features**: 20-50 lines (business logic)
 - **UI Components**: 10-30 lines (generic elements)
 
+### Performance Optimization Patterns
+- **Server-side filtering**: Database handles search/filtering instead of client-side processing
+- **Pagination**: 24 items per page for optimal loading and UX
+- **Debounced search**: 300ms delay prevents excessive API calls
+- **Strategic indexing**: Database indexes for common query patterns
+
 #### Key Component Patterns:
 ```typescript
 // Service-related components
@@ -58,7 +64,7 @@ AuthGuard.tsx             // Route protection
 PlatformSelector.tsx      // Platform switching
 
 // Platform-specific components
-CharityCard.tsx           // JustGiving charity display
+CharityCard.tsx           // JustGiving charity display with logos and profile links
 PlatformAccessGuard.tsx   // Cross-platform access control
 ```
 
@@ -231,8 +237,9 @@ const { user, signOut, loading } = useAuth();
 - ✅ Unified user profile system
 - ✅ Platform-aware service creation and browsing
 - ✅ Donation flow with JustGiving integration
-- ✅ Browse charities system (1737+ charities)
+- ✅ Browse charities system (1737+ charities) with pagination and city filtering
 - ✅ Notification system for donors and fundraisers
+- ✅ Performance optimization: server-side filtering, strategic indexing, debounced search
 
 ### Component Inventory
 - ✅ **Authentication**: Login, signup, auth guards

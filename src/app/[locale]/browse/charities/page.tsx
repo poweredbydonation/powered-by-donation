@@ -17,6 +17,7 @@ interface CharityFilters {
   search: string
   category: string
   country: string
+  city: string
   status: string
   enhancedData: string
 }
@@ -42,6 +43,7 @@ export default function BrowseCharitiesPage({ params }: BrowseCharitiesPageProps
     search: '',
     category: 'all',
     country: 'all',
+    city: 'all',
     status: 'all',
     enhancedData: 'all'
   })
@@ -57,6 +59,7 @@ export default function BrowseCharitiesPage({ params }: BrowseCharitiesPageProps
   // Filter options
   const [categories, setCategories] = useState<string[]>([])
   const [countries, setCountries] = useState<string[]>([])
+  const [cities, setCities] = useState<string[]>([])
   const [stats, setStats] = useState({
     totalCharities: 0,
     totalDonations: 0,
@@ -111,6 +114,18 @@ export default function BrowseCharitiesPage({ params }: BrowseCharitiesPageProps
           ])
         ).sort()
         setCountries(uniqueCountries)
+
+        // Load cities (distinct values)
+        const { data: cityData } = await supabase
+          .from('justgiving_charity_cache')
+          .select('address_city')
+          .not('address_city', 'is', null)
+          .not('address_city', 'eq', '')
+        
+        const uniqueCities = Array.from(
+          new Set(cityData?.map(item => item.address_city).filter(Boolean))
+        ).sort()
+        setCities(uniqueCities)
 
         // Load stats
         const { data: statsData } = await supabase
@@ -187,6 +202,11 @@ export default function BrowseCharitiesPage({ params }: BrowseCharitiesPageProps
         query = query.or(`address_country.eq.${currentFilters.country},country_code.eq.${currentFilters.country}`)
       }
 
+      // Apply city filter
+      if (currentFilters.city !== 'all') {
+        query = query.eq('address_city', currentFilters.city)
+      }
+
       // Apply status filter
       if (currentFilters.status === 'approved') {
         query = query.eq('is_approved', true)
@@ -261,6 +281,7 @@ export default function BrowseCharitiesPage({ params }: BrowseCharitiesPageProps
       search: '',
       category: 'all',
       country: 'all',
+      city: 'all',
       status: 'all',
       enhancedData: 'all'
     })
@@ -272,6 +293,7 @@ export default function BrowseCharitiesPage({ params }: BrowseCharitiesPageProps
     filters.search.trim() !== '' ||
     filters.category !== 'all' ||
     filters.country !== 'all' ||
+    filters.city !== 'all' ||
     filters.status !== 'all' ||
     filters.enhancedData !== 'all'
   ), [filters])
@@ -341,7 +363,7 @@ export default function BrowseCharitiesPage({ params }: BrowseCharitiesPageProps
             </div>
             
             {/* Filter Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
               {/* Category Filter */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center">
@@ -377,6 +399,26 @@ export default function BrowseCharitiesPage({ params }: BrowseCharitiesPageProps
                   {countries.map((country) => (
                     <option key={country} value={country}>
                       {country}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* City Filter */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+                  <MapPin className="h-4 w-4 mr-1 text-orange-500" />
+                  City
+                </label>
+                <select
+                  value={filters.city}
+                  onChange={(e) => handleFilterChange('city', e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  <option value="all">All Cities ({cities.length})</option>
+                  {cities.map((city) => (
+                    <option key={city} value={city}>
+                      {city}
                     </option>
                   ))}
                 </select>
@@ -450,6 +492,11 @@ export default function BrowseCharitiesPage({ params }: BrowseCharitiesPageProps
                   {filters.country !== 'all' && (
                     <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">
                       Country: {filters.country}
+                    </span>
+                  )}
+                  {filters.city !== 'all' && (
+                    <span className="text-xs bg-orange-100 text-orange-700 px-2 py-1 rounded">
+                      City: {filters.city}
                     </span>
                   )}
                   {filters.status !== 'all' && (

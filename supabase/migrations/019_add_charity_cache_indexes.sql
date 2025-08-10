@@ -13,6 +13,9 @@ CREATE INDEX IF NOT EXISTS idx_justgiving_charity_cache_country ON justgiving_ch
 -- Index for country code filtering (basic data)
 CREATE INDEX IF NOT EXISTS idx_justgiving_charity_cache_country_code ON justgiving_charity_cache(country_code);
 
+-- Index for city filtering
+CREATE INDEX IF NOT EXISTS idx_justgiving_charity_cache_city ON justgiving_charity_cache(address_city);
+
 -- Index for approval status filtering
 CREATE INDEX IF NOT EXISTS idx_justgiving_charity_cache_approved ON justgiving_charity_cache(is_approved) WHERE is_approved = true;
 

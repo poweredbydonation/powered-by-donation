@@ -44,17 +44,34 @@ export default function CharityCard({ charity, locale }: CharityCardProps) {
                 {charity.name}
               </a>
             </div>
-            {charity.logo_url && (
-              <img 
-                src={charity.logo_url} 
-                alt={`${charity.name} logo`}
-                className="w-12 h-12 object-contain rounded flex-shrink-0"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.style.display = 'none';
-                }}
-              />
-            )}
+            <div className="w-16 h-16 flex-shrink-0 ml-2">
+              {charity.logo_url ? (
+                <img 
+                  src={charity.logo_url} 
+                  alt={`${charity.name} logo`}
+                  className="w-full h-full object-contain rounded-lg border border-gray-200 bg-gray-50"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.style.display = 'none';
+                    // Show fallback icon instead
+                    const parent = target.parentElement;
+                    if (parent) {
+                      parent.innerHTML = `
+                        <div class="w-full h-full flex items-center justify-center bg-gray-100 rounded-lg border border-gray-200">
+                          <svg class="w-8 h-8 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"/>
+                          </svg>
+                        </div>
+                      `;
+                    }
+                  }}
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center bg-gray-100 rounded-lg border border-gray-200">
+                  <Heart className="w-8 h-8 text-gray-400" />
+                </div>
+              )}
+            </div>
           </div>
           
           {/* Category and Status Badges */}
@@ -147,18 +164,36 @@ export default function CharityCard({ charity, locale }: CharityCardProps) {
         </div>
 
         {/* Action Buttons */}
-        <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-          <a 
-            href={charityUrl}
-            className="text-sm font-medium text-blue-600 hover:text-blue-800 flex items-center"
-          >
-            View Services
-            <ExternalLink className="h-3 w-3 ml-1" />
-          </a>
-          
-          <div className="text-xs text-gray-500">
-            {hasActivity ? 'Community Supported' : 'Available to Support'}
+        <div className="pt-4 border-t border-gray-100 space-y-2">
+          <div className="flex items-center justify-between">
+            <a 
+              href={charityUrl}
+              className="text-sm font-medium text-blue-600 hover:text-blue-800 flex items-center"
+            >
+              View Services
+              <ExternalLink className="h-3 w-3 ml-1" />
+            </a>
+            
+            <div className="text-xs text-gray-500">
+              {hasActivity ? 'Community Supported' : 'Available to Support'}
+            </div>
           </div>
+          
+          {/* JustGiving Profile Link */}
+          {charity.profile_page_url && (
+            <div className="flex items-center justify-center">
+              <a 
+                href={charity.profile_page_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-gray-600 hover:text-blue-600 flex items-center px-3 py-1 rounded-full border border-gray-200 hover:border-blue-300 transition-colors"
+              >
+                <Globe className="h-3 w-3 mr-1" />
+                Visit JustGiving Profile
+                <ExternalLink className="h-2 w-2 ml-1" />
+              </a>
+            </div>
+          )}
         </div>
 
         {/* Recent Activity Indicator */}
