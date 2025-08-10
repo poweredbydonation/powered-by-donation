@@ -44,6 +44,12 @@ The routing follows next-intl best practices: same-locale uses Link for SPA beha
 - **Features**: 20-50 lines (business logic)
 - **UI Components**: 10-30 lines (generic elements)
 
+#### Preferred Charity System:
+- **Badge Display**: Pink sparkles badge shows "Preferred by Services" on charity cards
+- **Service Integration**: Queries `services.preferred_charities` JSONB field for charity_id matching
+- **Filtering**: Dedicated filter section allows showing only preferred charities
+- **Performance**: Server-side filtering with preferredCharityIds Set for O(1) lookups
+
 ### Performance Optimization Patterns
 - **Server-side filtering**: Database handles search/filtering instead of client-side processing
 - **Pagination**: 24 items per page for optimal loading and UX
@@ -238,6 +244,7 @@ const { user, signOut, loading } = useAuth();
 - ✅ Platform-aware service creation and browsing
 - ✅ Donation flow with JustGiving integration
 - ✅ Browse charities system (1737+ charities) with pagination and city filtering
+- ✅ Preferred charity badges and filtering (shows charities selected by services)
 - ✅ Notification system for donors and fundraisers
 - ✅ Performance optimization: server-side filtering, strategic indexing, debounced search
 

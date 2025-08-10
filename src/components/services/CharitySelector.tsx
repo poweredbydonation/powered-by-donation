@@ -49,8 +49,15 @@ export default function CharitySelector({
     }
 
     if (searchTerm.trim().length < 2) {
-      setSearchResults([])
-      setShowDropdown(false)
+      // Show popular charities when no search term
+      if (searchTerm.length === 0) {
+        searchTimeoutRef.current = setTimeout(async () => {
+          await loadPopularCharities()
+        }, 100)
+      } else {
+        setSearchResults([])
+        setShowDropdown(false)
+      }
       return
     }
 
@@ -77,6 +84,43 @@ export default function CharitySelector({
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
+  const loadPopularCharities = async () => {
+    if (disabled || platform !== 'justgiving') return
+    
+    setIsSearching(true)
+    setSearchError('')
+    
+    try {
+      const { createClient } = await import('@/lib/supabase/client')
+      const supabase = createClient()
+      
+      // Load popular charities (those with most donations or approved status)
+      const { data, error } = await supabase
+        .from('justgiving_charity_cache')
+        .select('justgiving_charity_id, name, description, logo_url')
+        .or('is_approved.eq.true,total_donations_count.gt.0')
+        .order('total_donations_count', { ascending: false })
+        .order('name', { ascending: true })
+        .limit(8)
+
+      if (error) throw error
+
+      const transformedResults: JustGivingCharity[] = (data || []).map(charity => ({
+        charityId: parseInt(charity.justgiving_charity_id),
+        name: charity.name,
+        description: charity.description || '',
+        logoAbsoluteUrl: charity.logo_url || undefined
+      }))
+
+      setSearchResults(transformedResults)
+      setShowDropdown(transformedResults.length > 0)
+    } catch (error) {
+      console.error('Error loading popular charities:', error)
+    } finally {
+      setIsSearching(false)
+    }
+  }
+
   const performSearch = async (query: string) => {
     if (disabled) return
     
@@ -90,31 +134,41 @@ export default function CharitySelector({
     setSearchError('')
     
     try {
-      // First try cached search for fast results
-      const cachedResponse = await fetch(`/api/charities/cached?q=${encodeURIComponent(query)}&limit=10`)
-      const cachedData = await cachedResponse.json()
+      // Use our optimized charity cache directly
+      const { createClient } = await import('@/lib/supabase/client')
+      const supabase = createClient()
       
-      if (cachedData.success && cachedData.data && cachedData.data.searchResults.length > 0) {
-        setSearchResults(cachedData.data.searchResults)
-        setShowDropdown(true)
-        setIsSearching(false)
-        return
+      const searchTerm = query.trim()
+      let dbQuery = supabase
+        .from('justgiving_charity_cache')
+        .select('justgiving_charity_id, name, description, logo_url')
+        .limit(10)
+        .order('name', { ascending: true })
+
+      // Apply search filter using the same logic as browse page
+      if (searchTerm) {
+        dbQuery = dbQuery.or(`name.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%,keywords.ilike.%${searchTerm}%`)
       }
-      
-      // If no cached results, fall back to live JustGiving API search
-      console.log('No cached results found, searching JustGiving API...')
-      const liveResponse = await fetch(`/api/charities/search?q=${encodeURIComponent(query)}&maxResults=10`)
-      const liveData = await liveResponse.json()
-      
-      if (liveData.success && liveData.data) {
-        setSearchResults(liveData.data.searchResults || [])
-        setShowDropdown(true)
-      } else {
-        setSearchError(liveData.error || 'Failed to search charities')
+
+      const { data, error } = await dbQuery
+
+      if (error) {
+        throw error
       }
+
+      // Transform to match expected format
+      const transformedResults: JustGivingCharity[] = (data || []).map(charity => ({
+        charityId: parseInt(charity.justgiving_charity_id),
+        name: charity.name,
+        description: charity.description || '',
+        logoAbsoluteUrl: charity.logo_url || undefined
+      }))
+
+      setSearchResults(transformedResults)
+      setShowDropdown(transformedResults.length > 0)
     } catch (error) {
       console.error('Charity search error:', error)
-      setSearchError('Network error occurred')
+      setSearchError('Search failed. Please try again.')
     } finally {
       setIsSearching(false)
     }
@@ -162,7 +216,15 @@ export default function CharitySelector({
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            onFocus={() => searchTerm.length >= 2 && setShowDropdown(true)}
+            onFocus={() => {
+              if (searchTerm.length >= 2) {
+                setShowDropdown(true)
+              } else if (searchTerm.length === 0 && searchResults.length > 0) {
+                setShowDropdown(true)
+              } else if (searchTerm.length === 0) {
+                loadPopularCharities()
+              }
+            }}
             placeholder={platform === 'justgiving' 
               ? "Search for charities (e.g., 'cancer', 'children', 'environment')" 
               : "Every.org integration coming soon..."}

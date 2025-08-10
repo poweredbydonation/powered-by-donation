@@ -91,10 +91,11 @@ Browse services → View fixed pricing → Choose charity → Sign up → Donate
 - **Coverage**: Complete database enhancement in ~4 days
 - **API Integration**: JustGiving GetCharityById with multi-approach authentication
 - **Complete Dataset**: 1745+ charities accessible (bypassed 1000-record client limit)
-- **Advanced Filtering**: Country, city, approval status, registration status, enhanced data availability
+- **Advanced Filtering**: Country, city, approval status, registration status, enhanced data availability, preferred by services
 - **Smart Search**: Name, description, location, registration number, keywords
 - **Performance Optimized**: Server-side filtering, 24-item pagination, strategic database indexing
 - **Enhanced UI**: Larger charity logos, JustGiving profile links, responsive design
+- **Preferred Charity System**: Pink badge and dedicated filter for charities selected by active services
 
 **Detailed Progress**: See [PROJECT-STATUS.md](./PROJECT-STATUS.md) for complete milestone tracking, task lists, and implementation history
 

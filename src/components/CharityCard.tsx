@@ -1,12 +1,13 @@
 import { JustGivingCharityCache } from '@/types/database'
-import { Heart, ExternalLink, TrendingUp, Calendar, MapPin, Globe, Shield, Star } from 'lucide-react'
+import { Heart, ExternalLink, TrendingUp, Calendar, MapPin, Globe, Shield, Star, Sparkles } from 'lucide-react'
 
 interface CharityCardProps {
   charity: JustGivingCharityCache
   locale: string
+  isPreferred?: boolean
 }
 
-export default function CharityCard({ charity, locale }: CharityCardProps) {
+export default function CharityCard({ charity, locale, isPreferred = false }: CharityCardProps) {
   // Generate charity page URL
   const charityUrl = `/${locale}/justgiving/charity/${charity.slug}`
 
@@ -76,6 +77,13 @@ export default function CharityCard({ charity, locale }: CharityCardProps) {
           
           {/* Category and Status Badges */}
           <div className="flex flex-wrap gap-2">
+            {isPreferred && (
+              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-pink-100 text-pink-800 border border-pink-200">
+                <Sparkles className="h-2 w-2 mr-1" />
+                Preferred by Services
+              </span>
+            )}
+            
             {charity.category && (
               <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                 {charity.category}

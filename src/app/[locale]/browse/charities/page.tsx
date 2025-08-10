@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react'
 import MultilingualNavbar from '@/components/MultilingualNavbar'
 import CharityCard from '@/components/CharityCard'
-import { Search, Heart, Users, TrendingUp, MapPin, Globe, Shield, Star, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Search, Heart, Users, TrendingUp, MapPin, Globe, Shield, Star, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { JustGivingCharityCache } from '@/types/database'
 
@@ -15,11 +15,11 @@ interface BrowseCharitiesPageProps {
 
 interface CharityFilters {
   search: string
-  category: string
   country: string
   city: string
   status: string
   enhancedData: string
+  preferred: string
 }
 
 interface PaginationInfo {
@@ -41,11 +41,11 @@ export default function BrowseCharitiesPage({ params }: BrowseCharitiesPageProps
   // Filter state
   const [filters, setFilters] = useState<CharityFilters>({
     search: '',
-    category: 'all',
     country: 'all',
     city: 'all',
     status: 'all',
-    enhancedData: 'all'
+    enhancedData: 'all',
+    preferred: 'all'
   })
   
   // Pagination state
@@ -57,7 +57,6 @@ export default function BrowseCharitiesPage({ params }: BrowseCharitiesPageProps
   })
   
   // Filter options
-  const [categories, setCategories] = useState<string[]>([])
   const [countries, setCountries] = useState<string[]>([])
   const [cities, setCities] = useState<string[]>([])
   const [stats, setStats] = useState({
@@ -70,6 +69,9 @@ export default function BrowseCharitiesPage({ params }: BrowseCharitiesPageProps
     registeredCharities: 0,
     countriesCount: 0
   })
+  
+  // Track which charities are preferred by services
+  const [preferredCharityIds, setPreferredCharityIds] = useState<Set<string>>(new Set())
 
   useEffect(() => {
     // Load messages
@@ -89,17 +91,6 @@ export default function BrowseCharitiesPage({ params }: BrowseCharitiesPageProps
       const supabase = createClient()
       
       try {
-        // Load categories (distinct values)
-        const { data: categoryData } = await supabase
-          .from('justgiving_charity_cache')
-          .select('category')
-          .not('category', 'is', null)
-          .not('category', 'eq', '')
-        
-        const uniqueCategories = Array.from(
-          new Set(categoryData?.map(item => item.category).filter(Boolean))
-        ).sort()
-        setCategories(uniqueCategories)
 
         // Load countries (distinct values)
         const { data: countryData } = await supabase
@@ -126,6 +117,25 @@ export default function BrowseCharitiesPage({ params }: BrowseCharitiesPageProps
           new Set(cityData?.map(item => item.address_city).filter(Boolean))
         ).sort()
         setCities(uniqueCities)
+
+        // Load preferred charities from services
+        const { data: servicesData } = await supabase
+          .from('services')
+          .select('preferred_charities')
+          .not('preferred_charities', 'is', null)
+          .eq('is_active', true)
+
+        const preferredIds = new Set<string>()
+        servicesData?.forEach(service => {
+          if (service.preferred_charities && Array.isArray(service.preferred_charities)) {
+            service.preferred_charities.forEach((charity: any) => {
+              if (charity.charity_id) {
+                preferredIds.add(charity.charity_id)
+              }
+            })
+          }
+        })
+        setPreferredCharityIds(preferredIds)
 
         // Load stats
         const { data: statsData } = await supabase
@@ -192,10 +202,6 @@ export default function BrowseCharitiesPage({ params }: BrowseCharitiesPageProps
         query = query.or(`name.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%,keywords.ilike.%${searchTerm}%,address_city.ilike.%${searchTerm}%,registration_number.ilike.%${searchTerm}%`)
       }
 
-      // Apply category filter
-      if (currentFilters.category !== 'all') {
-        query = query.eq('category', currentFilters.category)
-      }
 
       // Apply country filter
       if (currentFilters.country !== 'all') {
@@ -221,6 +227,17 @@ export default function BrowseCharitiesPage({ params }: BrowseCharitiesPageProps
         query = query.not('enhanced_data_fetched_at', 'is', null)
       } else if (currentFilters.enhancedData === 'basic') {
         query = query.is('enhanced_data_fetched_at', null)
+      }
+
+      // Apply preferred charities filter
+      if (currentFilters.preferred === 'preferred') {
+        const preferredIdsArray = Array.from(preferredCharityIds)
+        if (preferredIdsArray.length > 0) {
+          query = query.in('justgiving_charity_id', preferredIdsArray)
+        } else {
+          // If no preferred charities, return empty result
+          query = query.eq('justgiving_charity_id', 'impossible-id-that-does-not-exist')
+        }
       }
 
       // Apply pagination
@@ -249,7 +266,7 @@ export default function BrowseCharitiesPage({ params }: BrowseCharitiesPageProps
       setSearchLoading(false)
       setLoading(false)
     }
-  }, [])
+  }, [preferredCharityIds])
 
   // Effect to fetch charities when filters or page changes
   useEffect(() => {
@@ -279,11 +296,11 @@ export default function BrowseCharitiesPage({ params }: BrowseCharitiesPageProps
   const clearFilters = () => {
     setFilters({
       search: '',
-      category: 'all',
       country: 'all',
       city: 'all',
       status: 'all',
-      enhancedData: 'all'
+      enhancedData: 'all',
+      preferred: 'all'
     })
     setPagination(prev => ({ ...prev, currentPage: 1 }))
   }
@@ -291,11 +308,11 @@ export default function BrowseCharitiesPage({ params }: BrowseCharitiesPageProps
   // Check if any filters are active
   const hasActiveFilters = useMemo(() => (
     filters.search.trim() !== '' ||
-    filters.category !== 'all' ||
     filters.country !== 'all' ||
     filters.city !== 'all' ||
     filters.status !== 'all' ||
-    filters.enhancedData !== 'all'
+    filters.enhancedData !== 'all' ||
+    filters.preferred !== 'all'
   ), [filters])
 
   // Generate pagination buttons
@@ -362,101 +379,173 @@ export default function BrowseCharitiesPage({ params }: BrowseCharitiesPageProps
               />
             </div>
             
-            {/* Filter Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
-              {/* Category Filter */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center">
-                  <Heart className="h-4 w-4 mr-1 text-red-500" />
-                  Category
-                </label>
-                <select
-                  value={filters.category}
-                  onChange={(e) => handleFilterChange('category', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            {/* Country Filter Pills */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-3 flex items-center">
+                <Globe className="h-4 w-4 mr-1 text-blue-500" />
+                Country ({countries.length} available)
+              </label>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  onClick={() => handleFilterChange('country', 'all')}
+                  className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                    filters.country === 'all'
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
                 >
-                  <option value="all">All Categories ({categories.length})</option>
-                  {categories.map((category) => (
-                    <option key={category} value={category}>
-                      {category}
-                    </option>
-                  ))}
-                </select>
+                  All Countries
+                </button>
+                {countries.slice(0, 8).map((country) => (
+                  <button
+                    key={country}
+                    onClick={() => handleFilterChange('country', country)}
+                    className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                      filters.country === country
+                        ? 'bg-blue-600 text-white'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    }`}
+                  >
+                    {country}
+                  </button>
+                ))}
+                {countries.length > 8 && (
+                  <div className="text-sm text-gray-500 flex items-center px-2">
+                    +{countries.length - 8} more
+                  </div>
+                )}
               </div>
+            </div>
 
-              {/* Country Filter */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center">
-                  <Globe className="h-4 w-4 mr-1 text-blue-500" />
-                  Country
-                </label>
-                <select
-                  value={filters.country}
-                  onChange={(e) => handleFilterChange('country', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            {/* Status Filter Pills */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-3 flex items-center">
+                <Shield className="h-4 w-4 mr-1 text-green-500" />
+                Status
+              </label>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  onClick={() => handleFilterChange('status', 'all')}
+                  className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                    filters.status === 'all'
+                      ? 'bg-green-600 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
                 >
-                  <option value="all">All Countries ({countries.length})</option>
-                  {countries.map((country) => (
-                    <option key={country} value={country}>
-                      {country}
-                    </option>
-                  ))}
-                </select>
+                  All Status
+                </button>
+                <button
+                  onClick={() => handleFilterChange('status', 'approved')}
+                  className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                    filters.status === 'approved'
+                      ? 'bg-green-600 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  JustGiving Approved ({stats.approvedCharities})
+                </button>
+                <button
+                  onClick={() => handleFilterChange('status', 'registered')}
+                  className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                    filters.status === 'registered'
+                      ? 'bg-green-600 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  Officially Registered ({stats.registeredCharities})
+                </button>
               </div>
+            </div>
 
-              {/* City Filter */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center">
-                  <MapPin className="h-4 w-4 mr-1 text-orange-500" />
-                  City
-                </label>
-                <select
-                  value={filters.city}
-                  onChange={(e) => handleFilterChange('city', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            {/* Detail Level Filter Pills */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-3 flex items-center">
+                <Star className="h-4 w-4 mr-1 text-purple-500" />
+                Charity Information
+              </label>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  onClick={() => handleFilterChange('enhancedData', 'all')}
+                  className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                    filters.enhancedData === 'all'
+                      ? 'bg-purple-600 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
                 >
-                  <option value="all">All Cities ({cities.length})</option>
-                  {cities.map((city) => (
-                    <option key={city} value={city}>
-                      {city}
-                    </option>
-                  ))}
-                </select>
+                  Show All
+                </button>
+                <button
+                  onClick={() => handleFilterChange('enhancedData', 'enhanced')}
+                  className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                    filters.enhancedData === 'enhanced'
+                      ? 'bg-purple-600 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  With Detailed Info ({stats.enhancedCharities})
+                </button>
+                <button
+                  onClick={() => handleFilterChange('enhancedData', 'basic')}
+                  className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                    filters.enhancedData === 'basic'
+                      ? 'bg-purple-600 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  Basic Info Only ({stats.totalCharities - stats.enhancedCharities})
+                </button>
               </div>
+            </div>
 
-              {/* Status Filter */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center">
-                  <Shield className="h-4 w-4 mr-1 text-green-500" />
-                  Status
-                </label>
-                <select
-                  value={filters.status}
-                  onChange={(e) => handleFilterChange('status', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            {/* Preferred by Services Filter Pills */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-3 flex items-center">
+                <Sparkles className="h-4 w-4 mr-1 text-pink-500" />
+                Service Preferences
+              </label>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  onClick={() => handleFilterChange('preferred', 'all')}
+                  className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                    filters.preferred === 'all'
+                      ? 'bg-pink-600 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
                 >
-                  <option value="all">All Status</option>
-                  <option value="approved">JustGiving Approved ({stats.approvedCharities})</option>
-                  <option value="registered">Officially Registered ({stats.registeredCharities})</option>
-                </select>
+                  All Charities
+                </button>
+                <button
+                  onClick={() => handleFilterChange('preferred', 'preferred')}
+                  className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                    filters.preferred === 'preferred'
+                      ? 'bg-pink-600 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  <Sparkles className="h-3 w-3 mr-1 inline" />
+                  Preferred by Services ({preferredCharityIds.size})
+                </button>
               </div>
+            </div>
 
-              {/* Enhanced Data Filter */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center">
-                  <MapPin className="h-4 w-4 mr-1 text-purple-500" />
-                  Detail Level
-                </label>
-                <select
-                  value={filters.enhancedData}
-                  onChange={(e) => handleFilterChange('enhancedData', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                >
-                  <option value="all">All Details</option>
-                  <option value="enhanced">Enhanced Details ({stats.enhancedCharities})</option>
-                  <option value="basic">Basic Info Only ({stats.totalCharities - stats.enhancedCharities})</option>
-                </select>
-              </div>
+            {/* City Filter (keeping as dropdown since many cities) */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+                <MapPin className="h-4 w-4 mr-1 text-orange-500" />
+                City
+              </label>
+              <select
+                value={filters.city}
+                onChange={(e) => handleFilterChange('city', e.target.value)}
+                className="w-full max-w-xs px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="all">All Cities ({cities.length})</option>
+                {cities.map((city) => (
+                  <option key={city} value={city}>
+                    {city}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
 
@@ -484,11 +573,6 @@ export default function BrowseCharitiesPage({ params }: BrowseCharitiesPageProps
                       Search: "{filters.search}"
                     </span>
                   )}
-                  {filters.category !== 'all' && (
-                    <span className="text-xs bg-red-100 text-red-700 px-2 py-1 rounded">
-                      Category: {filters.category}
-                    </span>
-                  )}
                   {filters.country !== 'all' && (
                     <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">
                       Country: {filters.country}
@@ -506,7 +590,12 @@ export default function BrowseCharitiesPage({ params }: BrowseCharitiesPageProps
                   )}
                   {filters.enhancedData !== 'all' && (
                     <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded">
-                      Details: {filters.enhancedData === 'enhanced' ? 'Enhanced' : 'Basic'}
+                      Info: {filters.enhancedData === 'enhanced' ? 'Detailed' : 'Basic Only'}
+                    </span>
+                  )}
+                  {filters.preferred !== 'all' && (
+                    <span className="text-xs bg-pink-100 text-pink-700 px-2 py-1 rounded">
+                      Preferred by Services
                     </span>
                   )}
                 </div>
@@ -548,6 +637,7 @@ export default function BrowseCharitiesPage({ params }: BrowseCharitiesPageProps
                   key={charity.justgiving_charity_id} 
                   charity={charity}
                   locale={locale}
+                  isPreferred={preferredCharityIds.has(charity.justgiving_charity_id)}
                 />
               ))
             )}
