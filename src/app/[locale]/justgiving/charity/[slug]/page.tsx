@@ -6,7 +6,6 @@ import { createClient } from '@/lib/supabase/client'
 import { JustGivingCharityCache, ServiceWithPlatformFields } from '@/types/database'
 import MultilingualNavbar from '@/components/MultilingualNavbar'
 import { ExternalLink, Users, TrendingUp, Calendar } from 'lucide-react'
-import { useTranslations } from 'next-intl'
 
 interface CharityPageProps {
   params: {
@@ -18,14 +17,13 @@ interface CharityPageProps {
 type ServiceWithFundraiser = ServiceWithPlatformFields & {
   users: {
     id: string
-    full_name: string
+    name: string
     username: string
   }
 }
 
 export default function JustGivingCharityPage({ params }: CharityPageProps) {
   const { locale, slug } = params
-  const t = useTranslations('charity')
   const [charity, setCharity] = useState<JustGivingCharityCache | null>(null)
   const [services, setServices] = useState<ServiceWithFundraiser[]>([])
   const [loading, setLoading] = useState(true)
@@ -60,23 +58,36 @@ export default function JustGivingCharityPage({ params }: CharityPageProps) {
 
         setCharity(charityData)
 
-        // Get services that support this charity (both any_charity and specific_charities types)
-        const { data: servicesData, error: servicesError } = await supabase
+        // Get services that support this charity
+        // First get all JustGiving services that accept any charity
+        const { data: anyCharityServices, error: anyCharityError } = await supabase
           .from('services')
           .select(`
             *,
-            users!inner(id, full_name, username)
+            users!inner(id, name, username)
           `)
           .eq('platform', 'justgiving')
           .eq('is_active', true)
-          .or(`charity_requirement_type.eq.any_charity,and(charity_requirement_type.eq.specific_charities,preferred_charities.cs."${charityData.justgiving_charity_id}")`)
+          .eq('charity_requirement_type', 'any_charity')
           .order('created_at', { ascending: false })
 
-        if (servicesError) {
-          console.error('Error loading services:', servicesError)
+        // Debug logging
+        console.log('Charity ID:', charityData.justgiving_charity_id)
+        console.log('Any charity services found:', anyCharityServices?.length || 0)
+        console.log('Any charity services:', anyCharityServices)
+        console.log('Any charity services error:', anyCharityError)
+
+        // For now, just use the "any charity" services
+        // TODO: Fix specific charity query JSON syntax later
+        const allServices = anyCharityServices || []
+
+        console.log('Total services for charity page:', allServices.length)
+
+        if (anyCharityError) {
+          console.error('Error loading services:', anyCharityError)
           setServices([])
         } else {
-          setServices(servicesData || [])
+          setServices(allServices)
         }
 
       } catch (err) {
@@ -233,7 +244,7 @@ export default function JustGivingCharityPage({ params }: CharityPageProps) {
                   
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-gray-500">
-                      by {service.users.full_name || service.users.username}
+                      by {service.users.name || service.users.username}
                     </span>
                     <a
                       href={`/${locale}/services/${service.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}

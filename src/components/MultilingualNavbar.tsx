@@ -103,14 +103,22 @@ export default function MultilingualNavbar({ locale, messages }: MultilingualNav
 
           {/* Desktop Navigation - Right Side */}
           <div className="hidden md:flex items-center space-x-6">
-            {/* Browse Services + Platform + Language (two rows) */}
+            {/* Browse Links + Platform + Language (two rows) */}
             <div className="flex flex-col justify-center space-y-1">
-              <a 
-                href={`/${locale}/browse`}
-                className="text-gray-700 hover:text-blue-600 font-medium transition-colors text-right"
-              >
-                {messages?.nav?.browse || 'Browse Services'}
-              </a>
+              <div className="flex items-center space-x-4">
+                <a 
+                  href={`/${locale}/browse`}
+                  className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
+                >
+                  {messages?.nav?.browse || 'Browse Services'}
+                </a>
+                <a 
+                  href={`/${locale}/browse/charities`}
+                  className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
+                >
+                  Browse Charities
+                </a>
+              </div>
               
               {/* Platform + Language Selectors */}
               <div className="flex items-center justify-center space-x-2">
@@ -243,6 +251,14 @@ export default function MultilingualNavbar({ locale, messages }: MultilingualNav
                 onClick={() => setIsMenuOpen(false)}
               >
                 {messages?.nav?.browse || 'Browse Services'}
+              </a>
+              
+              <a 
+                href={`/${locale}/browse/charities`}
+                className="block text-gray-700 hover:text-blue-600 font-medium transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Browse Charities
               </a>
 
               {/* Mobile Authentication */}
