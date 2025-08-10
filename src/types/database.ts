@@ -119,6 +119,37 @@ export interface JustGivingCharityCache {
   page_views?: number;
   last_updated?: Date;
   stats_last_updated?: Date;
+  
+  // Enhanced charity details from GetCharityById API
+  address_line1?: string;
+  address_line2?: string;
+  address_city?: string;
+  address_county?: string;
+  address_country?: string;
+  address_postcode?: string;
+  display_name?: string;
+  logo_absolute_url?: string;
+  profile_page_url?: string;
+  registration_number?: string;
+  website_url?: string;
+  email_address?: string;
+  keywords?: string;
+  page_short_name?: string;
+  sms_short_name?: string;
+  is_approved?: boolean;
+  show_in_search?: boolean;
+  date_added_to_justgiving?: Date;
+  thankyou_message?: string;
+  impact_statement_what?: string;
+  impact_statement_why?: string;
+  country_code?: string;
+  currency_code?: string;
+  mobile_appeals?: Record<string, unknown>; // JSONB
+  donation_display_amounts?: Record<string, unknown>; // JSONB
+  theme_colour?: Record<string, unknown>; // JSONB
+  categories_list?: Record<string, unknown>; // JSONB - renamed from categories to avoid conflict
+  enhanced_data_fetched_at?: Date;
+  api_fetch_attempts?: number;
 }
 
 export interface EveryOrgNonprofitCache {
