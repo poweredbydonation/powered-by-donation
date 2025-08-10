@@ -134,16 +134,24 @@ pnpm run type-check
 pnpm run lint
 ```
 
-### Database Management
+### Database Management (Dual Platform Setup)
 ```bash
-# Supabase migrations
+# Supabase migrations (includes dual platform schema)
 supabase migration new migration_name
 supabase db push
-supabase gen types typescript --local > types/database.ts
+supabase gen types typescript --local > src/types/database.ts
 
-# Start local development
+# Start local development with dual platform support
 supabase start
 supabase stop
+
+# Apply dual platform migration (if setting up from scratch)
+supabase migration new dual_platform_setup
+# Copy migration files from supabase/migrations/
+supabase db push
+
+# Verify platform sequences are working
+supabase sql --file verify-platform-references.sql
 ```
 
 ### Development Workflow
@@ -162,30 +170,132 @@ git push origin main  # Triggers automatic deployment to powered-by-donation
 
 ## Development & Production Environments
 
-### Production Environment
+### Production Environment (Dual Platform Ready)
 - **GitHub Branch**: `main` - https://github.com/poweredbydonation/powered-by-donation/tree/main
 - **Vercel Project**: `powered-by-donation` - https://vercel.com/poweredbydonations-projects/powered-by-donation
 - **Supabase Project**: `production` - https://supabase.com/dashboard/project/pdazwmicqrxcvbhmfwmy
 - **URL**: https://powered-by-donation.vercel.app
+- **Platform Support**: JustGiving (Active) + Every.org (Phase 2)
+- **Sequential References**: PD-JG-1000+ (Active), PD-EV-1000+ (Ready)
 
-#### Development Environment  
+#### Development Environment (Full Dual Platform Testing)
 - **GitHub Branch**: `dev` - https://github.com/poweredbydonation/powered-by-donation/tree/dev
 - **Vercel Project**: `dev.powered-by-donation` - https://vercel.com/poweredbydonations-projects/dev.powered-by-donation
 - **Supabase Project**: `dev` - https://supabase.com/dashboard/project/ktwlhjgomcbbjynfefys
 - **URL**: https://dev-powered-by-donation.vercel.app
+- **Platform Testing**: Full JustGiving + Every.org integration testing
+- **Cron Jobs**: check-donations (5-minute polling), populate-justgiving-charity-cache (daily)
 
-### Environment Variables
+### Environment Variables (Dual Platform)
 Environment variables are managed via respective Vercel dashboards:
 - Database connections (Supabase URLs and keys)
-- JustGiving API credentials
+- **JustGiving API credentials** (Active)
+- **Every.org API credentials** (Phase 2 - Ready)
 - Authentication secrets
-- Third-party service configurations
+- Platform-specific webhook endpoints
+- Sequential reference generation secrets
 
-### Deployment Workflow
+### Deployment Workflow (Dual Platform)
 - **Development**: Automatic deployment on push to `dev` branch
 - **Production**: Automatic deployment on push to `main` branch
 - **No manual deployment commands needed**
 - **Environment-specific configurations handled automatically**
+- **Platform-specific deployments**: Both JustGiving and Every.org ready
+- **Database migrations**: Automatically applied via Supabase
+
+## Dual Platform Migration Guide
+
+### Database Migration Process
+The platform has undergone a complete migration to support dual platforms (JustGiving + Every.org):
+
+#### Migration Files Applied:
+```bash
+# Core dual platform schema
+002_dual_platform_references.sql     # Platform-specific tables and sequences
+013_notification_system.sql          # Fundraiser notification system  
+014_current_schema.sql               # Complete schema consolidation
+```
+
+#### Key Changes:
+1. **Platform-Aware Tables**: Services and service_requests now include platform fields
+2. **Sequential References**: PD-JG-1000, PD-EV-1000 generation system
+3. **Dual Cache Tables**: justgiving_charity_cache + every_org_nonprofit_cache
+4. **User Platform Preferences**: preferred_platform field for user routing
+5. **Notification System**: Automated email system for fundraiser alerts
+
+### Platform-Specific Development Setup
+
+#### JustGiving Integration (Active)
+```bash
+# Required environment variables
+JUSTGIVING_API_KEY=your_staging_api_key
+NEXT_PUBLIC_JUSTGIVING_CHARITY_CHECKOUT_URL=https://link.staging.justgiving.com
+
+# Test sequential references
+curl -X POST http://localhost:3000/api/just-giving/charity/123
+# Expected response: {"platform_reference": "PD-JG-1001", "donation_url": "..."}
+```
+
+#### Every.org Integration (Phase 2 Ready)
+```bash
+# Environment variables (ready for Phase 2)
+EVERY_ORG_API_KEY=your_api_key
+NEXT_PUBLIC_EVERY_ORG_BASE_URL=https://partners.every.org
+
+# Test platform readiness
+curl -X POST http://localhost:3000/api/every-org/non-profit/123
+# Expected response: {"message": "Every.org integration coming soon"}
+```
+
+#### Edge Functions Deployed
+```bash
+# check-donations: 5-minute automated polling
+supabase functions deploy check-donations
+
+# populate-justgiving-charity-cache: Daily charity sync
+supabase functions deploy populate-justgiving-charity-cache
+
+# Verify cron jobs
+supabase sql --execute "SELECT * FROM cron.job;"
+```
+
+### Testing Dual Platform Features
+
+#### Complete Donation Flow Testing
+```bash
+# 1. Start development server
+pnpm run dev
+
+# 2. Test JustGiving flow
+# Navigate to: http://localhost:3000/en/services/test-service
+# Select "JustGiving" platform, choose charity, complete donation
+# Verify sequential reference generation: PD-JG-1001
+
+# 3. Test platform switching
+# Navigate to profile settings, switch platform preference
+# Verify browse page filters services correctly
+
+# 4. Test organization pages
+# JustGiving: http://localhost:3000/en/justgiving/charity/test-charity
+# Every.org: http://localhost:3000/en/everyorg/nonprofit/test-nonprofit
+```
+
+#### Database Verification
+```sql
+-- Verify platform sequences are working
+SELECT nextval('donation_reference_jg_seq');  -- Should return 1000+
+SELECT nextval('donation_reference_ev_seq');  -- Should return 1000+
+
+-- Test reference generation function
+SELECT generate_platform_reference('justgiving');  -- PD-JG-1001
+SELECT generate_platform_reference('every_org');   -- PD-EV-1001
+
+-- Check service requests with references
+SELECT platform_reference, platform, organization_id, status 
+FROM service_requests 
+WHERE platform_reference LIKE 'PD-%'
+ORDER BY created_at DESC;
+```
 
 ## Component Architecture Guidelines
 
@@ -235,14 +345,22 @@ Extract complex logic to custom hooks while keeping related UI elements in the s
 - **"I need just this part"** - Want to reuse portion of component
 - **"Tests are complex"** - Need elaborate setup for simple assertions
 
-### Development Workflow
+### Development Workflow (Dual Platform Considerations)
 
 #### Start Simple, Split When Needed:
 1. **Build feature in one component** - Get it working first
-2. **Identify pain points** - Where does editing become difficult?
-3. **Extract by logical boundaries** - Split by feature, not lines
-4. **Test the split** - Ensure functionality still works
-5. **Refactor imports** - Update related components
+2. **Consider platform requirements** - Will this need platform-specific logic?
+3. **Identify pain points** - Where does editing become difficult?
+4. **Extract by logical boundaries** - Split by feature, not lines
+5. **Platform-aware abstractions** - Create platform-agnostic interfaces
+6. **Test the split** - Ensure functionality works for both platforms
+7. **Refactor imports** - Update related components
+
+#### Platform-Specific Component Patterns:
+- **Conditional Rendering**: Use platform field to show appropriate UI
+- **Platform Services**: Abstract platform APIs behind common interfaces  
+- **Shared Components**: Create reusable components that work across platforms
+- **Platform Guards**: Protect platform-specific functionality with access checks
 
 #### Review Checklist:
 - Can I understand this component in under 30 seconds?
