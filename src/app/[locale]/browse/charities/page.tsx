@@ -1,9 +1,9 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import MultilingualNavbar from '@/components/MultilingualNavbar'
 import CharityCard from '@/components/CharityCard'
-import { Search, Heart, Users, TrendingUp, MapPin, Globe, Shield, Star } from 'lucide-react'
+import { Search, Heart, Users, TrendingUp, MapPin, Globe, Shield, Star, ChevronLeft, ChevronRight } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { JustGivingCharityCache } from '@/types/database'
 
@@ -13,19 +13,60 @@ interface BrowseCharitiesPageProps {
   }
 }
 
+interface CharityFilters {
+  search: string
+  category: string
+  country: string
+  status: string
+  enhancedData: string
+}
+
+interface PaginationInfo {
+  currentPage: number
+  totalPages: number
+  totalCount: number
+  pageSize: number
+}
+
+const PAGE_SIZE = 24 // Show 24 charities per page (fits nicely in 3x8 grid)
+
 export default function BrowseCharitiesPage({ params }: BrowseCharitiesPageProps) {
   const locale = params.locale
   const [charities, setCharities] = useState<JustGivingCharityCache[]>([])
-  const [filteredCharities, setFilteredCharities] = useState<JustGivingCharityCache[]>([])
   const [loading, setLoading] = useState(true)
+  const [searchLoading, setSearchLoading] = useState(false)
   const [messages, setMessages] = useState<any>({})
-  const [searchQuery, setSearchQuery] = useState('')
-  const [selectedCategory, setSelectedCategory] = useState<string>('all')
-  const [selectedCountry, setSelectedCountry] = useState<string>('all')
-  const [selectedStatus, setSelectedStatus] = useState<string>('all')
+  
+  // Filter state
+  const [filters, setFilters] = useState<CharityFilters>({
+    search: '',
+    category: 'all',
+    country: 'all',
+    status: 'all',
+    enhancedData: 'all'
+  })
+  
+  // Pagination state
+  const [pagination, setPagination] = useState<PaginationInfo>({
+    currentPage: 1,
+    totalPages: 1,
+    totalCount: 0,
+    pageSize: PAGE_SIZE
+  })
+  
+  // Filter options
   const [categories, setCategories] = useState<string[]>([])
   const [countries, setCountries] = useState<string[]>([])
-  const [hasEnhancedData, setHasEnhancedData] = useState<string>('all')
+  const [stats, setStats] = useState({
+    totalCharities: 0,
+    totalDonations: 0,
+    totalAmount: 0,
+    charitiesWithDonations: 0,
+    enhancedCharities: 0,
+    approvedCharities: 0,
+    registeredCharities: 0,
+    countriesCount: 0
+  })
 
   useEffect(() => {
     // Load messages
@@ -40,140 +81,219 @@ export default function BrowseCharitiesPage({ params }: BrowseCharitiesPageProps
       }
     }
 
-    // Fetch charities with pagination to get all records
-    async function fetchCharities() {
+    // Load filter options and stats once on mount
+    async function loadFiltersAndStats() {
       const supabase = createClient()
       
-      let allCharities: JustGivingCharityCache[] = []
-      let from = 0
-      const pageSize = 1000
-      let hasMore = true
-
-      while (hasMore) {
-        const { data, error } = await supabase
+      try {
+        // Load categories (distinct values)
+        const { data: categoryData } = await supabase
           .from('justgiving_charity_cache')
-          .select('*')
-          .range(from, from + pageSize - 1)
-          .order('name', { ascending: true })
-
-        if (error) {
-          console.error('Error fetching charities:', error)
-          break
-        }
-
-        const batch = data || []
-        allCharities = [...allCharities, ...batch]
+          .select('category')
+          .not('category', 'is', null)
+          .not('category', 'eq', '')
         
-        // Check if we got fewer records than requested (end of data)
-        hasMore = batch.length === pageSize
-        from += pageSize
+        const uniqueCategories = Array.from(
+          new Set(categoryData?.map(item => item.category).filter(Boolean))
+        ).sort()
+        setCategories(uniqueCategories)
+
+        // Load countries (distinct values)
+        const { data: countryData } = await supabase
+          .from('justgiving_charity_cache')
+          .select('address_country, country_code')
+          .or('address_country.not.is.null,country_code.not.is.null')
         
-        // Log progress for large datasets
-        if (allCharities.length % 1000 === 0 || !hasMore) {
-          console.log(`Loaded ${allCharities.length} of ~1745 charities`)
+        const uniqueCountries = Array.from(
+          new Set([
+            ...countryData?.map(item => item.address_country).filter(Boolean) || [],
+            ...countryData?.map(item => item.country_code).filter(Boolean) || []
+          ])
+        ).sort()
+        setCountries(uniqueCountries)
+
+        // Load stats
+        const { data: statsData } = await supabase
+          .from('justgiving_charity_cache')
+          .select(`
+            total_donations_count,
+            total_amount_received,
+            enhanced_data_fetched_at,
+            is_approved,
+            registration_number,
+            address_country,
+            country_code
+          `)
+
+        if (statsData) {
+          setStats({
+            totalCharities: statsData.length,
+            totalDonations: statsData.reduce((sum, charity) => sum + (charity.total_donations_count || 0), 0),
+            totalAmount: statsData.reduce((sum, charity) => sum + (charity.total_amount_received || 0), 0),
+            charitiesWithDonations: statsData.filter(charity => (charity.total_donations_count || 0) > 0).length,
+            enhancedCharities: statsData.filter(charity => charity.enhanced_data_fetched_at !== null).length,
+            approvedCharities: statsData.filter(charity => charity.is_approved === true).length,
+            registeredCharities: statsData.filter(charity => 
+              charity.registration_number && 
+              charity.registration_number.trim() !== '' &&
+              !charity.registration_number.toLowerCase().includes('n/a')
+            ).length,
+            countriesCount: uniqueCountries.length
+          })
         }
+      } catch (error) {
+        console.error('Error loading filters and stats:', error)
       }
-      setCharities(allCharities)
-      setFilteredCharities(allCharities)
-        
-      // Extract unique categories
-      const uniqueCategories = Array.from(
-        new Set(
-          allCharities
-            .map(charity => charity.category)
-            .filter((category): category is string => category !== undefined && category !== null && category.trim() !== '')
-        )
-      ).sort()
-      setCategories(uniqueCategories)
-
-      // Extract unique countries from enhanced data
-      const uniqueCountries = Array.from(
-        new Set(
-          allCharities
-            .map(charity => charity.address_country || charity.country_code)
-            .filter((country): country is string => country !== undefined && country !== null && country.trim() !== '')
-        )
-      ).sort()
-      setCountries(uniqueCountries)
-      
-      setLoading(false)
     }
 
     loadMessages()
-    fetchCharities()
+    loadFiltersAndStats()
   }, [locale])
 
-  // Filter charities based on search query and filters
+  // Debounced search function
+  const debouncedSearch = useCallback(
+    debounce((searchTerm: string, filterValues: CharityFilters) => {
+      setFilters(prev => ({ ...prev, search: searchTerm }))
+      setPagination(prev => ({ ...prev, currentPage: 1 })) // Reset to first page
+    }, 300),
+    []
+  )
+
+  // Fetch charities with server-side filtering and pagination
+  const fetchCharities = useCallback(async (currentFilters: CharityFilters, page: number) => {
+    const supabase = createClient()
+    setSearchLoading(true)
+    
+    try {
+      let query = supabase
+        .from('justgiving_charity_cache')
+        .select('*', { count: 'exact' })
+        .order('name', { ascending: true })
+
+      // Apply search filter (server-side text search)
+      if (currentFilters.search.trim()) {
+        const searchTerm = currentFilters.search.trim()
+        // Use ilike for partial matches as a fallback to FTS
+        query = query.or(`name.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%,keywords.ilike.%${searchTerm}%,address_city.ilike.%${searchTerm}%,registration_number.ilike.%${searchTerm}%`)
+      }
+
+      // Apply category filter
+      if (currentFilters.category !== 'all') {
+        query = query.eq('category', currentFilters.category)
+      }
+
+      // Apply country filter
+      if (currentFilters.country !== 'all') {
+        query = query.or(`address_country.eq.${currentFilters.country},country_code.eq.${currentFilters.country}`)
+      }
+
+      // Apply status filter
+      if (currentFilters.status === 'approved') {
+        query = query.eq('is_approved', true)
+      } else if (currentFilters.status === 'registered') {
+        query = query.not('registration_number', 'is', null)
+          .not('registration_number', 'eq', '')
+          .not('registration_number', 'ilike', '%n/a%')
+      }
+
+      // Apply enhanced data filter
+      if (currentFilters.enhancedData === 'enhanced') {
+        query = query.not('enhanced_data_fetched_at', 'is', null)
+      } else if (currentFilters.enhancedData === 'basic') {
+        query = query.is('enhanced_data_fetched_at', null)
+      }
+
+      // Apply pagination
+      const from = (page - 1) * PAGE_SIZE
+      const to = from + PAGE_SIZE - 1
+      query = query.range(from, to)
+
+      const { data, count, error } = await query
+
+      if (error) {
+        console.error('Error fetching charities:', error)
+        return
+      }
+
+      setCharities(data || [])
+      setPagination(prev => ({
+        ...prev,
+        currentPage: page,
+        totalCount: count || 0,
+        totalPages: Math.ceil((count || 0) / PAGE_SIZE)
+      }))
+
+    } catch (error) {
+      console.error('Error in fetchCharities:', error)
+    } finally {
+      setSearchLoading(false)
+      setLoading(false)
+    }
+  }, [])
+
+  // Effect to fetch charities when filters or page changes
   useEffect(() => {
-    let filtered = charities
+    fetchCharities(filters, pagination.currentPage)
+  }, [filters, pagination.currentPage, fetchCharities])
 
-    // Apply search filter
-    if (searchQuery.trim()) {
-      const query = searchQuery.toLowerCase()
-      const beforeFilter = filtered.length
-      filtered = filtered.filter(
-        charity =>
-          charity.name.toLowerCase().includes(query) ||
-          charity.description?.toLowerCase().includes(query) ||
-          charity.category?.toLowerCase().includes(query) ||
-          charity.keywords?.toLowerCase().includes(query) ||
-          charity.address_city?.toLowerCase().includes(query) ||
-          charity.registration_number?.toLowerCase().includes(query)
-      )
-      // Log search results for debugging
-      console.log(`Search "${query}": ${beforeFilter} -> ${filtered.length} results`)
+  // Handle filter changes
+  const handleFilterChange = (key: keyof CharityFilters, value: string) => {
+    setFilters(prev => ({ ...prev, [key]: value }))
+    setPagination(prev => ({ ...prev, currentPage: 1 })) // Reset to first page
+  }
+
+  // Handle search input change
+  const handleSearchChange = (value: string) => {
+    debouncedSearch(value, filters)
+  }
+
+  // Handle pagination
+  const handlePageChange = (newPage: number) => {
+    if (newPage >= 1 && newPage <= pagination.totalPages) {
+      setPagination(prev => ({ ...prev, currentPage: newPage }))
+      window.scrollTo({ top: 0, behavior: 'smooth' })
     }
+  }
 
-    // Apply category filter
-    if (selectedCategory !== 'all') {
-      filtered = filtered.filter(charity => charity.category === selectedCategory)
+  // Clear all filters
+  const clearFilters = () => {
+    setFilters({
+      search: '',
+      category: 'all',
+      country: 'all',
+      status: 'all',
+      enhancedData: 'all'
+    })
+    setPagination(prev => ({ ...prev, currentPage: 1 }))
+  }
+
+  // Check if any filters are active
+  const hasActiveFilters = useMemo(() => (
+    filters.search.trim() !== '' ||
+    filters.category !== 'all' ||
+    filters.country !== 'all' ||
+    filters.status !== 'all' ||
+    filters.enhancedData !== 'all'
+  ), [filters])
+
+  // Generate pagination buttons
+  const paginationButtons = useMemo(() => {
+    const buttons = []
+    const { currentPage, totalPages } = pagination
+    
+    // Always show first page
+    if (totalPages > 1) buttons.push(1)
+    
+    // Show pages around current page
+    for (let i = Math.max(2, currentPage - 2); i <= Math.min(totalPages - 1, currentPage + 2); i++) {
+      if (i > 1) buttons.push(i)
     }
-
-    // Apply country filter
-    if (selectedCountry !== 'all') {
-      filtered = filtered.filter(charity => 
-        charity.address_country === selectedCountry || 
-        charity.country_code === selectedCountry
-      )
-    }
-
-    // Apply status filter
-    if (selectedStatus !== 'all') {
-      if (selectedStatus === 'approved') {
-        filtered = filtered.filter(charity => charity.is_approved === true)
-      } else if (selectedStatus === 'registered') {
-        filtered = filtered.filter(charity => 
-          charity.registration_number && 
-          charity.registration_number.trim() !== '' &&
-          !charity.registration_number.toLowerCase().includes('n/a')
-        )
-      }
-    }
-
-    // Apply enhanced data filter
-    if (hasEnhancedData !== 'all') {
-      if (hasEnhancedData === 'enhanced') {
-        filtered = filtered.filter(charity => charity.enhanced_data_fetched_at !== null)
-      } else if (hasEnhancedData === 'basic') {
-        filtered = filtered.filter(charity => charity.enhanced_data_fetched_at === null)
-      }
-    }
-
-    setFilteredCharities(filtered)
-  }, [charities, searchQuery, selectedCategory, selectedCountry, selectedStatus, hasEnhancedData])
-
-  // Calculate stats
-  const totalCharities = charities.length
-  const totalDonations = charities.reduce((sum, charity) => sum + (charity.total_donations_count || 0), 0)
-  const totalAmount = charities.reduce((sum, charity) => sum + (charity.total_amount_received || 0), 0)
-  const charitiesWithDonations = charities.filter(charity => (charity.total_donations_count || 0) > 0).length
-  const enhancedCharities = charities.filter(charity => charity.enhanced_data_fetched_at !== null).length
-  const approvedCharities = charities.filter(charity => charity.is_approved === true).length
-  const registeredCharities = charities.filter(charity => 
-    charity.registration_number && 
-    charity.registration_number.trim() !== '' &&
-    !charity.registration_number.toLowerCase().includes('n/a')
-  ).length
+    
+    // Always show last page
+    if (totalPages > 1 && !buttons.includes(totalPages)) buttons.push(totalPages)
+    
+    return buttons
+  }, [pagination])
 
   return (
     <div className="min-h-screen bg-white">
@@ -187,8 +307,23 @@ export default function BrowseCharitiesPage({ params }: BrowseCharitiesPageProps
               Browse Charities
             </h1>
             <p className="text-lg text-gray-600 max-w-3xl">
-              Discover registered charities from JustGiving that you can support through our service marketplace. Find causes you care about and see which services benefit each charity.
+              Discover registered charities from JustGiving that you can support through our service marketplace. 
+              Find causes you care about and see which services benefit each charity.
             </p>
+            <div className="mt-4 flex items-center space-x-6 text-sm text-gray-500">
+              <span className="flex items-center">
+                <Heart className="h-4 w-4 mr-1" />
+                {stats.totalCharities.toLocaleString()} charities
+              </span>
+              <span className="flex items-center">
+                <Globe className="h-4 w-4 mr-1" />
+                {stats.countriesCount} countries
+              </span>
+              <span className="flex items-center">
+                <Star className="h-4 w-4 mr-1" />
+                {stats.enhancedCharities.toLocaleString()} enhanced
+              </span>
+            </div>
           </div>
 
           {/* Search and Filters */}
@@ -198,8 +333,8 @@ export default function BrowseCharitiesPage({ params }: BrowseCharitiesPageProps
               <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
               <input
                 type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                defaultValue={filters.search}
+                onChange={(e) => handleSearchChange(e.target.value)}
                 placeholder="Search by name, description, location, registration number..."
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
@@ -209,17 +344,16 @@ export default function BrowseCharitiesPage({ params }: BrowseCharitiesPageProps
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               {/* Category Filter */}
               <div>
-                <label htmlFor="category-select" className="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+                <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center">
                   <Heart className="h-4 w-4 mr-1 text-red-500" />
                   Category
                 </label>
                 <select
-                  id="category-select"
-                  value={selectedCategory}
-                  onChange={(e) => setSelectedCategory(e.target.value)}
+                  value={filters.category}
+                  onChange={(e) => handleFilterChange('category', e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
-                  <option value="all">All Categories</option>
+                  <option value="all">All Categories ({categories.length})</option>
                   {categories.map((category) => (
                     <option key={category} value={category}>
                       {category}
@@ -230,17 +364,16 @@ export default function BrowseCharitiesPage({ params }: BrowseCharitiesPageProps
 
               {/* Country Filter */}
               <div>
-                <label htmlFor="country-select" className="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+                <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center">
                   <Globe className="h-4 w-4 mr-1 text-blue-500" />
                   Country
                 </label>
                 <select
-                  id="country-select"
-                  value={selectedCountry}
-                  onChange={(e) => setSelectedCountry(e.target.value)}
+                  value={filters.country}
+                  onChange={(e) => handleFilterChange('country', e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
-                  <option value="all">All Countries</option>
+                  <option value="all">All Countries ({countries.length})</option>
                   {countries.map((country) => (
                     <option key={country} value={country}>
                       {country}
@@ -251,116 +384,119 @@ export default function BrowseCharitiesPage({ params }: BrowseCharitiesPageProps
 
               {/* Status Filter */}
               <div>
-                <label htmlFor="status-select" className="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+                <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center">
                   <Shield className="h-4 w-4 mr-1 text-green-500" />
                   Status
                 </label>
                 <select
-                  id="status-select"
-                  value={selectedStatus}
-                  onChange={(e) => setSelectedStatus(e.target.value)}
+                  value={filters.status}
+                  onChange={(e) => handleFilterChange('status', e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
                   <option value="all">All Status</option>
-                  <option value="approved">JustGiving Approved</option>
-                  <option value="registered">Officially Registered</option>
+                  <option value="approved">JustGiving Approved ({stats.approvedCharities})</option>
+                  <option value="registered">Officially Registered ({stats.registeredCharities})</option>
                 </select>
               </div>
 
               {/* Enhanced Data Filter */}
               <div>
-                <label htmlFor="enhanced-select" className="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+                <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center">
                   <MapPin className="h-4 w-4 mr-1 text-purple-500" />
                   Detail Level
                 </label>
                 <select
-                  id="enhanced-select"
-                  value={hasEnhancedData}
-                  onChange={(e) => setHasEnhancedData(e.target.value)}
+                  value={filters.enhancedData}
+                  onChange={(e) => handleFilterChange('enhancedData', e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
                   <option value="all">All Details</option>
-                  <option value="enhanced">Enhanced Details</option>
-                  <option value="basic">Basic Info Only</option>
+                  <option value="enhanced">Enhanced Details ({stats.enhancedCharities})</option>
+                  <option value="basic">Basic Info Only ({stats.totalCharities - stats.enhancedCharities})</option>
                 </select>
               </div>
             </div>
           </div>
 
-          {/* Filter Summary */}
-          {(selectedCategory !== 'all' || selectedCountry !== 'all' || selectedStatus !== 'all' || hasEnhancedData !== 'all' || searchQuery.trim()) && (
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-              <div className="flex items-center justify-between">
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-sm font-medium text-blue-900">
-                    Showing {filteredCharities.length} of {totalCharities} charities
+          {/* Filter Summary and Results Info */}
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center space-x-4">
+              <span className="text-sm font-medium text-gray-900">
+                {searchLoading ? (
+                  <span className="flex items-center">
+                    <div className="animate-spin h-4 w-4 border-2 border-blue-500 border-t-transparent rounded-full mr-2"></div>
+                    Searching...
                   </span>
-                  {searchQuery.trim() && (
+                ) : (
+                  <>
+                    Showing {((pagination.currentPage - 1) * PAGE_SIZE) + 1}-{Math.min(pagination.currentPage * PAGE_SIZE, pagination.totalCount)} of {pagination.totalCount.toLocaleString()} charities
+                  </>
+                )}
+              </span>
+              
+              {/* Active filters display */}
+              {hasActiveFilters && (
+                <div className="flex flex-wrap items-center gap-2">
+                  {filters.search.trim() && (
                     <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">
-                      Search: "{searchQuery}"
+                      Search: "{filters.search}"
                     </span>
                   )}
-                  {selectedCategory !== 'all' && (
+                  {filters.category !== 'all' && (
                     <span className="text-xs bg-red-100 text-red-700 px-2 py-1 rounded">
-                      Category: {selectedCategory}
+                      Category: {filters.category}
                     </span>
                   )}
-                  {selectedCountry !== 'all' && (
+                  {filters.country !== 'all' && (
                     <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">
-                      Country: {selectedCountry}
+                      Country: {filters.country}
                     </span>
                   )}
-                  {selectedStatus !== 'all' && (
+                  {filters.status !== 'all' && (
                     <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">
-                      Status: {selectedStatus === 'approved' ? 'JustGiving Approved' : 'Registered'}
+                      Status: {filters.status === 'approved' ? 'JustGiving Approved' : 'Registered'}
                     </span>
                   )}
-                  {hasEnhancedData !== 'all' && (
+                  {filters.enhancedData !== 'all' && (
                     <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded">
-                      Details: {hasEnhancedData === 'enhanced' ? 'Enhanced' : 'Basic'}
+                      Details: {filters.enhancedData === 'enhanced' ? 'Enhanced' : 'Basic'}
                     </span>
                   )}
                 </div>
-                <button
-                  onClick={() => {
-                    setSearchQuery('')
-                    setSelectedCategory('all')
-                    setSelectedCountry('all')
-                    setSelectedStatus('all')
-                    setHasEnhancedData('all')
-                  }}
-                  className="text-sm text-blue-600 hover:text-blue-800 font-medium"
-                >
-                  Clear all filters
-                </button>
-              </div>
+              )}
             </div>
-          )}
+            
+            {hasActiveFilters && (
+              <button
+                onClick={clearFilters}
+                className="text-sm text-blue-600 hover:text-blue-800 font-medium"
+              >
+                Clear all filters
+              </button>
+            )}
+          </div>
 
           {/* Charities Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
             {loading ? (
               <div className="col-span-full text-center py-12">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
                 <p className="text-gray-500">Loading charities...</p>
               </div>
-            ) : filteredCharities.length === 0 ? (
+            ) : charities.length === 0 ? (
               <div className="col-span-full text-center py-12">
                 <div className="text-gray-400 mb-4">
                   <Heart className="mx-auto h-12 w-12" />
                 </div>
                 <h3 className="text-lg font-medium text-gray-900 mb-2">
-                  {charities.length === 0 ? 'No charities available' : 'No matching charities'}
+                  No matching charities found
                 </h3>
                 <p className="text-gray-500">
-                  {charities.length === 0 
-                    ? 'Charity data is being populated. Please check back soon!'
-                    : 'Try adjusting your search or category filters to find more charities.'
-                  }
+                  Try adjusting your search or filters to find more charities.
                 </p>
               </div>
             ) : (
-              filteredCharities.map((charity) => (
+              charities.map((charity) => (
                 <CharityCard 
                   key={charity.justgiving_charity_id} 
                   charity={charity}
@@ -370,6 +506,45 @@ export default function BrowseCharitiesPage({ params }: BrowseCharitiesPageProps
             )}
           </div>
 
+          {/* Pagination */}
+          {pagination.totalPages > 1 && (
+            <div className="flex items-center justify-center space-x-2 mb-8">
+              <button
+                onClick={() => handlePageChange(pagination.currentPage - 1)}
+                disabled={pagination.currentPage === 1}
+                className="p-2 rounded-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+              >
+                <ChevronLeft className="h-5 w-5" />
+              </button>
+              
+              {paginationButtons.map((pageNum, index, array) => (
+                <div key={pageNum} className="flex items-center">
+                  {index > 0 && array[index - 1] !== pageNum - 1 && (
+                    <span className="px-2 text-gray-400">...</span>
+                  )}
+                  <button
+                    onClick={() => handlePageChange(pageNum)}
+                    className={`px-4 py-2 rounded-lg font-medium ${
+                      pageNum === pagination.currentPage
+                        ? 'bg-blue-600 text-white'
+                        : 'border border-gray-300 hover:bg-gray-50'
+                    }`}
+                  >
+                    {pageNum}
+                  </button>
+                </div>
+              ))}
+              
+              <button
+                onClick={() => handlePageChange(pagination.currentPage + 1)}
+                disabled={pagination.currentPage === pagination.totalPages}
+                className="p-2 rounded-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+              >
+                <ChevronRight className="h-5 w-5" />
+              </button>
+            </div>
+          )}
+
           {/* Community Impact Stats */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
             <h3 className="text-lg font-medium text-gray-900 mb-4">
@@ -377,28 +552,25 @@ export default function BrowseCharitiesPage({ params }: BrowseCharitiesPageProps
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-center">
               <div>
-                <div className="text-2xl font-bold text-blue-600">{filteredCharities.length}</div>
+                <div className="text-2xl font-bold text-blue-600">{pagination.totalCount.toLocaleString()}</div>
                 <div className="text-sm text-gray-500">
-                  {selectedCategory === 'all' && !searchQuery.trim()
-                    ? 'Total Charities'
-                    : 'Matching Charities'
-                  }
+                  {hasActiveFilters ? 'Matching Charities' : 'Total Charities'}
                 </div>
               </div>
               <div>
-                <div className="text-2xl font-bold text-green-600">{charitiesWithDonations}</div>
+                <div className="text-2xl font-bold text-green-600">{stats.charitiesWithDonations.toLocaleString()}</div>
                 <div className="text-sm text-gray-500">
                   Charities Supported
                 </div>
               </div>
               <div>
-                <div className="text-2xl font-bold text-purple-600">{totalDonations}</div>
+                <div className="text-2xl font-bold text-purple-600">{stats.totalDonations.toLocaleString()}</div>
                 <div className="text-sm text-gray-500">
                   Service Donations
                 </div>
               </div>
               <div>
-                <div className="text-2xl font-bold text-orange-600">£{totalAmount.toLocaleString()}</div>
+                <div className="text-2xl font-bold text-orange-600">£{stats.totalAmount.toLocaleString()}</div>
                 <div className="text-sm text-gray-500">
                   Total Donated
                 </div>
@@ -406,47 +578,6 @@ export default function BrowseCharitiesPage({ params }: BrowseCharitiesPageProps
             </div>
             <p className="text-xs text-gray-400 text-center mt-4">
               All donations go directly to registered charities via JustGiving
-            </p>
-          </div>
-
-          {/* Database Enhancement Stats */}
-          <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border border-blue-200 p-6 mb-8">
-            <h3 className="text-lg font-medium text-gray-900 mb-4 flex items-center">
-              <Star className="h-5 w-5 mr-2 text-amber-500" />
-              Enhanced Database Information
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-center">
-              <div className="bg-white bg-opacity-50 rounded-lg p-3">
-                <div className="text-xl font-bold text-amber-600">{enhancedCharities}</div>
-                <div className="text-sm text-gray-600 flex items-center justify-center">
-                  <Star className="h-3 w-3 mr-1" />
-                  Enhanced Details
-                </div>
-              </div>
-              <div className="bg-white bg-opacity-50 rounded-lg p-3">
-                <div className="text-xl font-bold text-green-600">{approvedCharities}</div>
-                <div className="text-sm text-gray-600 flex items-center justify-center">
-                  <Shield className="h-3 w-3 mr-1" />
-                  JustGiving Approved
-                </div>
-              </div>
-              <div className="bg-white bg-opacity-50 rounded-lg p-3">
-                <div className="text-xl font-bold text-purple-600">{registeredCharities}</div>
-                <div className="text-sm text-gray-600 flex items-center justify-center">
-                  <Globe className="h-3 w-3 mr-1" />
-                  Officially Registered
-                </div>
-              </div>
-              <div className="bg-white bg-opacity-50 rounded-lg p-3">
-                <div className="text-xl font-bold text-blue-600">{countries.length}</div>
-                <div className="text-sm text-gray-600 flex items-center justify-center">
-                  <MapPin className="h-3 w-3 mr-1" />
-                  Countries Represented
-                </div>
-              </div>
-            </div>
-            <p className="text-xs text-gray-500 text-center mt-4">
-              Enhanced details include addresses, contact information, and impact statements
             </p>
           </div>
 
@@ -469,4 +600,13 @@ export default function BrowseCharitiesPage({ params }: BrowseCharitiesPageProps
       </div>
     </div>
   )
+}
+
+// Debounce utility function
+function debounce<T extends (...args: any[]) => any>(func: T, wait: number): (...args: Parameters<T>) => void {
+  let timeout: NodeJS.Timeout | null = null
+  return (...args: Parameters<T>) => {
+    if (timeout) clearTimeout(timeout)
+    timeout = setTimeout(() => func(...args), wait)
+  }
 }
