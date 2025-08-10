@@ -20,6 +20,60 @@ type ServiceWithFundraiser = ServiceWithPlatformFields & {
     name: string
     username: string
   }
+  isSpecificallySelected?: boolean
+}
+
+// ServiceCard component for individual service display
+function ServiceCard({ service, locale }: { service: ServiceWithFundraiser, locale: string }) {
+  const formatCurrency = (amount: number) => 
+    new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD' }).format(amount)
+
+  return (
+    <div className={`border rounded-lg p-4 hover:shadow-md transition-shadow ${
+      service.isSpecificallySelected ? 'border-purple-300 bg-purple-50' : ''
+    }`}>
+      <div className="flex items-start justify-between mb-2">
+        <h3 className="font-semibold text-gray-900">{service.title}</h3>
+        {service.isSpecificallySelected && (
+          <span className="bg-purple-100 text-purple-800 px-2 py-1 rounded-full text-xs font-medium ml-2 flex-shrink-0">
+            ⭐ Selected this charity
+          </span>
+        )}
+      </div>
+      
+      <div className="flex items-center justify-between mb-3">
+        <span className="text-2xl font-bold text-green-600">
+          {formatCurrency(service.donation_amount)}
+        </span>
+        <div className="flex items-center space-x-2">
+          {!service.isSpecificallySelected && (
+            <span className="bg-gray-100 text-gray-600 px-2 py-1 rounded-full text-xs">
+              Open to all charities
+            </span>
+          )}
+          <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs">
+            JustGiving
+          </span>
+        </div>
+      </div>
+      
+      <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+        {service.description}
+      </p>
+      
+      <div className="flex items-center justify-between text-sm">
+        <span className="text-gray-500">
+          by {service.users.name || service.users.username}
+        </span>
+        <a
+          href={`/${locale}/services/${service.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
+          className="text-blue-600 hover:text-blue-800 font-medium"
+        >
+          View Service
+        </a>
+      </div>
+    </div>
+  )
 }
 
 export default function JustGivingCharityPage({ params }: CharityPageProps) {
@@ -71,20 +125,48 @@ export default function JustGivingCharityPage({ params }: CharityPageProps) {
           .eq('charity_requirement_type', 'any_charity')
           .order('created_at', { ascending: false })
 
-        // Debug logging
-        console.log('Charity ID:', charityData.justgiving_charity_id)
-        console.log('Any charity services found:', anyCharityServices?.length || 0)
-        console.log('Any charity services:', anyCharityServices)
-        console.log('Any charity services error:', anyCharityError)
+        // Then get services that specifically include this charity
+        
+        // Get all specific charity services and filter client-side due to complex JSON structure
+        const { data: allSpecificCharityServices, error: specificCharityError } = await supabase
+          .from('services')
+          .select(`
+            *,
+            users!inner(id, name, username)
+          `)
+          .eq('platform', 'justgiving')
+          .eq('is_active', true)
+          .eq('charity_requirement_type', 'specific_charities')
+          .order('created_at', { ascending: false })
 
-        // For now, just use the "any charity" services
-        // TODO: Fix specific charity query JSON syntax later
-        const allServices = anyCharityServices || []
+        // Filter client-side to find services that include this charity
+        const specificCharityServices = allSpecificCharityServices?.filter(service => {
+          if (!service.preferred_charities || !Array.isArray(service.preferred_charities)) {
+            return false
+          }
+          
+          return service.preferred_charities.some((charity: any) => {
+            if (typeof charity === 'object' && charity !== null) {
+              // Check if charity object has our charity_id
+              return charity.charity_id === charityData.justgiving_charity_id ||
+                     String(charity.charity_id) === String(charityData.justgiving_charity_id)
+            }
+            // Fallback for simple string/number values
+            return charity === charityData.justgiving_charity_id || 
+                   String(charity) === String(charityData.justgiving_charity_id)
+          })
+        }) || []
 
-        console.log('Total services for charity page:', allServices.length)
 
-        if (anyCharityError) {
-          console.error('Error loading services:', anyCharityError)
+        // Combine results with specific charity services first (prioritized)
+        const allServices = [
+          ...(specificCharityServices || []).map(service => ({ ...service, isSpecificallySelected: true })),
+          ...(anyCharityServices || []).map(service => ({ ...service, isSpecificallySelected: false }))
+        ]
+
+
+        if (anyCharityError && specificCharityError) {
+          console.error('Error loading services:', anyCharityError || specificCharityError)
           setServices([])
         } else {
           setServices(allServices)
@@ -224,37 +306,49 @@ export default function JustGivingCharityPage({ params }: CharityPageProps) {
           </h2>
           
           {services.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {services.map((service) => (
-                <div key={service.id} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
-                  <h3 className="font-semibold text-gray-900 mb-2">{service.title}</h3>
+            <div className="space-y-6">
+              {/* Show section headers if we have both types of services */}
+              {services.some(s => s.isSpecificallySelected) && services.some(s => !s.isSpecificallySelected) && (
+                <>
+                  {/* Specifically selected services */}
+                  {services.filter(s => s.isSpecificallySelected).length > 0 && (
+                    <div>
+                      <h3 className="text-lg font-semibold text-purple-800 mb-3 flex items-center">
+                        <span className="mr-2">⭐</span>
+                        Services that specifically chose this charity ({services.filter(s => s.isSpecificallySelected).length})
+                      </h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {services.filter(service => service.isSpecificallySelected).map((service) => (
+                          <ServiceCard key={service.id} service={service} locale={locale} />
+                        ))}
+                      </div>
+                    </div>
+                  )}
                   
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-2xl font-bold text-green-600">
-                      {formatCurrency(service.donation_amount)}
-                    </span>
-                    <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs">
-                      JustGiving
-                    </span>
-                  </div>
-                  
-                  <p className="text-sm text-gray-600 mb-3 line-clamp-2">
-                    {service.description}
-                  </p>
-                  
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-500">
-                      by {service.users.name || service.users.username}
-                    </span>
-                    <a
-                      href={`/${locale}/services/${service.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
-                      className="text-blue-600 hover:text-blue-800 font-medium"
-                    >
-                      View Service
-                    </a>
-                  </div>
+                  {/* Any charity services */}
+                  {services.filter(s => !s.isSpecificallySelected).length > 0 && (
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-700 mb-3">
+                        Services open to all charities ({services.filter(s => !s.isSpecificallySelected).length})
+                      </h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {services.filter(service => !service.isSpecificallySelected).map((service) => (
+                          <ServiceCard key={service.id} service={service} locale={locale} />
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </>
+              )}
+              
+              {/* If we only have one type, show them all together without headers */}
+              {!(services.some(s => s.isSpecificallySelected) && services.some(s => !s.isSpecificallySelected)) && (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {services.map((service) => (
+                    <ServiceCard key={service.id} service={service} locale={locale} />
+                  ))}
                 </div>
-              ))}
+              )}
             </div>
           ) : (
             <div className="text-center py-8">
