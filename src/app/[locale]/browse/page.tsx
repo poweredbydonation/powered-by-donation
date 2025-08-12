@@ -6,7 +6,7 @@ import ServiceLocationFilter from '@/components/ServiceLocationFilter'
 import ServicePrice from '@/components/services/ServicePrice'
 import { Search, MapPin, Heart, Star } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
-import { Service, ServiceLocation, CurrencyCode, DonationPlatform } from '@/types/database'
+import { Service, ServiceLocation, CurrencyCode } from '@/types/database'
 import { isServiceWithinRadius } from '@/lib/utils/distance'
 import { useAuth } from '@/hooks/useAuth'
 
@@ -39,8 +39,6 @@ export default function BrowsePage({ params }: BrowsePageProps) {
   const [searchQuery, setSearchQuery] = useState('')
   const [locationFilter, setLocationFilter] = useState<LocationFilter>({ type: 'all' })
   const [userCurrency, setUserCurrency] = useState<CurrencyCode>('AUD')
-  const [userPlatform, setUserPlatform] = useState<DonationPlatform | null>(null)
-  const [selectedPlatform, setSelectedPlatform] = useState<DonationPlatform>('justgiving')
 
   useEffect(() => {
     // Load messages
@@ -55,6 +53,7 @@ export default function BrowsePage({ params }: BrowsePageProps) {
       }
     }
 
+
     // Fetch user's preferences
     async function fetchUserPreferences() {
       if (!user) return
@@ -63,108 +62,54 @@ export default function BrowsePage({ params }: BrowsePageProps) {
       try {
         const { data: userProfile } = await supabase
           .from('users')
-          .select('preferred_currency, preferred_platform')
+          .select('preferred_currency')
           .eq('id', user.id)
           .single()
         
         if (userProfile?.preferred_currency) {
           setUserCurrency(userProfile.preferred_currency)
         }
-        
-        // Always set userPlatform to something - either user's preference or default
-        const platform = userProfile?.preferred_platform || 'justgiving'
-        setUserPlatform(platform)
-        setSelectedPlatform(platform)
       } catch (err) {
-        // Set default platform even on error
-        setUserPlatform('justgiving')
-        setSelectedPlatform('justgiving')
+        // Default currency already set
       }
     }
-
-    // Legacy fetchServices function - removed (not used)
 
     loadMessages()
     fetchUserPreferences()
-    // Don't fetch services here - do it after userPlatform is loaded
   }, [locale, user])
 
-  // Fetch services when userPlatform is loaded (for authenticated users) or platform changes (for anonymous users)
+  // Fetch all services regardless of platform
   useEffect(() => {
-    if (user && userPlatform !== null) {
-      // For authenticated users, fetch when userPlatform changes (and is loaded)
+    const fetchServices = async () => {
       setLoading(true)
-      const fetchServices = async () => {
-        const supabase = createClient()
-        
-        const { data, error } = await supabase
-          .from('services')
-          .select(`
-            *,
-            users (
-              id,
-              name
-            )
-          `)
-          .eq('is_active', true)
-          .eq('show_in_directory', true)
-          .order('created_at', { ascending: false })
+      const supabase = createClient()
+      
+      const { data, error } = await supabase
+        .from('services')
+        .select(`
+          *,
+          users (
+            id,
+            name
+          )
+        `)
+        .eq('is_active', true)
+        .eq('show_in_directory', true)
+        .order('created_at', { ascending: false })
 
-        if (error) {
-          setServices([])
-        } else {
-          const servicesData = data || []
-          // Filter by platform on client side to handle null/undefined platform values
-          const filteredByPlatform = servicesData.filter(service => {
-            const servicePlatform = service.platform || 'justgiving' // Default to justgiving for legacy services
-            return servicePlatform === userPlatform
-          })
-          setServices(filteredByPlatform)
-          setFilteredServices(filteredByPlatform)
-        }
-        
-        setLoading(false)
+      if (error) {
+        setServices([])
+      } else {
+        const servicesData = data || []
+        setServices(servicesData)
+        setFilteredServices(servicesData)
       }
       
-      fetchServices()
-    } else if (selectedPlatform) {
-      // For anonymous users, fetch when selectedPlatform changes
-      setLoading(true)
-      const fetchServices = async () => {
-        const supabase = createClient()
-        
-        const { data, error } = await supabase
-          .from('services')
-          .select(`
-            *,
-            users (
-              id,
-              name
-            )
-          `)
-          .eq('is_active', true)
-          .eq('show_in_directory', true)
-          .order('created_at', { ascending: false })
-
-        if (error) {
-          setServices([])
-        } else {
-          const servicesData = data || []
-          // Filter by platform on client side to handle null/undefined platform values
-          const filteredByPlatform = servicesData.filter(service => {
-            const servicePlatform = service.platform || 'justgiving' // Default to justgiving for legacy services
-            return servicePlatform === selectedPlatform
-          })
-          setServices(filteredByPlatform)
-          setFilteredServices(filteredByPlatform)
-        }
-        
-        setLoading(false)
-      }
-      
-      fetchServices()
+      setLoading(false)
     }
-  }, [user, userPlatform, selectedPlatform])
+    
+    fetchServices()
+  }, [])
 
   // Filter services based on search query and location filter
   useEffect(() => {
@@ -282,54 +227,6 @@ export default function BrowsePage({ params }: BrowsePageProps) {
 
           {/* Search and Filters */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8 space-y-6">
-            {/* Platform Filter (for anonymous users only) */}
-            {!user && (
-              <div>
-                <label htmlFor="platform-select" className="block text-sm font-medium text-gray-700 mb-2">
-                  Donation Platform
-                </label>
-                <select
-                  id="platform-select"
-                  value={selectedPlatform}
-                  onChange={(e) => setSelectedPlatform(e.target.value as DonationPlatform)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                >
-                  <option value="justgiving">JustGiving (Available Now)</option>
-                  <option value="every_org">Every.org (Coming Soon)</option>
-                </select>
-                <p className="text-sm text-gray-500 mt-1">
-                  {selectedPlatform === 'every_org' 
-                    ? 'Every.org integration is in development. Currently showing no services.'
-                    : 'Showing services that support JustGiving charitable donations.'
-                  }
-                </p>
-              </div>
-            )}
-
-            {/* Platform Info for authenticated users */}
-            {user && (
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h4 className="text-sm font-medium text-blue-800">
-                      Your Platform: {userPlatform === 'justgiving' ? 'JustGiving' : 'Every.org'}
-                    </h4>
-                    <p className="text-sm text-blue-700">
-                      {userPlatform === 'justgiving' 
-                        ? 'Showing services that support JustGiving charitable donations.'
-                        : 'Every.org integration coming soon. Switch to JustGiving to see available services.'
-                      }
-                    </p>
-                  </div>
-                  <a 
-                    href={`/${locale}/dashboard/profile`}
-                    className="text-sm text-blue-600 hover:text-blue-800 font-medium"
-                  >
-                    Change Platform
-                  </a>
-                </div>
-              </div>
-            )}
 
             {/* Search Bar */}
             <div className="relative">

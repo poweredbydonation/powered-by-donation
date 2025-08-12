@@ -8,7 +8,6 @@ import MultilingualNavbar from '@/components/MultilingualNavbar'
 import ServiceDonationFlow from '@/components/services/ServiceDonationFlow'
 import ServiceLocationMap from '@/components/ServiceLocationMap'
 import ServicePrice from '@/components/services/ServicePrice'
-import PlatformAccessGuard from '@/components/PlatformAccessGuard'
 import { useAuth } from '@/hooks/useAuth'
 
 interface ServicePageProps {
@@ -142,11 +141,7 @@ export default function ServicePage({ params }: ServicePageProps) {
   }
 
   return (
-    <PlatformAccessGuard 
-      servicePlatform={service.platform || 'justgiving'} 
-      serviceTitle={service.title} 
-      locale={locale}
-    >
+    <>
       <MultilingualNavbar locale={locale} messages={messages} />
       <div className="min-h-screen bg-gray-50">
         <div className="container mx-auto px-4 py-8">
@@ -330,6 +325,6 @@ export default function ServicePage({ params }: ServicePageProps) {
           </div>
         </div>
       </div>
-    </PlatformAccessGuard>
+    </>
   )
 }

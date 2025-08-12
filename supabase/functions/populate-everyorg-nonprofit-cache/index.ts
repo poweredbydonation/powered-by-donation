@@ -1,7 +1,16 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-import { corsHeaders } from '../_shared/cors.ts';
 
+// CORS headers for Edge Function
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers':
+    'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT, DELETE',
+};
+
+// NOTE: Environment variables may not work consistently in Supabase Edge Functions
+// If EVERYORG_PUBLIC_KEY env var fails, hardcode the API key directly in Supabase Dashboard
 const EVERYORG_PUBLIC_KEY = Deno.env.get('EVERYORG_PUBLIC_KEY');
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
@@ -51,12 +60,15 @@ async function fetchEveryOrgNonprofits(cause: string, page: number = 1, pageSize
 async function upsertNonprofitToCache(nonprofit: EveryOrgNonprofit): Promise<void> {
   try {
     // Extract slug from profileUrl if not provided
-    const slug = nonprofit.slug || nonprofit.profileUrl.split('/').pop() || nonprofit.ein;
+    const slug = nonprofit.slug || nonprofit.profileUrl.split('/').pop() || nonprofit.ein || `unknown-${Date.now()}`;
+    
+    // EIN can be null for international nonprofits
+    const nonprofitEin = nonprofit.ein || null;
     
     const { error } = await supabase
       .from('every_org_nonprofit_cache')
       .upsert({
-        nonprofit_ein: nonprofit.ein,
+        nonprofit_ein: nonprofitEin,
         name: nonprofit.name,
         description: nonprofit.description || '',
         category: nonprofit.tags?.[0] || 'general',
@@ -65,13 +77,13 @@ async function upsertNonprofitToCache(nonprofit: EveryOrgNonprofit): Promise<voi
         is_active: true,
         last_updated: new Date().toISOString(),
       }, {
-        onConflict: 'nonprofit_ein'
+        onConflict: 'slug'  // Use slug as conflict resolution since it's now the primary key
       });
     
     if (error) {
       console.error('Error upserting nonprofit to cache:', error);
     } else {
-      console.log(`Successfully cached nonprofit: ${nonprofit.name} (${nonprofit.ein})`);
+      console.log(`Successfully cached nonprofit: ${nonprofit.name} (${nonprofitEin || 'no EIN'})`);
     }
   } catch (error) {
     console.error('Error in upsertNonprofitToCache:', error);

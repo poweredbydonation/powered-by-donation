@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/hooks/useAuth'
 import { createClient } from '@/lib/supabase/client'
-import { CharityRequirementType, ServiceLocation, Service, PricingTier, CurrencyCode, DonationPlatform } from '@/types/database'
+import { CharityRequirementType, ServiceLocation, Service, PricingTier, CurrencyCode } from '@/types/database'
 import CharitySelector from './CharitySelector'
 import ServiceLocationPicker from '@/components/ServiceLocationPicker'
 import PricingTierSlider from '@/components/forms/PricingTierSlider'
@@ -31,7 +31,6 @@ export default function ServiceCreationForm({
   const [description, setDescription] = useState('')
   const [selectedTier, setSelectedTier] = useState<PricingTier | null>(null)
   const [userCurrency, setUserCurrency] = useState<CurrencyCode>('GBP')
-  const [userPlatform, setUserPlatform] = useState<DonationPlatform>('justgiving')
   const [charityRequirementType, setCharityRequirementType] = useState<CharityRequirementType>('any_charity')
   const [selectedCharities, setSelectedCharities] = useState<SelectedCharity[]>([])
   const [availableFrom, setAvailableFrom] = useState('')
@@ -73,15 +72,12 @@ export default function ServiceCreationForm({
       try {
         const { data: userProfile } = await supabase
           .from('users')
-          .select('preferred_currency, preferred_platform')
+          .select('preferred_currency')
           .eq('id', user.id)
           .single()
         
         if (userProfile?.preferred_currency) {
           setUserCurrency(userProfile.preferred_currency)
-        }
-        if (userProfile?.preferred_platform) {
-          setUserPlatform(userProfile.preferred_platform)
         }
       } catch (err) {
         console.error('Error fetching user preferences:', err)
@@ -155,10 +151,6 @@ export default function ServiceCreationForm({
     setError(null)
 
     try {
-      // Validate platform availability
-      if (userPlatform === 'every_org') {
-        throw new Error('Every.org integration is coming soon. Please switch to JustGiving in your profile settings to create services.')
-      }
 
       // Validate pricing tier selection
       if (!selectedTier) {
@@ -217,14 +209,14 @@ export default function ServiceCreationForm({
       const organizationData = charityRequirementType === 'specific_charities' && selectedCharities.length > 0
         ? {
             type: 'specific_charities',
-            platform: userPlatform,
+            platform: 'justgiving', // Default to JustGiving for now
             charities: preferredCharities,
             count: selectedCharities.length
           }
         : charityRequirementType === 'any_charity'
         ? {
             type: 'any_charity', 
-            platform: userPlatform
+            platform: 'justgiving' // Default to JustGiving for now
           }
         : null
 
@@ -242,7 +234,7 @@ export default function ServiceCreationForm({
         max_donors: maxDonors ? parseInt(maxDonors) : null,
         service_locations: [serviceLocation],
         // Platform-specific fields
-        platform: userPlatform,
+        platform: 'justgiving', // Default to JustGiving for now
         organization_name: organizationName,
         organization_data: organizationData,
         ...(mode === 'create' && { 
@@ -340,23 +332,7 @@ export default function ServiceCreationForm({
       <div className="space-y-4">
         <h3 className="text-lg font-medium text-gray-900">Charity Requirements</h3>
         
-        {userPlatform === 'every_org' ? (
-          <div className="bg-blue-50 border border-blue-200 rounded-md p-4">
-            <div className="flex items-start">
-              <div className="flex-shrink-0">
-                <svg className="h-5 w-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                </svg>
-              </div>
-              <div className="ml-3">
-                <h4 className="text-sm font-medium text-blue-800">Every.org Integration Coming Soon</h4>
-                <p className="mt-1 text-sm text-blue-700">
-                  Every.org nonprofit support is currently in development. You can switch to JustGiving in your profile settings to create services now.
-                </p>
-              </div>
-            </div>
-          </div>
-        ) : (
+        {(
           <div className="space-y-3">
             <label className="flex items-center">
               <input
@@ -396,7 +372,7 @@ export default function ServiceCreationForm({
         )}
 
         {/* Charity Selector */}
-        {charityRequirementType === 'specific_charities' && userPlatform === 'justgiving' && (
+        {charityRequirementType === 'specific_charities' && (
           <div className="pl-6 border-l-2 border-gray-200 space-y-4">
             <div>
               <h4 className="text-md font-medium text-gray-900 mb-2">Select Preferred Charities</h4>
@@ -410,7 +386,7 @@ export default function ServiceCreationForm({
                 onCharitiesChange={setSelectedCharities}
                 maxCharities={5}
                 disabled={loading}
-                platform={userPlatform}
+                platform="justgiving"
               />
               
               {charityRequirementType === 'specific_charities' && selectedCharities.length === 0 && (
@@ -556,13 +532,11 @@ export default function ServiceCreationForm({
         </button>
         <button
           type="submit"
-          disabled={loading || userPlatform === 'every_org'}
+          disabled={loading}
           className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
         >
           {loading 
             ? (mode === 'edit' ? 'Updating...' : 'Creating...') 
-            : userPlatform === 'every_org'
-            ? 'Every.org Coming Soon'
             : (mode === 'edit' ? 'Update Service' : 'Create Service')
           }
         </button>

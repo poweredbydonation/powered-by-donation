@@ -217,6 +217,15 @@
       }
     }
   },
+  "browse": {
+    "platform": {
+      "title": "Choose Donation Platform",
+      "subtitle": "Select which donation platform you'd like to browse services for. Each platform supports different charitable organizations.",
+      "selectButton": "Browse Services",
+      "comingSoonButton": "Coming Soon",
+      "infoTitle": "Platform Information"
+    }
+  },
   "services": {
     "browse": {
       "title": "Browse Services",
