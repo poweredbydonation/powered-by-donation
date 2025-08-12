@@ -29,6 +29,8 @@ interface LocationFilter {
   radius?: number
 }
 
+type PlatformFilter = 'all' | 'justgiving' | 'everyorg'
+
 export default function BrowsePage({ params }: BrowsePageProps) {
   const locale = params.locale
   const { user } = useAuth()
@@ -38,6 +40,7 @@ export default function BrowsePage({ params }: BrowsePageProps) {
   const [messages, setMessages] = useState<any>({})
   const [searchQuery, setSearchQuery] = useState('')
   const [locationFilter, setLocationFilter] = useState<LocationFilter>({ type: 'all' })
+  const [platformFilter, setPlatformFilter] = useState<PlatformFilter>('all')
   const [userCurrency, setUserCurrency] = useState<CurrencyCode>('AUD')
 
   useEffect(() => {
@@ -111,7 +114,7 @@ export default function BrowsePage({ params }: BrowsePageProps) {
     fetchServices()
   }, [])
 
-  // Filter services based on search query and location filter
+  // Filter services based on search query, platform, and location filter
   useEffect(() => {
     let filtered = services
 
@@ -124,6 +127,11 @@ export default function BrowsePage({ params }: BrowsePageProps) {
           service.description?.toLowerCase().includes(query) ||
           service.users.name.toLowerCase().includes(query)
       )
+    }
+
+    // Apply platform filter
+    if (platformFilter !== 'all') {
+      filtered = filtered.filter(service => service.platform === platformFilter)
     }
 
     // Apply location filter
@@ -182,7 +190,7 @@ export default function BrowsePage({ params }: BrowsePageProps) {
     }
 
     setFilteredServices(filtered)
-  }, [services, searchQuery, locationFilter])
+  }, [services, searchQuery, platformFilter, locationFilter])
 
   // Generate slug from title
   const generateSlug = (title: string): string => {
@@ -239,6 +247,45 @@ export default function BrowsePage({ params }: BrowsePageProps) {
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
+
+            {/* Platform Filter */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Platform
+              </label>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <button
+                  onClick={() => setPlatformFilter('all')}
+                  className={`px-4 py-2 rounded-lg border font-medium transition-colors ${
+                    platformFilter === 'all'
+                      ? 'bg-gray-900 text-white border-gray-900'
+                      : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                  }`}
+                >
+                  All Platforms ({services.length})
+                </button>
+                <button
+                  onClick={() => setPlatformFilter('justgiving')}
+                  className={`px-4 py-2 rounded-lg border font-medium transition-colors ${
+                    platformFilter === 'justgiving'
+                      ? 'bg-blue-600 text-white border-blue-600'
+                      : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                  }`}
+                >
+                  JustGiving ({services.filter(s => s.platform === 'justgiving').length})
+                </button>
+                <button
+                  onClick={() => setPlatformFilter('everyorg')}
+                  className={`px-4 py-2 rounded-lg border font-medium transition-colors ${
+                    platformFilter === 'everyorg'
+                      ? 'bg-green-600 text-white border-green-600'
+                      : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                  }`}
+                >
+                  Every.org ({services.filter(s => s.platform === 'everyorg').length})
+                </button>
+              </div>
+            </div>
             
             {/* Location Filter */}
             <ServiceLocationFilter 
@@ -254,7 +301,7 @@ export default function BrowsePage({ params }: BrowsePageProps) {
           </div>
 
           {/* Filter Summary */}
-          {(locationFilter.type !== 'all' || searchQuery.trim()) && (
+          {(locationFilter.type !== 'all' || platformFilter !== 'all' || searchQuery.trim()) && (
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-4">
@@ -264,6 +311,11 @@ export default function BrowsePage({ params }: BrowsePageProps) {
                   {searchQuery.trim() && (
                     <span className="text-sm text-blue-700">
                       matching "{searchQuery}"
+                    </span>
+                  )}
+                  {platformFilter !== 'all' && (
+                    <span className="text-sm text-blue-700">
+                      • {platformFilter === 'justgiving' ? 'JustGiving' : 'Every.org'} services
                     </span>
                   )}
                   {locationFilter.type !== 'all' && (
@@ -280,6 +332,7 @@ export default function BrowsePage({ params }: BrowsePageProps) {
                 <button
                   onClick={() => {
                     setSearchQuery('')
+                    setPlatformFilter('all')
                     setLocationFilter({ type: 'all' })
                   }}
                   className="text-sm text-blue-600 hover:text-blue-800 font-medium"

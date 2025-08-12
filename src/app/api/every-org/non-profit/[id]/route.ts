@@ -36,7 +36,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
       success: false,
       error: 'Every.org integration coming soon',
       data: {
-        platform: 'every_org',
+        platform: 'everyorg',
         nonprofitEin,
         message: 'Every.org donations will be available in a future update. Please use JustGiving for now.',
         availablePlatforms: ['justgiving'],
@@ -63,7 +63,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
     // Generate platform-specific reference ID  
     const { data: referenceResult, error: referenceError } = await supabase
       .rpc('generate_platform_reference', { 
-        platform_type: 'every_org' as DonationPlatform 
+        platform_type: 'everyorg' as DonationPlatform 
       })
 
     if (referenceError || !referenceResult) {
@@ -90,7 +90,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
         donor_id: donorId,
         fundraiser_id: fundraiserId,
         service_id: serviceId,
-        platform: 'every_org' as DonationPlatform,
+        platform: 'everyorg' as DonationPlatform,
         reference_id: referenceId,
         organization_id: nonprofitEin,
         organization_name: nonprofitData.name,
@@ -108,7 +108,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
         nonprofitEin,
         nonprofitName: nonprofitData.name,
         donationAmount,
-        platform: 'every_org',
+        platform: 'everyorg',
         status: 'pending'
       }
     })

@@ -376,5 +376,29 @@
       "activeRequests": "Aktif hizmet talepleriniz veya bekleyen bağışlarınız varken profilinizi silemezsiniz. Yardım için desteğe başvurun.",
       "deleteFailed": "Profil silinemedi"
     }
+  },
+  "platforms": {
+    "justgiving": {
+      "name": "JustGiving",
+      "entityType": {
+        "singular": "bağış kuruluşu",
+        "plural": "bağış kuruluşları"
+      },
+      "browse": {
+        "title": "JustGiving Bağış Kuruluşlarını Gözat",
+        "description": "Kayıtlı İngiltere bağış kuruluşlarını keşfedin ve beceri temelli bağışlarla davalara destek olun."
+      }
+    },
+    "everyorg": {
+      "name": "Every.org",
+      "entityType": {
+        "singular": "kar amacı gütmeyen kuruluş",
+        "plural": "kar amacı gütmeyen kuruluşlar"
+      },
+      "browse": {
+        "title": "Every.org Kar Amacı Gütmeyen Kuruluşları Gözat",
+        "description": "Kar amacı gütmeyen kuruluşları keşfedin ve beceri temelli bağışlarla davalara destek olun."
+      }
+    }
   }
 }

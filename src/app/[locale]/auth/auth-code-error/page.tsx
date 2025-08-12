@@ -1,4 +1,4 @@
-import { Link } from '@/i18n/routing'
+import Link from 'next/link'
 import MultilingualNavbar from '@/components/MultilingualNavbar'
 import { getMessages } from 'next-intl/server'
 

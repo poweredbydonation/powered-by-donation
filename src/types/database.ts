@@ -6,7 +6,7 @@ export type CharityRequirementType = 'any_charity' | 'specific_charities';
 
 export type CurrencyCode = 'GBP' | 'USD' | 'CAD' | 'AUD' | 'EUR';
 
-export type DonationPlatform = 'justgiving' | 'every_org';
+export type DonationPlatform = 'justgiving' | 'everyorg';
 
 export type ServiceStatus = 
   | 'pending' 
@@ -38,6 +38,67 @@ export interface User {
   preferred_currency?: CurrencyCode;
   preferred_platform?: DonationPlatform;
   created_at?: Date;
+}
+
+// Unified Organization Cache Interface (Platform-First Architecture)
+export interface OrganizationCache {
+  id: string; // UUID
+  platform: DonationPlatform;
+  external_id: string; // justgiving_charity_id or nonprofit_ein
+  name: string;
+  description?: string;
+  category?: string;
+  logo_url?: string;
+  slug: string; // SEO-friendly URL slug
+  
+  // Donation stats (common to both platforms)
+  total_donations_count?: number;
+  total_amount_received?: number;
+  this_month_count?: number;
+  this_month_amount?: number;
+  service_categories?: Record<string, unknown>; // JSONB - Service category breakdown
+  
+  // Platform management
+  is_active?: boolean;
+  is_featured?: boolean;
+  page_views?: number;
+  last_updated?: Date;
+  stats_last_updated?: Date;
+  
+  // Enhanced details (primarily from JustGiving)
+  address_line1?: string;
+  address_line2?: string;
+  address_city?: string;
+  address_county?: string;
+  address_country?: string;
+  address_postcode?: string;
+  display_name?: string;
+  logo_absolute_url?: string;
+  profile_page_url?: string;
+  registration_number?: string;
+  website_url?: string;
+  email_address?: string;
+  keywords?: string;
+  
+  // JustGiving specific fields
+  page_short_name?: string;
+  sms_short_name?: string;
+  is_approved?: boolean;
+  show_in_search?: boolean;
+  date_added_to_justgiving?: Date;
+  thankyou_message?: string;
+  impact_statement_what?: string;
+  impact_statement_why?: string;
+  country_code?: string;
+  currency_code?: string;
+  mobile_appeals?: Record<string, unknown>; // JSONB
+  donation_display_amounts?: Record<string, unknown>; // JSONB
+  theme_colour?: Record<string, unknown>; // JSONB
+  categories_list?: Record<string, unknown>; // JSONB
+  
+  // API management
+  enhanced_data_fetched_at?: Date;
+  api_fetch_attempts?: number;
 }
 
 // Legacy interfaces for backward compatibility (deprecated - use User instead)
@@ -82,7 +143,7 @@ export interface Service {
   happiness_rate?: number; // % donor satisfaction (calculated from service_requests)
 }
 
-// Legacy interface - use JustGivingCharityCache or EveryOrgNonprofitCache instead
+// Legacy interface - use OrganizationCache instead
 export interface CharityCache {
   justgiving_charity_id: string;
   name: string;
@@ -223,6 +284,28 @@ export interface SupporterHappinessRequirements {
   min_total_interactions?: number;
 }
 
+// Organization filter and search parameters for Platform-First architecture
+export interface OrganizationSearchParams {
+  platform?: DonationPlatform;
+  category?: string;
+  city?: string;
+  country_code?: string;
+  search?: string;
+  is_featured?: boolean;
+  preferred_only?: boolean; // Show only organizations preferred by services
+  page?: number;
+  limit?: number;
+}
+
+// Unified organization response for API endpoints
+export interface OrganizationSearchResponse {
+  organizations: OrganizationCache[];
+  total_count: number;
+  page: number;
+  limit: number;
+  has_more: boolean;
+}
+
 // Organization Page Data (platform-aware for public charity/nonprofit pages)
 export interface OrganizationPageData {
   platform: DonationPlatform;
@@ -259,7 +342,7 @@ export interface PlatformStats {
   total_fundraisers: number;
   services_this_month: number;
   justgiving_services: number;
-  every_org_services: number;
+  everyorg_services: number;
   donations_this_month: number;
   total_amount_this_month: number;
   charities_supported: number;

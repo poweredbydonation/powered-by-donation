@@ -68,7 +68,7 @@ export default function EveryOrgNonprofitPage({ params }: NonprofitPageProps) {
             *,
             users!inner(id, full_name, username)
           `)
-          .eq('platform', 'every_org')
+          .eq('platform', 'everyorg')
           .eq('is_active', true)
           .or(`charity_requirement_type.eq.any_charity,and(charity_requirement_type.eq.specific_charities,preferred_charities.cs."${nonprofitData.nonprofit_ein}")`)
           .order('created_at', { ascending: false })

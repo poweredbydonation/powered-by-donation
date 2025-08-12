@@ -417,5 +417,29 @@
       "activeRequests": "You cannot delete your profile while you have active service requests or pending donations. Contact support if you need assistance.",
       "deleteFailed": "Failed to delete profile"
     }
+  },
+  "platforms": {
+    "justgiving": {
+      "name": "JustGiving",
+      "entityType": {
+        "singular": "charity",
+        "plural": "charities"
+      },
+      "browse": {
+        "title": "Browse JustGiving Charities",
+        "description": "Discover registered UK charities and support causes through skill-based donations."
+      }
+    },
+    "everyorg": {
+      "name": "Every.org",
+      "entityType": {
+        "singular": "nonprofit",
+        "plural": "nonprofits"
+      },
+      "browse": {
+        "title": "Browse Every.org Nonprofits",
+        "description": "Explore nonprofits and support causes through skill-based donations."
+      }
+    }
   }
 }

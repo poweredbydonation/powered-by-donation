@@ -22,7 +22,7 @@ const PLATFORM_OPTIONS: PlatformOption[] = [
     description: 'Available Now'
   },
   {
-    value: 'every_org',
+    value: 'everyorg',
     label: 'Every.org',
     shortLabel: 'EV',
     available: true,

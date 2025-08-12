@@ -11,7 +11,7 @@ const corsHeaders = {
 // Types for our database (subset of what we need)
 interface ServiceRequest {
   id: string
-  platform?: 'justgiving' | 'every_org'
+  platform?: 'justgiving' | 'everyorg'
   reference_id?: string
   status?: 'pending' | 'success' | 'fundraiser_review' | 'acknowledged_feedback' | 'disputed_feedback' | 'unresponsive_to_feedback'
   timeout_at?: string

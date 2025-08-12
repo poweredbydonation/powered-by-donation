@@ -6,6 +6,7 @@ import { Menu, X, ChevronDown } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
 import { usePendingDonations } from '@/hooks/usePendingDonations'
 import { LANGUAGES, getOtherLanguages, getLanguageByCode } from '@/config/languages'
+import { getLocalizedServicesUrl } from '@/lib/utils/localized-urls'
 import PlatformSelector from './PlatformSelector'
 
 interface MultilingualNavbarProps {
@@ -107,7 +108,7 @@ export default function MultilingualNavbar({ locale, messages }: MultilingualNav
             <div className="flex flex-col justify-center space-y-1">
               <div className="flex items-center space-x-4">
                 <a 
-                  href={`/${locale}/browse`}
+                  href={getLocalizedServicesUrl(locale)}
                   className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
                 >
                   {messages?.nav?.browse || 'Browse Services'}
@@ -246,7 +247,7 @@ export default function MultilingualNavbar({ locale, messages }: MultilingualNav
           <div className="md:hidden border-t border-gray-200">
             <div className="py-4 space-y-4">
               <a 
-                href={`/${locale}/browse`}
+                href={getLocalizedServicesUrl(locale)}
                 className="block text-gray-700 hover:text-blue-600 font-medium transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
