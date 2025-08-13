@@ -31,81 +31,73 @@ function isValidPlatform(platform: string): platform is DonationPlatform {
 }
 
 export default async function OrganizationDetailPage({ params }: OrganizationPageProps) {
-  const { locale, platform: platformStr, entity_type: entitySlug, slug } = params
-
-  // Validate platform
-  if (!isValidPlatform(platformStr)) {
-    notFound()
-  }
-
-  const platform = platformStr as DonationPlatform
-
-  // Get entity type from URL slug
-  const entityType = getEntityTypeFromSlug(entitySlug)
-  if (!entityType) {
-    notFound()
-  }
-
-  // Validate platform-entity consistency
-  const expectedEntityType = getPlatformEntityType(platform)
-  if (entityType !== expectedEntityType) {
-    notFound()
-  }
-
-  // Fetch organization data from unified cache
-  const supabase = createClient()
-  
-  const { data: organization, error } = await supabase
-    .from('organization_cache')
-    .select('*')
-    .eq('platform', platform)
-    .eq('slug', slug)
-    .eq('is_active', true)
-    .single()
-
-  if (error || !organization) {
-    notFound()
-  }
-
-  const messages = await getMessages({ locale })
-
-  return (
-    <OrganizationPage 
-      locale={locale}
-      platform={platform}
-      entityType={entityType}
-      organization={organization}
-      messages={messages}
-    />
-  )
-}
-
-// Generate static params for popular organizations (subset for performance)
-export async function generateStaticParams() {
   try {
-    const supabase = createAnonClient()
+    const { locale, platform: platformStr, entity_type: entitySlug, slug } = params
+
+    // Validate platform
+    if (!isValidPlatform(platformStr)) {
+      notFound()
+    }
+
+    const platform = platformStr as DonationPlatform
+
+    // Get entity type from URL slug
+    const entityType = getEntityTypeFromSlug(entitySlug)
+    if (!entityType) {
+      notFound()
+    }
+
+    // Validate platform-entity consistency
+    const expectedEntityType = getPlatformEntityType(platform)
+    if (entityType !== expectedEntityType) {
+      notFound()
+    }
+
+    // Fetch organization data from unified cache
+    const supabase = createClient()
     
-    // Get top organizations from each platform for static generation
-    const { data: organizations } = await supabase
+    const { data: organization, error } = await supabase
       .from('organization_cache')
-      .select('platform, slug')
+      .select('*')
+      .eq('platform', platform)
+      .eq('slug', slug)
       .eq('is_active', true)
-      .or('is_featured.eq.true,total_donations_count.gt.10')
-      .limit(100)
+      .single()
 
-    if (!organizations) return []
+    if (error || !organization) {
+      notFound()
+    }
 
-    return organizations.map((org) => ({
-      platform: org.platform,
-      entity_type: getPlatformEntityType(org.platform as DonationPlatform) === 'charities' ? 'charities' : 'nonprofits',
-      slug: org.slug
-    }))
+    const messages = await getMessages({ locale })
+
+    return (
+      <OrganizationPage 
+        locale={locale}
+        platform={platform}
+        entityType={entityType}
+        organization={organization}
+        messages={messages}
+      />
+    )
   } catch (error) {
-    // Return empty array if database query fails during build
-    console.warn('Failed to generate static params for organizations:', error)
-    return []
+    console.error('OrganizationDetailPage error:', error)
+    // Return a fallback error page instead of throwing
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">Organization not found</h1>
+          <p className="text-gray-600 mb-4">We couldn't find the organization you're looking for.</p>
+          <a href="/" className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+            Go Home
+          </a>
+        </div>
+      </div>
+    )
   }
 }
+
+// Force dynamic rendering to avoid static generation conflicts
+export const dynamic = 'force-dynamic'
 
 // Generate metadata
 export async function generateMetadata({ params }: OrganizationPageProps) {
