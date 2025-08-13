@@ -61,8 +61,9 @@ The routing follows next-intl best practices: same-locale uses Link for SPA beha
 // Service-related components
 ServiceCard.tsx           // Individual service display
 ServiceList.tsx           // Service listing with filtering
-ServiceCreationForm.tsx   // Service creation interface
+ServiceCreationForm.tsx   // Service creation interface with multi-platform requirements
 ServiceDonationFlow.tsx   // Donation process handling
+PlatformRequirementsSelector.tsx // Multi-platform hierarchy selection system
 
 // User-related components  
 UnifiedUserProfileForm.tsx // Single form for all user types
@@ -72,6 +73,8 @@ PlatformSelector.tsx      // Platform switching
 // Platform-specific components
 CharityCard.tsx           // JustGiving charity display with logos and profile links
 PlatformAccessGuard.tsx   // Cross-platform access control
+OrganizationCard.tsx      // Unified organization display for both platforms
+OrganizationBrowse.tsx    // Platform-aware organization browsing
 ```
 
 ## Design Philosophy
@@ -235,6 +238,51 @@ const { user, signOut, loading } = useAuth();
 4. **Type safety**: Full TypeScript interface coverage
 5. **Testing**: Unit tests for complex logic
 
+## Multi-Platform Service Creation System
+
+### Platform Requirements Architecture
+The service creation system uses a hierarchical platform → organization selection model:
+
+```typescript
+interface PlatformRequirements {
+  type: PlatformRestrictionType;
+  allowed_platforms: DonationPlatform[];
+  platform_rules: Record<DonationPlatform, PlatformRule>;
+}
+
+interface PlatformRule {
+  entity_types: EntityRestrictionType;
+  allowed_entities: string[];
+  organizations: OrganizationRestrictionType;
+  specific_organizations: string[];
+}
+```
+
+### User Experience Flow
+**Platform Selection:**
+- Multiple platform selection with checkboxes
+- "Select All Platforms" / "Clear All" functionality
+- Auto-expansion when platforms are selected
+
+**Organization Selection (per platform):**
+- Auto-loads organizations from unified `organization_cache`
+- Search functionality with real-time filtering
+- "Select All" / "Clear All" for organization management
+- Visual organization cards with logos and names
+
+### Component Implementation
+**PlatformRequirementsSelector.tsx:**
+- Hierarchical UI with progressive disclosure
+- Real-time validation and error handling
+- Integrated with organization search and selection
+- Full TypeScript integration with type safety
+
+### Database Integration
+- New `platform_requirements` field in services table (JSONB)
+- Unified organization data from `organization_cache`
+- Backward compatibility with legacy `charity_requirement_type`
+- Advanced validation for multi-platform configurations
+
 ## Current Implementation Status
 
 ### Completed Features
@@ -242,6 +290,7 @@ const { user, signOut, loading } = useAuth();
 - ✅ Dual platform UI (JustGiving + Every.org placeholders)
 - ✅ Unified user profile system
 - ✅ Platform-aware service creation and browsing
+- ✅ Multi-platform service creation with hierarchical organization selection
 - ✅ Donation flow with JustGiving integration
 - ✅ Browse charities system (1737+ charities) with pagination and city filtering
 - ✅ Preferred charity badges and filtering (shows charities selected by services)

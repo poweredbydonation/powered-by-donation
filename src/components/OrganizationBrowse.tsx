@@ -12,12 +12,14 @@ import { DonationPlatform, OrganizationCache } from '@/types/database'
 import { EntityType } from '@/lib/utils/entity-urls'
 import OrganizationCard from '@/components/OrganizationCard'
 import OrganizationFilters from '@/components/OrganizationFilters'
+import MultilingualNavbar from '@/components/MultilingualNavbar'
 import { Search, Filter } from 'lucide-react'
 
 interface OrganizationBrowseProps {
   locale: string
   platform: DonationPlatform
   entityType: EntityType
+  messages?: any
   searchParams: {
     page?: string
     search?: string
@@ -42,6 +44,7 @@ export default function OrganizationBrowse({
   locale,
   platform,
   entityType,
+  messages,
   searchParams
 }: OrganizationBrowseProps) {
   const [state, setState] = useState<BrowseState>({
@@ -172,6 +175,7 @@ export default function OrganizationBrowse({
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {messages && <MultilingualNavbar locale={locale} messages={messages} />}
       {/* Header */}
       <div className="bg-white border-b">
         <div className="max-w-7xl mx-auto px-4 py-6">

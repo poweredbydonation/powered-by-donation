@@ -32,7 +32,7 @@ export default async function CreateServicePage({ params }: CreateServicePagePro
                 </p>
               </div>
               
-              <ServiceCreationForm />
+              <ServiceCreationForm locale={locale} />
             </div>
           </div>
         </div>

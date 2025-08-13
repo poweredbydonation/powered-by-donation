@@ -19,11 +19,19 @@ export default async function HomePage({ params }: HomePageProps) {
 
   // Load platform statistics for homepage
   const supabase = createClient()
-  const [platformStats, featuredOrgs] = await Promise.all([
-    // Get platform statistics
+  const [justgivingStats, everyorgStats, featuredOrgs] = await Promise.all([
+    // Get JustGiving count
     supabase
       .from('organization_cache')
-      .select('platform', { count: 'exact' })
+      .select('id', { count: 'exact', head: true })
+      .eq('platform', 'justgiving')
+      .eq('is_active', true),
+    
+    // Get Every.org count
+    supabase
+      .from('organization_cache')
+      .select('id', { count: 'exact', head: true })
+      .eq('platform', 'everyorg')
       .eq('is_active', true),
     
     // Get featured organizations from both platforms
@@ -36,9 +44,9 @@ export default async function HomePage({ params }: HomePageProps) {
       .limit(6)
   ])
 
-  const totalOrganizations = platformStats.count || 0
-  const justgivingCount = platformStats.data?.filter(o => o.platform === 'justgiving').length || 0
-  const everyorgCount = platformStats.data?.filter(o => o.platform === 'everyorg').length || 0
+  const justgivingCount = justgivingStats.count || 0
+  const everyorgCount = everyorgStats.count || 0
+  const totalOrganizations = justgivingCount + everyorgCount
 
   return (
     <div className="min-h-screen bg-white">

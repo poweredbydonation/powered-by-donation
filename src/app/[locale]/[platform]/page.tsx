@@ -4,6 +4,7 @@
  */
 
 import { notFound } from 'next/navigation'
+import { getMessages } from 'next-intl/server'
 import { DonationPlatform } from '@/types/database'
 import PlatformHome from '@/components/PlatformHome'
 
@@ -19,7 +20,7 @@ function isValidPlatform(platform: string): platform is DonationPlatform {
   return ['justgiving', 'everyorg'].includes(platform)
 }
 
-export default function PlatformPage({ params }: PlatformPageProps) {
+export default async function PlatformPage({ params }: PlatformPageProps) {
   const { locale, platform: platformStr } = params
 
   // Validate platform
@@ -28,8 +29,9 @@ export default function PlatformPage({ params }: PlatformPageProps) {
   }
 
   const platform = platformStr as DonationPlatform
+  const messages = await getMessages({ locale })
 
-  return <PlatformHome locale={locale} platform={platform} />
+  return <PlatformHome locale={locale} platform={platform} messages={messages} />
 }
 
 // Generate static params for known platforms

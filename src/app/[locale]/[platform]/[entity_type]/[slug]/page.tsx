@@ -5,6 +5,7 @@
  */
 
 import { notFound } from 'next/navigation'
+import { getMessages } from 'next-intl/server'
 import { createClient } from '@/lib/supabase/server'
 import { createClient as createAnonClient } from '@/lib/supabase/client'
 import { DonationPlatform, OrganizationCache } from '@/types/database'
@@ -66,12 +67,15 @@ export default async function OrganizationDetailPage({ params }: OrganizationPag
     notFound()
   }
 
+  const messages = await getMessages({ locale })
+
   return (
     <OrganizationPage 
       locale={locale}
       platform={platform}
       entityType={entityType}
       organization={organization}
+      messages={messages}
     />
   )
 }

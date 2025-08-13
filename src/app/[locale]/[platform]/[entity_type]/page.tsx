@@ -5,6 +5,7 @@
  */
 
 import { notFound } from 'next/navigation'
+import { getMessages } from 'next-intl/server'
 import { DonationPlatform } from '@/types/database'
 import { 
   getEntityTypeFromSlug, 
@@ -35,7 +36,7 @@ function isValidPlatform(platform: string): platform is DonationPlatform {
   return ['justgiving', 'everyorg'].includes(platform)
 }
 
-export default function OrganizationBrowsePage({ 
+export default async function OrganizationBrowsePage({ 
   params,
   searchParams 
 }: OrganizationBrowsePageProps) {
@@ -60,11 +61,14 @@ export default function OrganizationBrowsePage({
     notFound()
   }
 
+  const messages = await getMessages({ locale })
+
   return (
     <OrganizationBrowse
       locale={locale}
       platform={platform}
       entityType={entityType}
+      messages={messages}
       searchParams={searchParams}
     />
   )

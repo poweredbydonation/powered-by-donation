@@ -11,6 +11,7 @@ import { useTranslations } from 'next-intl'
 import { DonationPlatform, OrganizationCache, Service } from '@/types/database'
 import { EntityType, buildPlatformUrl } from '@/lib/utils/entity-urls'
 import { createClient } from '@/lib/supabase/client'
+import MultilingualNavbar from '@/components/MultilingualNavbar'
 import { 
   ExternalLink, 
   MapPin, 
@@ -28,6 +29,7 @@ interface OrganizationPageProps {
   locale: string
   platform: DonationPlatform
   entityType: EntityType
+  messages?: any
   organization: OrganizationCache
 }
 
@@ -43,7 +45,8 @@ export default function OrganizationPage({
   locale,
   platform,
   entityType,
-  organization
+  organization,
+  messages
 }: OrganizationPageProps) {
   const t = useTranslations('organization')
   const [services, setServices] = useState<ServiceWithUser[]>([])
@@ -101,6 +104,7 @@ export default function OrganizationPage({
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {messages && <MultilingualNavbar locale={locale} messages={messages} />}
       {/* Header */}
       <div className={`${config.bgClass} border-b`}>
         <div className="max-w-4xl mx-auto px-4 py-8">

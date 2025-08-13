@@ -12,10 +12,12 @@ import { DonationPlatform, OrganizationCache } from '@/types/database'
 import { createClient } from '@/lib/supabase/client'
 import { buildPlatformUrl } from '@/lib/utils/entity-urls'
 import { ExternalLink, TrendingUp, Users, Calendar } from 'lucide-react'
+import MultilingualNavbar from '@/components/MultilingualNavbar'
 
 interface PlatformHomeProps {
   locale: string
   platform: DonationPlatform
+  messages?: any
 }
 
 interface PlatformStats {
@@ -25,7 +27,7 @@ interface PlatformStats {
   featured_organizations: OrganizationCache[]
 }
 
-export default function PlatformHome({ locale, platform }: PlatformHomeProps) {
+export default function PlatformHome({ locale, platform, messages }: PlatformHomeProps) {
   const t = useTranslations('platform')
   const [stats, setStats] = useState<PlatformStats | null>(null)
   const [loading, setLoading] = useState(true)
@@ -118,6 +120,7 @@ export default function PlatformHome({ locale, platform }: PlatformHomeProps) {
   if (loading) {
     return (
       <div className="min-h-screen bg-white">
+        {messages && <MultilingualNavbar locale={locale} messages={messages} />}
         <div className="max-w-7xl mx-auto px-4 py-12">
           <div className="animate-pulse">
             <div className="h-8 bg-gray-200 rounded w-1/3 mb-4"></div>
@@ -137,6 +140,7 @@ export default function PlatformHome({ locale, platform }: PlatformHomeProps) {
 
   return (
     <div className="min-h-screen bg-white">
+      {messages && <MultilingualNavbar locale={locale} messages={messages} />}
       {/* Hero Section */}
       <div className={`${config.bgClass} border-b ${config.borderClass}`}>
         <div className="max-w-7xl mx-auto px-4 py-12">

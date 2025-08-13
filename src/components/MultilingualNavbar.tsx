@@ -25,9 +25,6 @@ export default function MultilingualNavbar({ locale, messages }: MultilingualNav
   const langDropdownRef = useRef<HTMLDivElement>(null)
   const profileDropdownRef = useRef<HTMLDivElement>(null)
   
-  console.log('=== MULTILINGUAL NAVBAR DEBUG ===')
-  console.log('MultilingualNavbar received locale prop:', locale)
-  console.log('MultilingualNavbar pathname:', pathname)
 
   useEffect(() => {
     setMounted(true)

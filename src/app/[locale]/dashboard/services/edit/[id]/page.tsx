@@ -142,6 +142,7 @@ export default function EditServicePage() {
             initialData={service}
             onSuccess={handleUpdateSuccess}
             mode="edit"
+            locale={locale}
           />
         </div>
       </div>

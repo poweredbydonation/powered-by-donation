@@ -4,8 +4,9 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/hooks/useAuth'
 import { createClient } from '@/lib/supabase/client'
-import { CharityRequirementType, ServiceLocation, Service, PricingTier, CurrencyCode } from '@/types/database'
+import { CharityRequirementType, ServiceLocation, Service, PricingTier, CurrencyCode, PlatformRequirements } from '@/types/database'
 import CharitySelector from './CharitySelector'
+import PlatformRequirementsSelector from './PlatformRequirementsSelector'
 import ServiceLocationPicker from '@/components/ServiceLocationPicker'
 import PricingTierSlider from '@/components/forms/PricingTierSlider'
 
@@ -20,12 +21,14 @@ interface ServiceCreationFormProps {
   initialData?: Service
   onSuccess?: () => void
   mode?: 'create' | 'edit'
+  locale?: string
 }
 
 export default function ServiceCreationForm({ 
   initialData, 
   onSuccess, 
-  mode = 'create' 
+  mode = 'create',
+  locale = 'en'
 }: ServiceCreationFormProps) {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
@@ -33,6 +36,8 @@ export default function ServiceCreationForm({
   const [userCurrency, setUserCurrency] = useState<CurrencyCode>('GBP')
   const [charityRequirementType, setCharityRequirementType] = useState<CharityRequirementType>('any_charity')
   const [selectedCharities, setSelectedCharities] = useState<SelectedCharity[]>([])
+  const [platformRequirements, setPlatformRequirements] = useState<PlatformRequirements | null>(null)
+  const [useNewPlatformSystem, setUseNewPlatformSystem] = useState(true)
   const [availableFrom, setAvailableFrom] = useState('')
   const [availableUntil, setAvailableUntil] = useState('')
   const [maxDonors, setMaxDonors] = useState('')
@@ -157,9 +162,22 @@ export default function ServiceCreationForm({
         throw new Error('Please select a pricing tier for your service.')
       }
 
-      // Validate charity requirements
-      if (charityRequirementType === 'specific_charities' && selectedCharities.length === 0) {
-        throw new Error('Please select at least one charity when using specific charity requirements.')
+      // Validate platform requirements
+      if (!platformRequirements) {
+        throw new Error('Please configure platform requirements.')
+      }
+      
+      if (platformRequirements.allowed_platforms.length === 0) {
+        throw new Error('Please select at least one platform.')
+      }
+      
+      // Check if any platform has specific organizations selected but none chosen
+      for (const platform of platformRequirements.allowed_platforms) {
+        const rule = platformRequirements.platform_rules[platform]
+        if (rule.organizations === 'specific_organizations' && rule.specific_organizations.length === 0) {
+          const platformName = platform === 'justgiving' ? 'JustGiving' : 'Every.org'
+          throw new Error(`Please select at least one organization for ${platformName}.`)
+        }
       }
 
       // Check if user has fundraiser role
@@ -229,12 +247,14 @@ export default function ServiceCreationForm({
         pricing_tier_id: selectedTier ? selectedTier.id : null,
         charity_requirement_type: charityRequirementType,
         preferred_charities: preferredCharities.length > 0 ? preferredCharities : null,
+        // Platform requirements
+        platform_requirements: platformRequirements,
         available_from: availableFrom,
         available_until: availableUntil || null,
         max_donors: maxDonors ? parseInt(maxDonors) : null,
         service_locations: [serviceLocation],
-        // Platform-specific fields
-        platform: 'justgiving', // Default to JustGiving for now
+        // Platform-specific fields (for backward compatibility)
+        platform: platformRequirements?.allowed_platforms[0] || 'justgiving',
         organization_name: organizationName,
         organization_data: organizationData,
         ...(mode === 'create' && { 
@@ -328,77 +348,15 @@ export default function ServiceCreationForm({
         />
       </div>
 
-      {/* Charity Requirements */}
-      <div className="space-y-4">
-        <h3 className="text-lg font-medium text-gray-900">Charity Requirements</h3>
+      {/* Donation Requirements */}
+      <div className="space-y-6">
+        <h3 className="text-lg font-medium text-gray-900">Donation Requirements</h3>
         
-        {(
-          <div className="space-y-3">
-            <label className="flex items-center">
-              <input
-                type="radio"
-                name="charityRequirement"
-                value="any_charity"
-                checked={charityRequirementType === 'any_charity'}
-                onChange={(e) => {
-                  setCharityRequirementType(e.target.value as CharityRequirementType)
-                  if (e.target.value === 'any_charity') {
-                    setSelectedCharities([])
-                  }
-                }}
-                className="mr-3"
-              />
-              <div>
-                <div className="font-medium">Any JustGiving Charity</div>
-                <div className="text-sm text-gray-500">Donors can donate to any registered charity</div>
-              </div>
-            </label>
-            
-            <label className="flex items-center">
-              <input
-                type="radio"
-                name="charityRequirement"
-                value="specific_charities"
-                checked={charityRequirementType === 'specific_charities'}
-                onChange={(e) => setCharityRequirementType(e.target.value as CharityRequirementType)}
-                className="mr-3"
-              />
-              <div>
-                <div className="font-medium">Specific Charities</div>
-                <div className="text-sm text-gray-500">Choose which charities donors can donate to</div>
-              </div>
-            </label>
-          </div>
-        )}
-
-        {/* Charity Selector */}
-        {charityRequirementType === 'specific_charities' && (
-          <div className="pl-6 border-l-2 border-gray-200 space-y-4">
-            <div>
-              <h4 className="text-md font-medium text-gray-900 mb-2">Select Preferred Charities</h4>
-              <p className="text-sm text-gray-600 mb-4">
-                Search and select up to 5 charities that donors can choose from. 
-                All charities are verified JustGiving registered charities.
-              </p>
-              
-              <CharitySelector
-                selectedCharities={selectedCharities}
-                onCharitiesChange={setSelectedCharities}
-                maxCharities={5}
-                disabled={loading}
-                platform="justgiving"
-              />
-              
-              {charityRequirementType === 'specific_charities' && selectedCharities.length === 0 && (
-                <div className="mt-3 p-3 bg-yellow-50 border border-yellow-200 rounded-md">
-                  <p className="text-sm text-yellow-800">
-                    Please select at least one charity for donors to donate to.
-                  </p>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
+        <PlatformRequirementsSelector
+          value={platformRequirements}
+          onChange={setPlatformRequirements}
+          locale={locale}
+        />
       </div>
 
       {/* Location Options */}

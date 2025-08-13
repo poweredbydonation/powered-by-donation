@@ -4,6 +4,26 @@
 // Enum Types
 export type CharityRequirementType = 'any_charity' | 'specific_charities';
 
+// Platform Requirements Types (New Multi-Platform System)
+export type PlatformRestrictionType = 'any_platform' | 'specific_platforms' | 'mixed_selection';
+
+export type EntityRestrictionType = 'any_entities' | 'specific_entities';
+
+export type OrganizationRestrictionType = 'any_organizations' | 'specific_organizations';
+
+export interface PlatformRule {
+  entity_types: EntityRestrictionType;
+  allowed_entities: string[]; // ['charity', 'nonprofit', etc.]
+  organizations: OrganizationRestrictionType;
+  specific_organizations: string[]; // Array of organization_cache IDs
+}
+
+export interface PlatformRequirements {
+  type: PlatformRestrictionType;
+  allowed_platforms: DonationPlatform[];
+  platform_rules: Record<DonationPlatform, PlatformRule>;
+}
+
 export type CurrencyCode = 'GBP' | 'USD' | 'CAD' | 'AUD' | 'EUR';
 
 export type DonationPlatform = 'justgiving' | 'everyorg';
@@ -128,6 +148,8 @@ export interface Service {
   pricing_tier_id?: number; // Foreign key to pricing_tiers table
   charity_requirement_type: CharityRequirementType;
   preferred_charities?: Record<string, unknown>; // JSONB - Array of platform organization IDs
+  // New platform requirements system
+  platform_requirements?: PlatformRequirements; // JSONB - Full platform hierarchy rules
   platform?: DonationPlatform;
   organization_id?: string; // Platform-specific charity/nonprofit ID
   organization_name?: string; // Cached organization name
