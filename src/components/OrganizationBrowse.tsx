@@ -87,80 +87,56 @@ export default function OrganizationBrowse({
       setState(prev => ({ ...prev, loading: true, error: null }))
       
       try {
-        const supabase = createClient()
-        let query = supabase
-          .from('organization_cache')
-          .select('*', { count: 'exact' })
-          .eq('platform', platform)
-          .eq('is_active', true)
-
+        // Use our new platform-specific API endpoint instead of direct Supabase queries
+        const params = new URLSearchParams({
+          page: currentPage.toString(),
+          limit: ITEMS_PER_PAGE.toString()
+        })
+        
         // Apply filters
         if (searchQuery) {
-          query = query.textSearch('fts', searchQuery, { type: 'websearch' })
+          params.set('search', searchQuery)
         }
-
+        
         if (categoryFilter) {
-          query = query.eq('category', categoryFilter)
+          params.set('category', categoryFilter)
         }
-
-        if (cityFilter) {
-          query = query.eq('address_city', cityFilter)
+        
+        if (cityFilter && cityFilter !== 'all') {
+          params.set('city', cityFilter)
         }
-
+        
         if (featuredOnly) {
-          query = query.eq('is_featured', true)
+          params.set('featured', 'true')
         }
-
-        // Preferred organizations filter (organizations with active services)
+        
         if (preferredOnly) {
-          const { data: preferredIds } = await supabase
-            .from('services')
-            .select('organization_id')
-            .eq('platform', platform)
-            .eq('is_active', true)
-            .not('organization_id', 'is', null)
-
-          if (preferredIds && preferredIds.length > 0) {
-            const ids = Array.from(new Set(preferredIds.map(s => s.organization_id)))
-            query = query.in('external_id', ids)
-          } else {
-            // No preferred organizations found
-            setState(prev => ({
-              ...prev,
-              organizations: [],
-              totalCount: 0,
-              hasMore: false,
-              loading: false
-            }))
-            return
-          }
+          params.set('preferred', 'true')
         }
 
-        // Pagination
-        const offset = (currentPage - 1) * ITEMS_PER_PAGE
-        query = query
-          .order('is_featured', { ascending: false })
-          .order('total_donations_count', { ascending: false })
-          .range(offset, offset + ITEMS_PER_PAGE - 1)
-
-        const { data, error, count } = await query
-
-        if (error) throw error
-
-        setState({
-          organizations: data || [],
-          totalCount: count || 0,
-          hasMore: (count || 0) > offset + ITEMS_PER_PAGE,
+        const response = await fetch(`/api/${platform}/organizations?${params.toString()}`)
+        
+        if (!response.ok) {
+          throw new Error(`Failed to fetch organizations: ${response.status} ${response.statusText}`)
+        }
+        
+        const data = await response.json()
+        
+        setState(prev => ({
+          ...prev,
           loading: false,
+          organizations: data.organizations || [],
+          totalCount: data.pagination?.total_results || 0,
+          hasMore: data.pagination?.has_next || false,
           error: null
-        })
+        }))
 
       } catch (error) {
         console.error('Error loading organizations:', error)
         setState(prev => ({
           ...prev,
           loading: false,
-          error: 'Failed to load organizations'
+          error: error instanceof Error ? error.message : 'Failed to load organizations'
         }))
       }
     }
