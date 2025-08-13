@@ -40,38 +40,54 @@ export default async function OrganizationBrowsePage({
   params,
   searchParams 
 }: OrganizationBrowsePageProps) {
-  const { locale, platform: platformStr, entity_type: entitySlug } = params
+  try {
+    const { locale, platform: platformStr, entity_type: entitySlug } = params
 
-  // Validate platform
-  if (!isValidPlatform(platformStr)) {
-    notFound()
+    // Validate platform
+    if (!isValidPlatform(platformStr)) {
+      notFound()
+    }
+
+    const platform = platformStr as DonationPlatform
+
+    // Get entity type from URL slug
+    const entityType = getEntityTypeFromSlug(entitySlug)
+    if (!entityType) {
+      notFound()
+    }
+
+    // Validate platform-entity consistency
+    const expectedEntityType = getPlatformEntityType(platform)
+    if (entityType !== expectedEntityType) {
+      notFound()
+    }
+
+    const messages = await getMessages({ locale })
+
+    return (
+      <OrganizationBrowse
+        locale={locale}
+        platform={platform}
+        entityType={entityType}
+        messages={messages}
+        searchParams={searchParams}
+      />
+    )
+  } catch (error) {
+    console.error('OrganizationBrowsePage error:', error)
+    // Return a fallback error page instead of throwing
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">Something went wrong</h1>
+          <p className="text-gray-600 mb-4">We're having trouble loading this page. Please try again later.</p>
+          <a href="/" className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+            Go Home
+          </a>
+        </div>
+      </div>
+    )
   }
-
-  const platform = platformStr as DonationPlatform
-
-  // Get entity type from URL slug
-  const entityType = getEntityTypeFromSlug(entitySlug)
-  if (!entityType) {
-    notFound()
-  }
-
-  // Validate platform-entity consistency
-  const expectedEntityType = getPlatformEntityType(platform)
-  if (entityType !== expectedEntityType) {
-    notFound()
-  }
-
-  const messages = await getMessages({ locale })
-
-  return (
-    <OrganizationBrowse
-      locale={locale}
-      platform={platform}
-      entityType={entityType}
-      messages={messages}
-      searchParams={searchParams}
-    />
-  )
 }
 
 // Generate static params for all possible combinations

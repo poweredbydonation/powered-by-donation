@@ -20,6 +20,15 @@ export async function GET(request: NextRequest) {
     const featured = searchParams.get('featured') === 'true';
     const preferred = searchParams.get('preferred') === 'true';
     
+    // Validate environment variables
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+      console.error('Missing Supabase environment variables');
+      return NextResponse.json({ 
+        error: 'Database configuration error',
+        details: 'Missing required environment variables'
+      }, { status: 500 });
+    }
+    
     const supabase = createClient();
     
     let query = supabase
