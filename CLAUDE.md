@@ -39,6 +39,7 @@ Internationalization: next-intl with 17 language support
 9. **Australian compliance** - Privacy Act, Consumer Law considerations
 10. **GitHub deployment** - All changes via Git push, not manual commands
 11. **Performance first** - Server-side filtering, pagination, strategic indexing
+12. **Dynamic over static** - When pages need any dynamic behavior (even potential future dynamic features), it's safer to use `export const dynamic = 'force-dynamic'` rather than trying to optimize with static generation that can cause production conflicts
 
 ### Key Patterns
 - **Anonymous displays**: "Someone donated $50 via Web Design service"
