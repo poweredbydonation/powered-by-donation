@@ -7,7 +7,6 @@ import { useAuth } from '@/hooks/useAuth'
 import { usePendingDonations } from '@/hooks/usePendingDonations'
 import { LANGUAGES, getOtherLanguages, getLanguageByCode } from '@/config/languages'
 import { getLocalizedServicesUrl } from '@/lib/utils/localized-urls'
-import PlatformSelector from './PlatformSelector'
 
 interface MultilingualNavbarProps {
   locale: string
@@ -118,11 +117,8 @@ export default function MultilingualNavbar({ locale, messages }: MultilingualNav
                 </a>
               </div>
               
-              {/* Platform + Language Selectors */}
-              <div className="flex items-center justify-center space-x-2">
-                {/* Platform Selector */}
-                <PlatformSelector />
-                
+              {/* Language Selector */}
+              <div className="flex items-center justify-center">
                 {/* Language Dropdown */}
                 <div ref={langDropdownRef} className="relative">
                   <button
@@ -321,14 +317,6 @@ export default function MultilingualNavbar({ locale, messages }: MultilingualNav
                   {messages?.nav?.login || 'Login'}
                 </a>
               )}
-
-              {/* Mobile Platform Selector */}
-              <div className="border-t pt-4">
-                <div className="text-sm text-gray-500 mb-2">Platform:</div>
-                <div className="mb-4">
-                  <PlatformSelector />
-                </div>
-              </div>
 
               {/* Mobile Language Selector */}
               <div className="border-t pt-4">

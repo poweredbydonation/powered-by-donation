@@ -66,9 +66,10 @@ async function upsertNonprofitToCache(nonprofit: EveryOrgNonprofit): Promise<voi
     const nonprofitEin = nonprofit.ein || null;
     
     const { error } = await supabase
-      .from('every_org_nonprofit_cache')
+      .from('organization_cache')
       .upsert({
-        nonprofit_ein: nonprofitEin,
+        platform: 'everyorg',
+        external_id: nonprofitEin || slug, // Use EIN if available, otherwise slug
         name: nonprofit.name,
         description: nonprofit.description || '',
         category: nonprofit.tags?.[0] || 'general',
@@ -77,7 +78,7 @@ async function upsertNonprofitToCache(nonprofit: EveryOrgNonprofit): Promise<voi
         is_active: true,
         last_updated: new Date().toISOString(),
       }, {
-        onConflict: 'slug'  // Use slug as conflict resolution since it's now the primary key
+        onConflict: 'platform,external_id'
       });
     
     if (error) {
@@ -160,8 +161,9 @@ serve(async (req) => {
     
     // Update cache statistics
     const { error: statsError } = await supabase
-      .from('every_org_nonprofit_cache')
+      .from('organization_cache')
       .update({ stats_last_updated: new Date().toISOString() })
+      .eq('platform', 'everyorg')
       .eq('is_active', true);
     
     if (statsError) {

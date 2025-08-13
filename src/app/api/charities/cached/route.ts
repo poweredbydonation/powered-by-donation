@@ -1,7 +1,7 @@
 /**
- * API Route: Cached Charity Search
+ * API Route: Cached Organization Search  
  * Endpoint: /api/charities/cached
- * Fast local search from charity_cache table
+ * Fast local search from unified organization_cache table
  */
 
 import { NextRequest, NextResponse } from 'next/server'
@@ -33,30 +33,32 @@ export async function GET(request: NextRequest) {
     const supabase = createClient()
     const searchTerm = query.trim().toLowerCase()
 
-    // Search in cached charities using PostgreSQL full-text search
-    const { data: charities, error } = await supabase
-      .from('charity_cache')
-      .select('justgiving_charity_id, name, description, category, logo_url, slug')
+    // Search in unified organization cache using PostgreSQL full-text search
+    const { data: organizations, error } = await supabase
+      .from('organization_cache')
+      .select('external_id, name, description, category, logo_url, slug, platform')
       .eq('is_active', true)
       .or(`name.ilike.%${searchTerm}%, description.ilike.%${searchTerm}%, category.ilike.%${searchTerm}%`)
       .order('name')
       .limit(Math.min(limit, 50))
 
     if (error) {
-      console.error('Cached charity search error:', error)
+      console.error('Cached organization search error:', error)
       return NextResponse.json(
-        { error: 'Failed to search cached charities' },
+        { error: 'Failed to search cached organizations' },
         { status: 500 }
       )
     }
 
-    // Transform to match JustGiving API format
-    const transformedResults = (charities || []).map(charity => ({
-      charityId: parseInt(charity.justgiving_charity_id),
-      name: charity.name,
-      description: charity.description || '',
-      logoAbsoluteUrl: charity.logo_url,
-      subCategory: charity.category
+    // Transform to match legacy JustGiving API format for backward compatibility
+    const transformedResults = (organizations || []).map(org => ({
+      charityId: org.platform === 'justgiving' ? parseInt(org.external_id) : org.external_id,
+      name: org.name,
+      description: org.description || '',
+      logoAbsoluteUrl: org.logo_url,
+      subCategory: org.category,
+      platform: org.platform,
+      slug: org.slug
     }))
 
     return NextResponse.json({
@@ -69,10 +71,10 @@ export async function GET(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Cached charity search API error:', error)
+    console.error('Cached organization search API error:', error)
     return NextResponse.json(
       { 
-        error: 'Failed to search cached charities',
+        error: 'Failed to search cached organizations',
         details: error instanceof Error ? error.message : 'Unknown error'
       },
       { status: 500 }

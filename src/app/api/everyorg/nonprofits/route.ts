@@ -15,13 +15,14 @@ export async function GET(request: NextRequest) {
     const supabase = createClient();
     
     let query = supabase
-      .from('every_org_nonprofit_cache')
+      .from('organization_cache')
       .select('*', { count: 'exact' })
+      .eq('platform', 'everyorg')
       .eq('is_active', true);
     
     // Apply filters
     if (search) {
-      query = query.or(`name.ilike.%${search}%,description.ilike.%${search}%,nonprofit_ein.ilike.%${search}%`);
+      query = query.or(`name.ilike.%${search}%,description.ilike.%${search}%,external_id.ilike.%${search}%`);
     }
     
     if (category) {

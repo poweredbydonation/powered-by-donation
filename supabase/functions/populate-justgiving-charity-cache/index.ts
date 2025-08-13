@@ -187,11 +187,12 @@ serve(async (req) => {
             registeredFound++;
             const slug = generateSlug(charity.name);
             
-            // Insert to database
+            // Insert to unified organization cache
             const { error } = await supabase
-              .from('justgiving_charity_cache')
+              .from('organization_cache')
               .upsert({
-                justgiving_charity_id: charity.charityId.toString(),
+                platform: 'justgiving',
+                external_id: charity.charityId.toString(),
                 name: charity.name,
                 description: charity.description || null,
                 logo_url: charity.logoAbsoluteUrl || null,
@@ -201,7 +202,7 @@ serve(async (req) => {
                 is_featured: PRIORITY_CHARITY_IDS.includes(charity.charityId),
                 last_updated: new Date().toISOString()
               }, {
-                onConflict: 'justgiving_charity_id',
+                onConflict: 'platform,external_id',
                 ignoreDuplicates: false
               });
             
