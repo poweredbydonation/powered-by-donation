@@ -90,25 +90,8 @@ export default async function OrganizationBrowsePage({
   }
 }
 
-// Generate static params for all possible combinations
-export function generateStaticParams() {
-  const platforms: DonationPlatform[] = ['justgiving', 'everyorg']
-  const params: Array<{ platform: string; entity_type: string }> = []
-
-  platforms.forEach((platform) => {
-    const entityType = getPlatformEntityType(platform)
-    const slugs = getAllEntitySlugs(entityType)
-    
-    slugs.forEach((slug) => {
-      params.push({
-        platform,
-        entity_type: slug
-      })
-    })
-  })
-
-  return params
-}
+// This page is dynamic due to searchParams usage
+export const dynamic = 'force-dynamic'
 
 // Generate metadata
 export async function generateMetadata({ params }: OrganizationBrowsePageProps) {
