@@ -13,15 +13,33 @@ interface OrganizationCardProps {
   locale: string
   platform: DonationPlatform
   entityType: EntityType
+  onCategorySelect?: (category: string) => void
 }
 
 export default function OrganizationCard({
   organization,
   locale,
   platform,
-  entityType
+  entityType,
+  onCategorySelect
 }: OrganizationCardProps) {
   const orgUrl = buildPlatformUrl(locale, platform, organization.slug)
+
+  // Handle tag clicks for category filtering
+  const handleTagClick = (tag: string, e: React.MouseEvent) => {
+    e.stopPropagation()
+    e.preventDefault()
+    
+    if (onCategorySelect) {
+      onCategorySelect(tag)
+    } else {
+      // Fallback for when onCategorySelect is not provided
+      const url = new URL(window.location.href)
+      url.searchParams.set('category', tag)
+      url.searchParams.delete('page')
+      window.location.href = url.toString()
+    }
+  }
 
   const platformConfig = {
     justgiving: {
@@ -95,6 +113,29 @@ export default function OrganizationCard({
           <p className="text-sm text-gray-600 line-clamp-2 mb-3">
             {organization.description || 'No description available.'}
           </p>
+
+          {/* Tags for Every.org */}
+          {platform === 'everyorg' && organization.categories_list && Array.isArray(organization.categories_list) && organization.categories_list.length > 0 && (
+            <div className="mb-3">
+              <div className="flex flex-wrap gap-1">
+                {organization.categories_list.slice(0, 5).map((tag: string, index: number) => (
+                  <span
+                    key={index}
+                    onClick={(e) => handleTagClick(tag, e)}
+                    className="inline-block bg-green-100 text-green-800 text-xs px-2 py-1 rounded cursor-pointer hover:bg-green-200 transition-colors"
+                    title={`Click to browse ${tag} category`}
+                  >
+                    {tag}
+                  </span>
+                ))}
+                {organization.categories_list.length > 5 && (
+                  <span className="text-xs text-gray-500 px-2 py-1">
+                    +{organization.categories_list.length - 5} more
+                  </span>
+                )}
+              </div>
+            </div>
+          )}
 
           {/* Stats */}
           <div className="flex items-center justify-between text-xs text-gray-500">

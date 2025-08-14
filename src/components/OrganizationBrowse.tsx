@@ -13,6 +13,7 @@ import { EntityType } from '@/lib/utils/entity-urls'
 import OrganizationCard from '@/components/OrganizationCard'
 import OrganizationFilters from '@/components/OrganizationFilters'
 import MultilingualNavbar from '@/components/MultilingualNavbar'
+import { getEveryOrgClient } from '@/lib/everyorg/client'
 import { Search, Filter } from 'lucide-react'
 
 interface OrganizationBrowseProps {
@@ -80,6 +81,62 @@ export default function OrganizationBrowse({
   }
 
   const config = platformConfig[platform]
+
+  // Every.org category system
+  const [everyOrgCategories, setEveryOrgCategories] = useState<string[]>([])
+  const [dynamicCategories, setDynamicCategories] = useState<string[]>([])
+  
+  // Initialize Every.org categories
+  useEffect(() => {
+    if (platform === 'everyorg') {
+      try {
+        const client = getEveryOrgClient()
+        const popularCategories = client.getPopularCauses()
+        setEveryOrgCategories(popularCategories)
+        
+        // Check if current category filter is not in popular categories and add it to dynamic
+        if (categoryFilter && !popularCategories.includes(categoryFilter)) {
+          setDynamicCategories(prev => 
+            prev.includes(categoryFilter) ? prev : [...prev, categoryFilter]
+          )
+        }
+      } catch (error) {
+        console.error('Failed to initialize Every.org client:', error)
+      }
+    }
+  }, [platform, categoryFilter])
+
+  // Format category name for display
+  const formatCategoryName = (category: string) => {
+    return category
+      .split('-')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ')
+  }
+
+  // Handle category selection
+  const handleCategorySelect = (category: string) => {
+    const url = new URL(window.location.href)
+    if (category === categoryFilter) {
+      url.searchParams.delete('category')
+    } else {
+      url.searchParams.set('category', category)
+      
+      // Add category to dynamic categories if it's not already in default categories and not already added
+      if (platform === 'everyorg' && 
+          !everyOrgCategories.includes(category) && 
+          !dynamicCategories.includes(category)) {
+        setDynamicCategories(prev => [...prev, category])
+      }
+    }
+    url.searchParams.delete('page')
+    window.location.href = url.toString()
+  }
+
+  // Combined categories for Every.org
+  const allCategories = platform === 'everyorg' 
+    ? [...everyOrgCategories, ...dynamicCategories]
+    : []
 
   // Load organizations
   useEffect(() => {
@@ -194,6 +251,47 @@ export default function OrganizationBrowse({
               />
             </div>
           </div>
+
+          {/* Every.org Category Selection */}
+          {platform === 'everyorg' && allCategories.length > 0 && (
+            <div className="mt-6 p-4 bg-green-50 rounded-lg border border-green-200">
+              <h3 className="text-sm font-semibold text-green-800 mb-3">Browse by Category</h3>
+              <div className="flex flex-wrap gap-2">
+                {allCategories.map((category) => {
+                  const isDynamic = dynamicCategories.includes(category)
+                  const isSelected = categoryFilter === category
+                  return (
+                    <button
+                      key={category}
+                      onClick={() => handleCategorySelect(category)}
+                      className={`px-3 py-1 rounded-full text-sm transition-colors ${
+                        isSelected
+                          ? isDynamic
+                            ? 'bg-green-600 text-white'
+                            : 'bg-green-600 text-white'
+                          : isDynamic
+                            ? 'bg-green-200 text-green-800 hover:bg-green-300'
+                            : 'bg-green-100 text-green-800 hover:bg-green-200'
+                      }`}
+                      title={isDynamic ? 'Discovered from nonprofit tags' : 'Popular category'}
+                    >
+                      {formatCategoryName(category)}
+                      {isDynamic && <span className="ml-1 text-xs">🆕</span>}
+                    </button>
+                  )
+                })}
+                {categoryFilter && (
+                  <button
+                    onClick={() => handleCategorySelect('')}
+                    className="px-3 py-1 rounded-full text-sm bg-gray-200 text-gray-700 hover:bg-gray-300"
+                    title="Clear category filter"
+                  >
+                    Clear Category
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -291,6 +389,7 @@ export default function OrganizationBrowse({
                     locale={locale}
                     platform={platform}
                     entityType={entityType}
+                    onCategorySelect={handleCategorySelect}
                   />
                 ))}
               </div>

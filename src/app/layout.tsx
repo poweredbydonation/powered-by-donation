@@ -11,6 +11,11 @@ export const metadata: Metadata = {
   authors: [{ name: 'Powered by Donation' }],
   creator: 'Powered by Donation',
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://poweredbydonation.com'),
+  icons: {
+    icon: '/favicon.svg',
+    shortcut: '/favicon.svg',
+    apple: '/favicon.svg',
+  },
   alternates: {
     canonical: '/',
   },

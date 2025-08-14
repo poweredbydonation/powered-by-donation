@@ -73,6 +73,7 @@ async function upsertNonprofitToCache(nonprofit: EveryOrgNonprofit): Promise<voi
         name: nonprofit.name,
         description: nonprofit.description || '',
         category: nonprofit.tags?.[0] || 'general',
+        categories_list: nonprofit.tags || [], // Store all tags
         logo_url: nonprofit.logoUrl,
         slug: slug,
         is_active: true,

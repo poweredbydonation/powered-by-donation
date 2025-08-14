@@ -16,6 +16,8 @@ export interface PlatformRule {
   allowed_entities: string[]; // ['charity', 'nonprofit', etc.]
   organizations: OrganizationRestrictionType;
   specific_organizations: string[]; // Array of organization_cache IDs
+  select_all_organizations?: boolean; // Flag indicating all organizations are selected
+  excluded_organizations?: string[]; // Array of organization IDs to exclude when select_all is true
 }
 
 export interface PlatformRequirements {

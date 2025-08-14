@@ -284,7 +284,7 @@ export default function OrganizationPage({
                     No services available for this organization yet.
                   </p>
                   <Link
-                    href={`/${locale}/dashboard/services/create?platform=${platform}&organization=${organization.slug}`}
+                    href={`/${locale}/dashboard/services/create?platform=${platform}&organization=${organization.external_id}`}
                     className={`inline-flex items-center px-4 py-2 ${config.buttonClass} text-white rounded-lg font-medium`}
                   >
                     <Plus className="h-4 w-4 mr-2" />
@@ -323,7 +323,7 @@ export default function OrganizationPage({
                 Create a service and donate the proceeds to this organization.
               </p>
               <Link
-                href={`/${locale}/dashboard/services/create?platform=${platform}&organization=${organization.slug}`}
+                href={`/${locale}/dashboard/services/create?platform=${platform}&organization=${organization.external_id}`}
                 className={`inline-flex items-center px-4 py-2 ${config.buttonClass} text-white rounded-lg font-medium w-full justify-center`}
               >
                 <Plus className="h-4 w-4 mr-2" />

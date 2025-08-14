@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useAuth } from '@/hooks/useAuth'
 import { createClient } from '@/lib/supabase/client'
 import { CharityRequirementType, ServiceLocation, Service, PricingTier, CurrencyCode, PlatformRequirements } from '@/types/database'
@@ -38,8 +38,21 @@ export default function ServiceCreationForm({
   const [selectedCharities, setSelectedCharities] = useState<SelectedCharity[]>([])
   const [platformRequirements, setPlatformRequirements] = useState<PlatformRequirements | null>(null)
   const [useNewPlatformSystem, setUseNewPlatformSystem] = useState(true)
-  const [availableFrom, setAvailableFrom] = useState('')
-  const [availableUntil, setAvailableUntil] = useState('')
+  // Set default availability dates - today and 1 month from today
+  const getDefaultDates = () => {
+    const today = new Date()
+    const oneMonthLater = new Date()
+    oneMonthLater.setMonth(today.getMonth() + 1)
+    
+    return {
+      from: today.toISOString().split('T')[0], // YYYY-MM-DD format
+      until: oneMonthLater.toISOString().split('T')[0]
+    }
+  }
+  
+  const defaultDates = getDefaultDates()
+  const [availableFrom, setAvailableFrom] = useState(defaultDates.from)
+  const [availableUntil, setAvailableUntil] = useState(defaultDates.until)
   const [maxDonors, setMaxDonors] = useState('')
   
   // Location handling
@@ -55,6 +68,7 @@ export default function ServiceCreationForm({
   
   const { user } = useAuth()
   const router = useRouter()
+  const searchParams = useSearchParams()
   const supabase = createClient()
 
   // Helper function to get price for user's currency
@@ -91,6 +105,76 @@ export default function ServiceCreationForm({
 
     fetchUserPreferences()
   }, [user, supabase])
+
+  // Handle URL parameters for context-driven service creation
+  useEffect(() => {
+    const handleUrlParams = async () => {
+      const platform = searchParams.get('platform')
+      const organizationId = searchParams.get('organization')
+      
+      if (platform && organizationId && (platform === 'justgiving' || platform === 'everyorg')) {
+        try {
+          // Fetch the organization from our cache
+          const { data: organization, error } = await supabase
+            .from('organization_cache')
+            .select('*')
+            .eq('platform', platform)
+            .eq('external_id', organizationId)
+            .eq('is_active', true)
+            .single()
+
+          if (!error && organization) {
+            // Create platform requirements with pre-selected organization
+            const platformRequirements: PlatformRequirements = {
+              type: 'specific_platforms',
+              allowed_platforms: [platform],
+              platform_rules: {
+                justgiving: platform === 'justgiving' ? {
+                  entity_types: 'specific_entities',
+                  allowed_entities: ['charity'],
+                  organizations: 'specific_organizations',
+                  specific_organizations: [organization.id] // Use internal database id, not external_id
+                } : {
+                  entity_types: 'specific_entities',
+                  allowed_entities: ['charity'],
+                  organizations: 'specific_organizations',
+                  specific_organizations: []
+                },
+                everyorg: platform === 'everyorg' ? {
+                  entity_types: 'specific_entities',
+                  allowed_entities: ['nonprofit'],
+                  organizations: 'specific_organizations',
+                  specific_organizations: [organization.id] // Use internal database id, not external_id
+                } : {
+                  entity_types: 'specific_entities',
+                  allowed_entities: ['nonprofit'],
+                  organizations: 'specific_organizations',
+                  specific_organizations: []
+                }
+              }
+            }
+
+            setPlatformRequirements(platformRequirements)
+            
+            // Also set legacy charity requirement for backward compatibility
+            setCharityRequirementType('specific_charities')
+            if (platform === 'justgiving') {
+              setSelectedCharities([{
+                justgiving_charity_id: organizationId,
+                name: organization.name,
+                description: organization.description,
+                logo_url: organization.logo_url
+              }])
+            }
+          }
+        } catch (error) {
+          console.error('Error fetching organization for pre-selection:', error)
+        }
+      }
+    }
+
+    handleUrlParams()
+  }, [searchParams, supabase])
 
   // Initialize form with existing data when in edit mode
   useEffect(() => {
@@ -174,9 +258,18 @@ export default function ServiceCreationForm({
       // Check if any platform has specific organizations selected but none chosen
       for (const platform of platformRequirements.allowed_platforms) {
         const rule = platformRequirements.platform_rules[platform]
-        if (rule.organizations === 'specific_organizations' && rule.specific_organizations.length === 0) {
+        if (rule.organizations === 'specific_organizations' && 
+            rule.specific_organizations.length === 0 && 
+            !rule.select_all_organizations) {
           const platformName = platform === 'justgiving' ? 'JustGiving' : 'Every.org'
-          throw new Error(`Please select at least one organization for ${platformName}.`)
+          throw new Error(`Please select at least one organization for ${platformName} or choose "Select All".`)
+        }
+        
+        // Additional check: if select_all is true but ALL organizations are excluded
+        if (rule.select_all_organizations && rule.excluded_organizations && 
+            rule.excluded_organizations.length >= (rule as any).total_organizations_count) {
+          const platformName = platform === 'justgiving' ? 'JustGiving' : 'Every.org'
+          throw new Error(`You cannot exclude all organizations from ${platformName}. Please include at least one organization.`)
         }
       }
 
