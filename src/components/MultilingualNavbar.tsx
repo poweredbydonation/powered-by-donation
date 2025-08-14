@@ -107,13 +107,7 @@ export default function MultilingualNavbar({ locale, messages }: MultilingualNav
                   href={getLocalizedServicesUrl(locale)}
                   className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
                 >
-                  {messages?.nav?.browse || 'Browse Services'}
-                </a>
-                <a 
-                  href={`/${locale}/browse/charities`}
-                  className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
-                >
-                  Browse Charities
+                  {messages?.nav?.services || 'Services'}
                 </a>
               </div>
               
@@ -253,15 +247,7 @@ export default function MultilingualNavbar({ locale, messages }: MultilingualNav
                 className="block text-gray-700 hover:text-blue-600 font-medium transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
-                {messages?.nav?.browse || 'Browse Services'}
-              </a>
-              
-              <a 
-                href={`/${locale}/browse/charities`}
-                className="block text-gray-700 hover:text-blue-600 font-medium transition-colors"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Browse Charities
+                {messages?.nav?.services || 'Services'}
               </a>
 
               {/* Mobile Authentication */}

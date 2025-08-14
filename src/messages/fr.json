@@ -2,6 +2,7 @@
   "nav": {
     "home": "Accueil",
     "browse": "Explorer les Services",
+    "services": "Services",
     "search": "Rechercher",
     "dashboard": "Tableau de Bord",
     "login": "Connexion",
