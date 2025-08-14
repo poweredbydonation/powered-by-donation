@@ -12,6 +12,7 @@ export interface Language {
   code: string
   name: string
   flag: string
+  flagIcon: string  // Path to flag SVG image
   nativeName: string
 }
 
@@ -21,23 +22,23 @@ export interface Language {
  */
 export const LANGUAGES: Language[] = [
   
-   { code: 'zh', name: 'Chinese', flag: '🇨🇳', nativeName: '中文' },
-  { code: 'de', name: 'German', flag: '🇩🇪', nativeName: 'Deutsch' },
-  { code: 'es', name: 'Spanish', flag: '🇪🇸', nativeName: 'Español' },
-  { code: 'fr', name: 'French', flag: '🇫🇷', nativeName: 'Français' },
-   { code: 'el', name: 'Greek', flag: '🇬🇷', nativeName: 'Ελληνικά' },
-   { code: 'yue', name: 'Cantonese', flag: '🇭🇰', nativeName: '粵語' },
-   { code: 'hi', name: 'Hindi', flag: '🇮🇳', nativeName: 'हिन्दी' },
-     { code: 'pa', name: 'Punjabi', flag: '🇮🇳', nativeName: 'ਪੰਜਾਬੀ' },
-    { code: 'it', name: 'Italian', flag: '🇮🇹', nativeName: 'Italiano' },
-  { code: 'ja', name: 'Japanese', flag: '🇯🇵', nativeName: '日本語' },
-  { code: 'ko', name: 'Korean', flag: '🇰🇷', nativeName: '한국어' },
-  { code: 'tl', name: 'Filipino', flag: '🇵🇭', nativeName: 'Filipino' },
-  { code: 'pt', name: 'Portuguese', flag: '🇵🇹', nativeName: 'Português' },
-  { code: 'ar', name: 'Arabic', flag: '🇸🇦', nativeName: 'العربية' },
-  { code: 'tr', name: 'Turkish', flag: '🇹🇷', nativeName: 'Türkçe' },
-  { code: 'en', name: 'English', flag: '🇺🇸', nativeName: 'English' },
-  { code: 'vi', name: 'Vietnamese', flag: '🇻🇳', nativeName: 'Tiếng Việt' }, 
+   { code: 'zh', name: 'Chinese', flag: '🇨🇳', flagIcon: '/flags/1x1/cn.svg', nativeName: '中文' },
+  { code: 'de', name: 'German', flag: '🇩🇪', flagIcon: '/flags/1x1/de.svg', nativeName: 'Deutsch' },
+  { code: 'es', name: 'Spanish', flag: '🇪🇸', flagIcon: '/flags/1x1/es.svg', nativeName: 'Español' },
+  { code: 'fr', name: 'French', flag: '🇫🇷', flagIcon: '/flags/1x1/fr.svg', nativeName: 'Français' },
+   { code: 'el', name: 'Greek', flag: '🇬🇷', flagIcon: '/flags/1x1/gr.svg', nativeName: 'Ελληνικά' },
+   { code: 'yue', name: 'Cantonese', flag: '🇭🇰', flagIcon: '/flags/1x1/hk.svg', nativeName: '粵語' },
+   { code: 'hi', name: 'Hindi', flag: '🇮🇳', flagIcon: '/flags/1x1/in.svg', nativeName: 'हिन्दी' },
+     { code: 'pa', name: 'Punjabi', flag: '🇮🇳', flagIcon: '/flags/1x1/in.svg', nativeName: 'ਪੰਜਾਬੀ' },
+    { code: 'it', name: 'Italian', flag: '🇮🇹', flagIcon: '/flags/1x1/it.svg', nativeName: 'Italiano' },
+  { code: 'ja', name: 'Japanese', flag: '🇯🇵', flagIcon: '/flags/1x1/jp.svg', nativeName: '日本語' },
+  { code: 'ko', name: 'Korean', flag: '🇰🇷', flagIcon: '/flags/1x1/kr.svg', nativeName: '한국어' },
+  { code: 'tl', name: 'Filipino', flag: '🇵🇭', flagIcon: '/flags/1x1/ph.svg', nativeName: 'Filipino' },
+  { code: 'pt', name: 'Portuguese', flag: '🇵🇹', flagIcon: '/flags/1x1/pt.svg', nativeName: 'Português' },
+  { code: 'ar', name: 'Arabic', flag: '🇸🇦', flagIcon: '/flags/1x1/sa.svg', nativeName: 'العربية' },
+  { code: 'tr', name: 'Turkish', flag: '🇹🇷', flagIcon: '/flags/1x1/tr.svg', nativeName: 'Türkçe' },
+  { code: 'en', name: 'English', flag: '🇺🇸', flagIcon: '/flags/1x1/us.svg', nativeName: 'English' },
+  { code: 'vi', name: 'Vietnamese', flag: '🇻🇳', flagIcon: '/flags/1x1/vn.svg', nativeName: 'Tiếng Việt' } 
  
 ]
 

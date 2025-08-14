@@ -123,10 +123,15 @@ export default function MultilingualNavbar({ locale, messages }: MultilingualNav
                 <div ref={langDropdownRef} className="relative">
                   <button
                     onClick={() => setIsLangOpen(!isLangOpen)}
-                    className="flex items-center text-gray-700 hover:text-blue-600 transition-colors"
+                    className="flex items-center space-x-1 text-gray-700 hover:text-blue-600 transition-colors"
                   >
-                    <span className="bg-gray-100 hover:bg-gray-200 text-xs font-medium text-gray-700 px-2 py-1 rounded-full transition-colors">
-                      {currentLang.nativeName}
+                    <span className="bg-gray-100 hover:bg-gray-200 text-xs font-medium text-gray-700 px-2 py-1 rounded-full transition-colors flex items-center space-x-1">
+                      <img 
+                        src={currentLang.flagIcon} 
+                        alt={`${currentLang.name} flag`}
+                        className="w-4 h-4 rounded-sm object-cover"
+                      />
+                      <span>{currentLang.nativeName}</span>
                     </span>
                   </button>
                   
@@ -139,7 +144,11 @@ export default function MultilingualNavbar({ locale, messages }: MultilingualNav
                           className="flex items-center space-x-2 px-4 py-2 hover:bg-gray-50 transition-colors"
                           onClick={() => setIsLangOpen(false)}
                         >
-                          <span className="text-lg">{lang.flag}</span>
+                          <img 
+                            src={lang.flagIcon} 
+                            alt={`${lang.name} flag`}
+                            className="w-5 h-5 rounded-sm object-cover"
+                          />
                           <span className="text-sm">{lang.nativeName}</span>
                         </a>
                       ))}
@@ -333,7 +342,11 @@ export default function MultilingualNavbar({ locale, messages }: MultilingualNav
                       }`}
                       onClick={() => setIsMenuOpen(false)}
                     >
-                      <span>{lang.flag}</span>
+                      <img 
+                        src={lang.flagIcon} 
+                        alt={`${lang.name} flag`}
+                        className="w-5 h-5 rounded-sm object-cover"
+                      />
                       <span className="text-sm">{lang.nativeName}</span>
                     </a>
                   ))}

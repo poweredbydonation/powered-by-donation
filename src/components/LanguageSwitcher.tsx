@@ -36,8 +36,12 @@ export default function LanguageSwitcher() {
         className="flex items-center space-x-2 px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md"
         aria-label={t('select')}
       >
-        <span className="text-lg">{currentLanguage.flag}</span>
-        <span className="hidden sm:inline">{currentLanguage.name}</span>
+        <img 
+          src={currentLanguage.flagIcon} 
+          alt={`${currentLanguage.name} flag`}
+          className="w-5 h-5 rounded-sm object-cover"
+        />
+        <span className="hidden sm:inline">{currentLanguage.nativeName}</span>
         <svg
           className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`}
           fill="none"
@@ -67,8 +71,12 @@ export default function LanguageSwitcher() {
                     locale === language.code ? 'bg-blue-50 text-blue-700' : 'text-gray-700'
                   }`}
                 >
-                  <span className="text-lg">{language.flag}</span>
-                  <span>{language.name}</span>
+                  <img 
+                    src={language.flagIcon} 
+                    alt={`${language.name} flag`}
+                    className="w-5 h-5 rounded-sm object-cover"
+                  />
+                  <span>{language.nativeName}</span>
                   {locale === language.code && (
                     <svg className="w-4 h-4 ml-auto" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
