@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { useTranslations, useLocale, useMessages } from 'next-intl'
 import AuthGuard from '@/components/auth/AuthGuard'
-import MultilingualNavbar from '@/components/MultilingualNavbar'
 import { useAuth } from '@/hooks/useAuth'
 import { createClient } from '@/lib/supabase/client'
 import { Service, ServiceLocation, ServiceWithPlatformFields } from '@/types/database'
@@ -128,7 +127,6 @@ export default function ServicesPage() {
 
   return (
     <AuthGuard>
-      <MultilingualNavbar locale={locale} messages={messages} />
       <div className="min-h-screen bg-gray-50 py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-8">

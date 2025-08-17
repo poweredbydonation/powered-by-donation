@@ -1,6 +1,5 @@
 import AuthGuard from '@/components/auth/AuthGuard'
 import { createClient } from '@/lib/supabase/server'
-import MultilingualNavbar from '@/components/MultilingualNavbar'
 import { getMessages, getTranslations } from 'next-intl/server'
 import Link from 'next/link'
 
@@ -81,7 +80,6 @@ export default async function DonationsPage({ params }: DonationsPageProps) {
 
   return (
     <AuthGuard>
-      <MultilingualNavbar locale={locale} messages={messages} />
       <div className="min-h-screen bg-gray-50 py-8">
         <div className="max-w-6xl mx-auto px-4">
           {/* Header */}

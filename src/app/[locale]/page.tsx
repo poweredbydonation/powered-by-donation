@@ -1,4 +1,3 @@
-import MultilingualNavbar from '@/components/MultilingualNavbar'
 import PlatformSelector from '@/components/PlatformSelector'
 import { Monitor, TrendingUp, Camera, ExternalLink, Users } from 'lucide-react'
 import { getTranslations, getMessages } from 'next-intl/server'
@@ -65,8 +64,6 @@ export default async function HomePage({ params }: HomePageProps) {
 
   return (
     <div className="min-h-screen bg-white">
-      <MultilingualNavbar locale={locale} messages={messages} />
-      
       {/* Hero Section */}
       <div className="bg-gradient-to-br from-blue-50 to-indigo-100">
         <div className="max-w-4xl mx-auto px-6 py-16 text-center">

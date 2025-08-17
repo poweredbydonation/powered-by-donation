@@ -1,7 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import AuthGuard from '@/components/auth/AuthGuard'
-import MultilingualNavbar from '@/components/MultilingualNavbar'
 import UnifiedUserProfileForm from '@/components/profile/UnifiedUserProfileForm'
 import { getMessages } from 'next-intl/server'
 
@@ -40,7 +39,6 @@ export default async function ProfileSetupPage({ params }: ProfileSetupPageProps
 
   return (
     <AuthGuard>
-      <MultilingualNavbar locale={locale} messages={messages} />
       <div className="min-h-screen bg-gray-50 py-12">
         <div className="max-w-3xl mx-auto px-4">
           <div className="text-center mb-8">

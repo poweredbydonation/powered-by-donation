@@ -1,6 +1,5 @@
 import { Metadata } from 'next'
 import { getMessages } from 'next-intl/server'
-import MultilingualNavbar from '@/components/MultilingualNavbar'
 import DonationSuccessContent from '@/components/DonationSuccessContent'
 
 interface DonationSuccessPageProps {
@@ -28,7 +27,6 @@ export default async function DonationSuccessPage({
 
   return (
     <>
-      <MultilingualNavbar locale={locale} messages={messages} />
       <div className="min-h-screen bg-gray-50">
         <DonationSuccessContent 
           jgDonationId={jgDonationId}

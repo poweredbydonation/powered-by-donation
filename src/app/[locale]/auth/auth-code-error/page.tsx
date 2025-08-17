@@ -1,6 +1,4 @@
 import Link from 'next/link'
-import MultilingualNavbar from '@/components/MultilingualNavbar'
-import { getMessages } from 'next-intl/server'
 
 interface AuthCodeErrorProps {
   params: {
@@ -16,10 +14,9 @@ interface AuthCodeErrorProps {
 export default async function AuthCodeError({ params, searchParams }: AuthCodeErrorProps) {
   const { locale } = params
   const { error, error_description, code } = searchParams
-  const messages = await getMessages({ locale })
+  
   return (
     <div className="min-h-screen bg-gray-50">
-      <MultilingualNavbar locale={locale} messages={messages} />
       <div className="flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">

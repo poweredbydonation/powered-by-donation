@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react'
 import { notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Service, ServiceLocation, CurrencyCode, ServiceWithPlatformFields } from '@/types/database'
-import MultilingualNavbar from '@/components/MultilingualNavbar'
 import ServiceDonationFlow from '@/components/services/ServiceDonationFlow'
 import ServiceLocationMap from '@/components/ServiceLocationMap'
 import ServicePrice from '@/components/services/ServicePrice'
@@ -142,7 +141,6 @@ export default function ServicePage({ params }: ServicePageProps) {
 
   return (
     <>
-      <MultilingualNavbar locale={locale} messages={messages} />
       <div className="min-h-screen bg-gray-50">
         <div className="container mx-auto px-4 py-8">
           {/* Service Header */}

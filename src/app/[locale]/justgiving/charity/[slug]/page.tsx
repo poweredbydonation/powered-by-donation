@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react'
 import { notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { JustGivingCharityCache, ServiceWithPlatformFields } from '@/types/database'
-import MultilingualNavbar from '@/components/MultilingualNavbar'
 import { ExternalLink, Users, TrendingUp, Calendar } from 'lucide-react'
 
 interface CharityPageProps {
@@ -186,7 +185,6 @@ export default function JustGivingCharityPage({ params }: CharityPageProps) {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <MultilingualNavbar locale={locale} messages={messages} />
         <div className="container mx-auto px-4 py-8">
           <div className="animate-pulse">
             <div className="h-8 bg-gray-200 rounded w-1/3 mb-4"></div>
@@ -211,7 +209,6 @@ export default function JustGivingCharityPage({ params }: CharityPageProps) {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <MultilingualNavbar locale={locale} messages={messages} />
       
       <div className="container mx-auto px-4 py-8">
         {/* Charity Header */}

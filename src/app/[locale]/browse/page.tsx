@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import MultilingualNavbar from '@/components/MultilingualNavbar'
 import ServiceLocationFilter from '@/components/ServiceLocationFilter'
 import ServicePrice from '@/components/services/ServicePrice'
 import { Search, MapPin, Heart, Star } from 'lucide-react'
@@ -219,7 +218,6 @@ export default function BrowsePage({ params }: BrowsePageProps) {
 
   return (
     <div className="min-h-screen bg-white">
-      <MultilingualNavbar locale={locale} messages={messages} />
       
       <div className="bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 py-12">
@@ -380,11 +378,11 @@ export default function BrowsePage({ params }: BrowsePageProps) {
               </div>
             ) : (
               filteredServices.map((service) => (
-              <div key={service.id} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
+              <div key={service.id} className="bg-gradient-to-br from-purple-50 via-white to-white border border-purple-200 border-l-4 border-l-purple-500 rounded-lg shadow-sm hover:shadow-lg hover:border-purple-300 transition-all duration-200 overflow-hidden">
                 <div className="p-6">
                   <div className="flex justify-between items-start mb-3">
                     <div className="flex-1 pr-2">
-                      <h3 className="text-lg font-semibold text-gray-900 line-clamp-2">
+                      <h3 className="text-lg font-semibold text-gray-900 hover:text-purple-600 line-clamp-2 transition-colors">
                         {service.title}
                       </h3>
                       <div className="mt-1">
@@ -423,11 +421,11 @@ export default function BrowsePage({ params }: BrowsePageProps) {
                     <ServicePrice
                       pricingTierId={service.pricing_tier_id}
                       userCurrency={userCurrency}
-                      className="text-2xl font-bold text-green-600"
+                      className="text-2xl font-bold text-purple-600"
                     />
                     <a 
                       href={`/${locale}/services/${generateSlug(service.title)}`}
-                      className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm inline-block text-center"
+                      className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors text-sm inline-block text-center"
                     >
                       {messages.common?.view || 'View Details'}
                     </a>

@@ -11,7 +11,6 @@ import { useTranslations } from 'next-intl'
 import { DonationPlatform, OrganizationCache, Service } from '@/types/database'
 import { EntityType, buildPlatformUrl } from '@/lib/utils/entity-urls'
 import { createClient } from '@/lib/supabase/client'
-import MultilingualNavbar from '@/components/MultilingualNavbar'
 import { 
   ExternalLink, 
   MapPin, 
@@ -24,6 +23,7 @@ import {
   Star,
   Plus
 } from 'lucide-react'
+import { parseOperatingCountries } from '@/lib/utils/country-codes'
 
 interface OrganizationPageProps {
   locale: string
@@ -111,7 +111,6 @@ export default function OrganizationPage({
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {messages && <MultilingualNavbar locale={locale} messages={messages} />}
       {/* Header */}
       <div className={`${config.bgClass} border-b`}>
         <div className="max-w-4xl mx-auto px-4 py-8">
@@ -239,25 +238,186 @@ export default function OrganizationPage({
               </div>
             )}
 
-            {/* ACNC Purposes - only for ACNC platform */}
-            {platform === 'acnc' && organization.acnc_purposes && Object.keys(organization.acnc_purposes).length > 0 && (
+            {/* ACNC Information - only for ACNC platform */}
+            {platform === 'acnc' && (
               <div className="bg-white rounded-lg border p-6">
-                <h2 className="text-xl font-semibold text-gray-900 mb-4">Charitable Purposes</h2>
-                <div className="flex flex-wrap gap-2">
-                  {Object.entries(organization.acnc_purposes).map(([purpose, value]) => {
-                    if (value === true || value === 'true') {
-                      return (
-                        <span
-                          key={purpose}
-                          className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${config.textClass} bg-white border`}
-                        >
-                          {purpose.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
-                        </span>
-                      )
-                    }
-                    return null
-                  })}
+                <h2 className="text-xl font-semibold text-gray-900 mb-6">ACNC Registration Details</h2>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Basic Registration Info */}
+                  <div className="space-y-4">
+                    <h3 className="font-medium text-gray-900 text-lg">Registration Information</h3>
+                    
+                    {organization.acnc_abn && (
+                      <div>
+                        <dt className="text-sm font-medium text-gray-500">ABN</dt>
+                        <dd className="text-sm text-gray-900">{organization.acnc_abn}</dd>
+                      </div>
+                    )}
+                    
+                    {organization.acnc_charity_legal_name && (
+                      <div>
+                        <dt className="text-sm font-medium text-gray-500">Legal Name</dt>
+                        <dd className="text-sm text-gray-900">{organization.acnc_charity_legal_name}</dd>
+                      </div>
+                    )}
+                    
+                    {organization.acnc_other_organisation_names && (
+                      <div>
+                        <dt className="text-sm font-medium text-gray-500">Other Names</dt>
+                        <dd className="text-sm text-gray-900">{organization.acnc_other_organisation_names}</dd>
+                      </div>
+                    )}
+                    
+                    {organization.acnc_registration_date && (
+                      <div>
+                        <dt className="text-sm font-medium text-gray-500">Registration Date</dt>
+                        <dd className="text-sm text-gray-900">{organization.acnc_registration_date}</dd>
+                      </div>
+                    )}
+                    
+                    {organization.acnc_date_organisation_established && (
+                      <div>
+                        <dt className="text-sm font-medium text-gray-500">Date Established</dt>
+                        <dd className="text-sm text-gray-900">{organization.acnc_date_organisation_established}</dd>
+                      </div>
+                    )}
+                    
+                    {organization.acnc_charity_size && (
+                      <div>
+                        <dt className="text-sm font-medium text-gray-500">Charity Size</dt>
+                        <dd className="text-sm text-gray-900">{organization.acnc_charity_size}</dd>
+                      </div>
+                    )}
+                    
+                    {organization.acnc_number_of_responsible_persons && (
+                      <div>
+                        <dt className="text-sm font-medium text-gray-500">Responsible Persons</dt>
+                        <dd className="text-sm text-gray-900">{organization.acnc_number_of_responsible_persons}</dd>
+                      </div>
+                    )}
+                    
+                    {organization.acnc_financial_year_end && (
+                      <div>
+                        <dt className="text-sm font-medium text-gray-500">Financial Year End</dt>
+                        <dd className="text-sm text-gray-900">{organization.acnc_financial_year_end}</dd>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Operations & Classifications */}
+                  <div className="space-y-4">
+                    <h3 className="font-medium text-gray-900 text-lg">Operations & Status</h3>
+                    
+                    {/* States of Operation */}
+                    <div>
+                      <dt className="text-sm font-medium text-gray-500 mb-2">States of Operation</dt>
+                      <dd className="flex flex-wrap gap-1">
+                        {organization.acnc_operates_in_act === 'Y' && (
+                          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800">ACT</span>
+                        )}
+                        {organization.acnc_operates_in_nsw === 'Y' && (
+                          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800">NSW</span>
+                        )}
+                        {organization.acnc_operates_in_nt === 'Y' && (
+                          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800">NT</span>
+                        )}
+                        {organization.acnc_operates_in_qld === 'Y' && (
+                          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800">QLD</span>
+                        )}
+                        {organization.acnc_operates_in_sa === 'Y' && (
+                          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800">SA</span>
+                        )}
+                        {organization.acnc_operates_in_tas === 'Y' && (
+                          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800">TAS</span>
+                        )}
+                        {organization.acnc_operates_in_vic === 'Y' && (
+                          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800">VIC</span>
+                        )}
+                        {organization.acnc_operates_in_wa === 'Y' && (
+                          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800">WA</span>
+                        )}
+                      </dd>
+                    </div>
+                    
+                    {organization.acnc_operating_countries && (
+                      <div>
+                        <dt className="text-sm font-medium text-gray-500">Operating Countries</dt>
+                        <dd className="text-sm text-gray-900">
+                          {parseOperatingCountries(organization.acnc_operating_countries).join(', ')}
+                        </dd>
+                      </div>
+                    )}
+                    
+                    {organization.acnc_address_type && (
+                      <div>
+                        <dt className="text-sm font-medium text-gray-500">Address Type</dt>
+                        <dd className="text-sm text-gray-900">{organization.acnc_address_type}</dd>
+                      </div>
+                    )}
+                    
+                    {/* Classification Status */}
+                    <div className="space-y-2">
+                      {organization.acnc_pbi && (
+                        <div>
+                          <dt className="text-sm font-medium text-gray-500">Public Benevolent Institution (PBI)</dt>
+                          <dd className="text-sm text-gray-900">{organization.acnc_pbi}</dd>
+                        </div>
+                      )}
+                      
+                      {organization.acnc_hpc && (
+                        <div>
+                          <dt className="text-sm font-medium text-gray-500">Health Promotion Charity (HPC)</dt>
+                          <dd className="text-sm text-gray-900">{organization.acnc_hpc}</dd>
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </div>
+
+                {/* Charitable Purposes */}
+                {organization.acnc_purposes && Object.keys(organization.acnc_purposes).length > 0 && (
+                  <div className="mt-6 pt-6 border-t">
+                    <h3 className="font-medium text-gray-900 text-lg mb-3">Charitable Purposes</h3>
+                    <div className="flex flex-wrap gap-2">
+                      {Object.entries(organization.acnc_purposes).map(([purpose, value]) => {
+                        if (value === true || value === 'true') {
+                          return (
+                            <span
+                              key={purpose}
+                              className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${config.textClass} bg-white border`}
+                            >
+                              {purpose.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                            </span>
+                          )
+                        }
+                        return null
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {/* Beneficiaries */}
+                {organization.acnc_beneficiaries && Object.keys(organization.acnc_beneficiaries).length > 0 && (
+                  <div className="mt-6 pt-6 border-t">
+                    <h3 className="font-medium text-gray-900 text-lg mb-3">Beneficiaries</h3>
+                    <div className="flex flex-wrap gap-2">
+                      {Object.entries(organization.acnc_beneficiaries).map(([beneficiary, value]) => {
+                        if (value === true || value === 'true') {
+                          return (
+                            <span
+                              key={beneficiary}
+                              className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${config.textClass} bg-white border`}
+                            >
+                              {beneficiary.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                            </span>
+                          )
+                        }
+                        return null
+                      })}
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 

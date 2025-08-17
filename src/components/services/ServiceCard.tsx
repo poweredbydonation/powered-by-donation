@@ -48,13 +48,13 @@ export default function ServiceCard({ service }: ServiceCardProps) {
   const fundraiserName = service.user?.name || 'Unknown Fundraiser'
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md hover:border-gray-300 transition-all duration-200">
+    <div className="bg-gradient-to-br from-purple-50 via-white to-white border border-purple-200 border-l-4 border-l-purple-500 rounded-lg shadow-sm hover:shadow-lg hover:border-purple-300 transition-all duration-200">
       <div className="p-6">
         {/* Service Title */}
         <div className="mb-4">
           <Link 
             href={`/services/${serviceSlug}`}
-            className="text-xl font-semibold text-gray-900 hover:text-blue-600 line-clamp-2"
+            className="text-xl font-semibold text-gray-900 hover:text-purple-600 line-clamp-2"
           >
             {service.title}
           </Link>
@@ -71,17 +71,17 @@ export default function ServiceCard({ service }: ServiceCardProps) {
         <div className="grid grid-cols-2 gap-4 mb-4">
           {/* Donation Amount */}
           <div>
-            <div className="text-xs text-gray-500 uppercase tracking-wide font-medium mb-1">
+            <div className="text-xs text-purple-600 uppercase tracking-wide font-medium mb-1">
               Donation Required
             </div>
-            <div className="text-lg font-bold text-green-600">
+            <div className="text-lg font-bold text-purple-600">
               {donationAmount}
             </div>
           </div>
 
           {/* Location */}
           <div>
-            <div className="text-xs text-gray-500 uppercase tracking-wide font-medium mb-1">
+            <div className="text-xs text-purple-600 uppercase tracking-wide font-medium mb-1">
               Location
             </div>
             <div className="text-sm text-gray-900 font-medium">
@@ -116,7 +116,7 @@ export default function ServiceCard({ service }: ServiceCardProps) {
               )}
             </div>
           ) : (
-            <div className="text-xs text-green-600 font-medium">
+            <div className="text-xs text-purple-600 font-medium">
               Available
             </div>
           )}

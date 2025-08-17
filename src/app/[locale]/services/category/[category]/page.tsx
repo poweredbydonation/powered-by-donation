@@ -2,7 +2,6 @@ import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { Service } from '@/types/database'
-import MultilingualNavbar from '@/components/MultilingualNavbar'
 import ServiceList from '@/components/services/ServiceList'
 import ServiceSort, { SortOption, sortServices } from '@/components/services/ServiceSort'
 import Link from 'next/link'
@@ -143,7 +142,6 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
 
   return (
     <>
-      <MultilingualNavbar locale={locale} messages={messages} />
       <div className="min-h-screen bg-gray-50">
         <div className="container mx-auto px-4 py-8">
           {/* Category Header */}

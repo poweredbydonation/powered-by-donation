@@ -6,6 +6,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { containsOperatingCountry } from '@/lib/utils/country-codes';
 
 export const dynamic = 'force-dynamic';
 
@@ -21,6 +22,8 @@ export async function GET(request: NextRequest) {
     const featured = searchParams.get('featured') === 'true';
     const preferred = searchParams.get('preferred') === 'true';
     const purpose = searchParams.get('purpose') || '';
+    const beneficiary = searchParams.get('beneficiary') || '';
+    const operatingCountry = searchParams.get('operating_country') || '';
     
     // Validate environment variables
     if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
@@ -38,6 +41,13 @@ export async function GET(request: NextRequest) {
       .select('*', { count: 'exact' })
       .eq('platform', 'acnc')
       .eq('is_active', true);
+    
+    // When filtering by operating country, only get organizations with operating countries data
+    if (operatingCountry) {
+      query = query
+        .not('acnc_operating_countries', 'is', null)
+        .neq('acnc_operating_countries', '');
+    }
     
     // Apply filters
     if (search) {
@@ -96,14 +106,31 @@ export async function GET(request: NextRequest) {
       // Filter by ACNC purpose using JSONB contains
       query = query.contains('acnc_purposes', { [purpose]: true });
     }
+
+    if (beneficiary) {
+      // Filter by ACNC beneficiary using JSONB contains
+      query = query.contains('acnc_beneficiaries', { [beneficiary]: true });
+    }
+
+    // Note: Operating country filtering is done post-query since we need to convert ISO codes to names
     
-    // Apply pagination and sorting
-    const offset = (page - 1) * limit;
-    query = query
-      .order('is_featured', { ascending: false })
-      .order('total_donations_count', { ascending: false })
-      .order('name', { ascending: true })
-      .range(offset, offset + limit - 1);
+    // For operating country filtering, we need to get all results first, then filter
+    // This is because we need to search across all organizations, not just the first page
+    if (operatingCountry) {
+      // Get all organizations when filtering by operating country
+      query = query
+        .order('is_featured', { ascending: false })
+        .order('total_donations_count', { ascending: false })
+        .order('name', { ascending: true });
+    } else {
+      // Apply pagination only when not filtering by operating country
+      const offset = (page - 1) * limit;
+      query = query
+        .order('is_featured', { ascending: false })
+        .order('total_donations_count', { ascending: false })
+        .order('name', { ascending: true })
+        .range(offset, offset + limit - 1);
+    }
     
     const { data: organizations, error, count } = await query;
     
@@ -112,8 +139,18 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Failed to fetch ACNC organizations' }, { status: 500 });
     }
     
-    // If preferred filter requested, we need to check which orgs are selected by services
+    // Apply post-query filtering
     let filteredOrganizations = organizations || [];
+    
+    // Filter by operating country (convert ISO codes to country names and check)
+    if (operatingCountry) {
+      filteredOrganizations = filteredOrganizations.filter(org => {
+        return org.acnc_operating_countries && 
+               containsOperatingCountry(org.acnc_operating_countries, operatingCountry);
+      });
+    }
+    
+    // If preferred filter requested, we need to check which orgs are selected by services
     if (preferred) {
       const { data: services } = await supabase
         .from('services')
@@ -134,15 +171,26 @@ export async function GET(request: NextRequest) {
       );
     }
     
-    const totalPages = Math.ceil((count || 0) / limit);
+    // Apply pagination after filtering for operating country
+    let finalOrganizations = filteredOrganizations;
+    let actualCount = count || 0;
+    
+    if (operatingCountry || preferred) {
+      // For post-query filtering, apply pagination manually
+      actualCount = filteredOrganizations.length;
+      const offset = (page - 1) * limit;
+      finalOrganizations = filteredOrganizations.slice(offset, offset + limit);
+    }
+    
+    const totalPages = Math.ceil(actualCount / limit);
     
     return NextResponse.json({
-      organizations: filteredOrganizations,
+      organizations: finalOrganizations,
       pagination: {
         page,
         pages: totalPages,
         page_size: limit,
-        total_results: count || 0,
+        total_results: actualCount,
         has_next: page < totalPages,
         has_previous: page > 1
       },

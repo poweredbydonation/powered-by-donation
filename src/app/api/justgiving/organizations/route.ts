@@ -17,6 +17,7 @@ export async function GET(request: NextRequest) {
     const search = searchParams.get('search') || '';
     const category = searchParams.get('category') || '';
     const city = searchParams.get('city') || '';
+    const country = searchParams.get('country') || '';
     const featured = searchParams.get('featured') === 'true';
     const preferred = searchParams.get('preferred') === 'true';
     
@@ -44,6 +45,14 @@ export async function GET(request: NextRequest) {
     
     if (category) {
       query = query.eq('category', category);
+    }
+    
+    if (country && country !== 'all') {
+      if (country === 'no_country') {
+        query = query.is('address_country', null);
+      } else {
+        query = query.eq('address_country', country);
+      }
     }
     
     if (city && city !== 'all') {

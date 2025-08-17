@@ -4,7 +4,6 @@ import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Service } from '@/types/database'
-import MultilingualNavbar from '@/components/MultilingualNavbar'
 import ServiceList from '@/components/services/ServiceList'
 import ServiceFilter, { ServiceFilters } from '@/components/services/ServiceFilter'
 import ServiceSort, { SortOption, sortServices } from '@/components/services/ServiceSort'
@@ -219,7 +218,6 @@ function SearchResults({ locale, messages }: { locale: string, messages: any }) 
 
   return (
     <>
-      <MultilingualNavbar locale={locale} messages={messages} />
       <div className="min-h-screen bg-gray-50">
         <div className="container mx-auto px-4 py-8">
           {/* Search Header */}

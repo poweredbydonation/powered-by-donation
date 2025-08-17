@@ -1,7 +1,6 @@
 import { Metadata } from 'next'
 import AuthGuard from '@/components/auth/AuthGuard'
 import ServiceCreationForm from '@/components/services/ServiceCreationForm'
-import MultilingualNavbar from '@/components/MultilingualNavbar'
 import { getMessages } from 'next-intl/server'
 
 export const metadata: Metadata = {
@@ -20,7 +19,6 @@ export default async function CreateServicePage({ params }: CreateServicePagePro
   const messages = await getMessages({ locale })
   return (
     <AuthGuard>
-      <MultilingualNavbar locale={locale} messages={messages} />
       <div className="min-h-screen bg-gray-50 py-8">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-white shadow rounded-lg">

@@ -26,8 +26,13 @@ interface OrganizationBrowsePageProps {
     search?: string
     category?: string
     city?: string
+    country?: string
     featured?: string
     preferred?: string
+    purpose?: string
+    beneficiary?: string
+    state?: string
+    operating_country?: string
   }
 }
 

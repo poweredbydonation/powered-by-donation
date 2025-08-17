@@ -1,6 +1,5 @@
 import AuthGuard from '@/components/auth/AuthGuard'
 import SignupForm from '@/components/auth/SignupForm'
-import MultilingualNavbar from '@/components/MultilingualNavbar'
 import { getMessages } from 'next-intl/server'
 
 interface SignupPageProps {
@@ -16,7 +15,6 @@ export default async function SignupPage({ params }: SignupPageProps) {
   return (
     <AuthGuard requireAuth={false}>
       <div className="min-h-screen bg-gray-50">
-        <MultilingualNavbar locale={locale} messages={messages} />
         <div className="py-12">
           <SignupForm locale={locale} messages={messages} />
         </div>

@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect, useCallback, useMemo } from 'react'
-import MultilingualNavbar from '@/components/MultilingualNavbar'
 import CharityCard from '@/components/CharityCard'
 import { Search, Heart, Users, TrendingUp, MapPin, Globe, Shield, Star, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
@@ -336,7 +335,6 @@ export default function BrowseCharitiesPage({ params }: BrowseCharitiesPageProps
 
   return (
     <div className="min-h-screen bg-white">
-      <MultilingualNavbar locale={locale} messages={messages} />
       
       <div className="bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 py-12">

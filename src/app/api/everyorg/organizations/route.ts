@@ -17,6 +17,7 @@ export async function GET(request: NextRequest) {
     const search = searchParams.get('search') || '';
     const category = searchParams.get('category') || '';
     const city = searchParams.get('city') || '';
+    const state = searchParams.get('state') || '';
     const featured = searchParams.get('featured') === 'true';
     const preferred = searchParams.get('preferred') === 'true';
     
@@ -37,13 +38,17 @@ export async function GET(request: NextRequest) {
       query = query.eq('category', category);
     }
     
+    // Note: Every.org organizations don't have structured address data
+    // Location information is embedded in description field
+    // State/city filtering removed as address_county and address_city are null
+    
     if (city && city !== 'all') {
       if (city === 'online') {
         // Show organizations that can receive online donations (all Every.org nonprofits)
         query = query.eq('is_active', true);
       } else {
-        // Filter by specific city
-        query = query.eq('address_city', city);
+        // Filter by description content for location terms
+        query = query.ilike('description', `%${city}%`);
       }
     }
     

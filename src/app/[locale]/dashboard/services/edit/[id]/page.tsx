@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import AuthGuard from '@/components/auth/AuthGuard'
-import MultilingualNavbar from '@/components/MultilingualNavbar'
 import ServiceCreationForm from '@/components/services/ServiceCreationForm'
 import { useAuth } from '@/hooks/useAuth'
 import { createClient } from '@/lib/supabase/client'
@@ -79,7 +78,6 @@ export default function EditServicePage() {
   if (loading) {
     return (
       <AuthGuard>
-        <MultilingualNavbar locale={locale} messages={messages} />
         <div className="min-h-screen bg-gray-50 py-8">
           <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="bg-white rounded-lg shadow p-6">
@@ -101,7 +99,6 @@ export default function EditServicePage() {
   if (error) {
     return (
       <AuthGuard>
-        <MultilingualNavbar locale={locale} messages={messages} />
         <div className="min-h-screen bg-gray-50 py-8">
           <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="bg-red-50 border border-red-200 rounded-lg p-6">
@@ -128,7 +125,6 @@ export default function EditServicePage() {
 
   return (
     <AuthGuard>
-      <MultilingualNavbar locale={locale} messages={messages} />
       <div className="min-h-screen bg-gray-50 py-8">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-8">

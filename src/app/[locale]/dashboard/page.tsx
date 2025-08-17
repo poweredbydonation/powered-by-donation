@@ -1,7 +1,6 @@
 import AuthGuard from '@/components/auth/AuthGuard'
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
-import MultilingualNavbar from '@/components/MultilingualNavbar'
 import DeleteUserProfile from '@/components/profile/DeleteUserProfile'
 import { getMessages, getTranslations } from 'next-intl/server'
 import { NextIntlClientProvider } from 'next-intl'
@@ -31,7 +30,6 @@ export default async function DashboardPage({ params }: DashboardPageProps) {
 
   return (
     <AuthGuard>
-      <MultilingualNavbar locale={locale} messages={messages} />
       <div className="min-h-screen bg-gray-50 py-12">
         <div className="max-w-4xl mx-auto px-4">
           <div className="bg-white rounded-lg shadow-md p-6">

@@ -8,12 +8,20 @@ import { usePendingDonations } from '@/hooks/usePendingDonations'
 import { LANGUAGES, getOtherLanguages, getLanguageByCode } from '@/config/languages'
 import { getLocalizedServicesUrl } from '@/lib/utils/localized-urls'
 
+interface PlatformStats {
+  services: number
+  justgiving: number
+  everyorg: number
+  acnc: number
+}
+
 interface MultilingualNavbarProps {
   locale: string
   messages: any
+  platformStats: PlatformStats
 }
 
-export default function MultilingualNavbar({ locale, messages }: MultilingualNavbarProps) {
+export default function MultilingualNavbar({ locale, messages, platformStats }: MultilingualNavbarProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isLangOpen, setIsLangOpen] = useState(false)
   const [isProfileOpen, setIsProfileOpen] = useState(false)
@@ -82,7 +90,7 @@ export default function MultilingualNavbar({ locale, messages }: MultilingualNav
   }
 
   return (
-    <nav className="bg-white shadow-sm border-b">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm border-b">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between">
           {/* Left Side - Logo and Tagline (two rows) */}
@@ -321,6 +329,92 @@ export default function MultilingualNavbar({ locale, messages }: MultilingualNav
             </div>
           </div>
         )}
+      </div>
+
+      {/* Mini Platform Tiles - Hidden on mobile */}
+      <div className="hidden md:block bg-gray-50 border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+            {/* Powered by Donation Tile */}
+            <a 
+              href={`/${locale}/services`}
+              className="group bg-purple-50 border border-purple-200 rounded-lg p-3 hover:border-purple-300 hover:bg-purple-100 transition-all text-center"
+            >
+              <div className="text-lg font-bold text-purple-600 mb-1">
+                {platformStats.services.toLocaleString()} Free Services
+              </div>
+              <div className="text-xs text-purple-700 leading-tight">
+                Free services you can get by donating to JustGiving and Every.org charities
+              </div>
+            </a>
+
+            {/* JustGiving Tile */}
+            <a 
+              href={`/${locale}/justgiving/charities`}
+              className="group bg-blue-50 border border-blue-200 rounded-lg p-3 hover:border-blue-300 hover:bg-blue-100 transition-all text-center"
+            >
+              <div className="flex items-center justify-center mb-2">
+                <img
+                  src="/flags/1x1/gb.svg"
+                  alt="United Kingdom"
+                  className="w-4 h-4 rounded object-cover mr-1"
+                />
+                <span className="text-xs font-semibold text-blue-800">JustGiving</span>
+              </div>
+              <div className="text-lg font-bold text-blue-600 mb-1">
+                {platformStats.justgiving.toLocaleString()} Charities
+              </div>
+              <div className="text-xs text-blue-700 leading-tight">
+                UK's leading charity fundraising platform with extensive charity database
+              </div>
+            </a>
+
+            {/* Every.org Tile */}
+            <a 
+              href={`/${locale}/everyorg/nonprofits`}
+              className="group bg-green-50 border border-green-200 rounded-lg p-3 hover:border-green-300 hover:bg-green-100 transition-all text-center"
+            >
+              <div className="flex items-center justify-center mb-2">
+                <img
+                  src="/flags/1x1/us.svg"
+                  alt="United States"
+                  className="w-4 h-4 rounded object-cover mr-1"
+                />
+                <span className="text-xs font-semibold text-green-800">Every.org</span>
+              </div>
+              <div className="text-lg font-bold text-green-600 mb-1">
+                {platformStats.everyorg.toLocaleString()} Nonprofits
+              </div>
+              <div className="text-xs text-green-700 leading-tight">
+                US-based nonprofit platform with verified organizations across America
+              </div>
+            </a>
+
+            {/* ACNC Tile */}
+            <a 
+              href={`/${locale}/acnc/charities`}
+              className="group bg-orange-50 border border-orange-200 rounded-lg p-3 hover:border-orange-300 hover:bg-orange-100 transition-all text-center relative"
+            >
+              <div className="flex items-center justify-center mb-2">
+                <img
+                  src="/flags/1x1/au.svg"
+                  alt="Australia"
+                  className="w-4 h-4 rounded object-cover mr-1"
+                />
+                <span className="text-xs font-semibold text-orange-800">ACNC</span>
+              </div>
+              <div className="text-lg font-bold text-orange-600 mb-1">
+                {platformStats.acnc.toLocaleString()} Charities and Nonprofits
+              </div>
+              <div className="text-xs text-orange-700 leading-tight">
+                Australian Charities and Not-for-profits Commission registry
+              </div>
+              <div className="absolute top-1 right-1 bg-orange-500 text-white text-xs px-1 py-0.5 rounded-full" style={{fontSize: '8px'}}>
+                Browse Only
+              </div>
+            </a>
+          </div>
+        </div>
       </div>
     </nav>
   )
