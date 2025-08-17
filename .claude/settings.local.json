@@ -12,7 +12,9 @@
       "Bash(mv:*)",
       "Bash(node:*)",
       "WebFetch(domain:raw.githubusercontent.com)",
-      "WebFetch(domain:raw.githubusercontent.com)"
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(rm:*)",
+      "Bash(supabase functions deploy:*)"
     ],
     "deny": []
   }

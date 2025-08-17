@@ -50,6 +50,15 @@ export default function PlatformHome({ locale, platform, messages }: PlatformHom
       borderClass: 'border-green-200', 
       textClass: 'text-green-800',
       buttonClass: 'bg-green-600 hover:bg-green-700'
+    },
+    acnc: {
+      name: 'ACNC',
+      description: 'Australian Charities and Not-for-profits Commission',
+      color: 'orange',
+      bgClass: 'bg-orange-50',
+      borderClass: 'border-orange-200',
+      textClass: 'text-orange-800',
+      buttonClass: 'bg-orange-600 hover:bg-orange-700'
     }
   }
 

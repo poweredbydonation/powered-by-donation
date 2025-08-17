@@ -112,7 +112,7 @@ export default function ServiceCreationForm({
       const platform = searchParams.get('platform')
       const organizationId = searchParams.get('organization')
       
-      if (platform && organizationId && (platform === 'justgiving' || platform === 'everyorg')) {
+      if (platform && organizationId && (platform === 'justgiving' || platform === 'everyorg' || platform === 'acnc')) {
         try {
           // Fetch the organization from our cache
           const { data: organization, error } = await supabase
@@ -150,6 +150,17 @@ export default function ServiceCreationForm({
                   allowed_entities: ['nonprofit'],
                   organizations: 'specific_organizations',
                   specific_organizations: []
+                },
+                acnc: platform === 'acnc' ? {
+                  entity_types: 'specific_entities',
+                  allowed_entities: ['charity'],
+                  organizations: 'specific_organizations',
+                  specific_organizations: [organization.id] // Use internal database id, not external_id
+                } : {
+                  entity_types: 'specific_entities',
+                  allowed_entities: ['charity'],
+                  organizations: 'specific_organizations',
+                  specific_organizations: []
                 }
               }
             }
@@ -158,7 +169,7 @@ export default function ServiceCreationForm({
             
             // Also set legacy charity requirement for backward compatibility
             setCharityRequirementType('specific_charities')
-            if (platform === 'justgiving') {
+            if (platform === 'justgiving' || platform === 'acnc') {
               setSelectedCharities([{
                 justgiving_charity_id: organizationId,
                 name: organization.name,

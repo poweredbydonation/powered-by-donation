@@ -1,6 +1,6 @@
 /**
  * Platform Home Page - Dynamic Route
- * Handles: /{locale}/justgiving/ and /{locale}/everyorg/
+ * Handles: /{locale}/justgiving/, /{locale}/everyorg/, and /{locale}/acnc/
  */
 
 import { notFound } from 'next/navigation'
@@ -17,7 +17,7 @@ interface PlatformPageProps {
 
 // Validate platform parameter
 function isValidPlatform(platform: string): platform is DonationPlatform {
-  return ['justgiving', 'everyorg'].includes(platform)
+  return ['justgiving', 'everyorg', 'acnc'].includes(platform)
 }
 
 export default async function PlatformPage({ params }: PlatformPageProps) {
@@ -36,7 +36,7 @@ export default async function PlatformPage({ params }: PlatformPageProps) {
 
 // Generate static params for known platforms
 export function generateStaticParams() {
-  const platforms: DonationPlatform[] = ['justgiving', 'everyorg']
+  const platforms: DonationPlatform[] = ['justgiving', 'everyorg', 'acnc']
   
   return platforms.map((platform) => ({
     platform,
@@ -56,7 +56,8 @@ export async function generateMetadata({ params }: PlatformPageProps) {
   const platform = platformStr as DonationPlatform
   const platformNames = {
     justgiving: 'JustGiving',
-    everyorg: 'Every.org'
+    everyorg: 'Every.org',
+    acnc: 'ACNC'
   }
 
   return {

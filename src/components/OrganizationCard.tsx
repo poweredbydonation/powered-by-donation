@@ -51,6 +51,11 @@ export default function OrganizationCard({
       color: 'green', 
       badgeClass: 'bg-green-100 text-green-800',
       linkClass: 'text-green-600 hover:text-green-800'
+    },
+    acnc: {
+      color: 'orange',
+      badgeClass: 'bg-orange-100 text-orange-800',
+      linkClass: 'text-orange-600 hover:text-orange-800'
     }
   }
 

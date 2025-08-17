@@ -66,6 +66,13 @@ export default function OrganizationPage({
       bgClass: 'bg-green-50', 
       textClass: 'text-green-800',
       buttonClass: 'bg-green-600 hover:bg-green-700'
+    },
+    acnc: {
+      name: 'ACNC',
+      color: 'orange',
+      bgClass: 'bg-orange-50',
+      textClass: 'text-orange-800',
+      buttonClass: 'bg-orange-600 hover:bg-orange-700'
     }
   }
 
@@ -161,7 +168,7 @@ export default function OrganizationPage({
               <div className="flex items-center space-x-4">
                 {organization.website_url && (
                   <a
-                    href={organization.website_url}
+                    href={organization.website_url.startsWith('http') ? organization.website_url : `https://${organization.website_url}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className={`flex items-center ${config.textClass} hover:underline`}
@@ -229,6 +236,28 @@ export default function OrganizationPage({
                     <p className="text-gray-700">{organization.impact_statement_why}</p>
                   </div>
                 )}
+              </div>
+            )}
+
+            {/* ACNC Purposes - only for ACNC platform */}
+            {platform === 'acnc' && organization.acnc_purposes && Object.keys(organization.acnc_purposes).length > 0 && (
+              <div className="bg-white rounded-lg border p-6">
+                <h2 className="text-xl font-semibold text-gray-900 mb-4">Charitable Purposes</h2>
+                <div className="flex flex-wrap gap-2">
+                  {Object.entries(organization.acnc_purposes).map(([purpose, value]) => {
+                    if (value === true || value === 'true') {
+                      return (
+                        <span
+                          key={purpose}
+                          className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${config.textClass} bg-white border`}
+                        >
+                          {purpose.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                        </span>
+                      )
+                    }
+                    return null
+                  })}
+                </div>
               </div>
             )}
 

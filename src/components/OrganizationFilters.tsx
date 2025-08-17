@@ -20,12 +20,14 @@ interface OrganizationFiltersProps {
     city?: string
     featured?: boolean
     preferred?: boolean
+    purpose?: string
   }
 }
 
 interface FilterOptions {
   categories: string[]
   cities: string[]
+  purposes: string[]
 }
 
 export default function OrganizationFilters({
@@ -35,7 +37,7 @@ export default function OrganizationFilters({
 }: OrganizationFiltersProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const [options, setOptions] = useState<FilterOptions>({ categories: [], cities: [] })
+  const [options, setOptions] = useState<FilterOptions>({ categories: [], cities: [], purposes: [] })
   const [loading, setLoading] = useState(true)
 
   // Load filter options
@@ -47,7 +49,7 @@ export default function OrganizationFilters({
         // Get unique categories and cities for this platform
         const { data: organizations } = await supabase
           .from('organization_cache')
-          .select('category, address_city')
+          .select('category, address_city, acnc_purposes')
           .eq('platform', platform)
           .eq('is_active', true)
           .not('category', 'is', null)
@@ -57,7 +59,23 @@ export default function OrganizationFilters({
           const categories = Array.from(new Set(organizations.map(o => o.category).filter(Boolean))).sort()
           const cities = Array.from(new Set(organizations.map(o => o.address_city).filter(Boolean))).sort()
           
-          setOptions({ categories, cities })
+          // Extract ACNC purposes for ACNC platform
+          let purposes: string[] = []
+          if (platform === 'acnc') {
+            const purposeSet = new Set<string>()
+            organizations.forEach(org => {
+              if (org.acnc_purposes && typeof org.acnc_purposes === 'object') {
+                Object.entries(org.acnc_purposes).forEach(([purpose, value]) => {
+                  if (value === true || value === 'true') {
+                    purposeSet.add(purpose)
+                  }
+                })
+              }
+            })
+            purposes = Array.from(purposeSet).sort()
+          }
+          
+          setOptions({ categories, cities, purposes })
         }
       } catch (error) {
         console.error('Error loading filter options:', error)
@@ -92,6 +110,7 @@ export default function OrganizationFilters({
     params.delete('city') 
     params.delete('featured')
     params.delete('preferred')
+    params.delete('purpose')
     params.delete('page')
     
     router.push(`?${params.toString()}`)
@@ -211,6 +230,38 @@ export default function OrganizationFilters({
               className="text-xs text-gray-500 hover:text-gray-700"
             >
               Clear location
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* ACNC Purposes Filter - only for ACNC platform */}
+      {platform === 'acnc' && options.purposes.length > 0 && (
+        <div className="space-y-3">
+          <h4 className="text-sm font-medium text-gray-700">Charitable Purpose</h4>
+          <div className="space-y-2 max-h-48 overflow-y-auto">
+            {options.purposes.map((purpose) => (
+              <label key={purpose} className="flex items-center">
+                <input
+                  type="radio"
+                  name="purpose"
+                  value={purpose}
+                  checked={currentFilters.purpose === purpose}
+                  onChange={(e) => updateFilter('purpose', e.target.value)}
+                  className="rounded-full border-gray-300 text-orange-600 focus:ring-orange-500"
+                />
+                <span className="ml-2 text-sm text-gray-600">
+                  {purpose.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                </span>
+              </label>
+            ))}
+          </div>
+          {currentFilters.purpose && (
+            <button
+              onClick={() => updateFilter('purpose', null)}
+              className="text-xs text-gray-500 hover:text-gray-700"
+            >
+              Clear purpose
             </button>
           )}
         </div>

@@ -28,7 +28,7 @@ export interface PlatformRequirements {
 
 export type CurrencyCode = 'GBP' | 'USD' | 'CAD' | 'AUD' | 'EUR';
 
-export type DonationPlatform = 'justgiving' | 'everyorg';
+export type DonationPlatform = 'justgiving' | 'everyorg' | 'acnc';
 
 export type ServiceStatus = 
   | 'pending' 
@@ -121,6 +121,30 @@ export interface OrganizationCache {
   // API management
   enhanced_data_fetched_at?: Date;
   api_fetch_attempts?: number;
+  
+  // ACNC specific fields
+  acnc_abn?: string;
+  acnc_charity_legal_name?: string;
+  acnc_other_organisation_names?: string;
+  acnc_address_type?: string;
+  acnc_registration_date?: string;
+  acnc_date_organisation_established?: string;
+  acnc_charity_size?: string;
+  acnc_number_of_responsible_persons?: string;
+  acnc_financial_year_end?: string;
+  acnc_operates_in_act?: string;
+  acnc_operates_in_nsw?: string;
+  acnc_operates_in_nt?: string;
+  acnc_operates_in_qld?: string;
+  acnc_operates_in_sa?: string;
+  acnc_operates_in_tas?: string;
+  acnc_operates_in_vic?: string;
+  acnc_operates_in_wa?: string;
+  acnc_operating_countries?: string;
+  acnc_pbi?: string;
+  acnc_hpc?: string;
+  acnc_purposes?: Record<string, unknown>; // JSONB
+  acnc_beneficiaries?: Record<string, unknown>; // JSONB
 }
 
 // Legacy interfaces for backward compatibility (deprecated - use User instead)

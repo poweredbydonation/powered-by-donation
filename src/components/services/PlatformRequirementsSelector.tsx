@@ -46,32 +46,38 @@ export default function PlatformRequirementsSelector({
   const t = useTranslations('service-creation')
   const [expandedPlatforms, setExpandedPlatforms] = useState<Record<DonationPlatform, boolean>>({
     justgiving: false,
-    everyorg: false
+    everyorg: false,
+    acnc: false
   })
   
   const [organizations, setOrganizations] = useState<Record<DonationPlatform, OrganizationOption[]>>({
     justgiving: [],
-    everyorg: []
+    everyorg: [],
+    acnc: []
   })
   
   const [organizationSearch, setOrganizationSearch] = useState<Record<DonationPlatform, string>>({
     justgiving: '',
-    everyorg: ''
+    everyorg: '',
+    acnc: ''
   })
   
   const [loadingOrganizations, setLoadingOrganizations] = useState<Record<DonationPlatform, boolean>>({
     justgiving: false,
-    everyorg: false
+    everyorg: false,
+    acnc: false
   })
 
   const [pagination, setPagination] = useState<Record<DonationPlatform, PaginationState>>({
     justgiving: { page: 1, totalCount: 0, hasMore: false },
-    everyorg: { page: 1, totalCount: 0, hasMore: false }
+    everyorg: { page: 1, totalCount: 0, hasMore: false },
+    acnc: { page: 1, totalCount: 0, hasMore: false }
   })
 
   const [isSelectingAll, setIsSelectingAll] = useState<Record<DonationPlatform, boolean>>({
     justgiving: false,
-    everyorg: false
+    everyorg: false,
+    acnc: false
   })
 
   const ITEMS_PER_PAGE = 50
@@ -94,6 +100,14 @@ export default function PlatformRequirementsSelector({
           everyorg: {
             entity_types: 'specific_entities',
             allowed_entities: ['nonprofit'],
+            organizations: 'specific_organizations',
+            specific_organizations: [],
+            select_all_organizations: false,
+            excluded_organizations: []
+          },
+          acnc: {
+            entity_types: 'specific_entities',
+            allowed_entities: ['charity'],
             organizations: 'specific_organizations',
             specific_organizations: [],
             select_all_organizations: false,
@@ -222,7 +236,7 @@ export default function PlatformRequirementsSelector({
   const handleRestrictionTypeChange = (type: PlatformRestrictionType) => {
     const newRequirements: PlatformRequirements = {
       type,
-      allowed_platforms: type === 'any_platform' ? ['justgiving', 'everyorg'] : [],
+      allowed_platforms: type === 'any_platform' ? ['justgiving', 'everyorg', 'acnc'] : [],
       platform_rules: value?.platform_rules || {
         justgiving: {
           entity_types: 'any_entities',
@@ -233,6 +247,12 @@ export default function PlatformRequirementsSelector({
         everyorg: {
           entity_types: 'any_entities',
           allowed_entities: ['nonprofit'],
+          organizations: 'any_organizations',
+          specific_organizations: []
+        },
+        acnc: {
+          entity_types: 'any_entities',
+          allowed_entities: ['charity'],
           organizations: 'any_organizations',
           specific_organizations: []
         }
@@ -397,16 +417,18 @@ export default function PlatformRequirementsSelector({
     // Select all platforms and expand them
     setExpandedPlatforms({
       justgiving: true,
-      everyorg: true
+      everyorg: true,
+      acnc: true
     })
     
-    // Load organizations for both platforms
+    // Load organizations for all platforms
     loadOrganizations('justgiving')
     loadOrganizations('everyorg')
+    loadOrganizations('acnc')
     
     onChange({
       ...value,
-      allowed_platforms: ['justgiving', 'everyorg']
+      allowed_platforms: ['justgiving', 'everyorg', 'acnc']
     })
   }
 
@@ -416,7 +438,8 @@ export default function PlatformRequirementsSelector({
     // Clear all platforms and collapse them
     setExpandedPlatforms({
       justgiving: false,
-      everyorg: false
+      everyorg: false,
+      acnc: false
     })
     
     onChange({
@@ -464,7 +487,8 @@ export default function PlatformRequirementsSelector({
     
     return {
       justgiving: getFilteredForPlatform('justgiving'),
-      everyorg: getFilteredForPlatform('everyorg')
+      everyorg: getFilteredForPlatform('everyorg'),
+      acnc: getFilteredForPlatform('acnc')
     }
   }, [organizations, organizationSearch, value?.platform_rules])
 
@@ -472,7 +496,8 @@ export default function PlatformRequirementsSelector({
 
   const platformConfig = {
     justgiving: { name: 'JustGiving', color: 'blue', entityName: 'Charities' },
-    everyorg: { name: 'Every.org', color: 'green', entityName: 'Nonprofits' }
+    everyorg: { name: 'Every.org', color: 'green', entityName: 'Nonprofits' },
+    acnc: { name: 'ACNC', color: 'orange', entityName: 'Charities' }
   }
 
   return (
@@ -512,7 +537,7 @@ export default function PlatformRequirementsSelector({
           
           {/* Mobile: Remove outer border, use full width sections */}
           <div className="space-y-4 md:border md:rounded-lg md:p-4">
-            {(['justgiving', 'everyorg'] as DonationPlatform[]).map(platform => {
+            {(['justgiving', 'everyorg', 'acnc'] as DonationPlatform[]).map(platform => {
               const config = platformConfig[platform]
               const isSelected = value.allowed_platforms.includes(platform)
               const isExpanded = expandedPlatforms[platform]

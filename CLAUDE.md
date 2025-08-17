@@ -333,6 +333,33 @@ Transform entire application from entity-first to platform-first architecture wi
 - **Responsive Design**: Mobile-first approach preserved across navigation changes
 - **Accessibility**: Screen reader friendly with proper text labels
 
+#### **ACNC FILTERING ENHANCEMENT - Session 2025-08-17** 🎯
+✅ **NSW State Filtering Complete**: Location filter now shows only NSW cities when NSW state is selected
+✅ **Dynamic City Loading**: State-specific cities loaded from organizations that operate in selected state
+✅ **Show More Button Fix**: Displays correct count based on filtered city list (not always 639)
+✅ **Complete Category Loading**: Removed 2000 organization limit to load all ACNC categories from complete dataset
+✅ **TypeScript Fixes**: Resolved strict mode function declaration errors for production builds
+
+**ACNC Filtering System Details**:
+- **State-Based City Filtering**: When NSW selected, shows only cities from organizations with `acnc_operates_in_nsw = 'Y'`
+- **Dynamic Count Updates**: "Show More (136 more)" reflects actual filtered city count
+- **Complete Data Coverage**: All 2,600+ ACNC organizations processed for comprehensive filtering
+- **Verified Category System**: 9 categories (Animals, Arts & Culture, Education, Environment, General Charitable Purposes, Health, Human Rights, Religion, Social Welfare)
+- **Verified Purpose System**: 8 charitable purposes (all main ACNC charitable purposes represented)
+
+**Technical Achievements**:
+- **State Management**: Added `stateCities` state for dynamic state-specific city loading
+- **Smart Filtering Logic**: `filteredCities` uses state-specific cities when state selected, all cities otherwise
+- **Enhanced UI Feedback**: Location section shows "Browse by Location (NSW)" with accurate city counts
+- **Complete Data Processing**: Arrow function expressions resolve TypeScript strict mode compilation errors
+- **Performance Optimization**: Maintains search and pagination functionality within state-filtered cities
+
+**Verified Data Completeness**:
+- **Categories**: 9 complete categories derived from charitable purposes
+- **Purposes**: 8 main ACNC charitable purposes (3,000 organizations each due to multiple purpose assignments)
+- **States**: 8 Australian states with operating organizations
+- **Cities**: Dynamic loading based on state selection with search and pagination
+
 ### Enhanced Charity Data System
 - **Automated Enhancement**: Every 30 minutes via Supabase cron
 - **Comprehensive Details**: Address, contact info, impact statements, branding

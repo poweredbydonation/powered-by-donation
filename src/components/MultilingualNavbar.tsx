@@ -100,55 +100,43 @@ export default function MultilingualNavbar({ locale, messages }: MultilingualNav
 
           {/* Desktop Navigation - Right Side */}
           <div className="hidden md:flex items-center space-x-6">
-            {/* Browse Links + Platform + Language (two rows) */}
-            <div className="flex flex-col justify-center space-y-1">
-              <div className="flex items-center space-x-4">
-                <a 
-                  href={getLocalizedServicesUrl(locale)}
-                  className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
+            {/* Language Selector */}
+            <div className="flex items-center justify-center">
+              {/* Language Dropdown */}
+              <div ref={langDropdownRef} className="relative">
+                <button
+                  onClick={() => setIsLangOpen(!isLangOpen)}
+                  className="flex items-center space-x-1 text-gray-700 hover:text-blue-600 transition-colors"
                 >
-                  {messages?.nav?.services || 'Services'}
-                </a>
-              </div>
-              
-              {/* Language Selector */}
-              <div className="flex items-center justify-center">
-                {/* Language Dropdown */}
-                <div ref={langDropdownRef} className="relative">
-                  <button
-                    onClick={() => setIsLangOpen(!isLangOpen)}
-                    className="flex items-center space-x-1 text-gray-700 hover:text-blue-600 transition-colors"
-                  >
-                    <span className="bg-gray-100 hover:bg-gray-200 text-xs font-medium text-gray-700 px-2 py-1 rounded-full transition-colors flex items-center space-x-1">
-                      <img 
-                        src={currentLang.flagIcon} 
-                        alt={`${currentLang.name} flag`}
-                        className="w-4 h-4 rounded-sm object-cover"
-                      />
-                      <span>{currentLang.nativeName}</span>
-                    </span>
-                  </button>
-                  
-                  {isLangOpen && (
-                    <div className="absolute left-0 mt-2 w-40 bg-white rounded-lg shadow-lg border z-50">
-                      {otherLangs.map((lang) => (
-                        <a
-                          key={lang.code}
-                          href={`/${lang.code}${getPathWithoutLocale()}`}
-                          className="flex items-center space-x-2 px-4 py-2 hover:bg-gray-50 transition-colors"
-                          onClick={() => setIsLangOpen(false)}
-                        >
-                          <img 
-                            src={lang.flagIcon} 
-                            alt={`${lang.name} flag`}
-                            className="w-5 h-5 rounded-sm object-cover"
-                          />
-                          <span className="text-sm">{lang.nativeName}</span>
-                        </a>
-                      ))}
-                    </div>
-                  )}
-                </div>
+                  <span className="bg-gray-100 hover:bg-gray-200 text-xs font-medium text-gray-700 px-2 py-1 rounded-full transition-colors flex items-center space-x-1">
+                    <img 
+                      src={currentLang.flagIcon} 
+                      alt={`${currentLang.name} flag`}
+                      className="w-4 h-4 rounded-sm object-cover"
+                    />
+                    <span>{currentLang.nativeName}</span>
+                  </span>
+                </button>
+                
+                {isLangOpen && (
+                  <div className="absolute left-0 mt-2 w-40 bg-white rounded-lg shadow-lg border z-50">
+                    {otherLangs.map((lang) => (
+                      <a
+                        key={lang.code}
+                        href={`/${lang.code}${getPathWithoutLocale()}`}
+                        className="flex items-center space-x-2 px-4 py-2 hover:bg-gray-50 transition-colors"
+                        onClick={() => setIsLangOpen(false)}
+                      >
+                        <img 
+                          src={lang.flagIcon} 
+                          alt={`${lang.name} flag`}
+                          className="w-5 h-5 rounded-sm object-cover"
+                        />
+                        <span className="text-sm">{lang.nativeName}</span>
+                      </a>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
             
@@ -242,14 +230,6 @@ export default function MultilingualNavbar({ locale, messages }: MultilingualNav
         {isMenuOpen && (
           <div className="md:hidden border-t border-gray-200">
             <div className="py-4 space-y-4">
-              <a 
-                href={getLocalizedServicesUrl(locale)}
-                className="block text-gray-700 hover:text-blue-600 font-medium transition-colors"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                {messages?.nav?.services || 'Services'}
-              </a>
-
               {/* Mobile Authentication */}
               {!mounted ? (
                 <div className="animate-pulse bg-gray-200 h-8 w-20 rounded"></div>

@@ -19,7 +19,7 @@ export default async function HomePage({ params }: HomePageProps) {
 
   // Load platform statistics for homepage
   const supabase = createClient()
-  const [justgivingStats, everyorgStats, featuredOrgs] = await Promise.all([
+  const [justgivingStats, everyorgStats, acncStats, servicesStats, featuredOrgs] = await Promise.all([
     // Get JustGiving count
     supabase
       .from('organization_cache')
@@ -34,7 +34,20 @@ export default async function HomePage({ params }: HomePageProps) {
       .eq('platform', 'everyorg')
       .eq('is_active', true),
     
-    // Get featured organizations from both platforms
+    // Get ACNC count
+    supabase
+      .from('organization_cache')
+      .select('id', { count: 'exact', head: true })
+      .eq('platform', 'acnc')
+      .eq('is_active', true),
+    
+    // Get Services count
+    supabase
+      .from('services')
+      .select('id', { count: 'exact', head: true })
+      .eq('is_active', true),
+    
+    // Get featured organizations from all platforms
     supabase
       .from('organization_cache')
       .select('*')
@@ -46,7 +59,9 @@ export default async function HomePage({ params }: HomePageProps) {
 
   const justgivingCount = justgivingStats.count || 0
   const everyorgCount = everyorgStats.count || 0
-  const totalOrganizations = justgivingCount + everyorgCount
+  const acncCount = acncStats.count || 0
+  const servicesCount = servicesStats.count || 0
+  const totalOrganizations = justgivingCount + everyorgCount + acncCount
 
   return (
     <div className="min-h-screen bg-white">
@@ -56,50 +71,112 @@ export default async function HomePage({ params }: HomePageProps) {
       <div className="bg-gradient-to-br from-blue-50 to-indigo-100">
         <div className="max-w-4xl mx-auto px-6 py-16 text-center">
           
-          {/* Platform Stats */}
-          <div className="mb-12">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-2xl mx-auto">
-              <div className="bg-white/80 backdrop-blur-sm rounded-lg p-4 border">
-                <div className="text-2xl font-bold text-blue-600">{totalOrganizations.toLocaleString()}</div>
-                <div className="text-sm text-gray-600">Organizations</div>
-              </div>
-              <div className="bg-white/80 backdrop-blur-sm rounded-lg p-4 border">
-                <div className="text-2xl font-bold text-blue-600">{justgivingCount.toLocaleString()}</div>
-                <div className="text-sm text-gray-600">JustGiving</div>
-              </div>
-              <div className="bg-white/80 backdrop-blur-sm rounded-lg p-4 border">
-                <div className="text-2xl font-bold text-green-600">{everyorgCount.toLocaleString()}</div>
-                <div className="text-sm text-gray-600">Every.org</div>
-              </div>
-            </div>
-          </div>
-          
-          {/* Platform Links - Above Everything */}
+          {/* Platform Cards */}
           <div className="mb-16">
-            <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">Choose Your Platform</h2>
-              <p className="text-gray-600">Browse organizations and start donating</p>
-            </div>
-            <div className="flex items-center justify-center space-x-8">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 max-w-8xl mx-auto">
+              {/* Powered by Donation Card */}
               <Link 
-                href={`/${locale}/justgiving/charities`}
-                className="flex items-center bg-blue-50 hover:bg-blue-100 border-2 border-blue-200 hover:border-blue-300 px-6 py-4 rounded-xl transition-all text-blue-700 hover:text-blue-800 min-w-[200px]"
+                href={`/${locale}/services`}
+                className="group bg-purple-50 border-2 border-purple-200 rounded-xl p-5 hover:border-purple-300 hover:bg-purple-100 transition-all"
               >
-                <Users className="h-6 w-6 mr-3" />
-                <div className="text-left">
-                  <div className="font-bold text-lg">JustGiving</div>
-                  <div className="text-sm text-blue-600">{justgivingCount.toLocaleString()} Charities</div>
+                <div className="text-center">
+                  <div className="flex items-center justify-center mb-3">
+                    <h3 className="text-lg font-semibold text-purple-800 whitespace-nowrap">Powered by Donation</h3>
+                  </div>
+                  <div className="text-2xl font-bold text-purple-600 mb-2">
+                    {servicesCount.toLocaleString()}
+                  </div>
+                  <p className="text-purple-700 mb-4 text-xs">
+                    Free services you can get by donating to JustGiving and Every.org charities
+                  </p>
+                  <div className="flex items-center justify-center text-purple-600 group-hover:text-purple-800 text-xs">
+                    <span className="mr-2">Browse Free Services</span>
+                    <ExternalLink className="h-3 w-3" />
+                  </div>
                 </div>
               </Link>
-              
+
+              {/* JustGiving Card */}
               <Link 
-                href={`/${locale}/everyorg/nonprofits`}
-                className="flex items-center bg-green-50 hover:bg-green-100 border-2 border-green-200 hover:border-green-300 px-6 py-4 rounded-xl transition-all text-green-700 hover:text-green-800 min-w-[200px]"
+                href={`/${locale}/justgiving`}
+                className="group bg-blue-50 border-2 border-blue-200 rounded-xl p-5 hover:border-blue-300 hover:bg-blue-100 transition-all"
               >
-                <Users className="h-6 w-6 mr-3" />
-                <div className="text-left">
-                  <div className="font-bold text-lg">Every.org</div>
-                  <div className="text-sm text-green-600">{everyorgCount.toLocaleString()} Nonprofits</div>
+                <div className="text-center">
+                  <div className="flex items-center justify-center mb-3">
+                    <img
+                      src="/flags/1x1/gb.svg"
+                      alt="United Kingdom"
+                      className="w-6 h-6 rounded object-cover mr-2"
+                    />
+                    <h3 className="text-lg font-semibold text-blue-800">JustGiving</h3>
+                  </div>
+                  <div className="text-2xl font-bold text-blue-600 mb-2">
+                    {justgivingCount.toLocaleString()}
+                  </div>
+                  <p className="text-blue-700 mb-4 text-xs">
+                    UK's leading charity fundraising platform with extensive charity database
+                  </p>
+                  <div className="flex items-center justify-center text-blue-600 group-hover:text-blue-800 text-xs">
+                    <span className="mr-2">Browse Charities</span>
+                    <ExternalLink className="h-3 w-3" />
+                  </div>
+                </div>
+              </Link>
+
+              {/* Every.org Card */}
+              <Link 
+                href={`/${locale}/everyorg`}
+                className="group bg-green-50 border-2 border-green-200 rounded-xl p-5 hover:border-green-300 hover:bg-green-100 transition-all"
+              >
+                <div className="text-center">
+                  <div className="flex items-center justify-center mb-3">
+                    <img
+                      src="/flags/1x1/us.svg"
+                      alt="United States"
+                      className="w-6 h-6 rounded object-cover mr-2"
+                    />
+                    <h3 className="text-lg font-semibold text-green-800">Every.org</h3>
+                  </div>
+                  <div className="text-2xl font-bold text-green-600 mb-2">
+                    {everyorgCount.toLocaleString()}
+                  </div>
+                  <p className="text-green-700 mb-4 text-xs">
+                    Global nonprofit platform connecting donors with verified organizations worldwide
+                  </p>
+                  <div className="flex items-center justify-center text-green-600 group-hover:text-green-800 text-xs">
+                    <span className="mr-2">Browse Nonprofits</span>
+                    <ExternalLink className="h-3 w-3" />
+                  </div>
+                </div>
+              </Link>
+
+              {/* ACNC Card */}
+              <Link 
+                href={`/${locale}/acnc/charities`}
+                className="group bg-orange-50 border-2 border-orange-200 rounded-xl p-5 hover:border-orange-300 hover:bg-orange-100 transition-all relative"
+              >
+                <div className="text-center">
+                  <div className="flex items-center justify-center mb-3">
+                    <img
+                      src="/flags/1x1/au.svg"
+                      alt="Australia"
+                      className="w-6 h-6 rounded object-cover mr-2"
+                    />
+                    <h3 className="text-lg font-semibold text-orange-800">ACNC</h3>
+                  </div>
+                  <div className="text-2xl font-bold text-orange-600 mb-2">
+                    {acncCount.toLocaleString()}
+                  </div>
+                  <p className="text-orange-700 mb-4 text-xs">
+                    Australian Charities and Not-for-profits Commission registry
+                  </p>
+                  <div className="flex items-center justify-center text-orange-600 group-hover:text-orange-800 text-xs">
+                    <span className="mr-2">Browse Charities</span>
+                    <ExternalLink className="h-3 w-3" />
+                  </div>
+                  <div className="absolute top-1 right-1 bg-orange-500 text-white text-xs px-1 py-0.5 rounded-full text-[10px]">
+                    Browse Only
+                  </div>
                 </div>
               </Link>
             </div>
@@ -235,61 +312,6 @@ export default async function HomePage({ params }: HomePageProps) {
         </div>
       </div>
 
-      {/* Platform Browse Section */}
-      <div className="py-16 bg-white">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              Browse by Platform
-            </h2>
-            <p className="text-lg text-gray-600">
-              Choose your preferred donation platform and explore organizations
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            {/* JustGiving Card */}
-            <Link 
-              href={`/${locale}/justgiving`}
-              className="group bg-blue-50 border-2 border-blue-200 rounded-xl p-8 hover:border-blue-300 hover:bg-blue-100 transition-all"
-            >
-              <div className="text-center">
-                <div className="text-4xl font-bold text-blue-600 mb-2">
-                  {justgivingCount.toLocaleString()}
-                </div>
-                <h3 className="text-2xl font-semibold text-blue-800 mb-3">JustGiving</h3>
-                <p className="text-blue-700 mb-4">
-                  UK's leading charity fundraising platform with extensive charity database
-                </p>
-                <div className="flex items-center justify-center text-blue-600 group-hover:text-blue-800">
-                  <span className="mr-2">Browse Charities</span>
-                  <ExternalLink className="h-4 w-4" />
-                </div>
-              </div>
-            </Link>
-
-            {/* Every.org Card */}
-            <Link 
-              href={`/${locale}/everyorg`}
-              className="group bg-green-50 border-2 border-green-200 rounded-xl p-8 hover:border-green-300 hover:bg-green-100 transition-all"
-            >
-              <div className="text-center">
-                <div className="text-4xl font-bold text-green-600 mb-2">
-                  {everyorgCount.toLocaleString()}
-                </div>
-                <h3 className="text-2xl font-semibold text-green-800 mb-3">Every.org</h3>
-                <p className="text-green-700 mb-4">
-                  Global nonprofit platform connecting donors with verified organizations worldwide
-                </p>
-                <div className="flex items-center justify-center text-green-600 group-hover:text-green-800">
-                  <span className="mr-2">Browse Nonprofits</span>
-                  <ExternalLink className="h-4 w-4" />
-                </div>
-              </div>
-            </Link>
-          </div>
-        </div>
-      </div>
 
       {/* Featured Organizations */}
       {featuredOrgs.data && featuredOrgs.data.length > 0 && (

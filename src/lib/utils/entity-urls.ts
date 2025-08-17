@@ -13,7 +13,8 @@ export type EntityType = 'charities' | 'nonprofits'
 // Platform to entity type mapping
 export const PLATFORM_ENTITY_TYPES: Record<DonationPlatform, EntityType> = {
   justgiving: 'charities',
-  everyorg: 'nonprofits'
+  everyorg: 'nonprofits',
+  acnc: 'charities'
 }
 
 // Transliterated URL slugs for each entity type by locale
@@ -123,7 +124,7 @@ export function parsePlatformUrl(pathname: string): ParsedPlatformUrl | null {
   const [locale, platformStr, entitySlug, organizationSlug] = parts
   
   // Validate platform
-  if (!['justgiving', 'everyorg'].includes(platformStr)) return null
+  if (!['justgiving', 'everyorg', 'acnc'].includes(platformStr)) return null
   const platform = platformStr as DonationPlatform
   
   // Get entity type from slug

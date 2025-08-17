@@ -27,7 +27,7 @@ interface OrganizationPageProps {
 
 // Validate platform parameter
 function isValidPlatform(platform: string): platform is DonationPlatform {
-  return ['justgiving', 'everyorg'].includes(platform)
+  return ['justgiving', 'everyorg', 'acnc'].includes(platform)
 }
 
 export default async function OrganizationDetailPage({ params }: OrganizationPageProps) {
@@ -137,7 +137,8 @@ export async function generateMetadata({ params }: OrganizationPageProps) {
 
   const platformNames = {
     justgiving: 'JustGiving',
-    everyorg: 'Every.org'
+    everyorg: 'Every.org',
+    acnc: 'ACNC'
   }
 
   return {
