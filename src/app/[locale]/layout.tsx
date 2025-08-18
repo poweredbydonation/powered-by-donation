@@ -2,6 +2,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { AuthProvider } from '@/context/AuthContext'
 import Footer from '@/components/Footer'
+import MinimalFooter from '@/components/MinimalFooter'
 import DonorNotificationsBanner from '@/components/DonorNotificationsBanner'
 import FundraiserNotificationsBanner from '@/components/FundraiserNotificationsBanner'
 import MultilingualNavbar from '@/components/MultilingualNavbar'
@@ -59,14 +60,16 @@ export default async function LocaleLayout({
   return (
     <AuthProvider>
       <NextIntlClientProvider messages={messages} locale={locale}>
-        <div className="min-h-screen flex flex-col">
+        <div className="min-h-screen">
           <MultilingualNavbar locale={locale} messages={messages} platformStats={platformStats} />
-          <DonorNotificationsBanner />
-          <FundraiserNotificationsBanner />
-          <div className="flex-grow pt-20 md:pt-36">
+          <div className="notification-banners">
+            <DonorNotificationsBanner />
+            <FundraiserNotificationsBanner />
+          </div>
+          <div className="pt-14 pb-12">
             {children}
           </div>
-          <Footer key={locale} />
+          <MinimalFooter />
         </div>
       </NextIntlClientProvider>
     </AuthProvider>

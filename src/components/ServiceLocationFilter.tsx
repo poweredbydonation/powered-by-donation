@@ -26,18 +26,24 @@ interface ServiceLocationFilterProps {
   onFilterChange: (filter: LocationFilter) => void
   services?: ServiceWithLocation[]
   className?: string
+  forceShowMap?: boolean
+  initialType?: 'all' | 'remote' | 'physical' | 'hybrid'
+  hideTypeSelector?: boolean
 }
 
 export default function ServiceLocationFilter({
   onFilterChange,
   services = [],
-  className = ''
+  className = '',
+  forceShowMap = false,
+  initialType = 'all',
+  hideTypeSelector = false
 }: ServiceLocationFilterProps) {
-  const [selectedType, setSelectedType] = useState<'all' | 'remote' | 'physical' | 'hybrid'>('all')
+  const [selectedType, setSelectedType] = useState<'all' | 'remote' | 'physical' | 'hybrid'>(initialType)
   const [center, setCenter] = useState<Location>({ lat: -33.8688, lng: 151.2093 }) // Sydney default
   const [radius, setRadius] = useState(15)
   const [address, setAddress] = useState('')
-  const [showMap, setShowMap] = useState(false)
+  const [showMap, setShowMap] = useState(forceShowMap || initialType === 'physical' || initialType === 'hybrid')
 
   // Handle location type change
   const handleTypeChange = useCallback((type: 'all' | 'remote' | 'physical' | 'hybrid') => {
@@ -224,67 +230,69 @@ export default function ServiceLocationFilter({
   return (
     <div className={`space-y-6 ${className}`}>
       {/* Location Type Selection */}
-      <div className="space-y-3">
-        <h3 className="text-lg font-medium text-gray-900">Service Location</h3>
-        
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          <button
-            onClick={() => handleTypeChange('all')}
-            className={`flex items-center justify-center p-3 rounded-lg border transition-colors ${
-              selectedType === 'all'
-                ? 'bg-blue-50 border-blue-200 text-blue-700'
-                : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'
-            }`}
-          >
-            <Globe className="h-4 w-4 mr-2" />
-            <span className="text-sm font-medium">All Services</span>
-          </button>
+      {!hideTypeSelector && (
+        <div className="space-y-3">
+          <h3 className="text-lg font-medium text-gray-900">Service Location</h3>
           
-          <button
-            onClick={() => handleTypeChange('remote')}
-            className={`flex items-center justify-center p-3 rounded-lg border transition-colors ${
-              selectedType === 'remote'
-                ? 'bg-blue-50 border-blue-200 text-blue-700'
-                : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'
-            }`}
-          >
-            <Monitor className="h-4 w-4 mr-2" />
-            <span className="text-sm font-medium">Remote</span>
-          </button>
-          
-          <button
-            onClick={() => handleTypeChange('physical')}
-            className={`flex items-center justify-center p-3 rounded-lg border transition-colors ${
-              selectedType === 'physical'
-                ? 'bg-blue-50 border-blue-200 text-blue-700'
-                : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'
-            }`}
-          >
-            <MapPin className="h-4 w-4 mr-2" />
-            <span className="text-sm font-medium">In-Person</span>
-          </button>
-          
-          <button
-            onClick={() => handleTypeChange('hybrid')}
-            className={`flex items-center justify-center p-3 rounded-lg border transition-colors ${
-              selectedType === 'hybrid'
-                ? 'bg-blue-50 border-blue-200 text-blue-700'
-                : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'
-            }`}
-          >
-            <Navigation className="h-4 w-4 mr-2" />
-            <span className="text-sm font-medium">Hybrid</span>
-          </button>
-        </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <button
+              onClick={() => handleTypeChange('all')}
+              className={`flex items-center justify-center p-3 rounded-lg border transition-colors ${
+                selectedType === 'all'
+                  ? 'bg-blue-50 border-blue-200 text-blue-700'
+                  : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'
+              }`}
+            >
+              <Globe className="h-4 w-4 mr-2" />
+              <span className="text-sm font-medium">All Services</span>
+            </button>
+            
+            <button
+              onClick={() => handleTypeChange('remote')}
+              className={`flex items-center justify-center p-3 rounded-lg border transition-colors ${
+                selectedType === 'remote'
+                  ? 'bg-blue-50 border-blue-200 text-blue-700'
+                  : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'
+              }`}
+            >
+              <Monitor className="h-4 w-4 mr-2" />
+              <span className="text-sm font-medium">Remote</span>
+            </button>
+            
+            <button
+              onClick={() => handleTypeChange('physical')}
+              className={`flex items-center justify-center p-3 rounded-lg border transition-colors ${
+                selectedType === 'physical'
+                  ? 'bg-blue-50 border-blue-200 text-blue-700'
+                  : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'
+              }`}
+            >
+              <MapPin className="h-4 w-4 mr-2" />
+              <span className="text-sm font-medium">In-Person</span>
+            </button>
+            
+            <button
+              onClick={() => handleTypeChange('hybrid')}
+              className={`flex items-center justify-center p-3 rounded-lg border transition-colors ${
+                selectedType === 'hybrid'
+                  ? 'bg-blue-50 border-blue-200 text-blue-700'
+                  : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'
+              }`}
+            >
+              <Navigation className="h-4 w-4 mr-2" />
+              <span className="text-sm font-medium">Hybrid</span>
+            </button>
+          </div>
 
-        {/* Location type descriptions */}
-        <div className="text-sm text-gray-600">
-          {selectedType === 'all' && "Show all available services"}
-          {selectedType === 'remote' && "Online delivery via video calls, email, etc."}
-          {selectedType === 'physical' && "In-person service at a specific location"}
-          {selectedType === 'hybrid' && "Both remote and in-person options available"}
+          {/* Location type descriptions */}
+          <div className="text-sm text-gray-600">
+            {selectedType === 'all' && "Show all available services"}
+            {selectedType === 'remote' && "Online delivery via video calls, email, etc."}
+            {selectedType === 'physical' && "In-person service at a specific location"}
+            {selectedType === 'hybrid' && "Both remote and in-person options available"}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Map Section for Physical/Hybrid */}
       {showMap && (

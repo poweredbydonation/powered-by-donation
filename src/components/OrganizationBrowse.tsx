@@ -5,7 +5,7 @@
 
 'use client'
 
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useRef, useCallback } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { DonationPlatform, OrganizationCache } from '@/types/database'
@@ -13,7 +13,7 @@ import { EntityType } from '@/lib/utils/entity-urls'
 import OrganizationCard from '@/components/OrganizationCard'
 import OrganizationFilters from '@/components/OrganizationFilters'
 import { getEveryOrgClient } from '@/lib/everyorg/client'
-import { Search, Filter, ChevronDown } from 'lucide-react'
+import { Search, Filter, ChevronDown, Info, X } from 'lucide-react'
 import { parseOperatingCountries } from '@/lib/utils/country-codes'
 
 interface OrganizationBrowseProps {
@@ -39,9 +39,11 @@ interface OrganizationBrowseProps {
 interface BrowseState {
   organizations: OrganizationCache[]
   loading: boolean
+  loadingMore: boolean
   totalCount: number
   hasMore: boolean
   error: string | null
+  currentPage: number
 }
 
 const ITEMS_PER_PAGE = 24
@@ -56,15 +58,23 @@ export default function OrganizationBrowse({
   const [state, setState] = useState<BrowseState>({
     organizations: [],
     loading: true,
+    loadingMore: false,
     totalCount: 0,
     hasMore: false,
-    error: null
+    error: null,
+    currentPage: 1
   })
 
   const [showFilters, setShowFilters] = useState(false)
-
-  // Parse search params
-  const currentPage = parseInt(searchParams.page || '1', 10)
+  const [showMobileFilters, setShowMobileFilters] = useState(false)
+  const [showMobileFooter, setShowMobileFooter] = useState(false)
+  
+  // Refs for infinite scroll
+  const loadingTriggerRef = useRef<HTMLDivElement>(null)
+  const isInitialLoad = useRef(true)
+  
+  // Parse search params - ignore page for infinite scroll
+  const currentPage = 1 // Always start from page 1 for infinite scroll
   const searchQuery = searchParams.search || ''
   const categoryFilter = searchParams.category || ''
   const cityFilter = searchParams.city || ''
@@ -75,6 +85,17 @@ export default function OrganizationBrowse({
   const preferredOnly = searchParams.preferred === 'true'
   const purposeFilter = searchParams.purpose || ''
   const beneficiaryFilter = searchParams.beneficiary || ''
+
+  // Mobile filter selections state
+  const [mobileFilters, setMobileFilters] = useState({
+    search: searchQuery,
+    category: categoryFilter,
+    state: stateFilter,
+    purpose: purposeFilter,
+    city: cityFilter,
+    beneficiary: beneficiaryFilter,
+    operating_country: operatingCountryFilter
+  })
 
   // Platform configuration
   const platformConfig = {
@@ -140,23 +161,155 @@ export default function OrganizationBrowse({
   
   // Every.org state/city system - REMOVED (no structured location data in address fields)
   
-  // Initialize Every.org categories
+  // Initialize Every.org categories from database
   useEffect(() => {
     if (platform === 'everyorg') {
-      try {
-        const client = getEveryOrgClient()
-        const popularCategories = client.getPopularCauses()
-        setEveryOrgCategories(popularCategories)
-        
-        // Check if current category filter is not in popular categories and add it to dynamic
-        if (categoryFilter && !popularCategories.includes(categoryFilter)) {
-          setDynamicCategories(prev => 
-            prev.includes(categoryFilter) ? prev : [...prev, categoryFilter]
-          )
+      const loadEveryOrgData = async () => {
+        try {
+          const supabase = createClient()
+          
+          console.log('Loading Every.org filter data...')
+          
+          // Get all Every.org organizations without limit for comprehensive filter data
+          const { data: organizations, error } = await supabase
+            .from('organization_cache')
+            .select('*')
+            .eq('platform', 'everyorg')
+            .eq('is_active', true)
+            .limit(1)
+
+          // Debug: Check what fields are available
+          if (organizations && organizations.length > 0) {
+            console.log('Sample Every.org organization fields:', Object.keys(organizations[0]))
+            console.log('Sample Every.org organization data:', organizations[0])
+          }
+
+          // Now get all organizations for category extraction using available fields
+          const { data: allOrganizations, error: allError } = await supabase
+            .from('organization_cache')
+            .select('category, description, keywords, categories_list')
+            .eq('platform', 'everyorg')
+            .eq('is_active', true)
+
+          if (error || allError) {
+            console.error('Error loading Every.org data:', error || allError)
+            // Fallback to hardcoded categories
+            const client = getEveryOrgClient()
+            const popularCategories = client.getPopularCauses()
+            setEveryOrgCategories(popularCategories)
+            return
+          }
+
+          console.log('Every.org organizations loaded for filters:', allOrganizations?.length)
+
+          let loadedCategories: string[] = []
+          
+          if (allOrganizations && allOrganizations.length > 0) {
+            // Try multiple approaches to extract meaningful categories from available fields
+            const categorySet = new Set<string>()
+            
+            allOrganizations.forEach(org => {
+              // 1. Use existing category field
+              if (org.category) {
+                categorySet.add(org.category)
+              }
+              
+              // 2. Extract from categories_list if available (might be a JSON array)
+              if (org.categories_list) {
+                try {
+                  let categories = org.categories_list
+                  if (typeof categories === 'string') {
+                    categories = JSON.parse(categories)
+                  }
+                  if (Array.isArray(categories)) {
+                    categories.forEach(cat => {
+                      if (typeof cat === 'string') {
+                        categorySet.add(cat.trim())
+                      } else if (cat && cat.name) {
+                        categorySet.add(cat.name.trim())
+                      }
+                    })
+                  }
+                } catch (e) {
+                  // If not JSON, treat as comma-separated string
+                  if (typeof org.categories_list === 'string') {
+                    org.categories_list.split(',').forEach(cat => {
+                      categorySet.add(cat.trim())
+                    })
+                  }
+                }
+              }
+              
+              // 3. Extract from keywords if available
+              if (org.keywords && typeof org.keywords === 'string') {
+                // Look for common category keywords
+                const commonCategories = [
+                  'education', 'health', 'environment', 'animals', 'children', 'women', 'veterans',
+                  'homeless', 'hunger', 'poverty', 'disaster', 'research', 'arts', 'culture',
+                  'religion', 'human rights', 'justice', 'climate', 'conservation', 'disability',
+                  'elderly', 'youth', 'community', 'housing', 'employment', 'legal aid',
+                  'mental health', 'cancer', 'diabetes', 'addiction', 'rehabilitation'
+                ]
+                
+                const lowerKeywords = org.keywords.toLowerCase()
+                commonCategories.forEach(category => {
+                  if (lowerKeywords.includes(category)) {
+                    categorySet.add(category)
+                  }
+                })
+              }
+              
+              // 4. Extract from description using common nonprofit categories
+              if (org.description && typeof org.description === 'string') {
+                const lowerDesc = org.description.toLowerCase()
+                const descriptionCategories = [
+                  'education', 'health', 'environment', 'animals', 'children', 'women', 'veterans',
+                  'homeless', 'hunger', 'poverty', 'disaster', 'research', 'arts', 'culture',
+                  'religion', 'human rights', 'justice', 'climate', 'conservation', 'disability',
+                  'elderly', 'youth', 'community', 'housing', 'employment', 'food', 'water',
+                  'medical', 'cancer', 'mental health', 'advocacy', 'legal', 'refugee', 'immigrant'
+                ]
+                
+                descriptionCategories.forEach(category => {
+                  if (lowerDesc.includes(category)) {
+                    // Capitalize first letter
+                    categorySet.add(category.charAt(0).toUpperCase() + category.slice(1))
+                  }
+                })
+              }
+            })
+            
+            loadedCategories = Array.from(categorySet).filter(Boolean).sort()
+            console.log('Every.org categories found (enhanced extraction):', loadedCategories.length, loadedCategories.slice(0, 30))
+            setEveryOrgCategories(loadedCategories)
+          } else {
+            console.log('No Every.org organizations found for filtering, using fallback')
+            // Fallback to hardcoded categories
+            const client = getEveryOrgClient()
+            loadedCategories = client.getPopularCauses()
+            setEveryOrgCategories(loadedCategories)
+          }
+          
+          // Check if current category filter is not in loaded categories and add it to dynamic
+          if (categoryFilter && !loadedCategories.includes(categoryFilter)) {
+            setDynamicCategories(prev => 
+              prev.includes(categoryFilter) ? prev : [...prev, categoryFilter]
+            )
+          }
+        } catch (error) {
+          console.error('Failed to load Every.org data:', error)
+          // Fallback to hardcoded categories
+          try {
+            const client = getEveryOrgClient()
+            const popularCategories = client.getPopularCauses()
+            setEveryOrgCategories(popularCategories)
+          } catch (fallbackError) {
+            console.error('Failed to initialize Every.org client:', fallbackError)
+          }
         }
-      } catch (error) {
-        console.error('Failed to initialize Every.org client:', error)
       }
+      
+      loadEveryOrgData()
     }
   }, [platform, categoryFilter])
 
@@ -496,6 +649,89 @@ export default function OrganizationBrowse({
     window.location.href = url.toString()
   }
 
+  // Handle single filter selection
+  const selectFilter = (type: string, value: string) => {
+    setMobileFilters(prev => ({
+      ...prev,
+      [type]: prev[type as keyof typeof prev] === value ? '' : value
+    }))
+  }
+
+  // Apply filters
+  const applyMobileFilters = () => {
+    const url = new URL(window.location.href)
+    
+    // Clear existing filters
+    url.searchParams.delete('category')
+    url.searchParams.delete('state') 
+    url.searchParams.delete('purpose')
+    url.searchParams.delete('city')
+    url.searchParams.delete('search')
+    url.searchParams.delete('beneficiary')
+    url.searchParams.delete('operating_country')
+    url.searchParams.delete('page')
+    
+    // Apply new filters
+    if (mobileFilters.search.trim()) {
+      url.searchParams.set('search', mobileFilters.search.trim())
+    }
+    
+    if (mobileFilters.category) {
+      url.searchParams.set('category', mobileFilters.category)
+    }
+    
+    if (mobileFilters.state) {
+      url.searchParams.set('state', mobileFilters.state)
+    }
+    
+    if (mobileFilters.purpose) {
+      url.searchParams.set('purpose', mobileFilters.purpose)
+    }
+    
+    if (mobileFilters.city) {
+      url.searchParams.set('city', mobileFilters.city)
+    }
+    
+    if (mobileFilters.beneficiary) {
+      url.searchParams.set('beneficiary', mobileFilters.beneficiary)
+    }
+    
+    if (mobileFilters.operating_country) {
+      url.searchParams.set('operating_country', mobileFilters.operating_country)
+    }
+    
+    // Close modal and navigate
+    setShowMobileFilters(false)
+    window.location.href = url.toString()
+  }
+
+  // Clear all mobile filters
+  const clearMobileFilters = () => {
+    setMobileFilters({
+      search: '',
+      category: '',
+      state: '',
+      purpose: '',
+      city: '',
+      beneficiary: '',
+      operating_country: ''
+    })
+  }
+
+  // Initialize mobile filters when modal opens
+  const openMobileFilters = () => {
+    setMobileFilters({
+      search: searchQuery,
+      category: categoryFilter,
+      state: stateFilter,
+      purpose: purposeFilter,
+      city: cityFilter,
+      beneficiary: beneficiaryFilter,
+      operating_country: operatingCountryFilter
+    })
+    setShowMobileFilters(true)
+  }
+
   // Handle ACNC beneficiary selection
   const handleBeneficiarySelect = (beneficiary: string) => {
     const url = new URL(window.location.href)
@@ -593,6 +829,7 @@ export default function OrganizationBrowse({
     ? [...everyOrgCategories, ...dynamicCategories]
     : []
 
+
   // Filtered cities for location search (ACNC and JustGiving)
   const filteredCities = useMemo(() => {
     if (platform === 'acnc') {
@@ -654,88 +891,130 @@ export default function OrganizationBrowse({
     return []
   }, [platform, acncCities, stateCities, stateFilter, justgivingCities, countryCities, countryFilter, locationSearch, showAllLocations, cityFilter])
 
-  // Load organizations
-  useEffect(() => {
-    const loadOrganizations = async () => {
-      setState(prev => ({ ...prev, loading: true, error: null }))
-      
-      try {
-        // Use our new platform-specific API endpoint instead of direct Supabase queries
-        const params = new URLSearchParams({
-          page: currentPage.toString(),
-          limit: ITEMS_PER_PAGE.toString()
-        })
-        
-        // Apply filters
-        if (searchQuery) {
-          params.set('search', searchQuery)
-        }
-        
-        if (categoryFilter) {
-          params.set('category', categoryFilter)
-        }
-        
-        if (cityFilter && cityFilter !== 'all') {
-          params.set('city', cityFilter)
-        }
-        
-        if (countryFilter && countryFilter !== 'all') {
-          params.set('country', countryFilter)
-        }
-        
-        if (stateFilter && stateFilter !== 'all') {
-          params.set('state', stateFilter)
-        }
-        
-        if (featuredOnly) {
-          params.set('featured', 'true')
-        }
-        
-        if (preferredOnly) {
-          params.set('preferred', 'true')
-        }
-        
-        if (purposeFilter) {
-          params.set('purpose', purposeFilter)
-        }
-
-        if (beneficiaryFilter) {
-          params.set('beneficiary', beneficiaryFilter)
-        }
-
-        if (operatingCountryFilter) {
-          params.set('operating_country', operatingCountryFilter)
-        }
-
-        const response = await fetch(`/api/${platform}/organizations?${params.toString()}`)
-        
-        if (!response.ok) {
-          throw new Error(`Failed to fetch organizations: ${response.status} ${response.statusText}`)
-        }
-        
-        const data = await response.json()
-        
-        setState(prev => ({
-          ...prev,
-          loading: false,
-          organizations: data.organizations || [],
-          totalCount: data.pagination?.total_results || 0,
-          hasMore: data.pagination?.has_next || false,
-          error: null
-        }))
-
-      } catch (error) {
-        console.error('Error loading organizations:', error)
-        setState(prev => ({
-          ...prev,
-          loading: false,
-          error: error instanceof Error ? error.message : 'Failed to load organizations'
-        }))
-      }
+  // Load organizations function for infinite scroll
+  const loadOrganizations = useCallback(async (page: number, append: boolean = false) => {
+    if (append) {
+      setState(prev => ({ ...prev, loadingMore: true, error: null }))
+    } else {
+      setState(prev => ({ ...prev, loading: true, error: null, currentPage: 1, organizations: [] }))
     }
+    
+    try {
+      // Use our new platform-specific API endpoint instead of direct Supabase queries
+      const params = new URLSearchParams({
+        page: page.toString(),
+        limit: ITEMS_PER_PAGE.toString()
+      })
+      
+      // Apply filters
+      if (searchQuery) {
+        params.set('search', searchQuery)
+      }
+      
+      if (categoryFilter) {
+        params.set('category', categoryFilter)
+      }
+      
+      if (cityFilter && cityFilter !== 'all') {
+        params.set('city', cityFilter)
+      }
+      
+      if (countryFilter && countryFilter !== 'all') {
+        params.set('country', countryFilter)
+      }
+      
+      if (stateFilter && stateFilter !== 'all') {
+        params.set('state', stateFilter)
+      }
+      
+      if (featuredOnly) {
+        params.set('featured', 'true')
+      }
+      
+      if (preferredOnly) {
+        params.set('preferred', 'true')
+      }
+      
+      if (purposeFilter) {
+        params.set('purpose', purposeFilter)
+      }
 
-    loadOrganizations()
-  }, [platform, currentPage, searchQuery, categoryFilter, cityFilter, countryFilter, stateFilter, operatingCountryFilter, featuredOnly, preferredOnly, purposeFilter, beneficiaryFilter])
+      if (beneficiaryFilter) {
+        params.set('beneficiary', beneficiaryFilter)
+      }
+
+      if (operatingCountryFilter) {
+        params.set('operating_country', operatingCountryFilter)
+      }
+
+      const response = await fetch(`/api/${platform}/organizations?${params.toString()}`)
+      
+      if (!response.ok) {
+        throw new Error(`Failed to fetch organizations: ${response.status} ${response.statusText}`)
+      }
+      
+      const data = await response.json()
+      
+      setState(prev => ({
+        ...prev,
+        loading: false,
+        loadingMore: false,
+        organizations: append 
+          ? [...prev.organizations, ...(data.organizations || [])]
+          : data.organizations || [],
+        totalCount: data.pagination?.total_results || 0,
+        hasMore: data.pagination?.has_next || false,
+        currentPage: page,
+        error: null
+      }))
+
+    } catch (error) {
+      console.error('Error loading organizations:', error)
+      setState(prev => ({
+        ...prev,
+        loading: false,
+        loadingMore: false,
+        error: error instanceof Error ? error.message : 'Failed to load organizations'
+      }))
+    }
+  }, [platform, searchQuery, categoryFilter, cityFilter, countryFilter, stateFilter, operatingCountryFilter, featuredOnly, preferredOnly, purposeFilter, beneficiaryFilter])
+
+  // Load more organizations for infinite scroll
+  const loadMore = useCallback(() => {
+    if (!state.loadingMore && state.hasMore) {
+      loadOrganizations(state.currentPage + 1, true)
+    }
+  }, [loadOrganizations, state.loadingMore, state.hasMore, state.currentPage])
+
+  // Initial load and filter changes
+  useEffect(() => {
+    isInitialLoad.current = true
+    loadOrganizations(1, false)
+  }, [loadOrganizations])
+
+  // Intersection observer for infinite scroll with preemptive loading
+  useEffect(() => {
+    if (!loadingTriggerRef.current) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries
+        // Trigger loading when element comes into view (preemptive loading)
+        if (entry.isIntersecting && !state.loading && !state.loadingMore && state.hasMore) {
+          loadMore()
+        }
+      },
+      {
+        // Trigger when element is 300px from entering viewport (preemptive)
+        rootMargin: '300px',
+        threshold: 0.1
+      }
+    )
+
+    observer.observe(loadingTriggerRef.current)
+
+    return () => observer.disconnect()
+  }, [loadMore, state.loading, state.loadingMore, state.hasMore])
 
   // Calculate pagination info
   const totalPages = Math.ceil(state.totalCount / ITEMS_PER_PAGE)
@@ -768,7 +1047,7 @@ export default function OrganizationBrowse({
   }, [locationSearch])
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="bg-gray-50">
       {/* Header */}
       <div className="bg-white border-b">
         <div className="max-w-7xl mx-auto px-4 py-6">
@@ -779,11 +1058,16 @@ export default function OrganizationBrowse({
               </h1>
               <p className="text-gray-600 mt-1">
                 {state.loading ? 'Loading...' : `${state.totalCount.toLocaleString()} organizations`}
+                {(platform === 'acnc' || platform === 'everyorg') && (
+                  <span className="hidden md:inline ml-2 text-sm text-gray-500">
+                    • Use the filter button to search and filter
+                  </span>
+                )}
               </p>
             </div>
           </div>
 
-          {/* Search Bar and Platform Filters Row */}
+          {/* Search Bar and Platform Filters Row - Hidden when using modal filters */}
           {platform === 'justgiving' ? (
             <div className="mt-4 flex flex-col lg:flex-row gap-4 items-start lg:items-end">
               {/* Search Bar */}
@@ -941,8 +1225,8 @@ export default function OrganizationBrowse({
               )}
             </div>
           ) : platform === 'acnc' ? (
-            /* ACNC Search and Filters Row */
-            <div className="mt-4 flex flex-col xl:flex-row gap-3 items-start xl:items-end">
+            /* ACNC Search and Filters Row - Hidden on mobile */
+            <div className="hidden md:flex mt-4 flex-col xl:flex-row gap-3 items-start xl:items-end">
               {/* Search Bar */}
               <div className="flex-1 max-w-48">
                 <div className="relative">
@@ -964,9 +1248,9 @@ export default function OrganizationBrowse({
                 </div>
               </div>
               
-              {/* Inline Category Filter */}
+              {/* Inline Category Filter - Mobile only */}
               {acncCategories.length > 0 && (
-                <div className="w-full xl:w-48">
+                <div className="w-full xl:w-48 md:hidden">
                   <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
                   <div className="relative">
                     <button
@@ -1012,9 +1296,9 @@ export default function OrganizationBrowse({
                 </div>
               )}
               
-              {/* Inline State Filter */}
+              {/* Inline State Filter - Mobile only */}
               {acncStates.length > 0 && (
-                <div className="w-full xl:w-32">
+                <div className="w-full xl:w-32 md:hidden">
                   <label className="block text-sm font-medium text-gray-700 mb-1">State</label>
                   <div className="relative">
                     <button
@@ -1060,9 +1344,9 @@ export default function OrganizationBrowse({
                 </div>
               )}
               
-              {/* Inline Purpose Filter */}
+              {/* Inline Purpose Filter - Mobile only */}
               {acncPurposes.length > 0 && (
-                <div className="w-full xl:w-48">
+                <div className="w-full xl:w-48 md:hidden">
                   <label className="block text-sm font-medium text-gray-700 mb-1">Purpose</label>
                   <div className="relative">
                     <button
@@ -1108,9 +1392,9 @@ export default function OrganizationBrowse({
                 </div>
               )}
               
-              {/* Inline Location Filter */}
+              {/* Inline Location Filter - Mobile only */}
               {acncCities.length > 0 && (
-                <div className="w-full xl:w-48">
+                <div className="w-full xl:w-48 md:hidden">
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Location{stateFilter && stateFilter !== 'all' ? ` (${stateFilter})` : ''}
                   </label>
@@ -1196,9 +1480,9 @@ export default function OrganizationBrowse({
                 </div>
               )}
               
-              {/* Inline Beneficiaries Filter */}
+              {/* Inline Beneficiaries Filter - Mobile only */}
               {acncBeneficiaries.length > 0 && (
-                <div className="w-full xl:w-48">
+                <div className="w-full xl:w-48 md:hidden">
                   <label className="block text-sm font-medium text-gray-700 mb-1">Beneficiaries</label>
                   <div className="relative">
                     <button
@@ -1244,9 +1528,9 @@ export default function OrganizationBrowse({
                 </div>
               )}
               
-              {/* Inline Operating Countries Filter */}
+              {/* Inline Operating Countries Filter - Mobile only */}
               {acncOperatingCountries.length > 0 && (
-                <div className="w-full xl:w-48">
+                <div className="w-full xl:w-48 md:hidden">
                   <label className="block text-sm font-medium text-gray-700 mb-1">Operating Countries</label>
                   <div className="relative">
                     <button
@@ -1292,16 +1576,97 @@ export default function OrganizationBrowse({
                 </div>
               )}
             </div>
+          ) : platform === 'everyorg' ? (
+            /* Every.org Search Bar + Category Dropdown - Hidden on mobile */
+            <div className="hidden md:flex mt-4 flex-col lg:flex-row gap-4 items-start lg:items-end">
+              {/* Search Bar */}
+              <div className="flex-1 max-w-md">
+                <div className="relative">
+                  <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                  <input
+                    type="text"
+                    defaultValue={searchQuery}
+                    placeholder="Search organizations..."
+                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        const url = new URL(window.location.href)
+                        url.searchParams.set('search', e.currentTarget.value)
+                        url.searchParams.delete('page')
+                        window.location.href = url.toString()
+                      }
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/* Category Filter - Mobile only */}
+              {allCategories.length > 0 && (
+                <div className="w-full lg:w-48 md:hidden">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                  <div className="relative">
+                    <button
+                      onClick={() => setCategoryDropdownOpen(!categoryDropdownOpen)}
+                      className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-left text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 flex items-center justify-between"
+                    >
+                      <span className={categoryFilter ? 'text-gray-900' : 'text-gray-500'}>
+                        {categoryFilter ? formatCategoryName(categoryFilter) : 'Category...'}
+                      </span>
+                      <ChevronDown className="h-4 w-4 text-gray-400" />
+                    </button>
+                    
+                    {categoryDropdownOpen && (
+                      <div className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                        {categoryFilter && (
+                          <button
+                            onClick={() => {
+                              handleCategorySelect('')
+                              setCategoryDropdownOpen(false)
+                            }}
+                            className="w-full px-3 py-2 text-left text-sm text-gray-500 hover:bg-gray-50 border-b"
+                          >
+                            Clear selection
+                          </button>
+                        )}
+                        {allCategories.map((category) => {
+                          const isDynamic = dynamicCategories.includes(category)
+                          return (
+                            <button
+                              key={category}
+                              onClick={() => {
+                                handleCategorySelect(category)
+                                setCategoryDropdownOpen(false)
+                              }}
+                              className={`w-full px-3 py-2 text-left text-sm hover:bg-green-50 ${
+                                categoryFilter === category ? 'bg-green-100 text-green-800 font-medium' : 'text-gray-700'
+                              }`}
+                              title={isDynamic ? 'Discovered from nonprofit tags' : 'Category'}
+                            >
+                              {formatCategoryName(category)}
+                              {isDynamic && <span className="ml-1 text-xs">🆕</span>}
+                            </button>
+                          )
+                        })}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
           ) : (
-            /* Default Search Bar for other platforms */
-            <div className="mt-4">
+            /* Search Bar for ACNC and Every.org platforms - Mobile only */
+            <div className="mt-4 md:hidden">
               <div className="relative max-w-md">
                 <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                 <input
                   type="text"
                   defaultValue={searchQuery}
                   placeholder="Search organizations..."
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className={`w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent ${
+                    platform === 'acnc' 
+                      ? 'focus:ring-orange-500' 
+                      : 'focus:ring-green-500'
+                  }`}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter') {
                       const url = new URL(window.location.href)
@@ -1315,52 +1680,12 @@ export default function OrganizationBrowse({
             </div>
           )}
 
-          {/* Every.org Category Selection */}
-          {platform === 'everyorg' && allCategories.length > 0 && (
-            <div className="mt-6 p-4 bg-green-50 rounded-lg border border-green-200">
-              <h3 className="text-sm font-semibold text-green-800 mb-3">Browse by Category</h3>
-              <div className="flex flex-wrap gap-2">
-                {allCategories.map((category) => {
-                  const isDynamic = dynamicCategories.includes(category)
-                  const isSelected = categoryFilter === category
-                  return (
-                    <button
-                      key={category}
-                      onClick={() => handleCategorySelect(category)}
-                      className={`px-3 py-1 rounded-full text-sm transition-colors ${
-                        isSelected
-                          ? isDynamic
-                            ? 'bg-green-600 text-white'
-                            : 'bg-green-600 text-white'
-                          : isDynamic
-                            ? 'bg-green-200 text-green-800 hover:bg-green-300'
-                            : 'bg-green-100 text-green-800 hover:bg-green-200'
-                      }`}
-                      title={isDynamic ? 'Discovered from nonprofit tags' : 'Popular category'}
-                    >
-                      {formatCategoryName(category)}
-                      {isDynamic && <span className="ml-1 text-xs">🆕</span>}
-                    </button>
-                  )
-                })}
-                {categoryFilter && (
-                  <button
-                    onClick={() => handleCategorySelect('')}
-                    className="px-3 py-1 rounded-full text-sm bg-gray-200 text-gray-700 hover:bg-gray-300"
-                    title="Clear category filter"
-                  >
-                    Clear Category
-                  </button>
-                )}
-              </div>
-            </div>
-          )}
-
           {/* Every.org State Selection - REMOVED (no structured location data) */}
 
           {/* Every.org Location Selection - REMOVED (no structured location data) */}
+          {/* Location filtering note - Hidden since we use filter modal for everything */}
           {platform === 'everyorg' && (
-            <div className="mt-6 p-4 bg-yellow-50 rounded-lg border border-yellow-200">
+            <div className="hidden mt-6 p-4 bg-yellow-50 rounded-lg border border-yellow-200">
               <div className="flex items-center gap-2 mb-3">
                 <h3 className="text-sm font-semibold text-yellow-800">Location Filtering</h3>
                 <span className="text-xs bg-yellow-200 text-yellow-800 px-2 py-1 rounded-full">Note</span>
@@ -1500,54 +1825,32 @@ export default function OrganizationBrowse({
               </div>
             )}
 
-            {/* Pagination */}
-            {!state.loading && totalPages > 1 && (
-              <div className="flex justify-center mt-12">
-                <div className="flex items-center space-x-2">
-                  {currentPage > 1 && (
-                    <a
-                      href={`?${new URLSearchParams({ ...searchParams, page: String(currentPage - 1) })}`}
-                      className="px-3 py-2 bg-white border rounded-lg hover:bg-gray-50"
-                    >
-                      Previous
-                    </a>
-                  )}
-                  
-                  {Array.from({ length: Math.min(5, totalPages) }).map((_, i) => {
-                    const pageNum = currentPage <= 3 ? i + 1 : currentPage - 2 + i
-                    if (pageNum > totalPages) return null
-                    
-                    return (
-                      <a
-                        key={pageNum}
-                        href={`?${new URLSearchParams({ ...searchParams, page: String(pageNum) })}`}
-                        className={`px-3 py-2 border rounded-lg ${
-                          pageNum === currentPage
-                            ? 'bg-blue-600 text-white border-blue-600'
-                            : 'bg-white hover:bg-gray-50'
-                        }`}
-                      >
-                        {pageNum}
-                      </a>
-                    )
-                  })}
-                  
-                  {state.hasMore && (
-                    <a
-                      href={`?${new URLSearchParams({ ...searchParams, page: String(currentPage + 1) })}`}
-                      className="px-3 py-2 bg-white border rounded-lg hover:bg-gray-50"
-                    >
-                      Next
-                    </a>
-                  )}
-                </div>
+            {/* Infinite Scroll Loading Trigger */}
+            {state.hasMore && (
+              <div 
+                ref={loadingTriggerRef} 
+                className="flex justify-center py-8 mt-8"
+              >
+                {state.loadingMore && (
+                  <div className="flex items-center space-x-3">
+                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+                    <span className="text-gray-600">Loading more...</span>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* End of results indicator */}
+            {!state.loading && !state.hasMore && state.organizations.length > 0 && (
+              <div className="flex justify-center py-8 mt-8 mb-8">
+                <span className="text-gray-500 text-sm">You've reached the end of results</span>
               </div>
             )}
           </div>
         </div>
 
-        {/* Filters Sidebar - Hidden for ACNC (uses top filters instead) */}
-        {showFilters && platform !== 'acnc' && (
+        {/* Filters Sidebar - Hidden for ACNC and Every.org (use modal filters instead) */}
+        {showFilters && platform !== 'acnc' && platform !== 'everyorg' && (
           <div className="lg:w-80">
             <OrganizationFilters
               platform={platform}
@@ -1571,6 +1874,344 @@ export default function OrganizationBrowse({
           </div>
         )}
       </div>
+
+      {/* Filter Button - All platforms, all screen sizes */}
+      {(platform === 'acnc' || platform === 'everyorg') && (
+        <div className="fixed bottom-20 md:bottom-6 right-6 z-50">
+          <button
+            onClick={openMobileFilters}
+            className={`${
+              platform === 'acnc' 
+                ? 'bg-orange-600 hover:bg-orange-700' 
+                : 'bg-green-600 hover:bg-green-700'
+            } text-white p-4 rounded-full shadow-lg transition-all duration-200 transform hover:scale-105`}
+          >
+            <Filter className="h-6 w-6" />
+          </button>
+        </div>
+      )}
+
+      {/* Filter Modal - ACNC and Every.org */}
+      {(platform === 'acnc' || platform === 'everyorg') && showMobileFilters && (
+        <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-end md:items-center md:justify-end md:pr-6 md:pb-20">
+          <div className="bg-white rounded-t-2xl md:rounded-2xl w-full md:w-96 max-h-[80vh] md:max-h-[70vh] overflow-y-auto md:shadow-2xl">
+            {/* Modal Header */}
+            <div className="sticky top-0 bg-white border-b border-gray-200 p-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-semibold text-gray-900">Filters</h3>
+                <div className="flex items-center space-x-3">
+                  <button
+                    onClick={clearMobileFilters}
+                    className="text-sm text-orange-600 hover:text-orange-700 font-medium"
+                  >
+                    Clear All
+                  </button>
+                  <button
+                    onClick={() => setShowMobileFilters(false)}
+                    className="text-gray-400 hover:text-gray-600"
+                  >
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Modal Content */}
+            <div className="p-4 space-y-6">
+              {/* Search Bar */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Search</label>
+                <div className="relative">
+                  <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                  <input
+                    type="text"
+                    value={mobileFilters.search}
+                    onChange={(e) => setMobileFilters(prev => ({ ...prev, search: e.target.value }))}
+                    placeholder="Search organizations..."
+                    className={`w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent ${
+                      platform === 'acnc' ? 'focus:ring-orange-500' : 'focus:ring-green-500'
+                    }`}
+                  />
+                </div>
+              </div>
+
+              {/* Category Filter - Platform-aware */}
+              {((platform === 'acnc' && acncCategories.length > 0) || (platform === 'everyorg' && allCategories.length > 0)) && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                  <div className="relative">
+                    <select
+                      value={mobileFilters.category}
+                      onChange={(e) => setMobileFilters(prev => ({ ...prev, category: e.target.value }))}
+                      className={`w-full p-3 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent appearance-none bg-white ${
+                        platform === 'acnc' 
+                          ? 'focus:ring-orange-500' 
+                          : 'focus:ring-green-500'
+                      }`}
+                    >
+                      <option value="">All Categories</option>
+                      {(platform === 'acnc' ? acncCategories : allCategories).map((category) => (
+                        <option key={category} value={category}>
+                          {platform === 'everyorg' ? formatCategoryName(category) : category}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+                  </div>
+                </div>
+              )}
+
+              {/* State Filter - ACNC only */}
+              {platform === 'acnc' && acncStates.length > 0 && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">State</label>
+                  <div className="relative">
+                    <select
+                      value={mobileFilters.state}
+                      onChange={(e) => setMobileFilters(prev => ({ ...prev, state: e.target.value }))}
+                      className="w-full p-3 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none bg-white"
+                    >
+                      <option value="">All States</option>
+                      {acncStates.map((state) => (
+                        <option key={state} value={state}>
+                          {state}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+                  </div>
+                </div>
+              )}
+
+              {/* Purpose Filter - ACNC only */}
+              {platform === 'acnc' && acncPurposes.length > 0 && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Purpose</label>
+                  <div className="relative">
+                    <select
+                      value={mobileFilters.purpose}
+                      onChange={(e) => setMobileFilters(prev => ({ ...prev, purpose: e.target.value }))}
+                      className="w-full p-3 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent appearance-none bg-white"
+                    >
+                      <option value="">All Purposes</option>
+                      {acncPurposes.map((purpose) => (
+                        <option key={purpose} value={purpose}>
+                          {purpose.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+                  </div>
+                </div>
+              )}
+
+              {/* Location Filter - ACNC only */}
+              {platform === 'acnc' && acncCities.length > 0 && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Location</label>
+                  <div className="relative">
+                    <select
+                      value={mobileFilters.city}
+                      onChange={(e) => setMobileFilters(prev => ({ ...prev, city: e.target.value }))}
+                      className="w-full p-3 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent appearance-none bg-white"
+                    >
+                      <option value="">All Locations</option>
+                      {(stateFilter && stateFilter !== 'all' ? stateCities : acncCities).map((city) => (
+                        <option key={city} value={city}>
+                          {city}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+                  </div>
+                </div>
+              )}
+
+              {/* Beneficiaries Filter - ACNC only */}
+              {platform === 'acnc' && acncBeneficiaries.length > 0 && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Beneficiaries</label>
+                  <div className="relative">
+                    <select
+                      value={mobileFilters.beneficiary}
+                      onChange={(e) => setMobileFilters(prev => ({ ...prev, beneficiary: e.target.value }))}
+                      className="w-full p-3 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent appearance-none bg-white"
+                    >
+                      <option value="">All Beneficiaries</option>
+                      {acncBeneficiaries.map((beneficiary) => (
+                        <option key={beneficiary} value={beneficiary}>
+                          {beneficiary.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+                  </div>
+                </div>
+              )}
+
+              {/* Operating Countries Filter - ACNC only */}
+              {platform === 'acnc' && acncOperatingCountries.length > 0 && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Operating Countries</label>
+                  <div className="relative">
+                    <select
+                      value={mobileFilters.operating_country}
+                      onChange={(e) => setMobileFilters(prev => ({ ...prev, operating_country: e.target.value }))}
+                      className="w-full p-3 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent appearance-none bg-white"
+                    >
+                      <option value="">All Countries</option>
+                      {acncOperatingCountries.map((country) => (
+                        <option key={country} value={country}>
+                          {country}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+                  </div>
+                </div>
+              )}
+
+              {/* Every.org Location Filtering Note - Mobile only */}
+              {platform === 'everyorg' && (
+                <div className="p-4 bg-yellow-50 rounded-lg border border-yellow-200">
+                  <div className="flex items-center gap-2 mb-3">
+                    <h3 className="text-sm font-semibold text-yellow-800">Location Filtering</h3>
+                    <span className="text-xs bg-yellow-200 text-yellow-800 px-2 py-1 rounded-full">Note</span>
+                  </div>
+                  <p className="text-sm text-yellow-700">
+                    Every.org organizations contain location information in their descriptions, but not in structured address fields. 
+                    Use the search bar above to find organizations by location (e.g., "San Francisco", "Texas", "California").
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* Modal Footer - Apply Filters Button */}
+            <div className="sticky bottom-0 bg-white border-t border-gray-200 p-4">
+              <div className="flex space-x-3">
+                <button
+                  onClick={() => setShowMobileFilters(false)}
+                  className="flex-1 px-4 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={applyMobileFilters}
+                  className={`flex-1 px-4 py-3 text-white rounded-lg transition-colors font-medium ${
+                    platform === 'acnc' 
+                      ? 'bg-orange-600 hover:bg-orange-700' 
+                      : 'bg-green-600 hover:bg-green-700'
+                  }`}
+                >
+                  Apply Filters
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Mobile Footer Access Button */}
+      <div className="md:hidden fixed bottom-6 left-6 z-40">
+        <button
+          onClick={() => setShowMobileFooter(true)}
+          className="bg-gray-800 hover:bg-gray-900 text-white p-3 rounded-full shadow-lg transition-all duration-200 transform hover:scale-105"
+          aria-label="View footer information"
+        >
+          <Info className="h-5 w-5" />
+        </button>
+      </div>
+
+      {/* Mobile Footer Modal */}
+      {showMobileFooter && (
+        <div className="md:hidden fixed inset-0 z-50 bg-black bg-opacity-50 flex items-end">
+          <div className="bg-white rounded-t-2xl w-full max-h-[80vh] overflow-y-auto">
+            {/* Modal Header */}
+            <div className="sticky top-0 bg-white border-b border-gray-200 p-4 z-10">
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-semibold text-gray-900">Site Information</h3>
+                <button
+                  onClick={() => setShowMobileFooter(false)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
+            </div>
+
+            {/* Modal Content - Footer Content */}
+            <div className="p-4 pb-8">
+              {/* Trust & Transparency Section */}
+              <div className="bg-gray-50 rounded-lg p-4 mb-6">
+                <h4 className="font-semibold text-gray-900 mb-3">Trust & Transparency</h4>
+                <div className="space-y-4">
+                  <div>
+                    <div className="flex items-center mb-2">
+                      <span className="text-green-600 mr-2">♥</span>
+                      <span className="font-medium text-sm">No Platform Fees</span>
+                    </div>
+                    <p className="text-xs text-gray-600 ml-6">
+                      100% of donations go directly to charities via JustGiving. We never take fees from donations.
+                    </p>
+                  </div>
+                  <div>
+                    <div className="flex items-center mb-2">
+                      <span className="text-gray-700 mr-2">⌨</span>
+                      <span className="font-medium text-sm">Open Source</span>
+                    </div>
+                    <p className="text-xs text-gray-600 ml-6">
+                      Our platform is transparent - view our source code on GitHub.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Quick Links */}
+              <div className="grid grid-cols-2 gap-4 mb-6">
+                <div>
+                  <h4 className="font-semibold text-gray-900 mb-3 text-sm">Platform</h4>
+                  <ul className="space-y-2 text-xs">
+                    <li><a href={`/${locale}/services`} className="text-gray-600 hover:text-gray-900">Browse Services</a></li>
+                    <li><a href={`/${locale}/dashboard`} className="text-gray-600 hover:text-gray-900">For Fundraisers</a></li>
+                    <li><a href={`/${locale}/justgiving/charities`} className="text-gray-600 hover:text-gray-900">Featured Charities</a></li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-gray-900 mb-3 text-sm">Legal</h4>
+                  <ul className="space-y-2 text-xs">
+                    <li><a href={`/${locale}/privacy`} className="text-gray-600 hover:text-gray-900">Privacy Policy</a></li>
+                    <li><a href={`/${locale}/terms`} className="text-gray-600 hover:text-gray-900">Terms of Service</a></li>
+                    <li><a href={`/${locale}/about`} className="text-gray-600 hover:text-gray-900">About Us</a></li>
+                    <li><a href={`/${locale}/contact`} className="text-gray-600 hover:text-gray-900">Contact</a></li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* Bottom Info */}
+              <div className="border-t border-gray-200 pt-4">
+                <div className="text-xs text-gray-500 space-y-2">
+                  <div>© 2025 Powered by Donation</div>
+                  <div>ABN: 17 927 784 658</div>
+                  <div>Made in Australia</div>
+                  <div className="flex items-center">
+                    <span>Powered by </span>
+                    <a 
+                      href="https://www.justgiving.com" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:text-blue-700 ml-1"
+                    >
+                      JustGiving
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
