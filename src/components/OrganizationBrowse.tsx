@@ -168,31 +168,14 @@ export default function OrganizationBrowse({
         try {
           const supabase = createClient()
           
-          console.log('Loading Every.org filter data...')
-          
-          // Get all Every.org organizations without limit for comprehensive filter data
-          const { data: organizations, error } = await supabase
-            .from('organization_cache')
-            .select('*')
-            .eq('platform', 'everyorg')
-            .eq('is_active', true)
-            .limit(1)
+          // Load filter data from lookup table (much faster)
+          const { data: categoriesResult, error } = await supabase
+            .from('everyorg_categories_lookup')
+            .select('category')
+            .order('category')
 
-          // Debug: Check what fields are available
-          if (organizations && organizations.length > 0) {
-            console.log('Sample Every.org organization fields:', Object.keys(organizations[0]))
-            console.log('Sample Every.org organization data:', organizations[0])
-          }
-
-          // Now get all organizations for category extraction using available fields
-          const { data: allOrganizations, error: allError } = await supabase
-            .from('organization_cache')
-            .select('category, description, keywords, categories_list')
-            .eq('platform', 'everyorg')
-            .eq('is_active', true)
-
-          if (error || allError) {
-            console.error('Error loading Every.org data:', error || allError)
+          if (error) {
+            console.error('Error loading Every.org categories from lookup:', error)
             // Fallback to hardcoded categories
             const client = getEveryOrgClient()
             const popularCategories = client.getPopularCauses()
@@ -200,101 +183,23 @@ export default function OrganizationBrowse({
             return
           }
 
-          console.log('Every.org organizations loaded for filters:', allOrganizations?.length)
-
-          let loadedCategories: string[] = []
-          
-          if (allOrganizations && allOrganizations.length > 0) {
-            // Try multiple approaches to extract meaningful categories from available fields
-            const categorySet = new Set<string>()
-            
-            allOrganizations.forEach(org => {
-              // 1. Use existing category field
-              if (org.category) {
-                categorySet.add(org.category)
-              }
-              
-              // 2. Extract from categories_list if available (might be a JSON array)
-              if (org.categories_list) {
-                try {
-                  let categories = org.categories_list
-                  if (typeof categories === 'string') {
-                    categories = JSON.parse(categories)
-                  }
-                  if (Array.isArray(categories)) {
-                    categories.forEach(cat => {
-                      if (typeof cat === 'string') {
-                        categorySet.add(cat.trim())
-                      } else if (cat && cat.name) {
-                        categorySet.add(cat.name.trim())
-                      }
-                    })
-                  }
-                } catch (e) {
-                  // If not JSON, treat as comma-separated string
-                  if (typeof org.categories_list === 'string') {
-                    org.categories_list.split(',').forEach(cat => {
-                      categorySet.add(cat.trim())
-                    })
-                  }
-                }
-              }
-              
-              // 3. Extract from keywords if available
-              if (org.keywords && typeof org.keywords === 'string') {
-                // Look for common category keywords
-                const commonCategories = [
-                  'education', 'health', 'environment', 'animals', 'children', 'women', 'veterans',
-                  'homeless', 'hunger', 'poverty', 'disaster', 'research', 'arts', 'culture',
-                  'religion', 'human rights', 'justice', 'climate', 'conservation', 'disability',
-                  'elderly', 'youth', 'community', 'housing', 'employment', 'legal aid',
-                  'mental health', 'cancer', 'diabetes', 'addiction', 'rehabilitation'
-                ]
-                
-                const lowerKeywords = org.keywords.toLowerCase()
-                commonCategories.forEach(category => {
-                  if (lowerKeywords.includes(category)) {
-                    categorySet.add(category)
-                  }
-                })
-              }
-              
-              // 4. Extract from description using common nonprofit categories
-              if (org.description && typeof org.description === 'string') {
-                const lowerDesc = org.description.toLowerCase()
-                const descriptionCategories = [
-                  'education', 'health', 'environment', 'animals', 'children', 'women', 'veterans',
-                  'homeless', 'hunger', 'poverty', 'disaster', 'research', 'arts', 'culture',
-                  'religion', 'human rights', 'justice', 'climate', 'conservation', 'disability',
-                  'elderly', 'youth', 'community', 'housing', 'employment', 'food', 'water',
-                  'medical', 'cancer', 'mental health', 'advocacy', 'legal', 'refugee', 'immigrant'
-                ]
-                
-                descriptionCategories.forEach(category => {
-                  if (lowerDesc.includes(category)) {
-                    // Capitalize first letter
-                    categorySet.add(category.charAt(0).toUpperCase() + category.slice(1))
-                  }
-                })
-              }
-            })
-            
-            loadedCategories = Array.from(categorySet).filter(Boolean).sort()
-            console.log('Every.org categories found (enhanced extraction):', loadedCategories.length, loadedCategories.slice(0, 30))
-            setEveryOrgCategories(loadedCategories)
+          if (categoriesResult && categoriesResult.length > 0) {
+            setEveryOrgCategories(categoriesResult.map(item => item.category))
           } else {
-            console.log('No Every.org organizations found for filtering, using fallback')
-            // Fallback to hardcoded categories
+            // Fallback to hardcoded categories if no data in lookup table
             const client = getEveryOrgClient()
-            loadedCategories = client.getPopularCauses()
-            setEveryOrgCategories(loadedCategories)
+            const popularCategories = client.getPopularCauses()
+            setEveryOrgCategories(popularCategories)
           }
           
           // Check if current category filter is not in loaded categories and add it to dynamic
-          if (categoryFilter && !loadedCategories.includes(categoryFilter)) {
-            setDynamicCategories(prev => 
-              prev.includes(categoryFilter) ? prev : [...prev, categoryFilter]
-            )
+          if (categoryFilter && categoriesResult && categoriesResult.length > 0) {
+            const loadedCategories = categoriesResult.map(item => item.category)
+            if (!loadedCategories.includes(categoryFilter)) {
+              setDynamicCategories(prev => 
+                prev.includes(categoryFilter) ? prev : [...prev, categoryFilter]
+              )
+            }
           }
         } catch (error) {
           console.error('Failed to load Every.org data:', error)
@@ -320,121 +225,36 @@ export default function OrganizationBrowse({
         try {
           const supabase = createClient()
           
-          console.log('Loading ACNC filter data...')
-          
-          // Get all organizations without limit for comprehensive filter data
-          const { data: organizations, error } = await supabase
-            .from('organization_cache')
-            .select('acnc_purposes, acnc_beneficiaries, category, address_city, acnc_operates_in_act, acnc_operates_in_nsw, acnc_operates_in_nt, acnc_operates_in_qld, acnc_operates_in_sa, acnc_operates_in_tas, acnc_operates_in_vic, acnc_operates_in_wa, acnc_operating_countries')
-            .eq('platform', 'acnc')
-            .eq('is_active', true)
-            .not('acnc_operating_countries', 'is', null)
-            .neq('acnc_operating_countries', '')
-            // Remove limit to get complete filter data
+          // Load filter data from lookup tables (much faster)
+          const [categoriesResult, purposesResult, beneficiariesResult, citiesResult, statesResult, countriesResult] = await Promise.all([
+            supabase.from('acnc_categories_lookup').select('category').order('category'),
+            supabase.from('acnc_purposes_lookup').select('purpose').order('purpose'),
+            supabase.from('acnc_beneficiaries_lookup').select('beneficiary').order('beneficiary'),
+            supabase.from('acnc_cities_lookup').select('city').order('city'),
+            supabase.from('acnc_states_lookup').select('state').order('state'),
+            supabase.from('acnc_operating_countries_lookup').select('country').order('country')
+          ])
 
-          if (error) {
-            console.error('Error loading ACNC data:', error)
-            return
+          if (categoriesResult.data) {
+            setAcncCategories(categoriesResult.data.map(item => item.category))
           }
-
-          console.log('ACNC organizations loaded for filters:', organizations?.length)
-
-          if (organizations && organizations.length > 0) {
-            // Extract purposes
-            const purposeSet = new Set<string>()
-            organizations.forEach(org => {
-              if (org.acnc_purposes && typeof org.acnc_purposes === 'object') {
-                Object.entries(org.acnc_purposes).forEach(([purpose, value]) => {
-                  if (value === true || value === 'true') {
-                    purposeSet.add(purpose)
-                  }
-                })
-              }
-            })
-            const purposes = Array.from(purposeSet).sort()
-            console.log('ACNC purposes found:', purposes.length, purposes.slice(0, 5))
-            setAcncPurposes(purposes)
-
-            // Extract beneficiaries
-            const beneficiarySet = new Set<string>()
-            organizations.forEach(org => {
-              if (org.acnc_beneficiaries && typeof org.acnc_beneficiaries === 'object') {
-                Object.entries(org.acnc_beneficiaries).forEach(([beneficiary, value]) => {
-                  if (value === true || value === 'true') {
-                    beneficiarySet.add(beneficiary)
-                  }
-                })
-              }
-            })
-            const beneficiaries = Array.from(beneficiarySet).sort()
-            console.log('ACNC beneficiaries found:', beneficiaries.length, beneficiaries.slice(0, 5))
-            setAcncBeneficiaries(beneficiaries)
-
-            // Extract categories from ALL organizations
-            const categories = Array.from(new Set(organizations.map(o => o.category).filter(Boolean))).sort()
-            console.log('ACNC categories found (all organizations):', categories.length, categories)
-            setAcncCategories(categories)
-
-            // Extract all cities from ALL organizations
-            const allCities = Array.from(new Set(organizations.map(o => o.address_city).filter(Boolean))).sort()
-            console.log('ACNC cities found (all organizations):', allCities.length, allCities.slice(0, 10))
-            setAcncCities(allCities)
-
-            // Extract states from operates_in fields
-            const stateSet = new Set<string>()
-            organizations.forEach(org => {
-              if (org.acnc_operates_in_act === 'Y') stateSet.add('ACT')
-              if (org.acnc_operates_in_nsw === 'Y') stateSet.add('NSW')
-              if (org.acnc_operates_in_nt === 'Y') stateSet.add('NT')
-              if (org.acnc_operates_in_qld === 'Y') stateSet.add('QLD')
-              if (org.acnc_operates_in_sa === 'Y') stateSet.add('SA')
-              if (org.acnc_operates_in_tas === 'Y') stateSet.add('TAS')
-              if (org.acnc_operates_in_vic === 'Y') stateSet.add('VIC')
-              if (org.acnc_operates_in_wa === 'Y') stateSet.add('WA')
-            })
-            const states = Array.from(stateSet).sort()
-            console.log('ACNC states found:', states.length, states)
-            setAcncStates(states)
-
-            // Extract operating countries (convert ISO codes to country names)
-            const operatingCountrySet = new Set<string>()
-            const rawCountryData: string[] = []
-            
-            organizations.forEach(org => {
-              if (org.acnc_operating_countries && typeof org.acnc_operating_countries === 'string' && org.acnc_operating_countries.trim()) {
-                rawCountryData.push(org.acnc_operating_countries)
-                // Parse country codes and convert to full country names
-                const countryNames = parseOperatingCountries(org.acnc_operating_countries)
-                countryNames.forEach(countryName => {
-                  operatingCountrySet.add(countryName)
-                })
-              }
-            })
-            
-            const operatingCountries = Array.from(operatingCountrySet).sort()
-            console.log('ACNC operating countries extraction:')
-            console.log('- Organizations with operating countries data:', organizations.length)
-            console.log('- Unique raw country strings found:', new Set(rawCountryData).size)
-            console.log('- Sample raw data:', Array.from(new Set(rawCountryData)).slice(0, 5))
-            console.log('- Final operating countries:', operatingCountries.length, operatingCountries.slice(0, 10))
-            
-            // Debug: Show count of organizations per country for verification
-            console.log('- Countries with most organizations:', 
-              operatingCountries.slice(0, 5).map(country => {
-                const count = rawCountryData.filter(data => {
-                  const countryNames = parseOperatingCountries(data)
-                  return countryNames.includes(country)
-                }).length
-                return `${country}(${count})`
-              }).join(', ')
-            )
-            
-            setAcncOperatingCountries(operatingCountries)
-          } else {
-            console.log('No ACNC organizations found for filtering')
+          if (purposesResult.data) {
+            setAcncPurposes(purposesResult.data.map(item => item.purpose))
+          }
+          if (beneficiariesResult.data) {
+            setAcncBeneficiaries(beneficiariesResult.data.map(item => item.beneficiary))
+          }
+          if (citiesResult.data) {
+            setAcncCities(citiesResult.data.map(item => item.city))
+          }
+          if (statesResult.data) {
+            setAcncStates(statesResult.data.map(item => item.state))
+          }
+          if (countriesResult.data) {
+            setAcncOperatingCountries(countriesResult.data.map(item => item.country))
           }
         } catch (error) {
-          console.error('Failed to load ACNC data:', error)
+          console.error('Failed to load ACNC filter data:', error)
         }
       }
       
@@ -449,36 +269,17 @@ export default function OrganizationBrowse({
         try {
           const supabase = createClient()
           
-          console.log('Loading JustGiving filter data...')
-          
-          // Get all JustGiving organizations for comprehensive filter data
-          const { data: organizations, error } = await supabase
-            .from('organization_cache')
-            .select('address_country, address_city')
-            .eq('platform', 'justgiving')
-            .eq('is_active', true)
-            .not('address_country', 'is', null)
-            .not('address_city', 'is', null)
+          // Load filter data from lookup tables (much faster)
+          const [countriesResult, citiesResult] = await Promise.all([
+            supabase.from('justgiving_countries_lookup').select('country').order('country'),
+            supabase.from('justgiving_cities_lookup').select('city').order('city')
+          ])
 
-          if (error) {
-            console.error('Error loading JustGiving data:', error)
-            return
+          if (countriesResult.data) {
+            setJustgivingCountries(countriesResult.data.map(item => item.country))
           }
-
-          console.log('JustGiving organizations loaded for filters:', organizations?.length)
-
-          if (organizations && organizations.length > 0) {
-            // Extract countries
-            const countries = Array.from(new Set(organizations.map(o => o.address_country).filter(Boolean))).sort()
-            console.log('JustGiving countries found:', countries.length, countries)
-            setJustgivingCountries(countries)
-
-            // Extract all cities
-            const allCities = Array.from(new Set(organizations.map(o => o.address_city).filter(Boolean))).sort()
-            console.log('JustGiving cities found:', allCities.length, allCities.slice(0, 10))
-            setJustgivingCities(allCities)
-          } else {
-            console.log('No JustGiving organizations found for filtering')
+          if (citiesResult.data) {
+            setJustgivingCities(citiesResult.data.map(item => item.city))
           }
         } catch (error) {
           console.error('Failed to load JustGiving data:', error)
