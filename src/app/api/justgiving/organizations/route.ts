@@ -32,11 +32,22 @@ export async function GET(request: NextRequest) {
     
     const supabase = createClient();
     
+    // Get total count from platform_stats table (much faster than counting)
+    const { data: statsData } = await supabase
+      .from('platform_stats')
+      .select('justgiving_count')
+      .order('last_updated', { ascending: false })
+      .limit(1)
+      .single();
+    
+    const totalCount = statsData?.justgiving_count || 0;
+
     let query = supabase
       .from('organization_cache')
-      .select('*', { count: 'exact' })
+      .select('*')
       .eq('platform', 'justgiving')
-      .eq('is_active', true);
+      .eq('is_active', true)
+      .eq('show_on_platform', true);
     
     // Apply filters
     if (search) {
@@ -77,7 +88,7 @@ export async function GET(request: NextRequest) {
       .order('name', { ascending: true })
       .range(offset, offset + limit - 1);
     
-    const { data: organizations, error, count } = await query;
+    const { data: organizations, error } = await query;
     
     if (error) {
       console.error('JustGiving organizations fetch error:', error);
@@ -104,7 +115,7 @@ export async function GET(request: NextRequest) {
       );
     }
     
-    const totalPages = Math.ceil((count || 0) / limit);
+    const totalPages = Math.ceil(totalCount / limit);
     
     return NextResponse.json({
       organizations: filteredOrganizations,
@@ -112,7 +123,7 @@ export async function GET(request: NextRequest) {
         page,
         pages: totalPages,
         page_size: limit,
-        total_results: count || 0,
+        total_results: totalCount,
         has_next: page < totalPages,
         has_previous: page > 1
       },

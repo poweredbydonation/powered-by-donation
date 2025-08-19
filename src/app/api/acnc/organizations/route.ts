@@ -114,6 +114,16 @@ export async function GET(request: NextRequest) {
       query = query.contains('acnc_beneficiaries', { [beneficiary]: true });
     }
 
+    // Get total count from platform_stats table (much faster than counting)
+    const { data: statsData } = await supabase
+      .from('platform_stats')
+      .select('acnc_count')
+      .order('last_updated', { ascending: false })
+      .limit(1)
+      .single();
+    
+    const totalCount = statsData?.acnc_count || 0;
+    
     // Apply pagination for all queries (operating country now uses database filtering)
     const offset = (page - 1) * limit;
     query = query
@@ -164,12 +174,13 @@ export async function GET(request: NextRequest) {
       finalOrganizations = filteredOrganizations.slice(offset, offset + limit);
     }
     
-    // Return simplified response without total count for better performance
+    // Return response with total count for pagination
     return NextResponse.json({
       organizations: finalOrganizations,
       pagination: {
         page,
         page_size: limit,
+        total_results: totalCount || 0,
         has_next: finalOrganizations.length === limit, // Assume more if we got full page
         has_previous: page > 1
       },

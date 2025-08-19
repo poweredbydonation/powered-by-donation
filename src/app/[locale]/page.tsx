@@ -66,7 +66,7 @@ export default async function HomePage({ params }: HomePageProps) {
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
       <div className="bg-gradient-to-br from-blue-50 to-indigo-100">
-        <div className="max-w-4xl mx-auto px-6 py-16 text-center">
+        <div className="max-w-4xl mx-auto px-6 text-center">
           
           {/* Platform Cards */}
           <div className="mb-16">

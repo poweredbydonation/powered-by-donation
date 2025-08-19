@@ -8,7 +8,9 @@
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import { DonationPlatform, OrganizationCache } from '@/types/database'
+import { useState, useEffect } from 'react'
+import { DonationPlatform, OrganizationCache, Service } from '@/types/database'
+import ServiceCard from '@/components/services/ServiceCard'
 import { EntityType, buildPlatformUrl } from '@/lib/utils/entity-urls'
 import { 
   ExternalLink, 
@@ -18,6 +20,7 @@ import {
   Phone, 
   Calendar,
   TrendingUp,
+  Plus,
   Users,
   Star,
   ArrowLeft
@@ -41,6 +44,11 @@ export default function OrganizationPage({
 }: OrganizationPageProps) {
   const t = useTranslations('organization')
   const router = useRouter()
+
+  // Services state
+  const [services, setServices] = useState<Service[]>([])
+  const [servicesLoading, setServicesLoading] = useState(false)
+  const [servicesError, setServicesError] = useState<string | null>(null)
 
   const platformConfig = {
     justgiving: {
@@ -68,8 +76,35 @@ export default function OrganizationPage({
 
   const config = platformConfig[platform]
 
-  // Load related services
-  // Services section removed for better performance
+  // Load services supporting this organization
+  useEffect(() => {
+    const loadServices = async () => {
+      setServicesLoading(true)
+      setServicesError(null)
+
+      try {
+        const response = await fetch(
+          `/api/services/by-organization?organization_id=${organization.id}&platform=${platform}`
+        )
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch services')
+        }
+
+        const data = await response.json()
+        setServices(data.services || [])
+      } catch (error) {
+        console.error('Error loading services:', error)
+        setServicesError('Failed to load services')
+      } finally {
+        setServicesLoading(false)
+      }
+    }
+
+    if (organization.id) {
+      loadServices()
+    }
+  }, [organization.id, platform])
 
   return (
     <>
@@ -178,10 +213,11 @@ export default function OrganizationPage({
       </div>
 
       {/* Main Content */}
-      <div className="max-w-4xl mx-auto px-4 py-8 pb-24 md:pb-8">
+      <div className="max-w-7xl mx-auto px-4 py-8 pb-24 md:pb-8">
+        {/* Three Column Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Main Content */}
-          <div className="lg:col-span-2 space-y-6">
+          {/* About Section */}
+          <div className="space-y-6">
             {/* Description */}
             {organization.description && (
               <div className="bg-white rounded-lg border p-6">
@@ -397,11 +433,11 @@ export default function OrganizationPage({
             {/* Services section removed for better performance - users can browse services separately */}
           </div>
 
-          {/* Sidebar */}
+          {/* Statistics Section */}
           <div className="space-y-6">
             {/* Stats */}
             <div className="bg-white rounded-lg border p-6">
-              <h3 className="font-semibold text-gray-900 mb-4">Statistics</h3>
+              <h3 className="text-xl font-semibold text-gray-900 mb-4">Statistics</h3>
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600">Total Donations</span>
@@ -418,9 +454,12 @@ export default function OrganizationPage({
               </div>
             </div>
 
-            {/* Create Service CTA - Hidden on mobile */}
-            <div className={`hidden md:block ${config.bgClass} rounded-lg border p-6 text-center`}>
-              <h3 className="font-semibold text-gray-900 mb-2">Support This Organization</h3>
+          </div>
+
+          {/* Support This Organization Section */}
+          <div className="space-y-6">
+            <div className={`${config.bgClass} rounded-lg border p-6 text-center`}>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">Support This Organization</h3>
               <p className="text-sm text-gray-600 mb-4">
                 Create a service and donate the proceeds to this organization.
               </p>
@@ -452,6 +491,98 @@ export default function OrganizationPage({
             <span className="text-sm text-gray-600">for {organization.display_name || organization.name}</span>
           </div>
         </div>
+      </div>
+
+      {/* Services Supporting This Organization */}
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900">
+              Services Supporting This Organization
+            </h2>
+            <p className="text-gray-600 mt-1">
+              Fundraisers offering skills in exchange for donations to this organization
+            </p>
+          </div>
+          {services.length > 0 && (
+            <div className="text-sm text-gray-500">
+              {services.length} service{services.length !== 1 ? 's' : ''} found
+            </div>
+          )}
+        </div>
+
+        {servicesLoading && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="animate-pulse">
+                <div className="bg-white rounded-lg border p-6">
+                  <div className="flex items-start space-x-4">
+                    <div className="flex-1">
+                      <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+                      <div className="h-3 bg-gray-200 rounded w-1/2 mb-2"></div>
+                      <div className="h-3 bg-gray-200 rounded w-2/3"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {servicesError && (
+          <div className="text-center py-8">
+            <p className="text-red-600 mb-4">{servicesError}</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+            >
+              Try Again
+            </button>
+          </div>
+        )}
+
+        {!servicesLoading && !servicesError && services.length === 0 && (
+          <div className="text-center py-12">
+            <div className="bg-gray-50 rounded-lg p-8">
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                No services yet
+              </h3>
+              <p className="text-gray-600 mb-4">
+                No fundraisers have created services specifically for this organization yet.
+              </p>
+              <Link
+                href={`/${locale}/dashboard/services/new?organization=${organization.id}&platform=${platform}`}
+                className={`inline-flex items-center px-4 py-2 ${config.buttonClass} text-white rounded-lg font-medium`}
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Be the First to Create a Service
+              </Link>
+            </div>
+          </div>
+        )}
+
+        {!servicesLoading && !servicesError && services.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {services.map((service) => (
+              <ServiceCard
+                key={service.id}
+                service={service as Service & { user: { name: string; bio?: string; location?: string; } | null }}
+                locale={locale}
+              />
+            ))}
+          </div>
+        )}
+
+        {services.length > 4 && (
+          <div className="text-center mt-8">
+            <Link
+              href={`/${locale}/services?org=${organization.id}`}
+              className={`inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white ${config.buttonClass}`}
+            >
+              View All Services Supporting This Organization
+            </Link>
+          </div>
+        )}
       </div>
     </div>
     </>

@@ -39,9 +39,7 @@ interface OrganizationBrowseProps {
 interface BrowseState {
   organizations: OrganizationCache[]
   loading: boolean
-  loadingMore: boolean
   totalCount: number
-  hasMore: boolean
   error: string | null
   currentPage: number
 }
@@ -55,26 +53,20 @@ export default function OrganizationBrowse({
   messages,
   searchParams
 }: OrganizationBrowseProps) {
+  // Parse search params with pagination
+  const currentPage = parseInt(searchParams.page || '1', 10)
+  
   const [state, setState] = useState<BrowseState>({
     organizations: [],
     loading: true,
-    loadingMore: false,
     totalCount: 0,
-    hasMore: false,
     error: null,
-    currentPage: 1
+    currentPage: currentPage
   })
 
   const [showFilters, setShowFilters] = useState(false)
   const [showMobileFilters, setShowMobileFilters] = useState(false)
   const [showMobileFooter, setShowMobileFooter] = useState(false)
-  
-  // Refs for infinite scroll
-  const loadingTriggerRef = useRef<HTMLDivElement>(null)
-  const isInitialLoad = useRef(true)
-  
-  // Parse search params - ignore page for infinite scroll
-  const currentPage = 1 // Always start from page 1 for infinite scroll
   const searchQuery = searchParams.search || ''
   const categoryFilter = searchParams.category || ''
   const cityFilter = searchParams.city || ''
@@ -692,13 +684,9 @@ export default function OrganizationBrowse({
     return []
   }, [platform, acncCities, stateCities, stateFilter, justgivingCities, countryCities, countryFilter, locationSearch, showAllLocations, cityFilter])
 
-  // Load organizations function for infinite scroll
-  const loadOrganizations = useCallback(async (page: number, append: boolean = false) => {
-    if (append) {
-      setState(prev => ({ ...prev, loadingMore: true, error: null }))
-    } else {
-      setState(prev => ({ ...prev, loading: true, error: null, currentPage: 1, organizations: [] }))
-    }
+  // Load organizations function for pagination
+  const loadOrganizations = useCallback(async (page: number) => {
+    setState(prev => ({ ...prev, loading: true, error: null, currentPage: page, organizations: [] }))
     
     try {
       // Use our new platform-specific API endpoint instead of direct Supabase queries
@@ -759,12 +747,8 @@ export default function OrganizationBrowse({
       setState(prev => ({
         ...prev,
         loading: false,
-        loadingMore: false,
-        organizations: append 
-          ? [...prev.organizations, ...(data.organizations || [])]
-          : data.organizations || [],
+        organizations: data.organizations || [],
         totalCount: data.pagination?.total_results || 0,
-        hasMore: data.pagination?.has_next || false,
         currentPage: page,
         error: null
       }))
@@ -774,48 +758,25 @@ export default function OrganizationBrowse({
       setState(prev => ({
         ...prev,
         loading: false,
-        loadingMore: false,
         error: error instanceof Error ? error.message : 'Failed to load organizations'
       }))
     }
   }, [platform, searchQuery, categoryFilter, cityFilter, countryFilter, stateFilter, operatingCountryFilter, featuredOnly, preferredOnly, purposeFilter, beneficiaryFilter])
 
-  // Load more organizations for infinite scroll
-  const loadMore = useCallback(() => {
-    if (!state.loadingMore && state.hasMore) {
-      loadOrganizations(state.currentPage + 1, true)
-    }
-  }, [loadOrganizations, state.loadingMore, state.hasMore, state.currentPage])
-
   // Initial load and filter changes
   useEffect(() => {
-    isInitialLoad.current = true
-    loadOrganizations(1, false)
-  }, [loadOrganizations])
+    loadOrganizations(currentPage)
+  }, [loadOrganizations, currentPage])
 
-  // Intersection observer for infinite scroll with preemptive loading
-  useEffect(() => {
-    if (!loadingTriggerRef.current) return
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const [entry] = entries
-        // Trigger loading when element comes into view (preemptive loading)
-        if (entry.isIntersecting && !state.loading && !state.loadingMore && state.hasMore) {
-          loadMore()
-        }
-      },
-      {
-        // Trigger when element is 300px from entering viewport (preemptive)
-        rootMargin: '300px',
-        threshold: 0.1
-      }
-    )
-
-    observer.observe(loadingTriggerRef.current)
-
-    return () => observer.disconnect()
-  }, [loadMore, state.loading, state.loadingMore, state.hasMore])
+  // Pagination helper functions
+  const goToPage = (page: number) => {
+    if (page >= 1 && page <= totalPages && page !== currentPage) {
+      const url = new URL(window.location.href)
+      url.searchParams.set('page', page.toString())
+      window.history.pushState({}, '', url.toString())
+      loadOrganizations(page)
+    }
+  }
 
   // Calculate pagination info
   const totalPages = Math.ceil(state.totalCount / ITEMS_PER_PAGE)
@@ -858,7 +819,7 @@ export default function OrganizationBrowse({
                 {config.name} {config.entityName}
               </h1>
               <p className="text-gray-600 mt-1">
-                {state.loading ? 'Loading...' : `${state.totalCount.toLocaleString()} organizations`}
+                {state.loading ? 'Loading...' : 'Browse and discover organizations'}
                 {(platform === 'acnc' || platform === 'everyorg') && (
                   <span className="hidden md:inline ml-2 text-sm text-gray-500">
                     • Use the filter button to search and filter
@@ -1507,7 +1468,22 @@ export default function OrganizationBrowse({
           {/* Filter Summary */}
           {(categoryFilter || cityFilter || countryFilter || stateFilter || operatingCountryFilter || searchQuery || purposeFilter || featuredOnly || preferredOnly) && (
             <div className="mb-6 p-4 bg-gray-50 rounded-lg border">
-              <h3 className="text-sm font-medium text-gray-700 mb-2">Active Filters:</h3>
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="text-sm font-medium text-gray-700">Active Filters:</h3>
+                <button
+                  onClick={() => {
+                    const url = new URL(window.location.href)
+                    url.search = ''
+                    window.location.href = url.toString()
+                  }}
+                  className="text-sm text-red-600 hover:text-red-700 font-medium flex items-center gap-1"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                  Clear All Filters
+                </button>
+              </div>
               <div className="flex flex-wrap gap-2">
                 {searchQuery && (
                   <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-blue-100 text-blue-800">
@@ -1591,8 +1567,8 @@ export default function OrganizationBrowse({
               </div>
             )}
 
-            {/* No Results */}
-            {!state.loading && !state.error && state.totalCount === 0 && (
+            {/* No Results - Only show when filters are applied */}
+            {!state.loading && !state.error && state.totalCount === 0 && (categoryFilter || cityFilter || countryFilter || stateFilter || operatingCountryFilter || searchQuery || purposeFilter || featuredOnly || preferredOnly) && (
               <div className="text-center py-12">
                 <p className="text-gray-600 mb-4">
                   No organizations found matching your criteria.
@@ -1611,7 +1587,7 @@ export default function OrganizationBrowse({
             )}
 
             {/* Organizations Grid */}
-            {!state.loading && state.organizations.length > 0 && (
+            {(!state.loading && state.organizations.length > 0) && (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {state.organizations.map((org) => (
                   <OrganizationCard
@@ -1626,25 +1602,65 @@ export default function OrganizationBrowse({
               </div>
             )}
 
-            {/* Infinite Scroll Loading Trigger */}
-            {state.hasMore && (
-              <div 
-                ref={loadingTriggerRef} 
-                className="flex justify-center py-8 mt-8"
-              >
-                {state.loadingMore && (
-                  <div className="flex items-center space-x-3">
-                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
-                    <span className="text-gray-600">Loading more...</span>
-                  </div>
-                )}
-              </div>
-            )}
 
-            {/* End of results indicator */}
-            {!state.loading && !state.hasMore && state.organizations.length > 0 && (
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
               <div className="flex justify-center py-8 mt-8 mb-8">
-                <span className="text-gray-500 text-sm">You've reached the end of results</span>
+                <div className="flex items-center space-x-2">
+                  {/* Previous Button */}
+                  <button
+                    onClick={() => goToPage(currentPage - 1)}
+                    disabled={currentPage === 1}
+                    className={`px-3 py-2 rounded-lg text-sm font-medium ${
+                      currentPage === 1
+                        ? 'text-gray-400 cursor-not-allowed'
+                        : 'text-gray-700 hover:bg-gray-100'
+                    }`}
+                  >
+                    Previous
+                  </button>
+
+                  {/* Page Numbers */}
+                  {Array.from({ length: Math.min(totalPages, 7) }, (_, i) => {
+                    let page: number
+                    if (totalPages <= 7) {
+                      page = i + 1
+                    } else if (currentPage <= 4) {
+                      page = i + 1
+                    } else if (currentPage >= totalPages - 3) {
+                      page = totalPages - 6 + i
+                    } else {
+                      page = currentPage - 3 + i
+                    }
+
+                    return (
+                      <button
+                        key={page}
+                        onClick={() => goToPage(page)}
+                        className={`px-3 py-2 rounded-lg text-sm font-medium ${
+                          page === currentPage
+                            ? `bg-${config.color}-600 text-white`
+                            : `text-gray-700 hover:bg-${config.color}-50`
+                        }`}
+                      >
+                        {page}
+                      </button>
+                    )
+                  })}
+
+                  {/* Next Button */}
+                  <button
+                    onClick={() => goToPage(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                    className={`px-3 py-2 rounded-lg text-sm font-medium ${
+                      currentPage === totalPages
+                        ? 'text-gray-400 cursor-not-allowed'
+                        : 'text-gray-700 hover:bg-gray-100'
+                    }`}
+                  >
+                    Next
+                  </button>
+                </div>
               </div>
             )}
           </div>

@@ -19,42 +19,20 @@ export default async function LocaleLayout({
   // side is the easiest way to get started
   const messages = await getMessages({ locale });
 
-  // Load platform statistics for navbar
+  // Load platform statistics from cached stats table
   const supabase = createClient()
-  const [justgivingStats, everyorgStats, acncStats, servicesStats] = await Promise.all([
-    // Get JustGiving count
-    supabase
-      .from('organization_cache')
-      .select('id', { count: 'exact', head: true })
-      .eq('platform', 'justgiving')
-      .eq('is_active', true),
-    
-    // Get Every.org count
-    supabase
-      .from('organization_cache')
-      .select('id', { count: 'exact', head: true })
-      .eq('platform', 'everyorg')
-      .eq('is_active', true),
-    
-    // Get ACNC count
-    supabase
-      .from('organization_cache')
-      .select('id', { count: 'exact', head: true })
-      .eq('platform', 'acnc')
-      .eq('is_active', true),
-    
-    // Get Services count
-    supabase
-      .from('services')
-      .select('id', { count: 'exact', head: true })
-      .eq('is_active', true),
-  ])
+  const { data: statsData } = await supabase
+    .from('platform_stats')
+    .select('services_count, justgiving_count, everyorg_count, acnc_count')
+    .order('last_updated', { ascending: false })
+    .limit(1)
+    .single()
 
   const platformStats = {
-    services: servicesStats.count || 0,
-    justgiving: justgivingStats.count || 0,
-    everyorg: everyorgStats.count || 0,
-    acnc: acncStats.count || 0,
+    services: statsData?.services_count || 0,
+    justgiving: statsData?.justgiving_count || 0,
+    everyorg: statsData?.everyorg_count || 0,
+    acnc: statsData?.acnc_count || 0,
   };
 
   return (

@@ -10,9 +10,10 @@ interface ServiceCardProps {
       location?: string
     } | null
   }
+  locale?: string
 }
 
-export default function ServiceCard({ service }: ServiceCardProps) {  
+export default function ServiceCard({ service, locale = 'en' }: ServiceCardProps) {  
   // Safety check - if no user data, don't render the card
   if (!service.user) {
     return null
@@ -39,10 +40,62 @@ export default function ServiceCard({ service }: ServiceCardProps) {
   // Generate service slug from title
   const serviceSlug = service.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
 
-  // Charity requirement display
-  const charityRequirement = service.charity_requirement_type === 'any_charity' 
-    ? 'Any registered charity'
-    : 'Specific charities'
+  // Charity requirement display from platform requirements
+  const getCharityRequirement = () => {
+    if (!service.platform_requirements) {
+      // Fallback to legacy field if platform_requirements is not available
+      return service.charity_requirement_type === 'any_charity' 
+        ? 'Any registered charity'
+        : 'Specific charities'
+    }
+
+    const platformReqs = service.platform_requirements
+    const hasSpecificOrgs = Object.values(platformReqs.platform_rules).some(
+      (rule: any) => rule && rule.organizations === 'specific_organizations' && rule.specific_organizations && rule.specific_organizations.length > 0
+    )
+
+    if (hasSpecificOrgs) {
+      // Count total specific organizations across all platforms
+      const totalOrgs = Object.values(platformReqs.platform_rules).reduce(
+        (count: number, rule: any) => {
+          if (rule && rule.organizations === 'specific_organizations' && rule.specific_organizations) {
+            return count + rule.specific_organizations.length
+          }
+          return count
+        }, 0
+      )
+
+      if (totalOrgs === 1) {
+        // Try to get organization name from organization_name field (backward compatibility)
+        return service.organization_name || 'Specific organization'
+      } else if (totalOrgs > 1) {
+        // Get breakdown of organizations by platform
+        const platformBreakdown = Object.keys(platformReqs.platform_rules).map(platform => {
+          const rule = platformReqs.platform_rules[platform as keyof typeof platformReqs.platform_rules]
+          if (rule && rule.organizations === 'specific_organizations' && rule.specific_organizations && rule.specific_organizations.length > 0) {
+            const count = rule.specific_organizations.length
+            const platformName = platform === 'justgiving' ? 'JustGiving' : 
+                                platform === 'everyorg' ? 'Every.org' : 
+                                platform === 'acnc' ? 'ACNC' : platform
+            
+            return `${count} organization${count > 1 ? 's' : ''} on ${platformName}`
+          }
+          return null
+        }).filter(Boolean)
+        
+        return `Supporting ${platformBreakdown.join(' and ')}`
+      }
+    }
+
+    // Any organization from selected platforms
+    const platformNames = platformReqs.allowed_platforms
+      .map((p: string) => p === 'justgiving' ? 'JustGiving' : p === 'everyorg' ? 'Every.org' : 'ACNC')
+      .join(', ')
+    
+    return `Any ${platformNames} organization`
+  }
+
+  const charityRequirement = getCharityRequirement()
 
   // Fundraiser name with fallback
   const fundraiserName = service.user?.name || 'Unknown Fundraiser'
@@ -53,7 +106,7 @@ export default function ServiceCard({ service }: ServiceCardProps) {
         {/* Service Title */}
         <div className="mb-4">
           <Link 
-            href={`/services/${serviceSlug}`}
+            href={`/${locale}/services/${serviceSlug}`}
             className="text-xl font-semibold text-gray-900 hover:text-purple-600 line-clamp-2"
           >
             {service.title}

@@ -245,7 +245,7 @@ export default function OrganizationCard({
 
           {/* Description */}
           {organization.description && (
-            <p className="text-sm text-gray-600 line-clamp-2 mb-3">
+            <p className="text-sm text-gray-600 mb-3">
               {organization.description}
             </p>
           )}

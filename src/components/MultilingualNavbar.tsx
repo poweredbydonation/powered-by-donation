@@ -31,6 +31,12 @@ export default function MultilingualNavbar({ locale, messages, platformStats }: 
   const { pendingCount } = usePendingDonations()
   const langDropdownRef = useRef<HTMLDivElement>(null)
   const profileDropdownRef = useRef<HTMLDivElement>(null)
+
+  // Determine which section is active based on current path
+  const isServicesActive = pathname.includes('/services')
+  const isJustGivingActive = pathname.includes('/justgiving')
+  const isEveryOrgActive = pathname.includes('/everyorg')
+  const isAcncActive = pathname.includes('/acnc')
   
 
   useEffect(() => {
@@ -92,12 +98,11 @@ export default function MultilingualNavbar({ locale, messages, platformStats }: 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm border-b">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between py-2">
-          {/* Left Side - Logo */}
+        <div className="flex items-center justify-between md:justify-between py-2">
+          {/* Left Side - Logo (Desktop) / Empty space (Mobile) */}
           <div className="flex items-center">
-            <a href={`/${locale}`} className="text-lg font-bold text-blue-600 mr-3">
-              <span className="hidden md:inline">Powered by Donation</span>
-              <span className="md:hidden">Powered by Donation</span>
+            <a href={`/${locale}`} className="text-lg font-bold text-blue-600 mr-3 hidden md:inline">
+              <span>Powered by Donation</span>
             </a>
             {messages?.nav?.tagline && messages.nav.tagline.trim() !== '' && (
               <div className="text-xs text-gray-600 hidden lg:block">
@@ -106,15 +111,26 @@ export default function MultilingualNavbar({ locale, messages, platformStats }: 
             )}
           </div>
 
+          {/* Center - Logo (Mobile only) */}
+          <div className="md:hidden absolute left-1/2 transform -translate-x-1/2">
+            <a href={`/${locale}`} className="text-lg font-bold text-blue-600">
+              Powered by Donation
+            </a>
+          </div>
+
           {/* Center - Compact Platform Tiles */}
           <div className="hidden md:flex items-center space-x-2">
             {/* Services Tile */}
             <a 
               href={`/${locale}/services`}
-              className="bg-purple-50 border border-purple-200 rounded px-3 py-1 hover:bg-purple-100 transition-all text-center group"
+              className={`${
+                isServicesActive 
+                  ? 'bg-purple-50 border border-purple-200 text-purple-600' 
+                  : 'bg-gray-50 border border-gray-200 text-gray-400'
+              } rounded px-3 py-1 hover:bg-purple-100 transition-all text-center group`}
               title="Free services you can get by donating to JustGiving and Every.org charities"
             >
-              <div className="text-sm font-semibold text-purple-600">
+              <div className={`text-sm font-semibold ${isServicesActive ? 'text-purple-600' : 'text-gray-400'}`}>
                 {platformStats.services.toLocaleString()} Free Services
               </div>
             </a>
@@ -122,15 +138,19 @@ export default function MultilingualNavbar({ locale, messages, platformStats }: 
             {/* JustGiving Tile */}
             <a 
               href={`/${locale}/justgiving/charities`}
-              className="bg-blue-50 border border-blue-200 rounded px-3 py-1 hover:bg-blue-100 transition-all text-center group flex items-center space-x-1"
+              className={`${
+                isJustGivingActive 
+                  ? 'bg-blue-50 border border-blue-200' 
+                  : 'bg-gray-50 border border-gray-200'
+              } rounded px-3 py-1 hover:bg-blue-100 transition-all text-center group flex items-center space-x-1`}
               title="UK's leading charity fundraising platform with extensive charity database"
             >
               <img
                 src="/flags/1x1/gb.svg"
                 alt="UK"
-                className="w-3 h-3 rounded"
+                className={`w-3 h-3 rounded ${isJustGivingActive ? 'opacity-100' : 'opacity-40'}`}
               />
-              <div className="text-sm font-semibold text-blue-600">
+              <div className={`text-sm font-semibold ${isJustGivingActive ? 'text-blue-600' : 'text-gray-400'}`}>
                 {platformStats.justgiving.toLocaleString()} Charities
               </div>
             </a>
@@ -138,15 +158,19 @@ export default function MultilingualNavbar({ locale, messages, platformStats }: 
             {/* Every.org Tile */}
             <a 
               href={`/${locale}/everyorg/nonprofits`}
-              className="bg-green-50 border border-green-200 rounded px-3 py-1 hover:bg-green-100 transition-all text-center group flex items-center space-x-1"
+              className={`${
+                isEveryOrgActive 
+                  ? 'bg-green-50 border border-green-200' 
+                  : 'bg-gray-50 border border-gray-200'
+              } rounded px-3 py-1 hover:bg-green-100 transition-all text-center group flex items-center space-x-1`}
               title="US-based nonprofit platform with verified organizations across America"
             >
               <img
                 src="/flags/1x1/us.svg"
                 alt="US"
-                className="w-3 h-3 rounded"
+                className={`w-3 h-3 rounded ${isEveryOrgActive ? 'opacity-100' : 'opacity-40'}`}
               />
-              <div className="text-sm font-semibold text-green-600">
+              <div className={`text-sm font-semibold ${isEveryOrgActive ? 'text-green-600' : 'text-gray-400'}`}>
                 {platformStats.everyorg.toLocaleString()} Nonprofits
               </div>
             </a>
@@ -154,18 +178,22 @@ export default function MultilingualNavbar({ locale, messages, platformStats }: 
             {/* ACNC Tile */}
             <a 
               href={`/${locale}/acnc/charities`}
-              className="bg-orange-50 border border-orange-200 rounded px-3 py-1 hover:bg-orange-100 transition-all text-center group flex items-center space-x-1 relative"
+              className={`${
+                isAcncActive 
+                  ? 'bg-orange-50 border border-orange-200' 
+                  : 'bg-gray-50 border border-gray-200'
+              } rounded px-3 py-1 hover:bg-orange-100 transition-all text-center group flex items-center space-x-1 relative`}
               title="Australian Charities and Not-for-profits Commission registry"
             >
               <img
                 src="/flags/1x1/au.svg"
                 alt="AU"
-                className="w-3 h-3 rounded"
+                className={`w-3 h-3 rounded ${isAcncActive ? 'opacity-100' : 'opacity-40'}`}
               />
-              <div className="text-sm font-semibold text-orange-600">
+              <div className={`text-sm font-semibold ${isAcncActive ? 'text-orange-600' : 'text-gray-400'}`}>
                 {platformStats.acnc.toLocaleString()} Charities and Nonprofits
               </div>
-              <div className="absolute -top-1 -right-1 bg-orange-500 text-white text-xs px-1 rounded-full" style={{fontSize: '8px'}}>
+              <div className={`absolute -top-1 -right-1 ${isAcncActive ? 'bg-orange-500' : 'bg-gray-400'} text-white text-xs px-1 rounded-full`} style={{fontSize: '8px'}}>
                 B
               </div>
             </a>
@@ -380,8 +408,8 @@ export default function MultilingualNavbar({ locale, messages, platformStats }: 
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden border-t border-blue-200 bg-gradient-to-b from-blue-50 to-white animate-in slide-in-from-top duration-300">
-            <div className="py-6 px-4 space-y-6">
+          <div className="md:hidden border-t border-blue-200 bg-gradient-to-b from-blue-50 to-white animate-in slide-in-from-top duration-300 max-h-screen overflow-y-auto">
+            <div className="py-6 px-4 space-y-6 pb-8">
               {/* Mobile Authentication */}
               {!mounted ? (
                 <div className="animate-pulse bg-gradient-to-r from-blue-100 to-purple-100 h-12 w-32 rounded-xl"></div>
@@ -468,7 +496,7 @@ export default function MultilingualNavbar({ locale, messages, platformStats }: 
                   <span className="text-lg">🌍</span>
                   <div className="text-sm font-semibold text-purple-800">Choose Language:</div>
                 </div>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 gap-2">
                   {LANGUAGES.map((lang) => (
                     <a
                       key={lang.code}

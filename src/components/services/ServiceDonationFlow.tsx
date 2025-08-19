@@ -72,26 +72,32 @@ export default function ServiceDonationFlow({
   }
 
   const handleSupportService = async () => {
+    console.log('🖱️ Mobile button clicked!', { user: !!user, isAvailable, isFull, isGeneratingUrl })
+    
     if (!user) {
       // Redirect to login with return URL
       const returnUrl = encodeURIComponent(window.location.pathname)
+      console.log('🚀 Redirecting to login:', `/login?returnUrl=${returnUrl}`)
       window.location.href = `/login?returnUrl=${returnUrl}`
       return
     }
 
     // Show charity search/selection if needed
     if (service.charity_requirement_type === 'any_charity') {
+      console.log('🔍 Opening charity search modal...')
       setShowCharitySearch(true)
       return
     }
 
     // For specific charities, either show selection or proceed
     if (service.preferred_charities && service.preferred_charities.length > 1 && !selectedCharity) {
+      console.log('🎯 Opening charity selection modal...', { preferredCharities: service.preferred_charities.length })
       setShowCharitySelection(true)
       return
     }
 
     // Proceed with donation
+    console.log('💰 Proceeding directly to donation generation...', { selectedCharity })
     await generateDonationUrl()
   }
 
@@ -212,7 +218,65 @@ export default function ServiceDonationFlow({
   const isButtonDisabled = !isAvailable || isFull || isGeneratingUrl
 
   return (
-    <div className="bg-gradient-to-br from-green-50 to-blue-50 rounded-lg border border-green-200 p-6 sticky top-8">
+    <>
+      {/* Mobile Overlay Button - Fixed at bottom */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 shadow-lg">
+        <div className="px-4 py-3">
+          {/* Mobile Support Button */}
+          <button 
+            onClick={() => {
+              console.log('🎯 Mobile overlay clicked!')
+              handleSupportService()
+            }}
+            className={`w-full py-4 px-4 rounded-xl font-bold text-white text-lg shadow-lg ${
+              isButtonDisabled
+                ? 'bg-gray-400 cursor-not-allowed' 
+                : 'bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700'
+            } transition-colors duration-200`}
+            disabled={isButtonDisabled}
+          >
+            {isGeneratingUrl ? (
+              <div className="flex items-center justify-center space-x-2">
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                <span>Redirecting to JustGiving...</span>
+              </div>
+            ) : !user ? (
+              <div className="flex items-center justify-center space-x-2">
+                <span>🚀</span>
+                <span>Login to Support This Service</span>
+              </div>
+            ) : !isAvailable ? (
+              <div className="flex items-center justify-center space-x-2">
+                <span>⏰</span>
+                <span>Not Yet Available</span>
+              </div>
+            ) : isFull ? (
+              <div className="flex items-center justify-center space-x-2">
+                <span>🚫</span>
+                <span>Currently Full</span>
+              </div>
+            ) : (
+              <div className="flex items-center justify-center space-x-2">
+                <span>💝</span>
+                <span>Support This Service</span>
+              </div>
+            )}
+          </button>
+          
+          {/* Price indicator */}
+          <div className="text-center mt-2">
+            <ServicePrice
+              pricingTierId={service.pricing_tier_id}
+              userCurrency={userCurrency}
+              className="text-lg font-bold text-green-600"
+              showTierName={false}
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Desktop Component - Hidden on mobile */}
+      <div className="hidden md:block bg-gradient-to-br from-green-50 to-blue-50 rounded-lg border border-green-200 p-6 sticky top-8">
       {/* Donation Amount Header */}
       <div className="text-center mb-6">
         <ServicePrice
@@ -399,6 +463,7 @@ export default function ServiceDonationFlow({
           </p>
         </div>
       )}
-    </div>
+      </div>
+    </>
   )
 }

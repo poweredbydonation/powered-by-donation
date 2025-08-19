@@ -319,28 +319,107 @@ export default function ServiceCreationForm({
           }))
         : []
 
-      // Determine organization name and data based on charity requirements
-      const organizationName = charityRequirementType === 'specific_charities' && selectedCharities.length === 1
-        ? selectedCharities[0].name
-        : charityRequirementType === 'specific_charities' && selectedCharities.length > 1
-        ? `${selectedCharities.length} selected charities`
-        : charityRequirementType === 'any_charity'
-        ? 'Any JustGiving charity'
-        : null
+      // Derive organization name and data from platform requirements
+      const getOrganizationInfo = () => {
+        if (!platformRequirements) return { name: null, data: null }
 
-      const organizationData = charityRequirementType === 'specific_charities' && selectedCharities.length > 0
-        ? {
-            type: 'specific_charities',
-            platform: 'justgiving', // Default to JustGiving for now
-            charities: preferredCharities,
-            count: selectedCharities.length
+        const specificOrgs: string[] = []
+        const platforms = Object.keys(platformRequirements.platform_rules)
+        let orgNames: string[] = []
+
+        // Collect specific organizations from all platforms
+        for (const platform of platforms) {
+          const rule = platformRequirements.platform_rules[platform as keyof typeof platformRequirements.platform_rules]
+          if (rule && rule.organizations === 'specific_organizations' && rule.specific_organizations) {
+            specificOrgs.push(...rule.specific_organizations)
+            
+            // Get organization names from selected organizations
+            if (platform === 'justgiving' && selectedCharities.length > 0) {
+              orgNames.push(...selectedCharities.map(c => c.name))
+            }
+            // TODO: Add similar logic for other platforms when needed
           }
-        : charityRequirementType === 'any_charity'
-        ? {
-            type: 'any_charity', 
-            platform: 'justgiving' // Default to JustGiving for now
+        }
+
+        if (specificOrgs.length === 1) {
+          // Get the platform name for the single organization
+          const platformWithOrg = platforms.find(platform => {
+            const rule = platformRequirements.platform_rules[platform as keyof typeof platformRequirements.platform_rules]
+            return rule && rule.organizations === 'specific_organizations' && rule.specific_organizations && rule.specific_organizations.length > 0
+          })
+          
+          const platformName = platformWithOrg === 'justgiving' ? 'JustGiving' : 
+                              platformWithOrg === 'everyorg' ? 'Every.org' : 
+                              platformWithOrg === 'acnc' ? 'ACNC' : 'Selected'
+          
+          return {
+            name: orgNames[0] || `${platformName} organization`,
+            data: {
+              type: 'specific_organizations',
+              platforms: platformRequirements.allowed_platforms,
+              organization_ids: specificOrgs,
+              count: 1
+            }
           }
-        : null
+        } else if (specificOrgs.length > 1) {
+          // Get breakdown of organizations by platform
+          const platformBreakdown = platforms.map(platform => {
+            const rule = platformRequirements.platform_rules[platform as keyof typeof platformRequirements.platform_rules]
+            if (rule && rule.organizations === 'specific_organizations' && rule.specific_organizations && rule.specific_organizations.length > 0) {
+              const count = rule.specific_organizations.length
+              const platformName = platform === 'justgiving' ? 'JustGiving' : 
+                                  platform === 'everyorg' ? 'Every.org' : 
+                                  platform === 'acnc' ? 'ACNC' : platform
+              
+              return {
+                platform: platformName,
+                count,
+                text: `${count} organization${count > 1 ? 's' : ''} on ${platformName}`
+              }
+            }
+            return null
+          }).filter(Boolean)
+          
+          const breakdownText = `Supporting ${platformBreakdown.map(p => p!.text).join(' and ')}`
+          
+          return {
+            name: breakdownText,
+            data: {
+              type: 'specific_organizations',
+              platforms: platformRequirements.allowed_platforms,
+              organization_ids: specificOrgs,
+              count: specificOrgs.length,
+              breakdown: platformBreakdown
+            }
+          }
+        } else {
+          // Any organization from selected platforms
+          const platformNames = platformRequirements.allowed_platforms
+            .map(p => p === 'justgiving' ? 'JustGiving' : p === 'everyorg' ? 'Every.org' : 'ACNC')
+            .join(', ')
+          
+          return {
+            name: `Any ${platformNames} organization`,
+            data: {
+              type: 'any_organization',
+              platforms: platformRequirements.allowed_platforms
+            }
+          }
+        }
+      }
+
+      const { name: organizationName, data: organizationData } = getOrganizationInfo()
+
+      // Derive charity requirement type from platform requirements for backward compatibility
+      const derivedCharityRequirementType = (() => {
+        if (!platformRequirements) return 'any_charity'
+        
+        const hasSpecificOrgs = Object.values(platformRequirements.platform_rules).some(
+          rule => rule && rule.organizations === 'specific_organizations' && rule.specific_organizations && rule.specific_organizations.length > 0
+        )
+        
+        return hasSpecificOrgs ? 'specific_charities' : 'any_charity'
+      })()
 
       // Prepare service data
       const serviceData = {
@@ -349,7 +428,7 @@ export default function ServiceCreationForm({
         description: description.trim() || null,
         donation_amount: selectedTier ? selectedTier.price_aud : 0, // Always store AUD amount
         pricing_tier_id: selectedTier ? selectedTier.id : null,
-        charity_requirement_type: charityRequirementType,
+        charity_requirement_type: derivedCharityRequirementType,
         preferred_charities: preferredCharities.length > 0 ? preferredCharities : null,
         // Platform requirements
         platform_requirements: platformRequirements,

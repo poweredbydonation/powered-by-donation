@@ -1,13 +1,14 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { notFound } from 'next/navigation'
+import { notFound, useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Service, ServiceLocation, CurrencyCode, ServiceWithPlatformFields } from '@/types/database'
 import ServiceDonationFlow from '@/components/services/ServiceDonationFlow'
 import ServiceLocationMap from '@/components/ServiceLocationMap'
 import ServicePrice from '@/components/services/ServicePrice'
 import { useAuth } from '@/hooks/useAuth'
+import { ArrowLeft } from 'lucide-react'
 
 interface ServicePageProps {
   params: {
@@ -35,6 +36,7 @@ function generateSlug(title: string): string {
 export default function ServicePage({ params }: ServicePageProps) {
   const { locale, slug } = params
   const { user } = useAuth()
+  const router = useRouter()
   const [service, setService] = useState<ServiceWithFundraiser | null>(null)
   const [loading, setLoading] = useState(true)
   const [messages, setMessages] = useState<any>({})
@@ -141,8 +143,18 @@ export default function ServicePage({ params }: ServicePageProps) {
 
   return (
     <>
+      {/* Mobile Back Button Overlay */}
+      <div className="md:hidden fixed top-4 left-4 z-50">
+        <button
+          onClick={() => router.back()}
+          className="bg-white hover:bg-gray-50 p-3 rounded-full shadow-lg border border-gray-200 transition-colors duration-200"
+        >
+          <ArrowLeft className="h-5 w-5 text-gray-700" />
+        </button>
+      </div>
+
       <div className="min-h-screen bg-gray-50">
-        <div className="container mx-auto px-4 py-8">
+        <div className="container mx-auto px-4 py-8 pb-24 md:pb-8">
           {/* Service Header */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-8">
             <div className="p-8">
@@ -156,14 +168,6 @@ export default function ServicePage({ params }: ServicePageProps) {
                     
                     {/* Service status badges */}
                     <div className="flex items-center flex-wrap gap-2 mb-4">
-                      {/* Platform badge */}
-                      <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-                        service.platform === 'justgiving' 
-                          ? 'bg-blue-100 text-blue-800' 
-                          : 'bg-green-100 text-green-800'
-                      }`}>
-                        {service.platform === 'justgiving' ? 'JustGiving' : 'Every.org'}
-                      </span>
                       
                       {isAvailable && !isFull ? (
                         <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium text-green-800 bg-green-100">
@@ -180,7 +184,53 @@ export default function ServicePage({ params }: ServicePageProps) {
                       )}
                       
                       <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium text-purple-800 bg-purple-100">
-                        {service.charity_requirement_type === 'any_charity' ? 'Any Charity' : 'Specific Charities'}
+                        {(() => {
+                          if (!service.platform_requirements) {
+                            return service.charity_requirement_type === 'any_charity' ? 'Any Charity' : 'Specific Charities'
+                          }
+
+                          const platformReqs = service.platform_requirements
+                          const hasSpecificOrgs = Object.values(platformReqs.platform_rules).some(
+                            (rule: any) => rule && rule.organizations === 'specific_organizations' && rule.specific_organizations && rule.specific_organizations.length > 0
+                          )
+
+                          if (hasSpecificOrgs) {
+                            const totalOrgs = Object.values(platformReqs.platform_rules).reduce(
+                              (count: number, rule: any) => {
+                                if (rule && rule.organizations === 'specific_organizations' && rule.specific_organizations) {
+                                  return count + rule.specific_organizations.length
+                                }
+                                return count
+                              }, 0
+                            )
+
+                            if (totalOrgs === 1) {
+                              return service.organization_name || 'Specific Organization'
+                            } else if (totalOrgs > 1) {
+                              // Get breakdown of organizations by platform
+                              const platformBreakdown = Object.keys(platformReqs.platform_rules).map(platform => {
+                                const rule = platformReqs.platform_rules[platform as keyof typeof platformReqs.platform_rules]
+                                if (rule && rule.organizations === 'specific_organizations' && rule.specific_organizations && rule.specific_organizations.length > 0) {
+                                  const count = rule.specific_organizations.length
+                                  const platformName = platform === 'justgiving' ? 'JustGiving' : 
+                                                      platform === 'everyorg' ? 'Every.org' : 
+                                                      platform === 'acnc' ? 'ACNC' : platform
+                                  
+                                  return `${count} organization${count > 1 ? 's' : ''} on ${platformName}`
+                                }
+                                return null
+                              }).filter(Boolean)
+                              
+                              return `Supporting ${platformBreakdown.join(' and ')}`
+                            }
+                          }
+
+                          const platformNames = platformReqs.allowed_platforms
+                            .map((p: string) => p === 'justgiving' ? 'JustGiving' : p === 'everyorg' ? 'Every.org' : 'ACNC')
+                            .join(', ')
+                          
+                          return `Any ${platformNames} Organization`
+                        })()}
                       </span>
                     </div>
 
