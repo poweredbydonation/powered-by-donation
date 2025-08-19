@@ -5,12 +5,11 @@
 
 'use client'
 
-import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
-import { DonationPlatform, OrganizationCache, Service } from '@/types/database'
+import { useRouter } from 'next/navigation'
+import { DonationPlatform, OrganizationCache } from '@/types/database'
 import { EntityType, buildPlatformUrl } from '@/lib/utils/entity-urls'
-import { createClient } from '@/lib/supabase/client'
 import { 
   ExternalLink, 
   MapPin, 
@@ -21,7 +20,7 @@ import {
   TrendingUp,
   Users,
   Star,
-  Plus
+  ArrowLeft
 } from 'lucide-react'
 import { parseOperatingCountries } from '@/lib/utils/country-codes'
 
@@ -33,14 +32,6 @@ interface OrganizationPageProps {
   organization: OrganizationCache
 }
 
-interface ServiceWithUser extends Service {
-  users: {
-    id: string
-    name: string
-    username?: string
-  }
-}
-
 export default function OrganizationPage({
   locale,
   platform,
@@ -49,8 +40,7 @@ export default function OrganizationPage({
   messages
 }: OrganizationPageProps) {
   const t = useTranslations('organization')
-  const [services, setServices] = useState<ServiceWithUser[]>([])
-  const [loading, setLoading] = useState(true)
+  const router = useRouter()
 
   const platformConfig = {
     justgiving: {
@@ -79,38 +69,21 @@ export default function OrganizationPage({
   const config = platformConfig[platform]
 
   // Load related services
-  useEffect(() => {
-    async function loadServices() {
-      const supabase = createClient()
-      
-      try {
-        // Get services that support this organization
-        const { data: servicesData } = await supabase
-          .from('services')
-          .select(`
-            *,
-            users!inner(id, name, username)
-          `)
-          .eq('platform', platform)
-          .eq('is_active', true)
-          .or(`charity_requirement_type.eq.any_charity,and(charity_requirement_type.eq.specific_charities,organization_id.eq.${organization.external_id})`)
-          .order('created_at', { ascending: false })
-          .limit(6)
-
-        setServices(servicesData || [])
-      } catch (error) {
-        console.error('Error loading services:', error)
-        setServices([])
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    loadServices()
-  }, [platform, organization.external_id])
+  // Services section removed for better performance
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <>
+      {/* Mobile Back Button Overlay */}
+      <div className="md:hidden fixed top-4 left-4 z-50">
+        <button
+          onClick={() => router.back()}
+          className="bg-white hover:bg-gray-50 p-3 rounded-full shadow-lg border border-gray-200 transition-colors duration-200"
+        >
+          <ArrowLeft className="h-5 w-5 text-gray-700" />
+        </button>
+      </div>
+
+      <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <div className={`${config.bgClass} border-b`}>
         <div className="max-w-4xl mx-auto px-4 py-8">
@@ -205,7 +178,7 @@ export default function OrganizationPage({
       </div>
 
       {/* Main Content */}
-      <div className="max-w-4xl mx-auto px-4 py-8">
+      <div className="max-w-4xl mx-auto px-4 py-8 pb-24 md:pb-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
@@ -421,67 +394,7 @@ export default function OrganizationPage({
               </div>
             )}
 
-            {/* Related Services */}
-            <div className="bg-white rounded-lg border p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-semibold text-gray-900">Available Services</h2>
-                <Link
-                  href={`/${locale}/services?platform=${platform}&organization=${organization.slug}`}
-                  className={`text-sm ${config.textClass} hover:underline`}
-                >
-                  View all services
-                </Link>
-              </div>
-
-              {loading ? (
-                <div className="space-y-4">
-                  {[1, 2, 3].map(i => (
-                    <div key={i} className="animate-pulse border rounded-lg p-4">
-                      <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-                      <div className="h-3 bg-gray-200 rounded w-full"></div>
-                    </div>
-                  ))}
-                </div>
-              ) : services.length > 0 ? (
-                <div className="space-y-4">
-                  {services.map((service) => (
-                    <Link
-                      key={service.id}
-                      href={`/${locale}/services/${service.id}`}
-                      className="block border rounded-lg p-4 hover:border-gray-300 transition-colors"
-                    >
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <h3 className="font-medium text-gray-900 mb-1">
-                            {service.title}
-                          </h3>
-                          <p className="text-sm text-gray-600 mb-2 line-clamp-2">
-                            {service.description}
-                          </p>
-                          <div className="flex items-center text-xs text-gray-500 space-x-4">
-                            <span>by {service.users.name}</span>
-                            <span>A${service.donation_amount}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-8">
-                  <p className="text-gray-600 mb-4">
-                    No services available for this organization yet.
-                  </p>
-                  <Link
-                    href={`/${locale}/dashboard/services/create?platform=${platform}&organization=${organization.external_id}`}
-                    className={`inline-flex items-center px-4 py-2 ${config.buttonClass} text-white rounded-lg font-medium`}
-                  >
-                    <Plus className="h-4 w-4 mr-2" />
-                    Create Service
-                  </Link>
-                </div>
-              )}
-            </div>
+            {/* Services section removed for better performance - users can browse services separately */}
           </div>
 
           {/* Sidebar */}
@@ -505,8 +418,8 @@ export default function OrganizationPage({
               </div>
             </div>
 
-            {/* Create Service CTA */}
-            <div className={`${config.bgClass} rounded-lg border p-6 text-center`}>
+            {/* Create Service CTA - Hidden on mobile */}
+            <div className={`hidden md:block ${config.bgClass} rounded-lg border p-6 text-center`}>
               <h3 className="font-semibold text-gray-900 mb-2">Support This Organization</h3>
               <p className="text-sm text-gray-600 mb-4">
                 Create a service and donate the proceeds to this organization.
@@ -522,6 +435,25 @@ export default function OrganizationPage({
           </div>
         </div>
       </div>
+
+      {/* Mobile Overlay Button - Fixed at bottom */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 shadow-lg">
+        <div className="px-4 py-3">
+          <Link
+            href={`/${locale}/dashboard/services/create?platform=${platform}&organization=${organization.external_id}`}
+            className={`w-full py-4 px-4 rounded-xl font-bold text-white text-lg shadow-lg ${config.buttonClass} transition-colors duration-200 flex items-center justify-center space-x-2`}
+          >
+            <span>🚀</span>
+            <span>Create Service</span>
+          </Link>
+          
+          {/* Organization name indicator */}
+          <div className="text-center mt-2">
+            <span className="text-sm text-gray-600">for {organization.display_name || organization.name}</span>
+          </div>
+        </div>
+      </div>
     </div>
+    </>
   )
 }

@@ -44,7 +44,7 @@ export async function GET(request: NextRequest) {
     
     let query = supabase
       .from('organization_cache')
-      .select('*', { count: 'estimated' }) // Use estimated count for much better performance
+      .select('*') // Remove count entirely for maximum performance
       .eq('platform', 'acnc')
       .eq('is_active', true);
     
@@ -122,7 +122,7 @@ export async function GET(request: NextRequest) {
       .order('name', { ascending: true })
       .range(offset, offset + limit - 1);
     
-    const { data: organizations, error, count } = await query;
+    const { data: organizations, error } = await query;
     
     if (error) {
       console.error('ACNC organizations fetch error:', error);
@@ -157,25 +157,20 @@ export async function GET(request: NextRequest) {
     
     // Handle pagination after any remaining post-query filtering
     let finalOrganizations = filteredOrganizations;
-    let actualCount = count || 0;
     
     if (preferred) {
       // For preferred filtering, apply pagination manually since it's post-query
-      actualCount = filteredOrganizations.length;
       const offset = (page - 1) * limit;
       finalOrganizations = filteredOrganizations.slice(offset, offset + limit);
     }
     
-    const totalPages = Math.ceil(actualCount / limit);
-    
+    // Return simplified response without total count for better performance
     return NextResponse.json({
       organizations: finalOrganizations,
       pagination: {
         page,
-        pages: totalPages,
         page_size: limit,
-        total_results: actualCount,
-        has_next: page < totalPages,
+        has_next: finalOrganizations.length === limit, // Assume more if we got full page
         has_previous: page > 1
       },
       platform: 'acnc'
