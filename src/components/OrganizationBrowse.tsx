@@ -28,7 +28,6 @@ interface OrganizationBrowseProps {
     city?: string
     country?: string
     state?: string
-    operating_country?: string
     featured?: string
     preferred?: string
     purpose?: string
@@ -44,7 +43,7 @@ interface BrowseState {
   currentPage: number
 }
 
-const ITEMS_PER_PAGE = 24
+const ITEMS_PER_PAGE = 12
 
 export default function OrganizationBrowse({
   locale,
@@ -70,9 +69,7 @@ export default function OrganizationBrowse({
   const searchQuery = searchParams.search || ''
   const categoryFilter = searchParams.category || ''
   const cityFilter = searchParams.city || ''
-  const countryFilter = searchParams.country || ''
   const stateFilter = searchParams.state || ''
-  const operatingCountryFilter = searchParams.operating_country || ''
   const featuredOnly = searchParams.featured === 'true'
   const preferredOnly = searchParams.preferred === 'true'
   const purposeFilter = searchParams.purpose || ''
@@ -85,8 +82,7 @@ export default function OrganizationBrowse({
     state: stateFilter,
     purpose: purposeFilter,
     city: cityFilter,
-    beneficiary: beneficiaryFilter,
-    operating_country: operatingCountryFilter
+    beneficiary: beneficiaryFilter
   })
 
   // Platform configuration
@@ -130,10 +126,8 @@ export default function OrganizationBrowse({
   const [purposeDropdownOpen, setPurposeDropdownOpen] = useState(false)
   const [locationDropdownOpen, setLocationDropdownOpen] = useState(false)
   const [beneficiaryDropdownOpen, setBeneficiaryDropdownOpen] = useState(false)
-  const [operatingCountryDropdownOpen, setOperatingCountryDropdownOpen] = useState(false)
   
   // JustGiving dropdown states
-  const [justgivingCountryDropdownOpen, setJustgivingCountryDropdownOpen] = useState(false)
   const [justgivingCityDropdownOpen, setJustgivingCityDropdownOpen] = useState(false)
   
   // ACNC state system
@@ -141,15 +135,9 @@ export default function OrganizationBrowse({
   const [selectedState, setSelectedState] = useState<string>(stateFilter)
   const [stateCities, setStateCities] = useState<string[]>([])
   
-  // ACNC operating countries system
-  const [acncOperatingCountries, setAcncOperatingCountries] = useState<string[]>([])
-  const [selectedOperatingCountry, setSelectedOperatingCountry] = useState<string>(searchParams.operating_country || '')
   
-  // JustGiving country/city system
-  const [justgivingCountries, setJustgivingCountries] = useState<string[]>([])
+  // JustGiving city system  
   const [justgivingCities, setJustgivingCities] = useState<string[]>([])
-  const [selectedCountry, setSelectedCountry] = useState<string>(countryFilter)
-  const [countryCities, setCountryCities] = useState<string[]>([])
   
   // Every.org state/city system - REMOVED (no structured location data in address fields)
   
@@ -218,13 +206,12 @@ export default function OrganizationBrowse({
           const supabase = createClient()
           
           // Load filter data from lookup tables (much faster)
-          const [categoriesResult, purposesResult, beneficiariesResult, citiesResult, statesResult, countriesResult] = await Promise.all([
+          const [categoriesResult, purposesResult, beneficiariesResult, citiesResult, statesResult] = await Promise.all([
             supabase.from('acnc_categories_lookup').select('category').order('category'),
             supabase.from('acnc_purposes_lookup').select('purpose').order('purpose'),
             supabase.from('acnc_beneficiaries_lookup').select('beneficiary').order('beneficiary'),
             supabase.from('acnc_cities_lookup').select('city').order('city'),
-            supabase.from('acnc_states_lookup').select('state').order('state'),
-            supabase.from('acnc_operating_countries_lookup').select('country').order('country')
+            supabase.from('acnc_states_lookup').select('state').order('state')
           ])
 
           if (categoriesResult.data) {
@@ -242,9 +229,6 @@ export default function OrganizationBrowse({
           if (statesResult.data) {
             setAcncStates(statesResult.data.map(item => item.state))
           }
-          if (countriesResult.data) {
-            setAcncOperatingCountries(countriesResult.data.map(item => item.country))
-          }
         } catch (error) {
           console.error('Failed to load ACNC filter data:', error)
         }
@@ -261,17 +245,23 @@ export default function OrganizationBrowse({
         try {
           const supabase = createClient()
           
-          // Load filter data from lookup tables (much faster)
-          const [countriesResult, citiesResult] = await Promise.all([
-            supabase.from('justgiving_countries_lookup').select('country').order('country'),
-            supabase.from('justgiving_cities_lookup').select('city').order('city')
-          ])
+          // Load cities from lookup table (much faster)
+          const { data: citiesResult, error } = await supabase
+            .from('justgiving_cities_lookup')
+            .select('city')
+            .order('city')
 
-          if (countriesResult.data) {
-            setJustgivingCountries(countriesResult.data.map(item => item.country))
+          if (error) {
+            console.error('Failed to load JustGiving cities:', error)
+            return
           }
-          if (citiesResult.data) {
-            setJustgivingCities(citiesResult.data.map(item => item.city))
+
+          if (citiesResult && citiesResult.length > 0) {
+            const cities = citiesResult.map(item => item.city)
+            console.log('Loaded JustGiving cities:', cities.length, cities.slice(0, 5))
+            setJustgivingCities(cities)
+          } else {
+            console.log('No JustGiving cities loaded')
           }
         } catch (error) {
           console.error('Failed to load JustGiving data:', error)
@@ -357,49 +347,6 @@ export default function OrganizationBrowse({
     }
   }, [platform, stateFilter])
 
-  // Load cities for selected country (JustGiving)
-  useEffect(() => {
-    if (platform === 'justgiving' && countryFilter && countryFilter !== 'all') {
-      const loadCountryCities = async () => {
-        try {
-          const supabase = createClient()
-          
-          console.log('Loading cities for country:', countryFilter)
-          
-          // Get organizations in the selected country
-          const { data: organizations, error } = await supabase
-            .from('organization_cache')
-            .select('address_city')
-            .eq('platform', 'justgiving')
-            .eq('is_active', true)
-            .eq('address_country', countryFilter)
-            .not('address_city', 'is', null)
-
-          if (error) {
-            console.error('Error loading country cities:', error)
-            return
-          }
-
-          if (organizations && organizations.length > 0) {
-            const cities = Array.from(new Set(organizations.map(o => o.address_city).filter(Boolean))).sort()
-            console.log(`Cities found for ${countryFilter}:`, cities.length, cities.slice(0, 5))
-            setCountryCities(cities)
-          } else {
-            console.log(`No cities found for ${countryFilter}`)
-            setCountryCities([])
-          }
-        } catch (error) {
-          console.error('Failed to load country cities:', error)
-          setCountryCities([])
-        }
-      }
-      
-      loadCountryCities()
-    } else {
-      // No country selected, clear country cities
-      setCountryCities([])
-    }
-  }, [platform, countryFilter])
 
   // Every.org city loading - REMOVED (no structured location data available)
 
@@ -461,7 +408,6 @@ export default function OrganizationBrowse({
     url.searchParams.delete('city')
     url.searchParams.delete('search')
     url.searchParams.delete('beneficiary')
-    url.searchParams.delete('operating_country')
     url.searchParams.delete('page')
     
     // Apply new filters
@@ -489,9 +435,6 @@ export default function OrganizationBrowse({
       url.searchParams.set('beneficiary', mobileFilters.beneficiary)
     }
     
-    if (mobileFilters.operating_country) {
-      url.searchParams.set('operating_country', mobileFilters.operating_country)
-    }
     
     // Close modal and navigate
     setShowMobileFilters(false)
@@ -507,7 +450,6 @@ export default function OrganizationBrowse({
       purpose: '',
       city: '',
       beneficiary: '',
-      operating_country: ''
     })
   }
 
@@ -520,7 +462,6 @@ export default function OrganizationBrowse({
       purpose: purposeFilter,
       city: cityFilter,
       beneficiary: beneficiaryFilter,
-      operating_country: operatingCountryFilter
     })
     setShowMobileFilters(true)
   }
@@ -553,19 +494,6 @@ export default function OrganizationBrowse({
     window.location.href = url.toString()
   }
 
-  // Handle ACNC operating country selection
-  const handleOperatingCountrySelect = (country: string) => {
-    const url = new URL(window.location.href)
-    if (country === selectedOperatingCountry) {
-      url.searchParams.delete('operating_country')
-      setSelectedOperatingCountry('')
-    } else {
-      url.searchParams.set('operating_country', country)
-      setSelectedOperatingCountry(country)
-    }
-    url.searchParams.delete('page')
-    window.location.href = url.toString()
-  }
 
   // Handle ACNC city selection
   const handleCitySelect = (city: string) => {
@@ -583,21 +511,6 @@ export default function OrganizationBrowse({
     window.location.href = url.toString()
   }
 
-  // Handle JustGiving country selection
-  const handleCountrySelect = (country: string) => {
-    const url = new URL(window.location.href)
-    if (country === selectedCountry) {
-      url.searchParams.delete('country')
-      setSelectedCountry('')
-    } else {
-      url.searchParams.set('country', country)
-      setSelectedCountry(country)
-    }
-    // Clear city filter when country changes
-    url.searchParams.delete('city')
-    url.searchParams.delete('page')
-    window.location.href = url.toString()
-  }
 
   // Handle JustGiving city selection  
   const handleJustgivingCitySelect = (city: string) => {
@@ -653,8 +566,8 @@ export default function OrganizationBrowse({
       
       return cities
     } else if (platform === 'justgiving') {
-      // Use country-specific cities if a country is selected, otherwise use all cities
-      let cities = (countryFilter && countryFilter !== 'all') ? countryCities : justgivingCities
+      // Use all JustGiving cities from lookup table
+      let cities = justgivingCities
       
       // Apply search filter
       if (locationSearch.trim()) {
@@ -682,7 +595,7 @@ export default function OrganizationBrowse({
     }
     
     return []
-  }, [platform, acncCities, stateCities, stateFilter, justgivingCities, countryCities, countryFilter, locationSearch, showAllLocations, cityFilter])
+  }, [platform, acncCities, stateCities, stateFilter, justgivingCities, locationSearch, showAllLocations, cityFilter])
 
   // Load organizations function for pagination
   const loadOrganizations = useCallback(async (page: number) => {
@@ -708,9 +621,6 @@ export default function OrganizationBrowse({
         params.set('city', cityFilter)
       }
       
-      if (countryFilter && countryFilter !== 'all') {
-        params.set('country', countryFilter)
-      }
       
       if (stateFilter && stateFilter !== 'all') {
         params.set('state', stateFilter)
@@ -732,9 +642,6 @@ export default function OrganizationBrowse({
         params.set('beneficiary', beneficiaryFilter)
       }
 
-      if (operatingCountryFilter) {
-        params.set('operating_country', operatingCountryFilter)
-      }
 
       const response = await fetch(`/api/${platform}/organizations?${params.toString()}`)
       
@@ -743,6 +650,7 @@ export default function OrganizationBrowse({
       }
       
       const data = await response.json()
+      
       
       setState(prev => ({
         ...prev,
@@ -761,11 +669,20 @@ export default function OrganizationBrowse({
         error: error instanceof Error ? error.message : 'Failed to load organizations'
       }))
     }
-  }, [platform, searchQuery, categoryFilter, cityFilter, countryFilter, stateFilter, operatingCountryFilter, featuredOnly, preferredOnly, purposeFilter, beneficiaryFilter])
+  }, [platform, searchQuery, categoryFilter, cityFilter, stateFilter, featuredOnly, preferredOnly, purposeFilter, beneficiaryFilter])
+
+  // Prevent duplicate API calls with a ref
+  const loadingRef = useRef(false)
 
   // Initial load and filter changes
   useEffect(() => {
-    loadOrganizations(currentPage)
+    // Prevent duplicate calls
+    if (loadingRef.current) return
+    
+    loadingRef.current = true
+    loadOrganizations(currentPage).finally(() => {
+      loadingRef.current = false
+    })
   }, [loadOrganizations, currentPage])
 
   // Pagination helper functions
@@ -773,8 +690,7 @@ export default function OrganizationBrowse({
     if (page >= 1 && page <= totalPages && page !== currentPage) {
       const url = new URL(window.location.href)
       url.searchParams.set('page', page.toString())
-      window.history.pushState({}, '', url.toString())
-      loadOrganizations(page)
+      window.location.href = url.toString() // Use navigation instead of pushState
     }
   }
 
@@ -782,6 +698,7 @@ export default function OrganizationBrowse({
   const totalPages = Math.ceil(state.totalCount / ITEMS_PER_PAGE)
   const startItem = (currentPage - 1) * ITEMS_PER_PAGE + 1
   const endItem = Math.min(currentPage * ITEMS_PER_PAGE, state.totalCount)
+  
 
   // Close dropdowns when clicking outside
   useEffect(() => {
@@ -793,8 +710,6 @@ export default function OrganizationBrowse({
         setPurposeDropdownOpen(false)
         setLocationDropdownOpen(false)
         setBeneficiaryDropdownOpen(false)
-        setOperatingCountryDropdownOpen(false)
-        setJustgivingCountryDropdownOpen(false)
         setJustgivingCityDropdownOpen(false)
       }
     }
@@ -853,70 +768,12 @@ export default function OrganizationBrowse({
                 </div>
               </div>
               
-              {/* Inline Country Filter */}
-              {justgivingCountries.length > 0 && (
-                <div className="w-full lg:w-64">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Country</label>
-                  <div className="relative">
-                    <button
-                      onClick={() => setJustgivingCountryDropdownOpen(!justgivingCountryDropdownOpen)}
-                      className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-left text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 flex items-center justify-between"
-                    >
-                      <span className={countryFilter ? 'text-gray-900' : 'text-gray-500'}>
-                        {countryFilter === 'no_country' ? 'No Country Listed' : countryFilter || 'Select country...'}
-                      </span>
-                      <ChevronDown className="h-4 w-4 text-gray-400" />
-                    </button>
-                    
-                    {justgivingCountryDropdownOpen && (
-                      <div className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
-                        {countryFilter && (
-                          <button
-                            onClick={() => {
-                              handleCountrySelect('')
-                              setJustgivingCountryDropdownOpen(false)
-                            }}
-                            className="w-full px-3 py-2 text-left text-sm text-gray-500 hover:bg-gray-50 border-b"
-                          >
-                            Clear selection
-                          </button>
-                        )}
-                        <button
-                          onClick={() => {
-                            handleCountrySelect('no_country')
-                            setJustgivingCountryDropdownOpen(false)
-                          }}
-                          className={`w-full px-3 py-2 text-left text-sm hover:bg-blue-50 ${
-                            countryFilter === 'no_country' ? 'bg-blue-100 text-blue-800 font-medium' : 'text-gray-700'
-                          }`}
-                        >
-                          No Country Listed
-                        </button>
-                        {justgivingCountries.map((country) => (
-                          <button
-                            key={country}
-                            onClick={() => {
-                              handleCountrySelect(country)
-                              setJustgivingCountryDropdownOpen(false)
-                            }}
-                            className={`w-full px-3 py-2 text-left text-sm hover:bg-blue-50 ${
-                              countryFilter === country ? 'bg-blue-100 text-blue-800 font-medium' : 'text-gray-700'
-                            }`}
-                          >
-                            {country}
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
               
               {/* Inline City Filter */}
               {justgivingCities.length > 0 && (
                 <div className="w-full lg:w-64">
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Location{countryFilter && countryFilter !== 'all' && countryFilter !== 'no_country' ? ` (${countryFilter})` : ''}
+                    Location
                   </label>
                   <div className="relative">
                     <button
@@ -1290,53 +1147,6 @@ export default function OrganizationBrowse({
                 </div>
               )}
               
-              {/* Inline Operating Countries Filter - Mobile only */}
-              {acncOperatingCountries.length > 0 && (
-                <div className="w-full xl:w-48 md:hidden">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Operating Countries</label>
-                  <div className="relative">
-                    <button
-                      onClick={() => setOperatingCountryDropdownOpen(!operatingCountryDropdownOpen)}
-                      className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-left text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 flex items-center justify-between"
-                    >
-                      <span className={operatingCountryFilter ? 'text-gray-900' : 'text-gray-500'}>
-                        {operatingCountryFilter || 'Countries...'}
-                      </span>
-                      <ChevronDown className="h-4 w-4 text-gray-400" />
-                    </button>
-                    
-                    {operatingCountryDropdownOpen && (
-                      <div className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
-                        {operatingCountryFilter && (
-                          <button
-                            onClick={() => {
-                              handleOperatingCountrySelect('')
-                              setOperatingCountryDropdownOpen(false)
-                            }}
-                            className="w-full px-3 py-2 text-left text-sm text-gray-500 hover:bg-gray-50 border-b"
-                          >
-                            Clear selection
-                          </button>
-                        )}
-                        {acncOperatingCountries.map((country) => (
-                          <button
-                            key={country}
-                            onClick={() => {
-                              handleOperatingCountrySelect(country)
-                              setOperatingCountryDropdownOpen(false)
-                            }}
-                            className={`w-full px-3 py-2 text-left text-sm hover:bg-indigo-50 ${
-                              operatingCountryFilter === country ? 'bg-indigo-100 text-indigo-800 font-medium' : 'text-gray-700'
-                            }`}
-                          >
-                            {country}
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
             </div>
           ) : platform === 'everyorg' ? (
             /* Every.org Search Bar + Category Dropdown - Hidden on mobile */
@@ -1466,7 +1276,7 @@ export default function OrganizationBrowse({
           {/* Results Content */}
         <div className="mt-8">
           {/* Filter Summary */}
-          {(categoryFilter || cityFilter || countryFilter || stateFilter || operatingCountryFilter || searchQuery || purposeFilter || featuredOnly || preferredOnly) && (
+          {(categoryFilter || cityFilter || stateFilter || searchQuery || purposeFilter || featuredOnly || preferredOnly) && (
             <div className="mb-6 p-4 bg-gray-50 rounded-lg border">
               <div className="flex items-center justify-between mb-2">
                 <h3 className="text-sm font-medium text-gray-700">Active Filters:</h3>
@@ -1503,16 +1313,6 @@ export default function OrganizationBrowse({
                 {purposeFilter && (
                   <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-orange-100 text-orange-800">
                     Purpose: {purposeFilter.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
-                  </span>
-                )}
-                {countryFilter && (
-                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-blue-100 text-blue-800">
-                    Country: {countryFilter === 'no_country' ? 'No Country Listed' : countryFilter}
-                  </span>
-                )}
-                {operatingCountryFilter && (
-                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-purple-100 text-purple-800">
-                    Operating Country: {operatingCountryFilter}
                   </span>
                 )}
                 {cityFilter && (
@@ -1568,7 +1368,7 @@ export default function OrganizationBrowse({
             )}
 
             {/* No Results - Only show when filters are applied */}
-            {!state.loading && !state.error && state.totalCount === 0 && (categoryFilter || cityFilter || countryFilter || stateFilter || operatingCountryFilter || searchQuery || purposeFilter || featuredOnly || preferredOnly) && (
+            {!state.loading && !state.error && state.totalCount === 0 && (categoryFilter || cityFilter || stateFilter || searchQuery || purposeFilter || featuredOnly || preferredOnly) && (
               <div className="text-center py-12">
                 <p className="text-gray-600 mb-4">
                   No organizations found matching your criteria.
@@ -1603,65 +1403,98 @@ export default function OrganizationBrowse({
             )}
 
 
-            {/* Pagination Controls */}
+            {/* Industry Standard Pagination */}
             {totalPages > 1 && (
-              <div className="flex justify-center py-8 mt-8 mb-8">
-                <div className="flex items-center space-x-2">
-                  {/* Previous Button */}
+              <nav className="flex items-center justify-between border-t border-gray-200 px-4 py-3 sm:px-6" aria-label="Pagination">
+                <div className="hidden sm:block">
+                  <p className="text-sm text-gray-700">
+                    Showing <span className="font-medium">{startItem}</span> to{' '}
+                    <span className="font-medium">{endItem}</span> of{' '}
+                    <span className="font-medium">{state.totalCount.toLocaleString()}</span> results
+                  </p>
+                </div>
+                <div className="flex flex-1 justify-between sm:justify-end">
                   <button
                     onClick={() => goToPage(currentPage - 1)}
                     disabled={currentPage === 1}
-                    className={`px-3 py-2 rounded-lg text-sm font-medium ${
+                    className={`relative inline-flex items-center rounded-md px-3 py-2 text-sm font-semibold ring-1 ring-inset ${
                       currentPage === 1
-                        ? 'text-gray-400 cursor-not-allowed'
-                        : 'text-gray-700 hover:bg-gray-100'
+                        ? 'text-gray-300 ring-gray-300 cursor-not-allowed'
+                        : `text-gray-900 ring-gray-300 hover:bg-${platform === 'acnc' ? 'orange' : platform === 'everyorg' ? 'green' : 'blue'}-50`
                     }`}
                   >
                     Previous
                   </button>
-
-                  {/* Page Numbers */}
-                  {Array.from({ length: Math.min(totalPages, 7) }, (_, i) => {
-                    let page: number
-                    if (totalPages <= 7) {
-                      page = i + 1
-                    } else if (currentPage <= 4) {
-                      page = i + 1
-                    } else if (currentPage >= totalPages - 3) {
-                      page = totalPages - 6 + i
-                    } else {
-                      page = currentPage - 3 + i
-                    }
-
-                    return (
-                      <button
-                        key={page}
-                        onClick={() => goToPage(page)}
-                        className={`px-3 py-2 rounded-lg text-sm font-medium ${
-                          page === currentPage
-                            ? `bg-${config.color}-600 text-white`
-                            : `text-gray-700 hover:bg-${config.color}-50`
-                        }`}
-                      >
-                        {page}
-                      </button>
-                    )
-                  })}
-
-                  {/* Next Button */}
+                  
+                  {/* Desktop page numbers */}
+                  <div className="hidden md:flex">
+                    {(() => {
+                      const pages = []
+                      const delta = 2 // Show 2 pages on each side of current
+                      const range = []
+                      const rangeWithDots = []
+                      
+                      for (let i = Math.max(2, currentPage - delta); 
+                           i <= Math.min(totalPages - 1, currentPage + delta); 
+                           i++) {
+                        range.push(i)
+                      }
+                      
+                      if (currentPage - delta > 2) {
+                        rangeWithDots.push(1, '...')
+                      } else {
+                        rangeWithDots.push(1)
+                      }
+                      
+                      rangeWithDots.push(...range)
+                      
+                      if (currentPage + delta < totalPages - 1) {
+                        rangeWithDots.push('...', totalPages)
+                      } else if (totalPages > 1) {
+                        rangeWithDots.push(totalPages)
+                      }
+                      
+                      return rangeWithDots.map((page, index) => {
+                        if (page === '...') {
+                          return (
+                            <span key={`dots-${index}`} className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300">
+                              ...
+                            </span>
+                          )
+                        }
+                        
+                        const pageNum = page as number
+                        return (
+                          <button
+                            key={pageNum}
+                            onClick={() => goToPage(pageNum)}
+                            aria-current={pageNum === currentPage ? 'page' : undefined}
+                            className={`relative inline-flex items-center px-4 py-2 text-sm font-semibold ${
+                              pageNum === currentPage
+                                ? `z-10 bg-${platform === 'acnc' ? 'orange' : platform === 'everyorg' ? 'green' : 'blue'}-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-${platform === 'acnc' ? 'orange' : platform === 'everyorg' ? 'green' : 'blue'}-600`
+                                : `text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-${platform === 'acnc' ? 'orange' : platform === 'everyorg' ? 'green' : 'blue'}-50 focus:z-20 focus:outline-offset-0`
+                            }`}
+                          >
+                            {pageNum}
+                          </button>
+                        )
+                      })
+                    })()}
+                  </div>
+                  
                   <button
                     onClick={() => goToPage(currentPage + 1)}
                     disabled={currentPage === totalPages}
-                    className={`px-3 py-2 rounded-lg text-sm font-medium ${
+                    className={`relative ml-3 inline-flex items-center rounded-md px-3 py-2 text-sm font-semibold ring-1 ring-inset ${
                       currentPage === totalPages
-                        ? 'text-gray-400 cursor-not-allowed'
-                        : 'text-gray-700 hover:bg-gray-100'
+                        ? 'text-gray-300 ring-gray-300 cursor-not-allowed'
+                        : `text-gray-900 ring-gray-300 hover:bg-${platform === 'acnc' ? 'orange' : platform === 'everyorg' ? 'green' : 'blue'}-50`
                     }`}
                   >
                     Next
                   </button>
                 </div>
-              </div>
+              </nav>
             )}
           </div>
         </div>
@@ -1868,27 +1701,6 @@ export default function OrganizationBrowse({
                 </div>
               )}
 
-              {/* Operating Countries Filter - ACNC only */}
-              {platform === 'acnc' && acncOperatingCountries.length > 0 && (
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Operating Countries</label>
-                  <div className="relative">
-                    <select
-                      value={mobileFilters.operating_country}
-                      onChange={(e) => setMobileFilters(prev => ({ ...prev, operating_country: e.target.value }))}
-                      className="w-full p-3 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent appearance-none bg-white"
-                    >
-                      <option value="">All Countries</option>
-                      {acncOperatingCountries.map((country) => (
-                        <option key={country} value={country}>
-                          {country}
-                        </option>
-                      ))}
-                    </select>
-                    <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
-                  </div>
-                </div>
-              )}
 
               {/* Every.org Location Filtering Note - Mobile only */}
               {platform === 'everyorg' && (

@@ -185,15 +185,20 @@ export default function OrganizationPage({
                   </a>
                 )}
                 
-                {organization.profile_page_url && (
+                {(organization.profile_page_url || (platform === 'acnc' && organization.acnc_abn)) && (
                   <a
-                    href={organization.profile_page_url}
+                    href={
+                      organization.profile_page_url || 
+                      (platform === 'acnc' && organization.acnc_abn 
+                        ? `https://www.acnc.gov.au/charity/charities?search=${organization.acnc_abn}` 
+                        : '')
+                    }
                     target="_blank"
                     rel="noopener noreferrer"
                     className={`flex items-center ${config.textClass} hover:underline`}
                   >
                     <ExternalLink className="h-4 w-4 mr-1" />
-                    {config.name} Profile
+                    {platform === 'acnc' ? 'Search ACNC Register' : `${config.name} Profile`}
                   </a>
                 )}
                 

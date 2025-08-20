@@ -28,7 +28,7 @@ interface PaginationInfo {
   pageSize: number
 }
 
-const PAGE_SIZE = 24 // Show 24 charities per page (fits nicely in 3x8 grid)
+const PAGE_SIZE = 12 // Show 12 charities per page for better performance
 
 export default function BrowseCharitiesPage({ params }: BrowseCharitiesPageProps) {
   const locale = params.locale

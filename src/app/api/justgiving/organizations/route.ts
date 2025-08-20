@@ -6,6 +6,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import orgCache from '@/lib/cache/organization-cache';
 
 export const dynamic = 'force-dynamic';
 
@@ -13,13 +14,25 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get('page') || '1');
-    const limit = parseInt(searchParams.get('limit') || '24');
+    const limit = parseInt(searchParams.get('limit') || '12');
     const search = searchParams.get('search') || '';
     const category = searchParams.get('category') || '';
     const city = searchParams.get('city') || '';
-    const country = searchParams.get('country') || '';
     const featured = searchParams.get('featured') === 'true';
     const preferred = searchParams.get('preferred') === 'true';
+    
+    // Generate cache key for this request
+    const filters = { search, category, city, featured, preferred };
+    const cacheKey = orgCache.generateKey({ platform: 'justgiving', page, limit, filters });
+    
+    // Check cache first (only for non-user-specific queries)
+    // Temporarily disabled to test fresh queries
+    // if (!preferred) {
+    //   const cachedResult = orgCache.get(cacheKey);
+    //   if (cachedResult) {
+    //     return NextResponse.json(cachedResult);
+    //   }
+    // }
     
     // Validate environment variables
     if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
@@ -32,15 +45,38 @@ export async function GET(request: NextRequest) {
     
     const supabase = createClient();
     
-    // Get total count from platform_stats table (much faster than counting)
-    const { data: statsData } = await supabase
-      .from('platform_stats')
-      .select('justgiving_count')
-      .order('last_updated', { ascending: false })
-      .limit(1)
-      .single();
+    // Decode URL parameters properly
+    const decodedCity = city ? decodeURIComponent(city.replace(/\+/g, ' ')) : '';
     
-    const totalCount = statsData?.justgiving_count || 0;
+    // Build count query with same filters as main query
+    let countQuery = supabase
+      .from('organization_cache')
+      .select('*', { count: 'exact' })
+      .eq('platform', 'justgiving')
+      .eq('is_active', true)
+      .eq('show_on_platform', true);
+    
+    // Apply the same filters to count query
+    if (search) {
+      countQuery = countQuery.or(`name.ilike.%${search}%,description.ilike.%${search}%,registration_number.ilike.%${search}%,keywords.ilike.%${search}%`);
+    }
+    
+    if (category) {
+      countQuery = countQuery.eq('category', category);
+    }
+    
+    if (decodedCity && decodedCity !== 'all') {
+      if (decodedCity === 'online') {
+        // No additional filter needed for online - already filtered by is_active
+      } else {
+        // Filter by specific city
+        countQuery = countQuery.eq('address_city', decodedCity);
+      }
+    }
+    
+    if (featured) {
+      countQuery = countQuery.eq('is_featured', true);
+    }
 
     let query = supabase
       .from('organization_cache')
@@ -49,7 +85,7 @@ export async function GET(request: NextRequest) {
       .eq('is_active', true)
       .eq('show_on_platform', true);
     
-    // Apply filters
+    // Apply the same filters to main query
     if (search) {
       query = query.or(`name.ilike.%${search}%,description.ilike.%${search}%,registration_number.ilike.%${search}%,keywords.ilike.%${search}%`);
     }
@@ -58,21 +94,12 @@ export async function GET(request: NextRequest) {
       query = query.eq('category', category);
     }
     
-    if (country && country !== 'all') {
-      if (country === 'no_country') {
-        query = query.is('address_country', null);
-      } else {
-        query = query.eq('address_country', country);
-      }
-    }
-    
-    if (city && city !== 'all') {
-      if (city === 'online') {
-        // Show organizations that can receive online donations (all JustGiving charities)
-        query = query.eq('is_active', true);
+    if (decodedCity && decodedCity !== 'all') {
+      if (decodedCity === 'online') {
+        // No additional filter needed for online - already filtered by is_active
       } else {
         // Filter by specific city
-        query = query.eq('address_city', city);
+        query = query.eq('address_city', decodedCity);
       }
     }
     
@@ -80,15 +107,23 @@ export async function GET(request: NextRequest) {
       query = query.eq('is_featured', true);
     }
     
-    // Apply pagination and sorting
+    // Execute count query first (without pagination to get total filtered count)
+    const { count: totalCount, error: countError } = await countQuery;
+    
+    if (countError) {
+      console.error('JustGiving count query error:', countError);
+      return NextResponse.json({ error: 'Failed to get count' }, { status: 500 });
+    }
+    
+    // Apply pagination to the main query
     const offset = (page - 1) * limit;
     query = query
-      .order('is_featured', { ascending: false })
-      .order('total_donations_count', { ascending: false })
-      .order('name', { ascending: true })
+      .order('id') // Add simple sorting for consistent pagination
       .range(offset, offset + limit - 1);
     
+    // Execute main query
     const { data: organizations, error } = await query;
+    
     
     if (error) {
       console.error('JustGiving organizations fetch error:', error);
@@ -97,6 +132,8 @@ export async function GET(request: NextRequest) {
     
     // If preferred filter requested, we need to check which orgs are selected by services
     let filteredOrganizations = organizations || [];
+    let finalCount = totalCount || 0;
+    
     if (preferred) {
       const { data: services } = await supabase
         .from('services')
@@ -113,22 +150,40 @@ export async function GET(request: NextRequest) {
       filteredOrganizations = filteredOrganizations.filter(org => 
         preferredCharityIds.has(parseInt(org.external_id))
       );
+      
+      // For preferred filter, adjust count based on filtered results
+      if (filteredOrganizations.length < limit) {
+        // If we got fewer results than the page size, we're probably near the end
+        finalCount = (page - 1) * limit + filteredOrganizations.length;
+      }
     }
     
-    const totalPages = Math.ceil(totalCount / limit);
+    const totalPages = Math.ceil(finalCount / limit);
     
-    return NextResponse.json({
+    const response = {
       organizations: filteredOrganizations,
       pagination: {
         page,
         pages: totalPages,
         page_size: limit,
-        total_results: totalCount,
+        total_results: finalCount,
         has_next: page < totalPages,
         has_previous: page > 1
       },
       platform: 'justgiving'
-    });
+    };
+    
+    // Cache result (only for non-user-specific queries)
+    // Temporarily disabled caching
+    // if (!preferred && !search) {
+    //   // Cache static data (no search/personalization) for longer
+    //   orgCache.set(cacheKey, response, true);
+    // } else if (!preferred) {
+    //   // Cache dynamic data (search results) for shorter time
+    //   orgCache.set(cacheKey, response, false);
+    // }
+    
+    return NextResponse.json(response);
     
   } catch (error) {
     console.error('JustGiving organizations API error:', error);

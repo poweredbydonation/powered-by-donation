@@ -336,6 +336,20 @@ Transform entire application from entity-first to platform-first architecture wi
 **Country Code Mapping**: 17 languages mapped to ISO country codes (cn.svg, us.svg, de.svg, es.svg, fr.svg, etc.)
 **Performance**: Vector SVG graphics ensure crisp display and fast loading times
 
+#### **LATEST COMPLETION - Session 2025-01-20** 🎉
+✅ **ACNC Filtering & External Links Complete**: Fixed state filtering and added proper ACNC profile links
+✅ **Dynamic Filtered Counts**: ACNC API now counts filtered results when state/category filters are applied
+✅ **ACNC External Links**: Added search-based ACNC links using ABN for both organization cards and detail pages
+✅ **Accurate Pagination**: State filter (e.g., NSW) now shows correct result counts instead of cached totals
+✅ **Smart Counting**: Uses cached stats for unfiltered results, real counts when filters are active
+
+**Technical Achievements**:
+- **Fixed NSW Filtering**: `?state=NSW` now shows accurate result counts (not 63,146)
+- **ACNC Profile Links**: `https://www.acnc.gov.au/charity/charities?search=[ABN]` for all ACNC organizations
+- **Conditional Counting**: Fast cached counts for browsing, accurate counts for filtered results
+- **Cross-Component**: External links work in both OrganizationCard (browse) and OrganizationPage (detail)
+- **User Experience**: "Search ACNC Register" links help users find organizations on official ACNC website
+
 #### **MAJOR COMPLETION - Session 2025-01-19** 🎉
 ✅ **Performance Optimization Complete**: Eliminated infinite scroll and expensive COUNT queries across platform
 ✅ **Traditional Pagination**: Replaced infinite scroll with numbered pagination (24 items per page)

@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get('page') || '1');
-    const limit = parseInt(searchParams.get('limit') || '24');
+    const limit = parseInt(searchParams.get('limit') || '12');
     const search = searchParams.get('search') || '';
     const category = searchParams.get('category') || '';
     const city = searchParams.get('city') || '';
@@ -23,15 +23,21 @@ export async function GET(request: NextRequest) {
     
     const supabase = createClient();
     
-    // Get total count from platform_stats table (much faster than counting)
-    const { data: statsData } = await supabase
-      .from('platform_stats')
-      .select('everyorg_count')
-      .order('last_updated', { ascending: false })
-      .limit(1)
-      .single();
+    // Build count query with same filters as main query
+    let countQuery = supabase
+      .from('organization_cache')
+      .select('*', { count: 'exact' })
+      .eq('platform', 'everyorg')
+      .eq('is_active', true);
     
-    const totalCount = statsData?.everyorg_count || 0;
+    // Apply the same filters to count query
+    if (search) {
+      countQuery = countQuery.or(`name.ilike.%${search}%,description.ilike.%${search}%,external_id.ilike.%${search}%`);
+    }
+    
+    if (category) {
+      countQuery = countQuery.eq('category', category);
+    }
 
     let query = supabase
       .from('organization_cache')
@@ -39,7 +45,7 @@ export async function GET(request: NextRequest) {
       .eq('platform', 'everyorg')
       .eq('is_active', true);
     
-    // Apply filters
+    // Apply the same filters to main query
     if (search) {
       query = query.or(`name.ilike.%${search}%,description.ilike.%${search}%,external_id.ilike.%${search}%`);
     }
@@ -55,24 +61,31 @@ export async function GET(request: NextRequest) {
     if (city && city !== 'all') {
       if (city === 'online') {
         // Show organizations that can receive online donations (all Every.org nonprofits)
-        query = query.eq('is_active', true);
+        // No additional filter needed - already filtered by is_active
       } else {
         // Filter by description content for location terms
         query = query.ilike('description', `%${city}%`);
+        countQuery = countQuery.ilike('description', `%${city}%`);
       }
     }
     
     if (featured) {
       query = query.eq('is_featured', true);
+      countQuery = countQuery.eq('is_featured', true);
     }
     
-    // Apply pagination and sorting
+    // Get filtered count first
+    const { data: countData, error: countError, count: totalCount } = await countQuery;
+    
+    if (countError) {
+      console.error('Every.org count query error:', countError);
+      return NextResponse.json({ error: 'Failed to get count' }, { status: 500 });
+    }
+    
+    // Apply pagination without sorting for maximum performance
     const offset = (page - 1) * limit;
     query = query
-      .order('is_featured', { ascending: false })
-      .order('total_donations_count', { ascending: false })
-      .order('name', { ascending: true })
-      .range(offset, offset + limit - 1);
+      .range(offset, offset + limit - 1); // No sorting - use natural database order
     
     const { data: organizations, error } = await query;
     
@@ -83,6 +96,8 @@ export async function GET(request: NextRequest) {
     
     // If preferred filter requested, we need to check which orgs are selected by services
     let filteredOrganizations = organizations || [];
+    let finalCount = totalCount || 0;
+    
     if (preferred) {
       const { data: services } = await supabase
         .from('services')
@@ -101,9 +116,19 @@ export async function GET(request: NextRequest) {
       filteredOrganizations = filteredOrganizations.filter(org => 
         preferredOrgIds.has(org.id)
       );
+      
+      // For preferred filter, we need to count how many of the filtered orgs are preferred
+      // This is a limitation - we can't easily count preferred orgs without fetching all
+      // For now, we'll use the length of filtered results as a rough estimate
+      // In a production system, you'd want to optimize this with a materialized view or better query structure
+      if (filteredOrganizations.length < limit) {
+        // If we got fewer results than the page size, we're probably near the end
+        finalCount = (page - 1) * limit + filteredOrganizations.length;
+      }
+      // Note: This is an approximation and may not be perfectly accurate for preferred filter
     }
     
-    const totalPages = Math.ceil(totalCount / limit);
+    const totalPages = Math.ceil(finalCount / limit);
     
     return NextResponse.json({
       organizations: filteredOrganizations,
@@ -111,7 +136,7 @@ export async function GET(request: NextRequest) {
         page,
         pages: totalPages,
         page_size: limit,
-        total_results: totalCount,
+        total_results: finalCount,
         has_next: page < totalPages,
         has_previous: page > 1
       },

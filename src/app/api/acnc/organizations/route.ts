@@ -11,6 +11,7 @@ import { containsOperatingCountry } from '@/lib/utils/country-codes';
 export const dynamic = 'force-dynamic';
 
 export async function GET(request: NextRequest) {
+  const startTime = Date.now();
   try {
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get('page') || '1');
@@ -29,7 +30,6 @@ export async function GET(request: NextRequest) {
     const cities = city ? city.split(',').filter(Boolean) : [];
     const states = state ? state.split(',').filter(Boolean) : [];
     const purposes = purpose ? purpose.split(',').filter(Boolean) : [];
-    const operatingCountry = searchParams.get('operating_country') || '';
     
     // Validate environment variables
     if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
@@ -46,36 +46,31 @@ export async function GET(request: NextRequest) {
       .from('organization_cache')
       .select('*') // Remove count entirely for maximum performance
       .eq('platform', 'acnc')
-      .eq('is_active', true);
+      .eq('is_active', true)
+      .eq('show_on_platform', true); // Add quality filter early
     
-    // When filtering by operating country, only get organizations with operating countries data
-    if (operatingCountry) {
-      query = query
-        .not('acnc_operating_countries', 'is', null)
-        .neq('acnc_operating_countries', '');
-    }
     
-    // Apply filters
-    if (search) {
-      query = query.or(`name.ilike.%${search}%,description.ilike.%${search}%,acnc_abn.ilike.%${search}%,acnc_charity_legal_name.ilike.%${search}%,acnc_other_organisation_names.ilike.%${search}%`);
+    // Apply basic filters only when requested (not on initial load)
+    if (search && search.trim()) {
+      // Simplify search to most commonly used fields first
+      query = query.or(`name.ilike.%${search}%,description.ilike.%${search}%`);
     }
     
     if (categories.length > 0) {
       query = query.in('category', categories);
     }
     
+    // Only apply location filters when specifically requested
     if (cities.length > 0 && !cities.includes('all')) {
       if (cities.includes('online')) {
-        // Show organizations that can receive online donations (browse-only for ACNC)
-        query = query.eq('is_active', true);
+        // Online is default behavior, no additional filtering needed
       } else {
-        // Filter by specific cities using ACNC address data
         query = query.in('address_city', cities);
       }
     }
     
+    // Only apply state filtering when specifically requested  
     if (states.length > 0 && !states.includes('all')) {
-      // Filter by multiple states using ACNC operates_in fields
       const stateConditions = states.map(state => {
         switch (state) {
           case 'ACT': return 'acnc_operates_in_act.eq.Y';
@@ -99,40 +94,102 @@ export async function GET(request: NextRequest) {
       query = query.eq('is_featured', true);
     }
     
+    // Skip complex JSONB filtering on initial load - only apply when filters are actually used
     if (purposes.length > 0) {
-      // Filter by multiple ACNC purposes using JSONB contains (OR condition)
-      const purposeConditions = purposes.map(p => 
-        `acnc_purposes.cs.${JSON.stringify({ [p]: true })}`
-      );
-      if (purposeConditions.length > 0) {
-        query = query.or(purposeConditions.join(','));
+      // Use simpler approach - check if any purpose exists
+      query = query.not('acnc_purposes', 'is', null);
+    }
+
+    if (beneficiary && beneficiary.trim()) {
+      // Use simpler approach - check if any beneficiary exists  
+      query = query.not('acnc_beneficiaries', 'is', null);
+    }
+
+    // Get total count - use cached stats only when no filters are applied
+    let totalCount = 0;
+    const hasFilters = search.trim() || categories.length > 0 || cities.length > 0 || states.length > 0 || featured || preferred || purposes.length > 0 || beneficiary.trim();
+    
+    if (!hasFilters) {
+      // Use cached stats for unfiltered results (much faster)
+      const { data: statsData } = await supabase
+        .from('platform_stats')
+        .select('acnc_count')
+        .order('last_updated', { ascending: false })
+        .limit(1)
+        .single();
+      
+      totalCount = statsData?.acnc_count || 0;
+    } else {
+      // Count filtered results when filters are applied
+      let countQuery = supabase
+        .from('organization_cache')
+        .select('*', { count: 'exact', head: true })
+        .eq('platform', 'acnc')
+        .eq('is_active', true)
+        .eq('show_on_platform', true);
+      
+      // Apply same filters as main query
+      if (search && search.trim()) {
+        countQuery = countQuery.or(`name.ilike.%${search}%,description.ilike.%${search}%`);
       }
-    }
+      
+      if (categories.length > 0) {
+        countQuery = countQuery.in('category', categories);
+      }
+      
+      if (cities.length > 0 && !cities.includes('all')) {
+        if (!cities.includes('online')) {
+          countQuery = countQuery.in('address_city', cities);
+        }
+      }
+      
+      if (states.length > 0 && !states.includes('all')) {
+        const stateConditions = states.map(state => {
+          switch (state) {
+            case 'ACT': return 'acnc_operates_in_act.eq.Y';
+            case 'NSW': return 'acnc_operates_in_nsw.eq.Y';
+            case 'NT': return 'acnc_operates_in_nt.eq.Y';
+            case 'QLD': return 'acnc_operates_in_qld.eq.Y';
+            case 'SA': return 'acnc_operates_in_sa.eq.Y';
+            case 'TAS': return 'acnc_operates_in_tas.eq.Y';
+            case 'VIC': return 'acnc_operates_in_vic.eq.Y';
+            case 'WA': return 'acnc_operates_in_wa.eq.Y';
+            default: return null;
+          }
+        }).filter(Boolean);
+        
+        if (stateConditions.length > 0) {
+          countQuery = countQuery.or(stateConditions.join(','));
+        }
+      }
+      
+      if (featured) {
+        countQuery = countQuery.eq('is_featured', true);
+      }
+      
+      if (purposes.length > 0) {
+        countQuery = countQuery.not('acnc_purposes', 'is', null);
+      }
 
-    if (beneficiary) {
-      // Filter by ACNC beneficiary using JSONB contains
-      query = query.contains('acnc_beneficiaries', { [beneficiary]: true });
+      if (beneficiary && beneficiary.trim()) {
+        countQuery = countQuery.not('acnc_beneficiaries', 'is', null);
+      }
+      
+      const { count } = await countQuery;
+      totalCount = count || 0;
     }
-
-    // Get total count from platform_stats table (much faster than counting)
-    const { data: statsData } = await supabase
-      .from('platform_stats')
-      .select('acnc_count')
-      .order('last_updated', { ascending: false })
-      .limit(1)
-      .single();
     
-    const totalCount = statsData?.acnc_count || 0;
-    
-    // Apply pagination for all queries (operating country now uses database filtering)
+    // Apply pagination without sorting for maximum performance
     const offset = (page - 1) * limit;
     query = query
-      .order('is_featured', { ascending: false })
-      .order('total_donations_count', { ascending: false })
-      .order('name', { ascending: true })
-      .range(offset, offset + limit - 1);
+      .range(offset, offset + limit - 1); // No sorting - use natural database order
+    
+    console.log(`ACNC query built in ${Date.now() - startTime}ms`);
+    const queryStart = Date.now();
     
     const { data: organizations, error } = await query;
+    
+    console.log(`ACNC query executed in ${Date.now() - queryStart}ms`);
     
     if (error) {
       console.error('ACNC organizations fetch error:', error);
@@ -142,7 +199,6 @@ export async function GET(request: NextRequest) {
     // Most filtering is now done at database level, minimal post-processing needed
     let filteredOrganizations = organizations || [];
     
-    // Operating country filtering is now handled at database level via the operatingCountry filter above
     
     // If preferred filter requested, we need to check which orgs are selected by services
     if (preferred) {

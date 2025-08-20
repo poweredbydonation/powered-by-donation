@@ -285,13 +285,19 @@ export default function OrganizationCard({
             </div>
             
             {/* External Link */}
-            {organization.profile_page_url && (
+            {(organization.profile_page_url || (platform === 'acnc' && organization.acnc_abn)) && (
               <a
-                href={organization.profile_page_url}
+                href={
+                  organization.profile_page_url || 
+                  (platform === 'acnc' && organization.acnc_abn 
+                    ? `https://www.acnc.gov.au/charity/charities?search=${organization.acnc_abn}` 
+                    : '')
+                }
                 target="_blank"
                 rel="noopener noreferrer"
                 className={`${config.linkClass} hover:underline`}
                 onClick={(e) => e.stopPropagation()}
+                title={platform === 'acnc' ? 'Search on ACNC Register' : 'View profile'}
               >
                 <ExternalLink className="h-3 w-3" />
               </a>
