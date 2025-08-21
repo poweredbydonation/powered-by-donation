@@ -90,7 +90,7 @@ export default function OrganizationBrowse({
     justgiving: {
       name: 'JustGiving',
       entityName: 'Charities',
-      color: 'blue'
+      color: 'purple'
     },
     everyorg: {
       name: 'Every.org',
@@ -730,9 +730,25 @@ export default function OrganizationBrowse({
         <div className="max-w-7xl mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">
-                {config.name} {config.entityName}
-              </h1>
+              <div className="flex items-center gap-3 mb-1">
+                {platform === 'justgiving' && (
+                  <img
+                    src="/justgiving-logo.svg"
+                    alt="JustGiving"
+                    className="h-8 w-auto"
+                  />
+                )}
+                {platform === 'everyorg' && (
+                  <img
+                    src="/Logo_Green.svg"
+                    alt="Every.org"
+                    className="h-8 w-auto"
+                  />
+                )}
+                <h1 className="text-2xl font-bold text-gray-900">
+                  {platform === 'justgiving' ? config.entityName : `${config.name} ${config.entityName}`}
+                </h1>
+              </div>
               <p className="text-gray-600 mt-1">
                 {state.loading ? 'Loading...' : 'Browse and discover organizations'}
                 {(platform === 'acnc' || platform === 'everyorg') && (
@@ -755,7 +771,7 @@ export default function OrganizationBrowse({
                     type="text"
                     defaultValue={searchQuery}
                     placeholder="Search organizations..."
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#7A04DD] focus:border-transparent"
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') {
                         const url = new URL(window.location.href)
@@ -778,7 +794,7 @@ export default function OrganizationBrowse({
                   <div className="relative">
                     <button
                       onClick={() => setJustgivingCityDropdownOpen(!justgivingCityDropdownOpen)}
-                      className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-left text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 flex items-center justify-between"
+                      className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-left text-sm focus:ring-2 focus:ring-[#7A04DD] focus:border-[#7A04DD] flex items-center justify-between"
                     >
                       <span className={cityFilter ? 'text-gray-900' : 'text-gray-500'}>
                         {cityFilter || 'Select location...'}
@@ -797,7 +813,7 @@ export default function OrganizationBrowse({
                               value={locationSearch}
                               onChange={(e) => setLocationSearch(e.target.value)}
                               placeholder="Search locations..."
-                              className="w-full pl-7 pr-3 py-1 text-sm border border-gray-300 rounded-md focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                              className="w-full pl-7 pr-3 py-1 text-sm border border-gray-300 rounded-md focus:ring-1 focus:ring-[#7A04DD] focus:border-[#7A04DD]"
                             />
                           </div>
                         </div>
@@ -824,8 +840,8 @@ export default function OrganizationBrowse({
                                 setJustgivingCityDropdownOpen(false)
                                 setLocationSearch('')
                               }}
-                              className={`w-full px-3 py-2 text-left text-sm hover:bg-blue-50 ${
-                                cityFilter === city ? 'bg-blue-100 text-blue-800 font-medium' : 'text-gray-700'
+                              className={`w-full px-3 py-2 text-left text-sm hover:bg-purple-50 ${
+                                cityFilter === city ? 'bg-purple-100 text-purple-800 font-medium' : 'text-gray-700'
                               }`}
                             >
                               {city}
@@ -854,7 +870,7 @@ export default function OrganizationBrowse({
                     type="text"
                     defaultValue={searchQuery}
                     placeholder="Search organizations..."
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#7A04DD] focus:border-transparent"
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') {
                         const url = new URL(window.location.href)
@@ -922,7 +938,7 @@ export default function OrganizationBrowse({
                   <div className="relative">
                     <button
                       onClick={() => setStateDropdownOpen(!stateDropdownOpen)}
-                      className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-left text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 flex items-center justify-between"
+                      className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-left text-sm focus:ring-2 focus:ring-[#7A04DD] focus:border-[#7A04DD] flex items-center justify-between"
                     >
                       <span className={stateFilter ? 'text-gray-900' : 'text-gray-500'}>
                         {stateFilter || 'State...'}
@@ -950,8 +966,8 @@ export default function OrganizationBrowse({
                               handleStateSelect(state)
                               setStateDropdownOpen(false)
                             }}
-                            className={`w-full px-3 py-2 text-left text-sm hover:bg-blue-50 ${
-                              stateFilter === state ? 'bg-blue-100 text-blue-800 font-medium' : 'text-gray-700'
+                            className={`w-full px-3 py-2 text-left text-sm hover:bg-purple-50 ${
+                              stateFilter === state ? 'bg-purple-100 text-purple-800 font-medium' : 'text-gray-700'
                             }`}
                           >
                             {state}
@@ -1080,7 +1096,7 @@ export default function OrganizationBrowse({
                         {((stateFilter && stateFilter !== 'all') ? stateCities : acncCities).length > 20 && !showAllLocations && !locationSearch.trim() && (
                           <button
                             onClick={() => setShowAllLocations(true)}
-                            className="w-full px-3 py-2 text-xs text-blue-600 hover:bg-blue-50 border-t bg-white"
+                            className="w-full px-3 py-2 text-xs text-[#7A04DD] hover:bg-purple-50 border-t bg-white"
                           >
                             Show More ({((stateFilter && stateFilter !== 'all') ? stateCities : acncCities).length - 20} more)
                           </button>
@@ -1296,7 +1312,7 @@ export default function OrganizationBrowse({
               </div>
               <div className="flex flex-wrap gap-2">
                 {searchQuery && (
-                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-blue-100 text-blue-800">
+                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-purple-100 text-purple-800">
                     Search: "{searchQuery}"
                   </span>
                 )}
@@ -1306,7 +1322,7 @@ export default function OrganizationBrowse({
                   </span>
                 )}
                 {stateFilter && (
-                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-blue-100 text-blue-800">
+                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-purple-100 text-purple-800">
                     State: {stateFilter}
                   </span>
                 )}
@@ -1379,7 +1395,7 @@ export default function OrganizationBrowse({
                     url.search = ''
                     window.location.href = url.toString()
                   }}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                  className="px-4 py-2 bg-[#7A04DD] text-white rounded-lg hover:bg-[#540099]"
                 >
                   Clear Filters
                 </button>
@@ -1621,7 +1637,7 @@ export default function OrganizationBrowse({
                     <select
                       value={mobileFilters.state}
                       onChange={(e) => setMobileFilters(prev => ({ ...prev, state: e.target.value }))}
-                      className="w-full p-3 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none bg-white"
+                      className="w-full p-3 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#7A04DD] focus:border-transparent appearance-none bg-white"
                     >
                       <option value="">All States</option>
                       {acncStates.map((state) => (
@@ -1830,7 +1846,7 @@ export default function OrganizationBrowse({
                       href="https://www.justgiving.com" 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className="text-blue-600 hover:text-blue-700 ml-1"
+                      className="text-[#7A04DD] hover:text-[#540099] ml-1"
                     >
                       JustGiving
                     </a>

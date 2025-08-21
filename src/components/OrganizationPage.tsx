@@ -53,10 +53,10 @@ export default function OrganizationPage({
   const platformConfig = {
     justgiving: {
       name: 'JustGiving',
-      color: 'blue',
-      bgClass: 'bg-blue-50',
-      textClass: 'text-blue-800',
-      buttonClass: 'bg-blue-600 hover:bg-blue-700'
+      color: 'purple',
+      bgClass: 'bg-purple-50',
+      textClass: 'text-purple-800',
+      buttonClass: 'bg-[#7A04DD] hover:bg-[#540099]'
     },
     everyorg: {
       name: 'Every.org',
@@ -121,7 +121,32 @@ export default function OrganizationPage({
       <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <div className={`${config.bgClass} border-b`}>
-        <div className="max-w-4xl mx-auto px-4 py-8">
+        <div className="max-w-7xl mx-auto px-4 py-8">
+          {/* Platform Indicator */}
+          {platform === 'justgiving' && (
+            <div className="flex items-center gap-3 mb-6 pb-4 border-b border-purple-200">
+              <img
+                src="/justgiving-logo.svg"
+                alt="JustGiving"
+                className="h-6 w-auto"
+              />
+              <span className="text-sm text-purple-800 font-medium">
+                Registered charity on JustGiving
+              </span>
+            </div>
+          )}
+          {platform === 'everyorg' && (
+            <div className="flex items-center gap-3 mb-6 pb-4 border-b border-green-200">
+              <img
+                src="/Logo_Green.svg"
+                alt="Every.org"
+                className="h-6 w-auto"
+              />
+              <span className="text-sm text-green-800 font-medium">
+                Verified nonprofit on Every.org
+              </span>
+            </div>
+          )}
           <div className="flex items-start space-x-6">
             {/* Organization Logo */}
             {organization.logo_url && (
@@ -461,39 +486,23 @@ export default function OrganizationPage({
 
           </div>
 
-          {/* Support This Organization Section */}
+          {/* Donate to Organization Section */}
           <div className="space-y-6">
-            <div className={`${config.bgClass} rounded-lg border p-6 text-center`}>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">Support This Organization</h3>
-              <p className="text-sm text-gray-600 mb-4">
-                Create a service and donate the proceeds to this organization.
+            <div className="bg-white rounded-lg border p-6">
+              <h3 className="text-xl font-semibold text-gray-900 mb-4">Donate on {config.name}</h3>
+              
+              <p className="text-sm text-gray-600 mb-6 text-center">
+                Donate directly to {organization.display_name || organization.name} through {config.name}'s secure platform.
               </p>
               <Link
-                href={`/${locale}/dashboard/services/create?platform=${platform}&organization=${organization.external_id}`}
-                className={`inline-flex items-center px-4 py-2 ${config.buttonClass} text-white rounded-lg font-medium w-full justify-center`}
+                href={organization.profile_page_url || '#'}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`inline-flex items-center px-6 py-3 ${config.buttonClass} text-white rounded-lg font-medium w-full justify-center transition-colors`}
               >
-                <Plus className="h-4 w-4 mr-2" />
-                Create Service
+                Donate on {config.name}
               </Link>
             </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Mobile Overlay Button - Fixed at bottom */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 shadow-lg">
-        <div className="px-4 py-3">
-          <Link
-            href={`/${locale}/dashboard/services/create?platform=${platform}&organization=${organization.external_id}`}
-            className={`w-full py-4 px-4 rounded-xl font-bold text-white text-lg shadow-lg ${config.buttonClass} transition-colors duration-200 flex items-center justify-center space-x-2`}
-          >
-            <span>🚀</span>
-            <span>Create Service</span>
-          </Link>
-          
-          {/* Organization name indicator */}
-          <div className="text-center mt-2">
-            <span className="text-sm text-gray-600">for {organization.display_name || organization.name}</span>
           </div>
         </div>
       </div>
@@ -556,11 +565,11 @@ export default function OrganizationPage({
                 No fundraisers have created services specifically for this organization yet.
               </p>
               <Link
-                href={`/${locale}/dashboard/services/new?organization=${organization.id}&platform=${platform}`}
+                href={`/${locale}/dashboard/services/create?platform=${platform}&organization=${organization.external_id}`}
                 className={`inline-flex items-center px-4 py-2 ${config.buttonClass} text-white rounded-lg font-medium`}
               >
                 <Plus className="h-4 w-4 mr-2" />
-                Be the First to Create a Service
+                Create Service for {config.name}
               </Link>
             </div>
           </div>
@@ -573,22 +582,74 @@ export default function OrganizationPage({
                 key={service.id}
                 service={service as Service & { user: { name: string; bio?: string; location?: string; } | null }}
                 locale={locale}
+                platform={platform}
               />
             ))}
-          </div>
-        )}
+            
+            {/* Blank card - Offer a service and fundraise */}
+            <div className="bg-gradient-to-br from-green-50 via-white to-white border border-green-200 border-l-4 border-l-green-500 rounded-lg shadow-sm hover:shadow-lg hover:border-green-300 transition-all duration-200 flex flex-col">
+              <div className="p-6 text-center flex-1 flex flex-col">
+                <div className="mb-4">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                    Create Service for {config.name}
+                  </h3>
+                  <p className="text-gray-600 text-sm mb-4">
+                    Offer your skills and fundraise for {organization.display_name || organization.name} through {config.name}
+                  </p>
+                </div>
 
-        {services.length > 4 && (
-          <div className="text-center mt-8">
-            <Link
-              href={`/${locale}/services?org=${organization.id}`}
-              className={`inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white ${config.buttonClass}`}
-            >
-              View All Services Supporting This Organization
-            </Link>
+                <div className="grid grid-cols-2 gap-4 mb-4">
+                  <div>
+                    <div className="text-xs text-green-600 uppercase tracking-wide font-medium mb-1">
+                      Your Impact
+                    </div>
+                    <div className="text-lg font-bold text-green-600">
+                      You Choose
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-xs text-green-600 uppercase tracking-wide font-medium mb-1">
+                      Location
+                    </div>
+                    <div className="text-sm text-gray-900 font-medium">
+                      Any Location
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between pt-4 border-t border-gray-100 mb-4">
+                  <div className="flex items-center">
+                    <div className="text-sm">
+                      <span className="text-gray-500">by </span>
+                      <span className="font-medium text-gray-900">You</span>
+                    </div>
+                  </div>
+                  <div className="text-xs text-gray-500">
+                    Supporting this organization
+                  </div>
+                </div>
+
+                <div className="mb-4 flex-1">
+                  <div className="text-xs text-green-600 font-medium">
+                    Ready to Start
+                  </div>
+                </div>
+
+                {/* Button always at bottom */}
+                <div className="mt-auto">
+                  <Link
+                    href={`/${locale}/dashboard/services/create?platform=${platform}&organization=${organization.external_id}`}
+                    className="inline-flex items-center justify-center w-full px-4 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-colors"
+                  >
+                    Create {config.name} Service
+                  </Link>
+                </div>
+              </div>
+            </div>
           </div>
         )}
       </div>
+
     </div>
     </>
   )

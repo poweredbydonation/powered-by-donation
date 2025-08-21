@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Service, ServiceLocation } from '@/types/database'
+import { Service, ServiceLocation, DonationPlatform } from '@/types/database'
 import { formatCurrency } from '@/lib/currency'
 
 interface ServiceCardProps {
@@ -11,9 +11,10 @@ interface ServiceCardProps {
     } | null
   }
   locale?: string
+  platform?: DonationPlatform
 }
 
-export default function ServiceCard({ service, locale = 'en' }: ServiceCardProps) {  
+export default function ServiceCard({ service, locale = 'en', platform }: ServiceCardProps) {  
   // Safety check - if no user data, don't render the card
   if (!service.user) {
     return null
@@ -97,17 +98,54 @@ export default function ServiceCard({ service, locale = 'en' }: ServiceCardProps
 
   const charityRequirement = getCharityRequirement()
 
+  // Platform configuration for styling and labels
+  const platformConfig = {
+    justgiving: {
+      name: 'JustGiving',
+      gradient: 'from-purple-50 via-white to-white',
+      border: 'border-purple-200 border-l-purple-500',
+      hoverBorder: 'hover:border-purple-300',
+      textHover: 'hover:text-purple-600',
+      statusColor: 'text-purple-600',
+      buttonBg: 'bg-[#7A04DD] hover:bg-[#540099]',
+      buttonText: 'Donate on JustGiving & Get This'
+    },
+    everyorg: {
+      name: 'Every.org',
+      gradient: 'from-green-50 via-white to-white',
+      border: 'border-green-200 border-l-green-500',
+      hoverBorder: 'hover:border-green-300',
+      textHover: 'hover:text-green-600',
+      statusColor: 'text-green-600',
+      buttonBg: 'bg-green-600 hover:bg-green-700',
+      buttonText: 'Donate on Every.org & Get This'
+    },
+    acnc: {
+      name: 'ACNC',
+      gradient: 'from-orange-50 via-white to-white',
+      border: 'border-orange-200 border-l-orange-500',
+      hoverBorder: 'hover:border-orange-300',
+      textHover: 'hover:text-orange-600',
+      statusColor: 'text-orange-600',
+      buttonBg: 'bg-orange-600 hover:bg-orange-700',
+      buttonText: 'Support via ACNC & Get This'
+    }
+  }
+
+  // Use platform-specific config or default to JustGiving for backwards compatibility
+  const config = platform ? platformConfig[platform] : platformConfig.justgiving
+
   // Fundraiser name with fallback
   const fundraiserName = service.user?.name || 'Unknown Fundraiser'
 
   return (
-    <div className="bg-gradient-to-br from-purple-50 via-white to-white border border-purple-200 border-l-4 border-l-purple-500 rounded-lg shadow-sm hover:shadow-lg hover:border-purple-300 transition-all duration-200">
-      <div className="p-6">
+    <div className={`bg-gradient-to-br ${config.gradient} border ${config.border} border-l-4 rounded-lg shadow-sm hover:shadow-lg ${config.hoverBorder} transition-all duration-200 flex flex-col`}>
+      <div className="p-6 flex-1 flex flex-col">
         {/* Service Title */}
         <div className="mb-4">
           <Link 
             href={`/${locale}/services/${serviceSlug}`}
-            className="text-xl font-semibold text-gray-900 hover:text-purple-600 line-clamp-2"
+            className={`text-xl font-semibold text-gray-900 ${config.textHover} line-clamp-2`}
           >
             {service.title}
           </Link>
@@ -134,7 +172,7 @@ export default function ServiceCard({ service, locale = 'en' }: ServiceCardProps
 
           {/* Location */}
           <div>
-            <div className="text-xs text-purple-600 uppercase tracking-wide font-medium mb-1">
+            <div className={`text-xs ${config.statusColor} uppercase tracking-wide font-medium mb-1`}>
               Location
             </div>
             <div className="text-sm text-gray-900 font-medium">
@@ -144,7 +182,7 @@ export default function ServiceCard({ service, locale = 'en' }: ServiceCardProps
         </div>
 
         {/* Fundraiser and Charity Info */}
-        <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+        <div className="flex items-center justify-between pt-4 border-t border-gray-100 mb-4">
           <div className="flex items-center">
             <div className="text-sm">
               <span className="text-gray-500">by </span>
@@ -160,7 +198,7 @@ export default function ServiceCard({ service, locale = 'en' }: ServiceCardProps
         </div>
 
         {/* Availability Status */}
-        <div className="mt-3">
+        <div className="mb-4 flex-1">
           {service.max_donors && service.current_donors !== undefined ? (
             <div className="text-xs text-gray-500">
               {service.current_donors} / {service.max_donors} donors
@@ -169,10 +207,20 @@ export default function ServiceCard({ service, locale = 'en' }: ServiceCardProps
               )}
             </div>
           ) : (
-            <div className="text-xs text-purple-600 font-medium">
+            <div className={`text-xs ${config.statusColor} font-medium`}>
               Available
             </div>
           )}
+        </div>
+
+        {/* Platform-Specific Donate Button - Always at bottom */}
+        <div className="mt-auto">
+          <Link
+            href={`/${locale}/services/${serviceSlug}`}
+            className={`inline-flex items-center justify-center w-full px-4 py-3 ${config.buttonBg} text-white rounded-lg font-medium transition-colors`}
+          >
+            {config.buttonText}
+          </Link>
         </div>
       </div>
     </div>

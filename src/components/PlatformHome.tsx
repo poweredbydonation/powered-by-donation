@@ -151,6 +151,23 @@ export default function PlatformHome({ locale, platform, messages }: PlatformHom
       <div className={`${config.bgClass} border-b ${config.borderClass}`}>
         <div className="max-w-7xl mx-auto px-4 py-12">
           <div className="text-center">
+            {/* Platform Logo */}
+            <div className="mb-6">
+              {platform === 'justgiving' && (
+                <img
+                  src="/justgiving-logo.svg"
+                  alt="JustGiving"
+                  className="h-12 w-auto mx-auto"
+                />
+              )}
+              {platform === 'everyorg' && (
+                <img
+                  src="/Logo_Green.svg"
+                  alt="Every.org"
+                  className="h-12 w-auto mx-auto"
+                />
+              )}
+            </div>
             <h1 className={`text-4xl font-bold ${config.textClass} mb-4`}>
               {config.name}
             </h1>
