@@ -428,17 +428,21 @@ export default function BrowsePage({ params }: BrowsePageProps) {
               </div>
             ) : (
               filteredServices.map((service) => (
-              <div key={service.id} className="bg-gradient-to-br from-purple-50 via-white to-white border border-purple-200 border-l-4 border-l-purple-500 rounded-lg shadow-sm hover:shadow-lg hover:border-purple-300 transition-all duration-200 overflow-hidden">
+              <a 
+                key={service.id} 
+                href={`/${locale}/services/${generateSlug(service.title)}`}
+                className="block bg-gradient-to-br from-blue-50 via-white to-white border border-blue-200 border-l-4 border-l-blue-500 rounded-lg shadow-sm hover:shadow-lg hover:border-blue-300 transition-all duration-200 overflow-hidden cursor-pointer"
+              >
                 <div className="p-6">
                   <div className="flex justify-between items-start mb-3">
                     <div className="flex-1 pr-2">
-                      <h3 className="text-lg font-semibold text-gray-900 hover:text-purple-600 line-clamp-2 transition-colors">
+                      <h3 className="text-lg font-semibold text-gray-900 hover:text-blue-600 line-clamp-2 transition-colors">
                         {service.title}
                       </h3>
                       <div className="mt-1">
                         <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
                           service.platform === 'justgiving' 
-                            ? 'bg-blue-100 text-blue-800' 
+                            ? 'bg-purple-100 text-purple-800' 
                             : 'bg-green-100 text-green-800'
                         }`}>
                           {service.platform === 'justgiving' ? 'JustGiving' : 'Every.org'}
@@ -467,21 +471,15 @@ export default function BrowsePage({ params }: BrowsePageProps) {
                     </div>
                   </div>
                   
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-end">
                     <ServicePrice
                       pricingTierId={service.pricing_tier_id}
                       userCurrency={userCurrency}
-                      className="text-2xl font-bold text-purple-600"
+                      className="text-2xl font-bold text-blue-600"
                     />
-                    <a 
-                      href={`/${locale}/services/${generateSlug(service.title)}`}
-                      className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors text-sm inline-block text-center"
-                    >
-                      {messages.common?.view || 'View Details'}
-                    </a>
                   </div>
                 </div>
-              </div>
+              </a>
               ))
             )}
           </div>
@@ -511,7 +509,7 @@ export default function BrowsePage({ params }: BrowsePageProps) {
                 </div>
               </div>
               <div>
-                <div className="text-2xl font-bold text-purple-600">
+                <div className="text-2xl font-bold text-blue-600">
                   {new Set(filteredServices.map(service => service.users.id)).size}
                 </div>
                 <div className="text-sm text-gray-500">
@@ -546,7 +544,7 @@ export default function BrowsePage({ params }: BrowsePageProps) {
       <div className="md:hidden fixed bottom-6 right-6 z-50">
         <button
           onClick={openMobileFilters}
-          className="bg-purple-600 hover:bg-purple-700 text-white p-4 rounded-full shadow-lg transition-all duration-200 transform hover:scale-105"
+          className="bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-full shadow-lg transition-all duration-200 transform hover:scale-105"
         >
           <Filter className="h-6 w-6" />
         </button>
@@ -563,7 +561,7 @@ export default function BrowsePage({ params }: BrowsePageProps) {
                 <div className="flex items-center space-x-3">
                   <button
                     onClick={clearMobileFilters}
-                    className="text-sm text-purple-600 hover:text-purple-800 font-medium"
+                    className="text-sm text-blue-600 hover:text-blue-800 font-medium"
                   >
                     Clear All
                   </button>
@@ -591,7 +589,7 @@ export default function BrowsePage({ params }: BrowsePageProps) {
                     value={mobileFilters.search}
                     onChange={(e) => setMobileFilters(prev => ({ ...prev, search: e.target.value }))}
                     placeholder="Search services, fundraisers..."
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
               </div>
@@ -606,7 +604,7 @@ export default function BrowsePage({ params }: BrowsePageProps) {
                       name="platform"
                       checked={mobileFilters.platform === 'all'}
                       onChange={() => setMobileFilters(prev => ({ ...prev, platform: 'all' }))}
-                      className="w-4 h-4 text-purple-600 border-gray-300 focus:ring-purple-500"
+                      className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
                     />
                     <span className="text-sm text-gray-700">All Platforms</span>
                   </label>
@@ -643,27 +641,27 @@ export default function BrowsePage({ params }: BrowsePageProps) {
                       name="location"
                       checked={mobileFilters.location.type === 'all'}
                       onChange={() => handleMobileLocationTypeChange('all')}
-                      className="w-4 h-4 text-purple-600 border-gray-300 focus:ring-purple-500"
+                      className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
                     />
                     <span className="text-sm text-gray-700">All Locations</span>
                   </label>
-                  <label className="flex items-center space-x-3 p-2 rounded-lg hover:bg-purple-50 cursor-pointer">
+                  <label className="flex items-center space-x-3 p-2 rounded-lg hover:bg-blue-50 cursor-pointer">
                     <input
                       type="radio"
                       name="location"
                       checked={mobileFilters.location.type === 'remote'}
                       onChange={() => handleMobileLocationTypeChange('remote')}
-                      className="w-4 h-4 text-purple-600 border-gray-300 focus:ring-purple-500"
+                      className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
                     />
                     <span className="text-sm text-gray-700">Remote</span>
                   </label>
-                  <label className="flex items-center space-x-3 p-2 rounded-lg hover:bg-purple-50 cursor-pointer">
+                  <label className="flex items-center space-x-3 p-2 rounded-lg hover:bg-blue-50 cursor-pointer">
                     <input
                       type="radio"
                       name="location"
                       checked={mobileFilters.location.type === 'physical'}
                       onChange={() => handleMobileLocationTypeChange('physical')}
-                      className="w-4 h-4 text-purple-600 border-gray-300 focus:ring-purple-500"
+                      className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
                     />
                     <span className="text-sm text-gray-700">
                       In-Person
@@ -672,13 +670,13 @@ export default function BrowsePage({ params }: BrowsePageProps) {
                       }
                     </span>
                   </label>
-                  <label className="flex items-center space-x-3 p-2 rounded-lg hover:bg-purple-50 cursor-pointer">
+                  <label className="flex items-center space-x-3 p-2 rounded-lg hover:bg-blue-50 cursor-pointer">
                     <input
                       type="radio"
                       name="location"
                       checked={mobileFilters.location.type === 'hybrid'}
                       onChange={() => handleMobileLocationTypeChange('hybrid')}
-                      className="w-4 h-4 text-purple-600 border-gray-300 focus:ring-purple-500"
+                      className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
                     />
                     <span className="text-sm text-gray-700">
                       Hybrid
@@ -702,7 +700,7 @@ export default function BrowsePage({ params }: BrowsePageProps) {
                 </button>
                 <button
                   onClick={applyMobileFilters}
-                  className="flex-1 px-4 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium"
+                  className="flex-1 px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
                 >
                   Apply Filters
                 </button>
@@ -734,8 +732,8 @@ export default function BrowsePage({ params }: BrowsePageProps) {
             {/* Mobile Location Map Interface */}
             <div className="flex-1 overflow-y-auto">
               {/* Instructions */}
-              <div className="p-4 bg-purple-50 border-b">
-                <p className="text-sm text-purple-800">
+              <div className="p-4 bg-blue-50 border-b">
+                <p className="text-sm text-blue-800">
                   Tap on the map to set your location, then adjust the radius to find {mobileFilters.location.type} services near you.
                 </p>
               </div>
@@ -773,7 +771,7 @@ export default function BrowsePage({ params }: BrowsePageProps) {
                     // Close location modal and return to main filter modal
                     setShowMobileLocationMap(false)
                   }}
-                  className="flex-1 px-4 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium"
+                  className="flex-1 px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
                 >
                   Done
                 </button>

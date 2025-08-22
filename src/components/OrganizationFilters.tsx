@@ -39,6 +39,7 @@ export default function OrganizationFilters({
   const searchParams = useSearchParams()
   const [options, setOptions] = useState<FilterOptions>({ categories: [], cities: [], purposes: [] })
   const [loading, setLoading] = useState(true)
+  const [showAllCities, setShowAllCities] = useState(false)
 
   // Load filter options
   useEffect(() => {
@@ -46,18 +47,24 @@ export default function OrganizationFilters({
       const supabase = createClient()
       
       try {
-        // Get unique categories and cities for this platform
+        // Get unique categories for this platform
         const { data: organizations } = await supabase
           .from('organization_cache')
-          .select('category, address_city, acnc_purposes')
+          .select('category, acnc_purposes')
           .eq('platform', platform)
           .eq('is_active', true)
           .not('category', 'is', null)
-          .not('address_city', 'is', null)
 
-        if (organizations) {
+        // Get cities from lookup table for better performance and completeness
+        const { data: cityData, error: cityError } = await supabase
+          .from(`${platform}_cities_lookup`)
+          .select('city')
+          .order('organization_count', { ascending: false })
+        
+
+        if (organizations && cityData) {
           const categories = Array.from(new Set(organizations.map(o => o.category).filter(Boolean))).sort()
-          const cities = Array.from(new Set(organizations.map(o => o.address_city).filter(Boolean))).sort()
+          const cities = cityData.map(item => item.city).filter(Boolean)
           
           // Extract ACNC purposes for ACNC platform
           let purposes: string[] = []
@@ -208,9 +215,19 @@ export default function OrganizationFilters({
       {/* Location Filter */}
       {options.cities.length > 0 && (
         <div className="space-y-3">
-          <h4 className="text-sm font-medium text-gray-700">Location</h4>
+          <div className="flex items-center justify-between">
+            <h4 className="text-sm font-medium text-gray-700">Location</h4>
+            {options.cities.length > 20 && (
+              <button
+                onClick={() => setShowAllCities(!showAllCities)}
+                className="text-xs text-blue-600 hover:text-blue-800"
+              >
+                {showAllCities ? 'Show less' : `Show all (${options.cities.length})`}
+              </button>
+            )}
+          </div>
           <div className="space-y-2 max-h-48 overflow-y-auto">
-            {options.cities.slice(0, 20).map((city) => (
+            {(showAllCities ? options.cities : options.cities.slice(0, 20)).map((city) => (
               <label key={city} className="flex items-center">
                 <input
                   type="radio"

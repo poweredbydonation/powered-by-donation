@@ -43,12 +43,12 @@ export default function OrganizationCard({
 
   const platformConfig = {
     justgiving: {
-      color: 'blue',
-      badgeClass: 'bg-blue-100 text-blue-800',
-      categoryBadgeClass: 'bg-blue-100 text-blue-800',
-      purposeBadgeClass: 'bg-blue-100 text-blue-800',
-      linkClass: 'text-blue-600 hover:text-blue-800',
-      cardClass: 'bg-gradient-to-br from-blue-50 via-white to-white border-l-4 border-l-blue-500 shadow-sm hover:shadow-lg'
+      color: 'purple',
+      badgeClass: 'bg-purple-100 text-purple-800',
+      categoryBadgeClass: 'bg-purple-100 text-purple-800',
+      purposeBadgeClass: 'bg-purple-100 text-purple-800',
+      linkClass: 'text-[#7A04DD] hover:text-[#540099]',
+      cardClass: 'bg-gradient-to-br from-purple-50 via-white to-white border-l-4 border-l-[#7A04DD] shadow-sm hover:shadow-lg'
     },
     everyorg: {
       color: 'green', 
@@ -219,7 +219,7 @@ export default function OrganizationCard({
                   <Mail className="h-3 w-3 mr-1 flex-shrink-0" />
                   <a 
                     href={`mailto:${organization.email_address}`}
-                    className="hover:text-blue-600 truncate"
+                    className="hover:text-[#7A04DD] truncate"
                     onClick={(e) => e.stopPropagation()}
                   >
                     {organization.email_address}
@@ -233,7 +233,7 @@ export default function OrganizationCard({
                     href={organization.website_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:text-blue-600 truncate"
+                    className="hover:text-[#7A04DD] truncate"
                     onClick={(e) => e.stopPropagation()}
                   >
                     {organization.website_url.replace(/^https?:\/\//, '')}

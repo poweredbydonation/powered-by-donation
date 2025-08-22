@@ -114,10 +114,11 @@ Deno.serve(async (req) => {
     
     console.log('🚀 Starting enhanced charity details fetch...')
 
-    // Get charities that need enhanced data (process 20 per run)
+    // Get charities that need enhanced data (process 20 per run) - FIXED TO USE organization_cache
     const { data: charities, error: fetchError } = await supabase
-      .from('justgiving_charity_cache')
-      .select('justgiving_charity_id, name, api_fetch_attempts')
+      .from('organization_cache')
+      .select('external_id, name, api_fetch_attempts')
+      .eq('platform', 'justgiving')
       .is('enhanced_data_fetched_at', null)
       .lt('api_fetch_attempts', 3)
       .eq('is_active', true)
@@ -156,9 +157,9 @@ Deno.serve(async (req) => {
       }
 
       try {
-        console.log(`🔍 Fetching enhanced data for charity ID: ${charity.justgiving_charity_id}`)
+        console.log(`🔍 Fetching enhanced data for charity ID: ${charity.external_id}`)
 
-        const charityDetails = await fetchCharityDetails(charity.justgiving_charity_id, justGivingApiKey)
+        const charityDetails = await fetchCharityDetails(charity.external_id, justGivingApiKey)
         
         if (!charityDetails) {
           throw new Error('No charity details returned from API')
@@ -173,9 +174,9 @@ Deno.serve(async (req) => {
           }
         }
 
-        // Update charity cache with enhanced data
+        // Update organization_cache with enhanced data - FIXED TO USE organization_cache
         const { error: updateError } = await supabase
-          .from('justgiving_charity_cache')
+          .from('organization_cache')
           .update({
             // Address information
             address_line1: charityDetails.address?.line1,
@@ -222,7 +223,8 @@ Deno.serve(async (req) => {
             api_fetch_attempts: 0,
             last_updated: new Date().toISOString()
           })
-          .eq('justgiving_charity_id', charity.justgiving_charity_id)
+          .eq('platform', 'justgiving')
+          .eq('external_id', charity.external_id)
 
         if (updateError) {
           throw new Error(`Failed to update charity cache: ${updateError.message}`)
@@ -236,16 +238,17 @@ Deno.serve(async (req) => {
 
       } catch (error) {
         errorCount++
-        console.error(`❌ Failed to process charity ${charity.justgiving_charity_id}:`, error)
+        console.error(`❌ Failed to process charity ${charity.external_id}:`, error)
 
         // Increment attempt counter for failed requests
         const currentAttempts = charity.api_fetch_attempts || 0
         await supabase
-          .from('justgiving_charity_cache')
+          .from('organization_cache')
           .update({
             api_fetch_attempts: currentAttempts + 1
           })
-          .eq('justgiving_charity_id', charity.justgiving_charity_id)
+          .eq('platform', 'justgiving')
+          .eq('external_id', charity.external_id)
       }
     }
 

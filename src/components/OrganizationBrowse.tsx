@@ -581,12 +581,12 @@ export default function OrganizationBrowse({
         }
       } else {
         // Apply show more/less limit only when not searching
-        if (!showAllLocations && cities.length > 20) {
-          cities = cities.slice(0, 20)
+        if (!showAllLocations && cities.length > 50) {
+          cities = cities.slice(0, 50)
           
-          // Always include the currently selected city in the first 20, even if it would be cut off
+          // Always include the currently selected city in the first 50, even if it would be cut off
           if (cityFilter && !cities.includes(cityFilter)) {
-            cities = [cityFilter, ...cities.slice(0, 19)]
+            cities = [cityFilter, ...cities.slice(0, 49)]
           }
         }
       }
@@ -832,7 +832,7 @@ export default function OrganizationBrowse({
                               Clear selection
                             </button>
                           )}
-                          {filteredCities.slice(0, 50).map((city) => (
+                          {(showAllLocations ? filteredCities : filteredCities.slice(0, 50)).map((city) => (
                             <button
                               key={city}
                               onClick={() => {
@@ -847,10 +847,21 @@ export default function OrganizationBrowse({
                               {city}
                             </button>
                           ))}
-                          {filteredCities.length > 50 && (
-                            <div className="px-3 py-2 text-xs text-gray-500 border-t">
-                              Showing first 50 of {filteredCities.length} locations
-                            </div>
+                          {!showAllLocations && justgivingCities.length > 50 && (
+                            <button
+                              onClick={() => setShowAllLocations(true)}
+                              className="w-full px-3 py-2 text-xs text-[#7A04DD] hover:bg-purple-50 border-t bg-white"
+                            >
+                              Show More ({justgivingCities.length - 50} more)
+                            </button>
+                          )}
+                          {showAllLocations && justgivingCities.length > 50 && (
+                            <button
+                              onClick={() => setShowAllLocations(false)}
+                              className="w-full px-3 py-2 text-xs text-[#7A04DD] hover:bg-purple-50 border-t bg-white"
+                            >
+                              Show Less
+                            </button>
                           )}
                         </div>
                       </div>

@@ -566,10 +566,10 @@ export default function OrganizationPage({
               </p>
               <Link
                 href={`/${locale}/dashboard/services/create?platform=${platform}&organization=${organization.external_id}`}
-                className={`inline-flex items-center px-4 py-2 ${config.buttonClass} text-white rounded-lg font-medium`}
+                className="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium"
               >
                 <Plus className="h-4 w-4 mr-2" />
-                Create Service for {config.name}
+                Create a service for {organization.display_name || organization.name}
               </Link>
             </div>
           </div>
@@ -591,7 +591,7 @@ export default function OrganizationPage({
               <div className="p-6 text-center flex-1 flex flex-col">
                 <div className="mb-4">
                   <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                    Create Service for {config.name}
+                    Create a service for {organization.display_name || organization.name}
                   </h3>
                   <p className="text-gray-600 text-sm mb-4">
                     Offer your skills and fundraise for {organization.display_name || organization.name} through {config.name}
@@ -639,15 +639,129 @@ export default function OrganizationPage({
                 <div className="mt-auto">
                   <Link
                     href={`/${locale}/dashboard/services/create?platform=${platform}&organization=${organization.external_id}`}
-                    className="inline-flex items-center justify-center w-full px-4 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-colors"
+                    className="inline-flex items-center justify-center w-full px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
                   >
-                    Create {config.name} Service
+                    Create a service for {organization.display_name || organization.name}
                   </Link>
                 </div>
               </div>
             </div>
           </div>
         )}
+      </div>
+
+      {/* Donations Section */}
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="mb-6">
+          <h2 className="text-2xl font-bold text-gray-900">
+            Donations
+          </h2>
+          <p className="text-gray-600 mt-1">
+            Recent donations to this organization
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Donated and received services */}
+          <div className="bg-white rounded-lg border p-6">
+            <h3 className="text-xl font-semibold text-gray-900 mb-4">
+              Donated and received services
+            </h3>
+            <div className="space-y-4">
+              <div className="border-l-4 border-l-blue-500 pl-4 py-2">
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <p className="text-sm text-gray-900">
+                      <span className="font-medium">John Doe</span> donated <span className="font-semibold text-blue-600">$559</span> and got this service
+                    </p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      "I love you"
+                    </p>
+                  </div>
+                  <span className="text-xs text-gray-400">2 days ago</span>
+                </div>
+              </div>
+              
+              <div className="border-l-4 border-l-green-500 pl-4 py-2">
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <p className="text-sm text-gray-900">
+                      <span className="font-medium">Sarah Smith</span> donated <span className="font-semibold text-green-600">$320</span> and got web design service
+                    </p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      "Excellent work, very satisfied!"
+                    </p>
+                  </div>
+                  <span className="text-xs text-gray-400">5 days ago</span>
+                </div>
+              </div>
+
+              <div className="border-l-4 border-l-purple-500 pl-4 py-2">
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <p className="text-sm text-gray-900">
+                      <span className="font-medium">Mike Johnson</span> donated <span className="font-semibold text-purple-600">$125</span> and got consulting service
+                    </p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      "Great advice, will recommend!"
+                    </p>
+                  </div>
+                  <span className="text-xs text-gray-400">1 week ago</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Donated directly */}
+          <div className="bg-white rounded-lg border p-6">
+            <h3 className="text-xl font-semibold text-gray-900 mb-4">
+              Donated directly
+            </h3>
+            <div className="space-y-4">
+              <div className="border-l-4 border-l-orange-500 pl-4 py-2">
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <p className="text-sm text-gray-900">
+                      <span className="font-medium">George Wilson</span> donated <span className="font-semibold text-orange-600">$40</span>
+                    </p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      "Keep up the great work!"
+                    </p>
+                  </div>
+                  <span className="text-xs text-gray-400">1 day ago</span>
+                </div>
+              </div>
+              
+              <div className="border-l-4 border-l-red-500 pl-4 py-2">
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <p className="text-sm text-gray-900">
+                      <span className="font-medium">Emma Davis</span> donated <span className="font-semibold text-red-600">$75</span>
+                    </p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      "Supporting a great cause"
+                    </p>
+                  </div>
+                  <span className="text-xs text-gray-400">3 days ago</span>
+                </div>
+              </div>
+
+              <div className="border-l-4 border-l-indigo-500 pl-4 py-2">
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <p className="text-sm text-gray-900">
+                      <span className="font-medium">Alex Brown</span> donated <span className="font-semibold text-indigo-600">$100</span>
+                    </p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      "Happy to contribute to education"
+                    </p>
+                  </div>
+                  <span className="text-xs text-gray-400">1 week ago</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
     </div>

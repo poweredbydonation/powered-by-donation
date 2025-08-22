@@ -87,7 +87,7 @@ export default async function OrganizationDetailPage({ params }: OrganizationPag
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-4">Organization not found</h1>
           <p className="text-gray-600 mb-4">We couldn't find the organization you're looking for.</p>
-          <a href="/" className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+          <a href="/" className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700">
             Go Home
           </a>
         </div>

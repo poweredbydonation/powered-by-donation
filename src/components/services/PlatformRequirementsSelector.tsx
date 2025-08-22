@@ -495,7 +495,7 @@ export default function PlatformRequirementsSelector({
   if (!value) return null
 
   const platformConfig = {
-    justgiving: { name: 'JustGiving', color: 'blue', entityName: 'Charities' },
+    justgiving: { name: 'JustGiving', color: 'purple', entityName: 'Charities' },
     everyorg: { name: 'Every.org', color: 'green', entityName: 'Nonprofits' },
     acnc: { name: 'ACNC', color: 'orange', entityName: 'Charities' }
   }
@@ -512,14 +512,14 @@ export default function PlatformRequirementsSelector({
           {/* Mobile-first header */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 space-y-2 sm:space-y-0">
             <div className="flex items-center space-x-2">
-              <div className="h-2 w-2 bg-blue-500 rounded-full"></div>
+              <div className="h-2 w-2 bg-[#7A04DD] rounded-full"></div>
               <span className="text-sm font-medium text-gray-700">Select Platform:</span>
             </div>
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-y-0 sm:space-x-2">
               <button
                 type="button"
                 onClick={handleSelectAllPlatforms}
-                className="px-3 py-2 text-sm bg-blue-100 hover:bg-blue-200 text-blue-800 border border-blue-300 rounded-md transition-colors"
+                className="px-3 py-2 text-sm bg-purple-100 hover:bg-purple-200 text-purple-800 border border-purple-300 rounded-md transition-colors"
               >
                 Select All Platforms
               </button>
@@ -552,7 +552,7 @@ export default function PlatformRequirementsSelector({
                         type="checkbox"
                         checked={isSelected}
                         onChange={() => handlePlatformToggle(platform)}
-                        className="h-5 w-5 md:h-4 md:w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                        className="h-5 w-5 md:h-4 md:w-4 text-[#7A04DD] border-gray-300 rounded focus:ring-[#7A04DD]"
                       />
                       <div className="flex flex-col md:flex-row md:items-center md:space-x-2">
                         <span className="font-medium text-gray-900 text-base md:text-sm">{config.name}</span>
@@ -620,7 +620,7 @@ export default function PlatformRequirementsSelector({
                                 <button
                                   type="button"
                                   onClick={() => handleSelectAll(platform)}
-                                  className="flex-1 md:flex-none px-4 py-3 md:px-3 md:py-2 text-sm md:text-xs bg-blue-100 hover:bg-blue-200 text-blue-800 border border-blue-300 rounded-md transition-colors"
+                                  className="flex-1 md:flex-none px-4 py-3 md:px-3 md:py-2 text-sm md:text-xs bg-purple-100 hover:bg-purple-200 text-purple-800 border border-purple-300 rounded-md transition-colors"
                                 >
                                   Select All
                                 </button>
@@ -639,7 +639,7 @@ export default function PlatformRequirementsSelector({
 
                           {/* Select All Status Banner */}
                           {isSelectingAll[platform] && (
-                            <div className="mx-3 md:mx-0 mb-3 p-3 md:p-2 bg-blue-50 border border-blue-200 rounded text-sm md:text-xs text-blue-800">
+                            <div className="mx-3 md:mx-0 mb-3 p-3 md:p-2 bg-purple-50 border border-purple-200 rounded text-sm md:text-xs text-purple-800">
                               {(rule.excluded_organizations || []).length > 0 ? (
                                 <>✓ {pagination[platform].totalCount - (rule.excluded_organizations || []).length} of {pagination[platform].totalCount.toLocaleString()} organizations selected ({(rule.excluded_organizations || []).length} excluded)</>
                               ) : (
@@ -695,14 +695,14 @@ export default function PlatformRequirementsSelector({
                                         isExcluded
                                           ? 'bg-red-50 hover:bg-red-100 border border-red-200' // Red styling for excluded
                                           : isSelected 
-                                            ? 'bg-blue-50 hover:bg-blue-100 border border-blue-200' // Blue styling for selected
+                                            ? 'bg-purple-50 hover:bg-purple-100 border border-purple-200' // Purple styling for selected
                                             : 'hover:bg-gray-100 border border-transparent' // Default styling
                                       }`}>
                                         <input
                                           type="checkbox"
                                           checked={isSelected}
                                           onChange={() => handleOrganizationToggle(platform, org.id)}
-                                          className="h-4 w-4 md:h-3 md:w-3 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                                          className="h-4 w-4 md:h-3 md:w-3 text-[#7A04DD] border-gray-300 rounded focus:ring-[#7A04DD]"
                                         />
                                         <div className="ml-3 md:ml-2 flex items-center space-x-2 md:space-x-2 flex-1 min-w-0">
                                           {org.logo_url && (
@@ -719,7 +719,7 @@ export default function PlatformRequirementsSelector({
                                             isExcluded 
                                               ? 'text-red-800 font-medium line-through' // Red and strikethrough for excluded
                                               : isSelected 
-                                                ? 'text-blue-800 font-medium' // Blue for selected
+                                                ? 'text-purple-800 font-medium' // Purple for selected
                                                 : 'text-gray-700' // Default
                                           }`}>
                                             {org.name}
@@ -736,7 +736,7 @@ export default function PlatformRequirementsSelector({
                                   <button
                                     type="button"
                                     onClick={() => loadOrganizations(platform, true, organizationSearch[platform])}
-                                    className="w-full p-2 text-xs text-blue-600 hover:text-blue-800 hover:bg-blue-50 transition-colors"
+                                    className="w-full p-2 text-xs text-[#7A04DD] hover:text-[#540099] hover:bg-purple-50 transition-colors"
                                   >
                                     Load More Organizations...
                                   </button>
