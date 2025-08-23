@@ -32,7 +32,7 @@ interface LocationFilter {
 
 type PlatformFilter = 'all' | 'justgiving' | 'everyorg'
 
-export default function ServicesPage({ params }: ServicesPageProps) {
+export default function ServicesPageContent({ params }: ServicesPageProps) {
   const locale = params.locale
   const servicesSlug = params.services
   
@@ -66,11 +66,11 @@ export default function ServicesPage({ params }: ServicesPageProps) {
     // Load messages
     async function loadMessages() {
       try {
-        const msgs = (await import(`../../../messages/${locale}.json`)).default
+        const msgs = (await import(`../messages/${locale}.json`)).default
         setMessages(msgs)
       } catch (error) {
         // Fallback to English
-        const msgs = (await import(`../../../messages/en.json`)).default
+        const msgs = (await import(`../messages/en.json`)).default
         setMessages(msgs)
       }
     }
@@ -441,7 +441,7 @@ export default function ServicesPage({ params }: ServicesPageProps) {
               filteredServices.map((service) => (
               <a 
                 key={service.id} 
-                href={getLocalizedServicesUrl(locale, `/${generateSlug(service.title)}`)}
+                href={`/${locale}/PoweredByDonation/${expectedServicesSlug}/${generateSlug(service.title)}`}
                 className="block bg-gradient-to-br from-blue-50 via-white to-white border border-blue-200 border-l-4 border-l-blue-500 rounded-lg shadow-sm hover:shadow-lg hover:border-blue-300 transition-all duration-200 overflow-hidden cursor-pointer"
               >
                 <div className="p-6">
@@ -460,7 +460,6 @@ export default function ServicesPage({ params }: ServicesPageProps) {
                         </span>
                       </div>
                     </div>
-                    {/* Remove rating for now since we don't have happiness ratings yet */}
                   </div>
                   
                   <p className="text-gray-600 text-sm mb-4 line-clamp-3">
@@ -794,4 +793,3 @@ export default function ServicesPage({ params }: ServicesPageProps) {
     </div>
   )
 }
-

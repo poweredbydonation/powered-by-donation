@@ -4,6 +4,7 @@ import { getTranslations, getMessages } from 'next-intl/server'
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
 import { getLocalizedServicesUrl } from '@/lib/utils/localized-urls'
+import { buildPersonalUrl } from '@/lib/utils/entity-urls'
 
 interface HomePageProps {
   params: {
@@ -310,7 +311,7 @@ export default async function HomePage({ params }: HomePageProps) {
               <div className="flex items-start space-x-4">
                 <div className="w-10"></div>
                 <a 
-                  href={`/${locale}/dashboard/services/create`}
+                  href={buildPersonalUrl(locale, 'services')}
                   className="bg-green-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors inline-block w-fit text-center"
                   style={{ minWidth: '280px' }}
                 >

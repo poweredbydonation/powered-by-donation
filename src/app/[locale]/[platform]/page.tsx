@@ -1,11 +1,12 @@
 /**
  * Platform Home Page - Dynamic Route
- * Handles: /{locale}/justgiving/, /{locale}/everyorg/, and /{locale}/acnc/
+ * Handles: /{locale}/justgiving/, /{locale}/everyorg/, /{locale}/acnc/, and /{locale}/PoweredByDonation/
  */
 
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import { getMessages } from 'next-intl/server'
 import { DonationPlatform } from '@/types/database'
+import { PERSONAL_PLATFORM_SLUGS, isPersonalPlatform, getEntityUrlSlug } from '@/lib/utils/entity-urls'
 import PlatformHome from '@/components/PlatformHome'
 
 interface PlatformPageProps {
@@ -20,15 +21,49 @@ function isValidPlatform(platform: string): platform is DonationPlatform {
   return ['justgiving', 'everyorg', 'acnc'].includes(platform)
 }
 
+function isValidPlatformSlug(platform: string): boolean {
+  const normalizedPlatforms = ['justgiving', 'everyorg', 'acnc', 'poweredbydonation']
+  const personalPlatforms = Object.values(PERSONAL_PLATFORM_SLUGS)
+  return normalizedPlatforms.includes(platform.toLowerCase()) || personalPlatforms.includes(platform)
+}
+
+function normalizePlatformSlug(platform: string): string {
+  const lower = platform.toLowerCase()
+  if (lower === 'poweredbydonation') {
+    return 'PoweredByDonation'
+  }
+  return platform
+}
+
 export default async function PlatformPage({ params }: PlatformPageProps) {
   const { locale, platform: platformStr } = params
 
-  // Validate platform
-  if (!isValidPlatform(platformStr)) {
+  // Validate platform slug
+  if (!isValidPlatformSlug(platformStr)) {
     notFound()
   }
 
-  const platform = platformStr as DonationPlatform
+  // Normalize platform slug
+  const normalizedPlatform = normalizePlatformSlug(platformStr)
+
+  // Handle PoweredByDonation platform redirect to services
+  if (normalizedPlatform === 'PoweredByDonation') {
+    const servicesSlug = locale === 'tr' ? 'hizmetler' : 'services'
+    redirect(`/${locale}/PoweredByDonation/${servicesSlug}`)
+  }
+
+  // Handle personal platform redirect to services (default personal section)
+  if (isPersonalPlatform(normalizedPlatform)) {
+    const servicesSlug = getEntityUrlSlug('services', locale)
+    redirect(`/${locale}/${normalizedPlatform}/${servicesSlug}`)
+  }
+
+  // Validate donation platform
+  if (!isValidPlatform(normalizedPlatform)) {
+    notFound()
+  }
+
+  const platform = normalizedPlatform as DonationPlatform
   const messages = await getMessages({ locale })
 
   return <PlatformHome locale={locale} platform={platform} messages={messages} />
@@ -36,9 +71,9 @@ export default async function PlatformPage({ params }: PlatformPageProps) {
 
 // Generate static params for known platforms
 export function generateStaticParams() {
-  const platforms: DonationPlatform[] = ['justgiving', 'everyorg', 'acnc']
+  const allPlatforms = ['justgiving', 'everyorg', 'acnc', 'PoweredByDonation']
   
-  return platforms.map((platform) => ({
+  return allPlatforms.map((platform) => ({
     platform,
   }))
 }
@@ -47,13 +82,30 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: PlatformPageProps) {
   const { locale, platform: platformStr } = params
   
-  if (!isValidPlatform(platformStr)) {
+  if (!isValidPlatformSlug(platformStr)) {
     return {
       title: 'Platform Not Found',
     }
   }
 
-  const platform = platformStr as DonationPlatform
+  // Normalize platform slug
+  const normalizedPlatform = normalizePlatformSlug(platformStr)
+
+  if (normalizedPlatform === 'PoweredByDonation') {
+    return {
+      title: 'Services - Powered by Donation',
+      description: 'Browse professional services and support charities through skill-based donations.',
+    }
+  }
+
+  if (isPersonalPlatform(normalizedPlatform)) {
+    return {
+      title: 'My Dashboard - Powered by Donation',
+      description: 'Manage your services, donations, and profile on Powered by Donation.',
+    }
+  }
+
+  const platform = normalizedPlatform as DonationPlatform
   const platformNames = {
     justgiving: 'JustGiving',
     everyorg: 'Every.org',

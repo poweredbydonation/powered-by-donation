@@ -1,7 +1,7 @@
 /**
- * Individual Organization Page - Dynamic Route  
+ * Individual Entity Page - Dynamic Route  
  * Handles: /{locale}/{platform}/{entity_type}/{slug}/
- * Examples: /en/justgiving/charities/cancer-research-uk/
+ * Examples: /en/justgiving/charities/cancer-research-uk/, /en/PoweredByDonation/services/web-development/
  */
 
 import { notFound } from 'next/navigation'
@@ -15,8 +15,9 @@ import {
   EntityType
 } from '@/lib/utils/entity-urls'
 import OrganizationPage from '@/components/OrganizationPage'
+import { Suspense } from 'react'
 
-interface OrganizationPageProps {
+interface EntityPageProps {
   params: {
     locale: string
     platform: string
@@ -30,22 +31,65 @@ function isValidPlatform(platform: string): platform is DonationPlatform {
   return ['justgiving', 'everyorg', 'acnc'].includes(platform)
 }
 
-export default async function OrganizationDetailPage({ params }: OrganizationPageProps) {
+function isValidPlatformSlug(platform: string): boolean {
+  return ['justgiving', 'everyorg', 'acnc', 'poweredbydonation'].includes(platform.toLowerCase())
+}
+
+function normalizePlatformSlug(platform: string): string {
+  const lower = platform.toLowerCase()
+  if (lower === 'poweredbydonation') {
+    return 'PoweredByDonation'
+  }
+  return platform
+}
+
+// Dynamic import for Service component
+const ServicePage = () => import('../../../../../components/ServicePageContent').then(m => m.default)
+
+export default async function EntityDetailPage({ params }: EntityPageProps) {
   try {
     const { locale, platform: platformStr, entity_type: entitySlug, slug } = params
 
-    // Validate platform
-    if (!isValidPlatform(platformStr)) {
+    // Validate platform slug
+    if (!isValidPlatformSlug(platformStr)) {
       notFound()
     }
 
-    const platform = platformStr as DonationPlatform
+    // Normalize platform slug
+    const normalizedPlatform = normalizePlatformSlug(platformStr)
 
     // Get entity type from URL slug
     const entityType = getEntityTypeFromSlug(entitySlug)
     if (!entityType) {
       notFound()
     }
+
+    // Handle PoweredByDonation services
+    if (normalizedPlatform === 'PoweredByDonation') {
+      if (entityType !== 'services') {
+        notFound()
+      }
+
+      const messages = await getMessages({ locale })
+      
+      // Import the service page content dynamically
+      const ServicePageContent = await ServicePage()
+      
+      return (
+        <Suspense fallback={<div>Loading service...</div>}>
+          <ServicePageContent 
+            params={{ locale, slug }}
+          />
+        </Suspense>
+      )
+    }
+
+    // Handle donation platforms
+    if (!isValidPlatform(normalizedPlatform)) {
+      notFound()
+    }
+
+    const platform = normalizedPlatform as DonationPlatform
 
     // Validate platform-entity consistency
     const expectedEntityType = getPlatformEntityType(platform)
@@ -100,19 +144,67 @@ export default async function OrganizationDetailPage({ params }: OrganizationPag
 export const dynamic = 'force-dynamic'
 
 // Generate metadata
-export async function generateMetadata({ params }: OrganizationPageProps) {
+export async function generateMetadata({ params }: EntityPageProps) {
   const { locale, platform: platformStr, entity_type: entitySlug, slug } = params
   
-  if (!isValidPlatform(platformStr)) {
+  if (!isValidPlatformSlug(platformStr)) {
+    return {
+      title: 'Page Not Found',
+    }
+  }
+
+  // Normalize platform slug
+  const normalizedPlatform = normalizePlatformSlug(platformStr)
+
+  const entityType = getEntityTypeFromSlug(entitySlug)
+  if (!entityType) {
+    return {
+      title: 'Page Not Found',
+    }
+  }
+
+  // Handle PoweredByDonation services
+  if (normalizedPlatform === 'PoweredByDonation') {
+    if (entityType !== 'services') {
+      return {
+        title: 'Service Not Found',
+      }
+    }
+
+    // Fetch service for metadata
+    const supabase = createAnonClient()
+    const { data: services } = await supabase
+      .from('services')
+      .select('title, description')
+      .eq('is_active', true)
+      .eq('show_in_directory', true)
+
+    // Find service by slug
+    const generateSlug = (title: string) => title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
+    const service = services?.find(s => generateSlug(s.title) === slug)
+
+    if (!service) {
+      return {
+        title: 'Service Not Found - Powered by Donation',
+      }
+    }
+
+    return {
+      title: `${service.title} - Services - Powered by Donation`,
+      description: service.description || `Professional service: ${service.title}. Support charities through skill-based donations.`,
+    }
+  }
+
+  // Handle donation platforms
+  if (!isValidPlatform(normalizedPlatform)) {
     return {
       title: 'Organization Not Found',
     }
   }
 
-  const platform = platformStr as DonationPlatform
-  const entityType = getEntityTypeFromSlug(entitySlug)
+  const platform = normalizedPlatform as DonationPlatform
   
-  if (!entityType || getPlatformEntityType(platform) !== entityType) {
+  if (getPlatformEntityType(platform) !== entityType) {
     return {
       title: 'Organization Not Found',
     }

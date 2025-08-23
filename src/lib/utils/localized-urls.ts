@@ -34,13 +34,13 @@ export function getServicesPath(locale: string): string {
 }
 
 /**
- * Get full localized services URL with locale prefix
+ * Get full localized services URL with locale prefix (platform-first architecture)
  * @param locale - The locale code (e.g., 'en', 'tr')
  * @param subPath - Optional sub-path (e.g., '/slug')
- * @returns Full localized URL (e.g., '/tr/hizmetler' or '/tr/hizmetler/slug')
+ * @returns Full localized URL (e.g., '/tr/PoweredByDonation/hizmetler' or '/tr/PoweredByDonation/hizmetler/slug')
  */
 export function getLocalizedServicesUrl(locale: string, subPath?: string): string {
-  const basePath = getServicesPath(locale)
-  const fullPath = subPath ? `${basePath}${subPath}` : basePath
-  return `/${locale}${fullPath}`
+  const servicesSlug = locale === 'tr' ? 'hizmetler' : 'services'
+  const fullPath = subPath ? `/${servicesSlug}${subPath}` : `/${servicesSlug}`
+  return `/${locale}/PoweredByDonation${fullPath}`
 }

@@ -7,6 +7,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { usePendingDonations } from '@/hooks/usePendingDonations'
 import { LANGUAGES, getOtherLanguages, getLanguageByCode } from '@/config/languages'
 import { getLocalizedServicesUrl } from '@/lib/utils/localized-urls'
+import { buildPersonalUrl, getPersonalPlatformSlug, buildSystemUrl } from '@/lib/utils/entity-urls'
 
 interface PlatformStats {
   services: number
@@ -33,7 +34,7 @@ export default function MultilingualNavbar({ locale, messages, platformStats }: 
   const profileDropdownRef = useRef<HTMLDivElement>(null)
 
   // Determine which section is active based on current path
-  const isServicesActive = pathname.includes('/services')
+  const isServicesActive = pathname.includes('/PoweredByDonation/services') || pathname.includes('/PoweredByDonation/hizmetler')
   const isJustGivingActive = pathname.includes('/justgiving')
   const isEveryOrgActive = pathname.includes('/everyorg')
   const isAcncActive = pathname.includes('/acnc')
@@ -265,7 +266,7 @@ export default function MultilingualNavbar({ locale, messages, platformStats }: 
                         {/* Pending Donations Notification */}
                         {pendingCount > 0 && (
                           <a
-                            href={`/${locale}/dashboard/donations`}
+                            href={buildPersonalUrl(locale, 'donations')}
                             className="block w-full bg-yellow-50 hover:bg-yellow-100 text-yellow-800 px-3 py-2 rounded text-sm font-medium transition-colors text-left border border-yellow-200"
                             onClick={() => setIsProfileOpen(false)}
                           >
@@ -282,11 +283,25 @@ export default function MultilingualNavbar({ locale, messages, platformStats }: 
                         )}
                         
                         <a
-                          href={`/${locale}/dashboard`}
+                          href={buildPersonalUrl(locale, 'services')}
                           className="block w-full text-gray-700 hover:bg-gray-50 px-3 py-2 rounded text-sm font-medium transition-colors text-left"
                           onClick={() => setIsProfileOpen(false)}
                         >
-                          {messages?.nav?.dashboard || 'Dashboard'}
+                          My Services
+                        </a>
+                        <a
+                          href={buildPersonalUrl(locale, 'donations')}
+                          className="block w-full text-gray-700 hover:bg-gray-50 px-3 py-2 rounded text-sm font-medium transition-colors text-left"
+                          onClick={() => setIsProfileOpen(false)}
+                        >
+                          My Donations
+                        </a>
+                        <a
+                          href={buildPersonalUrl(locale, 'profile')}
+                          className="block w-full text-gray-700 hover:bg-gray-50 px-3 py-2 rounded text-sm font-medium transition-colors text-left"
+                          onClick={() => setIsProfileOpen(false)}
+                        >
+                          My Profile
                         </a>
                         
                         <div className="border-t pt-2 mt-2">
@@ -307,7 +322,7 @@ export default function MultilingualNavbar({ locale, messages, platformStats }: 
               </>
             ) : (
               <a 
-                href={`/${locale}/login`}
+                href={buildSystemUrl(locale, 'login')}
                 className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition-colors font-medium text-sm"
               >
                 {messages?.nav?.login || 'Login'}
@@ -433,7 +448,7 @@ export default function MultilingualNavbar({ locale, messages, platformStats }: 
                   <div className="space-y-3">
                     {pendingCount > 0 && (
                       <a
-                        href={`/${locale}/dashboard/donations`}
+                        href={buildPersonalUrl(locale, 'donations')}
                         className="block w-full bg-gradient-to-r from-yellow-400 to-orange-400 hover:from-yellow-500 hover:to-orange-500 text-white px-4 py-3 rounded-xl transition-all duration-200 font-semibold text-left shadow-lg hover:shadow-xl transform hover:scale-105"
                         onClick={() => setIsMenuOpen(false)}
                       >
@@ -452,16 +467,40 @@ export default function MultilingualNavbar({ locale, messages, platformStats }: 
                       </a>
                     )}
                     
-                    <a
-                      href={`/${locale}/dashboard`}
-                      className="block w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-4 py-3 rounded-xl transition-all duration-200 font-semibold text-left shadow-lg hover:shadow-xl transform hover:scale-105"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      <span className="flex items-center space-x-2">
-                        <span>🏠</span>
-                        <span>{messages?.nav?.dashboard || 'Dashboard'}</span>
-                      </span>
-                    </a>
+                    <div className="space-y-3">
+                      <a
+                        href={buildPersonalUrl(locale, 'services')}
+                        className="block w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-4 py-3 rounded-xl transition-all duration-200 font-semibold text-left shadow-lg hover:shadow-xl transform hover:scale-105"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        <span className="flex items-center space-x-2">
+                          <span>🛠️</span>
+                          <span>My Services</span>
+                        </span>
+                      </a>
+                      
+                      <a
+                        href={buildPersonalUrl(locale, 'donations')}
+                        className="block w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-4 py-3 rounded-xl transition-all duration-200 font-semibold text-left shadow-lg hover:shadow-xl transform hover:scale-105"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        <span className="flex items-center space-x-2">
+                          <span>💝</span>
+                          <span>My Donations</span>
+                        </span>
+                      </a>
+                      
+                      <a
+                        href={buildPersonalUrl(locale, 'profile')}
+                        className="block w-full bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white px-4 py-3 rounded-xl transition-all duration-200 font-semibold text-left shadow-lg hover:shadow-xl transform hover:scale-105"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        <span className="flex items-center space-x-2">
+                          <span>👤</span>
+                          <span>My Profile</span>
+                        </span>
+                      </a>
+                    </div>
                     
                     <button
                       onClick={() => {
@@ -479,7 +518,7 @@ export default function MultilingualNavbar({ locale, messages, platformStats }: 
                 </div>
               ) : (
                 <a 
-                  href={`/${locale}/login`}
+                  href={buildSystemUrl(locale, 'login')}
                   className="block bg-gradient-to-r from-blue-600 to-purple-700 hover:from-blue-700 hover:to-purple-800 text-white px-6 py-4 rounded-xl transition-all duration-200 font-bold text-center shadow-lg hover:shadow-xl transform hover:scale-105"
                   onClick={() => setIsMenuOpen(false)}
                 >

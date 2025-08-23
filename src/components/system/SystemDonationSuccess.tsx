@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import { getMessages } from 'next-intl/server'
 import DonationSuccessContent from '@/components/DonationSuccessContent'
 
-interface DonationSuccessPageProps {
+interface SystemDonationSuccessProps {
   params: {
     locale: string
   }
@@ -11,16 +11,10 @@ interface DonationSuccessPageProps {
   }
 }
 
-export const metadata: Metadata = {
-  title: 'Donation Successful | Powered by Donation',
-  description: 'Thank you for your charitable donation. Your contribution makes a difference.',
-  robots: 'noindex, nofollow'
-}
-
-export default async function DonationSuccessPage({ 
+export default async function SystemDonationSuccess({ 
   params, 
   searchParams 
-}: DonationSuccessPageProps) {
+}: SystemDonationSuccessProps) {
   const { locale } = params
   const { jgDonationId } = searchParams
   const messages = await getMessages({ locale })

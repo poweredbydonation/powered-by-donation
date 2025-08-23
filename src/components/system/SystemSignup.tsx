@@ -1,14 +1,14 @@
 import AuthGuard from '@/components/auth/AuthGuard'
-import LoginForm from '@/components/auth/LoginForm'
+import SignupForm from '@/components/auth/SignupForm'
 import { getMessages } from 'next-intl/server'
 
-interface LoginPageProps {
+interface SystemSignupProps {
   params: {
     locale: string
   }
 }
 
-export default async function LoginPage({ params }: LoginPageProps) {
+export default async function SystemSignup({ params }: SystemSignupProps) {
   const { locale } = params
   const messages = await getMessages({ locale })
 
@@ -16,7 +16,7 @@ export default async function LoginPage({ params }: LoginPageProps) {
     <AuthGuard requireAuth={false}>
       <div className="min-h-screen bg-gray-50">
         <div className="py-12">
-          <LoginForm locale={locale} messages={messages} />
+          <SignupForm locale={locale} messages={messages} />
         </div>
       </div>
     </AuthGuard>

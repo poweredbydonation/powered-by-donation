@@ -2,19 +2,25 @@ import AuthGuard from '@/components/auth/AuthGuard'
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
 import DeleteUserProfile from '@/components/profile/DeleteUserProfile'
+import UnifiedUserProfileForm from '@/components/profile/UnifiedUserProfileForm'
+import ServiceCreationForm from '@/components/services/ServiceCreationForm'
 import { getMessages, getTranslations } from 'next-intl/server'
 import { NextIntlClientProvider } from 'next-intl'
+import { buildPersonalUrl } from '@/lib/utils/entity-urls'
+import { getLocalizedServicesUrl } from '@/lib/utils/localized-urls'
+import { EntityType } from '@/lib/utils/entity-urls'
 
 // Disable caching for this page so it always shows fresh data
 export const dynamic = 'force-dynamic'
 
-interface DashboardPageProps {
+interface PersonalDashboardProps {
   params: {
     locale: string
   }
+  activeSection: EntityType
 }
 
-export default async function DashboardPage({ params }: DashboardPageProps) {
+export default async function PersonalDashboard({ params, activeSection }: PersonalDashboardProps) {
   const { locale } = params
   const messages = await getMessages({ locale })
   const t = await getTranslations({ locale, namespace: 'dashboard' })
@@ -28,12 +34,88 @@ export default async function DashboardPage({ params }: DashboardPageProps) {
     .eq('id', user?.id)
     .single()
 
-  return (
-    <AuthGuard>
-      <div className="min-h-screen bg-gray-50 py-12">
-        <div className="max-w-4xl mx-auto px-4">
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h1 className="text-3xl font-bold text-gray-900 mb-6">{t('title') || 'Dashboard'}</h1>
+  // Render different content based on active section
+  const renderSectionContent = () => {
+    switch (activeSection) {
+      case 'services':
+        return (
+          <div className="space-y-6">
+            <h1 className="text-3xl font-bold text-gray-900">My Services</h1>
+            
+            {/* Service Creation Form */}
+            <div className="bg-white border border-gray-200 rounded-lg p-6">
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">Create New Service</h2>
+              <ServiceCreationForm />
+            </div>
+            
+            {/* Existing Services List */}
+            <div className="bg-white border border-gray-200 rounded-lg p-6">
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">Your Services</h2>
+              <p className="text-gray-600 text-sm">Your existing services will appear here.</p>
+              {/* TODO: Add services list component here */}
+            </div>
+          </div>
+        )
+      
+      case 'donations':
+        return (
+          <div className="space-y-6">
+            <h1 className="text-3xl font-bold text-gray-900">My Donations</h1>
+            <div className="bg-green-50 border border-green-200 rounded-md p-4">
+              <p className="text-green-800 mb-4">Track your donation history and impact.</p>
+              <Link 
+                href={getLocalizedServicesUrl(locale)}
+                className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition-colors inline-block"
+              >
+                Browse Services
+              </Link>
+            </div>
+            {/* TODO: Add donations list component here */}
+          </div>
+        )
+      
+      case 'profile':
+        return (
+          <div className="space-y-6">
+            <h1 className="text-3xl font-bold text-gray-900">My Profile</h1>
+            
+            {/* Profile Form - for both creation and editing */}
+            <div className="bg-white border border-gray-200 rounded-lg p-6">
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">
+                {userProfile ? 'Edit Profile' : 'Create Profile'}
+              </h2>
+              <UnifiedUserProfileForm user={user} existingProfile={userProfile} />
+            </div>
+
+            {/* Delete Profile Section - only show if user has profile */}
+            {userProfile && (
+              <div className="bg-white border border-red-100 rounded-lg p-6">
+                <h3 className="text-lg font-semibold text-red-900 mb-2">Danger Zone</h3>
+                <p className="text-red-700 text-sm mb-4">
+                  Permanently delete your profile and all associated data.
+                </p>
+                <NextIntlClientProvider messages={{ deleteProfile: messages.deleteProfile }}>
+                  <DeleteUserProfile user={userProfile} />
+                </NextIntlClientProvider>
+              </div>
+            )}
+          </div>
+        )
+      
+      case 'settings':
+        return (
+          <div className="space-y-6">
+            <h1 className="text-3xl font-bold text-gray-900">Settings</h1>
+            <div className="bg-gray-50 border border-gray-200 rounded-md p-4">
+              <p className="text-gray-800">Settings page coming soon.</p>
+            </div>
+          </div>
+        )
+      
+      default:
+        return (
+          <div className="space-y-6">
+            <h1 className="text-3xl font-bold text-gray-900">{t('title') || 'Dashboard'}</h1>
             
             <div className="bg-blue-50 border border-blue-200 rounded-md p-4 mb-6">
               <h2 className="text-lg font-semibold text-blue-900 mb-2">
@@ -56,7 +138,7 @@ export default async function DashboardPage({ params }: DashboardPageProps) {
                 <h3 className="text-lg font-semibold text-yellow-900 mb-2">{t('getStarted')}</h3>
                 <p className="text-yellow-800 mb-4">{t('setupPrompt')}</p>
                 <Link 
-                  href={`/${locale}/dashboard/profile/setup`}
+                  href={buildPersonalUrl(locale, 'profile')}
                   className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors inline-block"
                 >
                   {t('createProfile')}
@@ -72,13 +154,13 @@ export default async function DashboardPage({ params }: DashboardPageProps) {
                   <p className="text-blue-700 text-sm mb-3">{t('fundraiserDescription')}</p>
                   <div className="space-y-2">
                     <Link 
-                      href={`/${locale}/dashboard/services`}
+                      href={buildPersonalUrl(locale, 'services')}
                       className="block text-blue-600 hover:text-blue-800 text-sm"
                     >
                       → {t('manageServices')}
                     </Link>
                     <Link 
-                      href={`/${locale}/dashboard/services/create`}
+                      href={buildPersonalUrl(locale, 'services')}
                       className="block text-blue-600 hover:text-blue-800 text-sm"
                     >
                       → {t('createNewService')}
@@ -90,7 +172,7 @@ export default async function DashboardPage({ params }: DashboardPageProps) {
                   <h3 className="font-semibold text-gray-900 mb-2">{t('becomeFundraiser')}</h3>
                   <p className="text-gray-600 text-sm mb-3">{t('fundraiserOffer')}</p>
                   <Link 
-                    href={`/${locale}/dashboard/profile`}
+                    href={buildPersonalUrl(locale, 'profile')}
                     className="text-blue-600 hover:text-blue-800 text-sm"
                   >
                     → {t('enableFundraiserRole')}
@@ -105,13 +187,13 @@ export default async function DashboardPage({ params }: DashboardPageProps) {
                   <p className="text-green-700 text-sm mb-3">{t('donorDescription')}</p>
                   <div className="space-y-2">
                     <Link 
-                      href={`/${locale}/dashboard/donations`}
+                      href={buildPersonalUrl(locale, 'donations')}
                       className="block text-green-600 hover:text-green-800 text-sm"
                     >
                       → {t('myDonations')}
                     </Link>
                     <Link 
-                      href={`/${locale}/browse`}
+                      href={getLocalizedServicesUrl(locale)}
                       className="block text-green-600 hover:text-green-800 text-sm"
                     >
                       → {t('browseServices')}
@@ -123,7 +205,7 @@ export default async function DashboardPage({ params }: DashboardPageProps) {
                   <h3 className="font-semibold text-gray-900 mb-2">{t('becomeDonor')}</h3>
                   <p className="text-gray-600 text-sm mb-3">{t('donorOffer')}</p>
                   <Link 
-                    href={`/${locale}/dashboard/profile`}
+                    href={buildPersonalUrl(locale, 'profile')}
                     className="text-blue-600 hover:text-blue-800 text-sm"
                   >
                     → {t('enableDonorRole')}
@@ -137,13 +219,13 @@ export default async function DashboardPage({ params }: DashboardPageProps) {
                 <p className="text-gray-600 text-sm mb-3">{t('accountDescription')}</p>
                 <div className="space-y-2">
                   <Link 
-                    href={`/${locale}/dashboard/profile`}
+                    href={buildPersonalUrl(locale, 'profile')}
                     className="block text-gray-600 hover:text-gray-800 text-sm"
                   >
                     → {t('editProfile')}
                   </Link>
                   <Link 
-                    href={`/${locale}/dashboard/settings`}
+                    href={buildPersonalUrl(locale, 'settings')}
                     className="block text-gray-600 hover:text-gray-800 text-sm"
                   >
                     → {t('privacySettings')}
@@ -170,20 +252,29 @@ export default async function DashboardPage({ params }: DashboardPageProps) {
                   </div>
                   <div className="flex gap-4">
                     <Link
-                      href={`/${locale}/dashboard/profile`}
+                      href={buildPersonalUrl(locale, 'profile')}
                       className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors text-sm"
                     >
                       {t('editProfile')}
                     </Link>
                     <NextIntlClientProvider messages={{ deleteProfile: messages.deleteProfile }}>
-                      <DeleteUserProfile 
-                        user={userProfile}
-                      />
+                      <DeleteUserProfile user={userProfile} />
                     </NextIntlClientProvider>
                   </div>
                 </div>
               </div>
             )}
+          </div>
+        )
+    }
+  }
+
+  return (
+    <AuthGuard>
+      <div className="min-h-screen bg-gray-50 py-12">
+        <div className="max-w-4xl mx-auto px-4">
+          <div className="bg-white rounded-lg shadow-md p-6">
+            {renderSectionContent()}
           </div>
         </div>
       </div>

@@ -8,7 +8,7 @@
 import { DonationPlatform } from '@/types/database'
 
 // Entity types (canonical values)
-export type EntityType = 'charities' | 'nonprofits'
+export type EntityType = 'charities' | 'nonprofits' | 'services' | 'donations' | 'profile' | 'settings' | 'donation-success' | 'login' | 'signup'
 
 // Platform to entity type mapping
 export const PLATFORM_ENTITY_TYPES: Record<DonationPlatform, EntityType> = {
@@ -16,6 +16,39 @@ export const PLATFORM_ENTITY_TYPES: Record<DonationPlatform, EntityType> = {
   everyorg: 'nonprofits',
   acnc: 'charities'
 }
+
+// PoweredByDonation platform entity type
+export const POWERED_BY_DONATION_ENTITY_TYPE: EntityType = 'services'
+
+// Personal platform slugs by locale
+export const PERSONAL_PLATFORM_SLUGS: Record<string, string> = {
+  en: 'my',
+  de: 'mein', 
+  es: 'mi',
+  fr: 'mon',
+  it: 'mio',
+  pt: 'meu',
+  ja: 'watashi-no',
+  ko: 'nae',
+  zh: 'wo-de',
+  ar: 'milki',
+  hi: 'mera',
+  tr: 'benim',
+  tl: 'aking',
+  el: 'mou',
+  yue: 'ngo-ge',
+  pa: 'mera',
+  vi: 'cua-toi'
+}
+
+// Personal platform entity types (for dashboard sections)
+export const PERSONAL_ENTITY_TYPES: EntityType[] = ['services', 'donations', 'profile', 'settings']
+
+// System entity types (for general app pages)
+export const SYSTEM_ENTITY_TYPES: EntityType[] = ['donation-success', 'login', 'signup']
+
+// System platform slug (consistent across languages)
+export const SYSTEM_PLATFORM_SLUG = 'system'
 
 // Transliterated URL slugs for each entity type by locale
 export const ENTITY_URL_SLUGS: Record<EntityType, Record<string, string>> = {
@@ -56,6 +89,139 @@ export const ENTITY_URL_SLUGS: Record<EntityType, Record<string, string>> = {
     yue: 'fei-ying-lei-zou-jik',
     pa: 'gair-munafa-sanstha',
     vi: 'to-chuc-phi-loi-nhuan'
+  },
+  services: {
+    en: 'services',
+    de: 'dienstleistungen',
+    es: 'servicios',
+    fr: 'services',
+    it: 'servizi',
+    pt: 'servicos',
+    ja: 'sabisu',
+    ko: 'seobiseu',
+    zh: 'fuwu',
+    ar: 'khadamat',
+    hi: 'seva',
+    tr: 'hizmetler',
+    tl: 'mga-serbisyo',
+    el: 'ypiresies',
+    yue: 'fuk-mou',
+    pa: 'sewa',
+    vi: 'dich-vu'
+  },
+  donations: {
+    en: 'donations',
+    de: 'spenden',
+    es: 'donaciones',
+    fr: 'dons',
+    it: 'donazioni',
+    pt: 'doacoes',
+    ja: 'kifu',
+    ko: 'gibus',
+    zh: 'juanzeng',
+    ar: 'tabarruaat',
+    hi: 'daan',
+    tr: 'bagislarim',
+    tl: 'mga-donasyon',
+    el: 'doreai',
+    yue: 'kyun-jing',
+    pa: 'daan',
+    vi: 'quy-gop'
+  },
+  profile: {
+    en: 'profile',
+    de: 'profil',
+    es: 'perfil',
+    fr: 'profil',
+    it: 'profilo',
+    pt: 'perfil',
+    ja: 'purofiiru',
+    ko: 'peulopil',
+    zh: 'ziliao',
+    ar: 'malaf-shakhi',
+    hi: 'praphi',
+    tr: 'profil',
+    tl: 'profile',
+    el: 'profil',
+    yue: 'go-jan-ji-liu',
+    pa: 'profail',
+    vi: 'ho-so'
+  },
+  settings: {
+    en: 'settings',
+    de: 'einstellungen',
+    es: 'configuracion',
+    fr: 'parametres',
+    it: 'impostazioni',
+    pt: 'configuracoes',
+    ja: 'settingu',
+    ko: 'seoljeong',
+    zh: 'shezhi',
+    ar: 'aedadat',
+    hi: 'settingz',
+    tr: 'ayarlar',
+    tl: 'mga-setting',
+    el: 'rythmiseis',
+    yue: 'sit-jing',
+    pa: 'settingan',
+    vi: 'cai-dat'
+  },
+  'donation-success': {
+    en: 'donation-success',
+    de: 'spenden-erfolg',
+    es: 'donacion-exitosa',
+    fr: 'don-reussi',
+    it: 'donazione-riuscita',
+    pt: 'doacao-sucesso',
+    ja: 'kifu-seiko',
+    ko: 'gibus-seonggong',
+    zh: 'juanzeng-chenggong',
+    ar: 'tabarru-najah',
+    hi: 'daan-safalta',
+    tr: 'bagis-basarili',
+    tl: 'donasyon-matagumpay',
+    el: 'dorea-epitychis',
+    yue: 'kyun-jing-sing-gung',
+    pa: 'daan-safalta',
+    vi: 'quy-gop-thanh-cong'
+  },
+  login: {
+    en: 'login',
+    de: 'anmelden',
+    es: 'iniciar-sesion',
+    fr: 'connexion',
+    it: 'accedi',
+    pt: 'entrar',
+    ja: 'roguin',
+    ko: 'rogeugin',
+    zh: 'denglu',
+    ar: 'dukhuul',
+    hi: 'login',
+    tr: 'giris',
+    tl: 'mag-login',
+    el: 'syndesi',
+    yue: 'dang-luk',
+    pa: 'login',
+    vi: 'dang-nhap'
+  },
+  signup: {
+    en: 'signup',
+    de: 'registrieren',
+    es: 'registrarse',
+    fr: 'inscription',
+    it: 'registrati',
+    pt: 'cadastrar',
+    ja: 'tooloo',
+    ko: 'hoewongatib',
+    zh: 'zhuce',
+    ar: 'tasjeel',
+    hi: 'signup',
+    tr: 'kayit-ol',
+    tl: 'mag-signup',
+    el: 'eggrafi',
+    yue: 'ji-chaak',
+    pa: 'signup',
+    vi: 'dang-ky'
   }
 }
 
@@ -123,7 +289,20 @@ export function parsePlatformUrl(pathname: string): ParsedPlatformUrl | null {
   
   const [locale, platformStr, entitySlug, organizationSlug] = parts
   
-  // Validate platform
+  // Handle PoweredByDonation platform
+  if (platformStr === 'PoweredByDonation') {
+    const entityType = getEntityTypeFromSlug(entitySlug)
+    if (entityType !== 'services') return null
+    
+    return {
+      locale,
+      platform: 'PoweredByDonation' as any, // Special case
+      entityType,
+      organizationSlug
+    }
+  }
+  
+  // Validate donation platform
   if (!['justgiving', 'everyorg', 'acnc'].includes(platformStr)) return null
   const platform = platformStr as DonationPlatform
   
@@ -154,4 +333,80 @@ export function getAllEntitySlugs(entityType: EntityType): string[] {
  */
 export function isValidEntitySlug(slug: string, entityType: EntityType): boolean {
   return getAllEntitySlugs(entityType).includes(slug)
+}
+
+/**
+ * Get the personal platform slug for a locale
+ */
+export function getPersonalPlatformSlug(locale: string): string {
+  return PERSONAL_PLATFORM_SLUGS[locale] || PERSONAL_PLATFORM_SLUGS['en']
+}
+
+/**
+ * Check if a platform slug is a personal platform
+ */
+export function isPersonalPlatform(platformSlug: string): boolean {
+  return Object.values(PERSONAL_PLATFORM_SLUGS).includes(platformSlug)
+}
+
+/**
+ * Check if a platform slug is the system platform
+ */
+export function isSystemPlatform(platformSlug: string): boolean {
+  return platformSlug === SYSTEM_PLATFORM_SLUG
+}
+
+/**
+ * Build personal platform URL
+ */
+export function buildPersonalUrl(locale: string, entityType: EntityType, subPath?: string): string {
+  const personalPlatform = getPersonalPlatformSlug(locale)
+  const entitySlug = getEntityUrlSlug(entityType, locale)
+  const basePath = `/${locale}/${personalPlatform}/${entitySlug}`
+  return subPath ? `${basePath}${subPath}` : basePath
+}
+
+/**
+ * Build system platform URL
+ */
+export function buildSystemUrl(locale: string, entityType: EntityType, subPath?: string): string {
+  const entitySlug = getEntityUrlSlug(entityType, locale)
+  const basePath = `/${locale}/${SYSTEM_PLATFORM_SLUG}/${entitySlug}`
+  return subPath ? `${basePath}${subPath}` : basePath
+}
+
+/**
+ * Parse personal platform URL and extract components
+ */
+export interface ParsedPersonalUrl {
+  locale: string
+  personalPlatform: string
+  entityType: EntityType
+  subPath?: string
+}
+
+export function parsePersonalUrl(pathname: string): ParsedPersonalUrl | null {
+  // Expected format: /[locale]/[personal_platform]/[entity_slug]/[sub_path?]
+  const parts = pathname.split('/').filter(Boolean)
+  
+  if (parts.length < 3) return null
+  
+  const [locale, personalPlatformSlug, entitySlug, ...subPathParts] = parts
+  
+  // Validate personal platform
+  if (!isPersonalPlatform(personalPlatformSlug)) return null
+  
+  // Get entity type from slug
+  const entityType = getEntityTypeFromSlug(entitySlug)
+  if (!entityType) return null
+  
+  // Validate it's a personal entity type
+  if (!PERSONAL_ENTITY_TYPES.includes(entityType)) return null
+  
+  return {
+    locale,
+    personalPlatform: personalPlatformSlug,
+    entityType,
+    subPath: subPathParts.length > 0 ? `/${subPathParts.join('/')}` : undefined
+  }
 }

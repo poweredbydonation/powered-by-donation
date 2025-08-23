@@ -218,7 +218,7 @@ class JustGivingAPI {
       params.append('donationValue', amount.toString())
     }
     params.append('currency', 'GBP') // JustGiving requires currency
-    params.append('exiturl', `${returnUrl}/en/donation-success?jgDonationId=JUSTGIVING-DONATION-ID`)
+    params.append('exiturl', `${returnUrl}/en/system/donation-success?jgDonationId=JUSTGIVING-DONATION-ID`)
     if (reference) {
       params.append('reference', reference)
     }

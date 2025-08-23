@@ -117,7 +117,7 @@ export default function LoginForm({ locale, messages }: LoginFormProps) {
 
       <p className="mt-4 text-center text-sm text-gray-600">
         {t('no_account')}{' '}
-        <Link href="/signup" className="text-blue-600 hover:text-blue-500">
+        <Link href={`/${locale}/system/signup`} className="text-blue-600 hover:text-blue-500">
           {t('sign_up_link')}
         </Link>
       </p>
