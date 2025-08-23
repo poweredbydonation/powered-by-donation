@@ -26,6 +26,7 @@ import {
   ArrowLeft
 } from 'lucide-react'
 import { parseOperatingCountries } from '@/lib/utils/country-codes'
+import { createClient } from '@/lib/supabase/client'
 
 interface OrganizationPageProps {
   locale: string
@@ -83,16 +84,64 @@ export default function OrganizationPage({
       setServicesError(null)
 
       try {
-        const response = await fetch(
-          `/api/services/by-organization?organization_id=${organization.id}&platform=${platform}`
-        )
+        // Query services directly from database using Supabase client
+        // This replaces the removed /api/services/by-organization endpoint
+        const supabase = createClient()
 
-        if (!response.ok) {
-          throw new Error('Failed to fetch services')
+        const { data: services, error } = await supabase
+          .from('services')
+          .select(`
+            *,
+            user:users!inner(
+              name,
+              bio,
+              location
+            )
+          `)
+          .eq('is_active', true)
+          .eq('show_in_directory', true)
+          .not('platform_requirements', 'is', null)
+          .order('created_at', { ascending: false })
+
+        if (error) {
+          console.error('Error fetching services:', error)
+          setServicesError('Failed to load services')
+          return
         }
 
-        const data = await response.json()
-        setServices(data.services || [])
+        // Filter services that support this organization
+        const filteredServices = services?.filter(service => {
+          if (!service.platform_requirements) return false
+
+          const platformReqs = service.platform_requirements
+          const platformRule = platformReqs.platform_rules?.[platform]
+
+          if (!platformRule) return false
+
+          // Check if service specifically targets this organization
+          const hasSpecificOrganization = (
+            platformRule.organizations === 'specific_organizations' &&
+            platformRule.specific_organizations &&
+            platformRule.specific_organizations.includes(organization.id)
+          )
+
+          // Check if service supports any organization on this platform
+          const supportsAnyOrganization = (
+            platformReqs.allowed_platforms.includes(platform) &&
+            (
+              platformRule.organizations !== 'specific_organizations' ||
+              platformRule.select_all_organizations === true ||
+              !platformRule.specific_organizations ||
+              platformRule.specific_organizations.length === 0
+            ) &&
+            (!platformRule.excluded_organizations || 
+             !platformRule.excluded_organizations.includes(organization.id))
+          )
+
+          return hasSpecificOrganization || supportsAnyOrganization
+        }) || []
+
+        setServices(filteredServices)
       } catch (error) {
         console.error('Error loading services:', error)
         setServicesError('Failed to load services')

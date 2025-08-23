@@ -138,7 +138,7 @@ Deno.serve(async (req)=>{
     const batchSize = 1000;
     while(true){
       console.log(`Fetching organizations ${from} to ${from + batchSize - 1}...`);
-      const { data: batch, error: batchError } = await supabaseClient.from('organization_cache').select('platform, category, address_city, address_country, acnc_purposes, acnc_beneficiaries, acnc_operates_in_act, acnc_operates_in_nsw, acnc_operates_in_nt, acnc_operates_in_qld, acnc_operates_in_sa, acnc_operates_in_tas, acnc_operates_in_vic, acnc_operates_in_wa, acnc_operating_countries').eq('is_active', true).range(from, from + batchSize - 1);
+      const { data: batch, error: batchError } = await supabaseClient.from('organization_cache').select('platform, category, address_city, address_country, acnc_purposes, acnc_beneficiaries, acnc_operates_in_act, acnc_operates_in_nsw, acnc_operates_in_nt, acnc_operates_in_qld, acnc_operates_in_sa, acnc_operates_in_tas, acnc_operates_in_vic, acnc_operates_in_wa, acnc_operating_countries').eq('is_active', true).eq('show_on_platform', true).range(from, from + batchSize - 1);
       if (batchError) {
         console.error('Error fetching batch:', batchError);
         break;

@@ -247,15 +247,33 @@ export default function OrganizationBrowse({
           const supabase = createClient()
           
           // Load cities from lookup table (much faster)
-          const { data: citiesResult, error } = await supabase
-            .from('justgiving_cities_lookup')
-            .select('city')
-            .order('city')
-
-          if (error) {
-            console.error('Failed to load JustGiving cities:', error)
-            return
+          // Fetch in multiple batches to get all cities
+          let allCities = []
+          let start = 0
+          const batchSize = 1000
+          
+          while (true) {
+            const { data: batch, error } = await supabase
+              .from('justgiving_cities_lookup')
+              .select('city')
+              .order('city')
+              .range(start, start + batchSize - 1)
+            
+            if (error) {
+              console.error('Failed to load JustGiving cities batch:', error)
+              break
+            }
+            
+            if (!batch || batch.length === 0) break
+            
+            allCities.push(...batch)
+            
+            if (batch.length < batchSize) break // Last batch
+            
+            start += batchSize
           }
+          
+          const citiesResult = allCities
 
           if (citiesResult && citiesResult.length > 0) {
             const cities = citiesResult.map(item => item.city)
@@ -553,17 +571,8 @@ export default function OrganizationBrowse({
         if (cityFilter && !cities.includes(cityFilter)) {
           cities = [cityFilter, ...cities]
         }
-      } else {
-        // Apply show more/less limit only when not searching
-        if (!showAllLocations && cities.length > 20) {
-          cities = cities.slice(0, 20)
-          
-          // Always include the currently selected city in the first 20, even if it would be cut off
-          if (cityFilter && !cities.includes(cityFilter)) {
-            cities = [cityFilter, ...cities.slice(0, 19)]
-          }
-        }
       }
+      // Note: Don't slice here - let the render logic handle show more/less
       
       return cities
     } else if (platform === 'justgiving') {
@@ -580,17 +589,8 @@ export default function OrganizationBrowse({
         if (cityFilter && !cities.includes(cityFilter)) {
           cities = [cityFilter, ...cities]
         }
-      } else {
-        // Apply show more/less limit only when not searching
-        if (!showAllLocations && cities.length > 50) {
-          cities = cities.slice(0, 50)
-          
-          // Always include the currently selected city in the first 50, even if it would be cut off
-          if (cityFilter && !cities.includes(cityFilter)) {
-            cities = [cityFilter, ...cities.slice(0, 49)]
-          }
-        }
       }
+      // Note: Don't slice here for JustGiving either - let render handle it
       
       return cities
     }
@@ -833,7 +833,7 @@ export default function OrganizationBrowse({
                               Clear selection
                             </button>
                           )}
-                          {(showAllLocations ? filteredCities : filteredCities.slice(0, 50)).map((city) => (
+                          {(showAllLocations ? filteredCities : filteredCities.slice(0, 20)).map((city) => (
                             <button
                               key={city}
                               onClick={() => {
@@ -848,15 +848,15 @@ export default function OrganizationBrowse({
                               {city}
                             </button>
                           ))}
-                          {!showAllLocations && justgivingCities.length > 50 && (
+                          {!showAllLocations && filteredCities.length > 20 && (
                             <button
                               onClick={() => setShowAllLocations(true)}
                               className="w-full px-3 py-2 text-xs text-[#7A04DD] hover:bg-purple-50 border-t bg-white"
                             >
-                              Show More ({justgivingCities.length - 50} more)
+                              Show More ({filteredCities.length - 20} more)
                             </button>
                           )}
-                          {showAllLocations && justgivingCities.length > 50 && (
+                          {showAllLocations && filteredCities.length > 20 && (
                             <button
                               onClick={() => setShowAllLocations(false)}
                               className="w-full px-3 py-2 text-xs text-[#7A04DD] hover:bg-purple-50 border-t bg-white"

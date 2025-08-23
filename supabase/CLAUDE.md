@@ -82,6 +82,21 @@ generate_platform_reference(platform_name text, sequence_name text)
 - **Features**: Address, contact details, impact statements, branding data
 - **Completion**: Processes all charities in ~4 days
 
+## Filter Lookup Tables System
+
+### SQL-Based Lookup Table Population
+- **Function**: `populate_lookup_tables_direct()` - Direct SQL function for filter data
+- **Schedule**: Daily at 3 AM UTC via pg_cron job `populate-lookup-tables-sql`
+- **Replaces**: Deprecated Edge Function `populate_filter_lookup_tables` (removed)
+- **Filter**: Only includes organizations with `show_on_platform = true`
+- **Performance**: ~10x faster than Edge Function approach using direct SQL
+- **Migration**: `20250823221500_setup_sql_cron_lookup_tables.sql` applied the transition
+
+### Lookup Tables
+- **JustGiving**: `justgiving_cities_lookup`, `justgiving_countries_lookup`
+- **ACNC**: `acnc_categories_lookup`, `acnc_cities_lookup`, `acnc_states_lookup`, `acnc_purposes_lookup`, `acnc_beneficiaries_lookup`, `acnc_operating_countries_lookup`
+- **Every.org**: `everyorg_categories_lookup`
+
 ## API Integration
 
 ### JustGiving Integration
