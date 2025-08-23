@@ -7,7 +7,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { usePendingDonations } from '@/hooks/usePendingDonations'
 import { LANGUAGES, getOtherLanguages, getLanguageByCode } from '@/config/languages'
 import { getLocalizedServicesUrl } from '@/lib/utils/localized-urls'
-import { buildPersonalUrl, getPersonalPlatformSlug, buildSystemUrl } from '@/lib/utils/entity-urls'
+import { buildPersonalUrl, getPersonalPlatformSlug, buildSystemUrl, getSystemPlatformSlug } from '@/lib/utils/entity-urls'
 
 interface PlatformStats {
   services: number

@@ -47,8 +47,26 @@ export const PERSONAL_ENTITY_TYPES: EntityType[] = ['services', 'donations', 'pr
 // System entity types (for general app pages)
 export const SYSTEM_ENTITY_TYPES: EntityType[] = ['donation-success', 'login', 'signup']
 
-// System platform slug (consistent across languages)
-export const SYSTEM_PLATFORM_SLUG = 'system'
+// System platform slugs by locale
+export const SYSTEM_PLATFORM_SLUGS: Record<string, string> = {
+  en: 'system',
+  de: 'system', 
+  es: 'sistema',
+  fr: 'systeme',
+  it: 'sistema',
+  pt: 'sistema',
+  ja: 'shisutemu',
+  ko: 'siseutem',
+  zh: 'xitong',
+  ar: 'nizam',
+  hi: 'pranali',
+  tr: 'sistem',
+  tl: 'sistema',
+  el: 'systima',
+  yue: 'hai-tung',
+  pa: 'pranali',
+  vi: 'he-thong'
+}
 
 // Transliterated URL slugs for each entity type by locale
 export const ENTITY_URL_SLUGS: Record<EntityType, Record<string, string>> = {
@@ -350,10 +368,17 @@ export function isPersonalPlatform(platformSlug: string): boolean {
 }
 
 /**
+ * Get the system platform slug for a locale
+ */
+export function getSystemPlatformSlug(locale: string): string {
+  return SYSTEM_PLATFORM_SLUGS[locale] || SYSTEM_PLATFORM_SLUGS['en']
+}
+
+/**
  * Check if a platform slug is the system platform
  */
 export function isSystemPlatform(platformSlug: string): boolean {
-  return platformSlug === SYSTEM_PLATFORM_SLUG
+  return Object.values(SYSTEM_PLATFORM_SLUGS).includes(platformSlug)
 }
 
 /**
@@ -370,8 +395,9 @@ export function buildPersonalUrl(locale: string, entityType: EntityType, subPath
  * Build system platform URL
  */
 export function buildSystemUrl(locale: string, entityType: EntityType, subPath?: string): string {
+  const systemPlatform = getSystemPlatformSlug(locale)
   const entitySlug = getEntityUrlSlug(entityType, locale)
-  const basePath = `/${locale}/${SYSTEM_PLATFORM_SLUG}/${entitySlug}`
+  const basePath = `/${locale}/${systemPlatform}/${entitySlug}`
   return subPath ? `${basePath}${subPath}` : basePath
 }
 

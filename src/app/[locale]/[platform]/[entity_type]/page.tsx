@@ -18,7 +18,7 @@ import {
   PERSONAL_ENTITY_TYPES,
   isSystemPlatform,
   SYSTEM_ENTITY_TYPES,
-  SYSTEM_PLATFORM_SLUG
+  SYSTEM_PLATFORM_SLUGS
 } from '@/lib/utils/entity-urls'
 import OrganizationBrowse from '@/components/OrganizationBrowse'
 import { Suspense } from 'react'
@@ -53,9 +53,10 @@ function isValidPlatform(platform: string): platform is DonationPlatform {
 function isValidPlatformSlug(platform: string): boolean {
   const normalizedPlatforms = ['justgiving', 'everyorg', 'acnc', 'poweredbydonation']
   const personalPlatforms = Object.values(PERSONAL_PLATFORM_SLUGS)
+  const systemPlatforms = Object.values(SYSTEM_PLATFORM_SLUGS)
   return normalizedPlatforms.includes(platform.toLowerCase()) || 
          personalPlatforms.includes(platform) || 
-         platform === SYSTEM_PLATFORM_SLUG
+         systemPlatforms.includes(platform)
 }
 
 function normalizePlatformSlug(platform: string): string {
