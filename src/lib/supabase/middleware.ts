@@ -1,5 +1,6 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
+import { isPersonalPlatform, PERSONAL_PLATFORM_SLUGS } from '@/lib/utils/entity-urls'
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
@@ -37,9 +38,9 @@ export async function updateSession(request: NextRequest) {
 
   // Check if user is accessing protected routes (accounting for locale prefixes)
   const pathname = request.nextUrl.pathname
-  const isProtectedRoute = 
-    pathname.includes('/dashboard') || 
-    pathname.includes('/profile')
+  const pathParts = pathname.split('/').filter(Boolean)
+  const platformSlug = pathParts[1] // Should be the platform part after locale
+  const isProtectedRoute = platformSlug && isPersonalPlatform(platformSlug)
   
   if (!user && isProtectedRoute) {
     // Extract locale from pathname if present
@@ -48,7 +49,7 @@ export async function updateSession(request: NextRequest) {
     
     // Redirect to login with locale preserved
     const url = request.nextUrl.clone()
-    url.pathname = `/${locale}/login`
+    url.pathname = `/${locale}/system/login`
     return NextResponse.redirect(url)
   }
 
