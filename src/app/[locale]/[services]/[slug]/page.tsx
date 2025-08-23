@@ -14,6 +14,7 @@ interface ServicePageProps {
   params: {
     slug: string
     locale: string
+    services: string
   }
 }
 

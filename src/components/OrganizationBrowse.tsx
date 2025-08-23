@@ -15,6 +15,7 @@ import OrganizationFilters from '@/components/OrganizationFilters'
 import { getEveryOrgClient } from '@/lib/everyorg/client'
 import { Search, Filter, ChevronDown, Info, X } from 'lucide-react'
 import { parseOperatingCountries } from '@/lib/utils/country-codes'
+import { getLocalizedServicesUrl } from '@/lib/utils/localized-urls'
 
 interface OrganizationBrowseProps {
   locale: string
@@ -1829,7 +1830,7 @@ export default function OrganizationBrowse({
                 <div>
                   <h4 className="font-semibold text-gray-900 mb-3 text-sm">Platform</h4>
                   <ul className="space-y-2 text-xs">
-                    <li><a href={`/${locale}/services`} className="text-gray-600 hover:text-gray-900">Browse Services</a></li>
+                    <li><a href={getLocalizedServicesUrl(locale)} className="text-gray-600 hover:text-gray-900">Browse Services</a></li>
                     <li><a href={`/${locale}/dashboard`} className="text-gray-600 hover:text-gray-900">For Fundraisers</a></li>
                     <li><a href={`/${locale}/justgiving/charities`} className="text-gray-600 hover:text-gray-900">Featured Charities</a></li>
                   </ul>

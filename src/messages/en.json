@@ -419,6 +419,12 @@
       "deleteFailed": "Failed to delete profile"
     }
   },
+  "routes": {
+    "services": "services",
+    "dashboard": "dashboard",
+    "signup": "signup",
+    "login": "login"
+  },
   "platforms": {
     "justgiving": {
       "name": "JustGiving",

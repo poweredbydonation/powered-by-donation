@@ -3,6 +3,7 @@ import { Monitor, TrendingUp, Camera, ExternalLink, Users } from 'lucide-react'
 import { getTranslations, getMessages } from 'next-intl/server'
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
+import { getLocalizedServicesUrl } from '@/lib/utils/localized-urls'
 
 interface HomePageProps {
   params: {
@@ -72,8 +73,8 @@ export default async function HomePage({ params }: HomePageProps) {
           <div className="mb-16">
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 max-w-8xl mx-auto">
               {/* Powered by Donation Card */}
-              <Link 
-                href={`/${locale}/services`}
+              <a 
+                href={getLocalizedServicesUrl(locale)}
                 className="group bg-purple-50 border-2 border-purple-200 rounded-xl p-5 hover:border-purple-300 hover:bg-purple-100 transition-all"
               >
                 <div className="text-center">
@@ -94,7 +95,7 @@ export default async function HomePage({ params }: HomePageProps) {
                     <ExternalLink className="h-3 w-3" />
                   </div>
                 </div>
-              </Link>
+              </a>
 
               {/* JustGiving Card */}
               <Link 
@@ -245,13 +246,13 @@ export default async function HomePage({ params }: HomePageProps) {
 
               <div className="flex items-start space-x-4">
                 <div className="w-10"></div>
-                <Link 
-                  href={`/${locale}/services`}
+                <a 
+                  href={getLocalizedServicesUrl(locale)}
                   className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors inline-block w-fit text-center"
                   style={{ minWidth: '280px' }}
                 >
                   {t('hero.donate_get_service')}
-                </Link>
+                </a>
               </div>
             </div>
             

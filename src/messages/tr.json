@@ -378,6 +378,12 @@
       "deleteFailed": "Profil silinemedi"
     }
   },
+  "routes": {
+    "services": "hizmetler",
+    "dashboard": "panel",
+    "signup": "kayit-ol",
+    "login": "giris"
+  },
   "platforms": {
     "justgiving": {
       "name": "JustGiving",

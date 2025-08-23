@@ -8,10 +8,12 @@ import { createClient } from '@/lib/supabase/client'
 import { Service, ServiceLocation, CurrencyCode } from '@/types/database'
 import { isServiceWithinRadius } from '@/lib/utils/distance'
 import { useAuth } from '@/hooks/useAuth'
+import { getLocalizedServicesUrl } from '@/lib/utils/localized-urls'
 
-interface BrowsePageProps {
+interface ServicesPageProps {
   params: {
     locale: string
+    services: string
   }
 }
 
@@ -30,8 +32,17 @@ interface LocationFilter {
 
 type PlatformFilter = 'all' | 'justgiving' | 'everyorg'
 
-export default function BrowsePage({ params }: BrowsePageProps) {
+export default function ServicesPage({ params }: ServicesPageProps) {
   const locale = params.locale
+  const servicesSlug = params.services
+  
+  // Validate that the services slug matches the expected translation for this locale
+  const expectedServicesSlug = locale === 'tr' ? 'hizmetler' : 'services'
+  
+  // Redirect to 404 if the services slug doesn't match the locale
+  if (servicesSlug !== expectedServicesSlug) {
+    throw new Error('Not Found')
+  }
   const { user } = useAuth()
   const [services, setServices] = useState<ServiceWithFundraiser[]>([])
   const [filteredServices, setFilteredServices] = useState<ServiceWithFundraiser[]>([])
@@ -430,7 +441,7 @@ export default function BrowsePage({ params }: BrowsePageProps) {
               filteredServices.map((service) => (
               <a 
                 key={service.id} 
-                href={`/${locale}/services/${generateSlug(service.title)}`}
+                href={getLocalizedServicesUrl(locale, `/${generateSlug(service.title)}`)}
                 className="block bg-gradient-to-br from-blue-50 via-white to-white border border-blue-200 border-l-4 border-l-blue-500 rounded-lg shadow-sm hover:shadow-lg hover:border-blue-300 transition-all duration-200 overflow-hidden cursor-pointer"
               >
                 <div className="p-6">
@@ -783,3 +794,4 @@ export default function BrowsePage({ params }: BrowsePageProps) {
     </div>
   )
 }
+

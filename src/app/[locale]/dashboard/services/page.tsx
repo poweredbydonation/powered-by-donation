@@ -8,6 +8,7 @@ import AuthGuard from '@/components/auth/AuthGuard'
 import { useAuth } from '@/hooks/useAuth'
 import { createClient } from '@/lib/supabase/client'
 import { Service, ServiceLocation, ServiceWithPlatformFields } from '@/types/database'
+import { getLocalizedServicesUrl } from '@/lib/utils/localized-urls'
 
 type UserService = ServiceWithPlatformFields & {
   fundraiser: {
@@ -284,12 +285,12 @@ export default function ServicesPage() {
                           >
                             {t('services.edit')}
                           </Link>
-                          <Link 
-                            href={`/${locale}/services/${generateSlug(service.title)}`}
+                          <a 
+                            href={getLocalizedServicesUrl(locale, `/${generateSlug(service.title)}`)}
                             className="text-gray-400 hover:text-gray-600 text-sm font-medium"
                           >
                             {t('services.view')}
-                          </Link>
+                          </a>
                         </div>
                       </div>
                     </div>

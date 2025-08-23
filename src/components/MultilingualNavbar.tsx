@@ -122,7 +122,7 @@ export default function MultilingualNavbar({ locale, messages, platformStats }: 
           <div className="hidden md:flex items-center space-x-2">
             {/* Services Tile */}
             <a 
-              href={`/${locale}/services`}
+              href={getLocalizedServicesUrl(locale)}
               className={`${
                 isServicesActive 
                   ? 'bg-purple-50 border border-purple-200 text-purple-600' 
@@ -338,7 +338,7 @@ export default function MultilingualNavbar({ locale, messages, platformStats }: 
             <div className="flex items-center justify-between space-x-1">
               {/* Services Tile */}
               <a 
-                href={`/${locale}/services`}
+                href={getLocalizedServicesUrl(locale)}
                 className="flex-1 bg-purple-50 border border-purple-200 rounded px-2 py-1 hover:bg-purple-100 transition-all text-center"
               >
                 <div className="flex items-center justify-center space-x-1">

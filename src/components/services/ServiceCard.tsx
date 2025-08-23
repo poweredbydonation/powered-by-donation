@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { Service, ServiceLocation, DonationPlatform } from '@/types/database'
 import { formatCurrency } from '@/lib/currency'
+import { getLocalizedServicesUrl } from '@/lib/utils/localized-urls'
 
 interface ServiceCardProps {
   service: Service & {
@@ -143,12 +144,12 @@ export default function ServiceCard({ service, locale = 'en', platform }: Servic
       <div className="p-6 flex-1 flex flex-col">
         {/* Service Title */}
         <div className="mb-4">
-          <Link 
-            href={`/${locale}/services/${serviceSlug}`}
+          <a 
+            href={getLocalizedServicesUrl(locale, `/${serviceSlug}`)}
             className={`text-xl font-semibold text-gray-900 ${config.textHover} line-clamp-2`}
           >
             {service.title}
-          </Link>
+          </a>
         </div>
 
         {/* Service Description */}
@@ -215,12 +216,12 @@ export default function ServiceCard({ service, locale = 'en', platform }: Servic
 
         {/* Platform-Specific Donate Button - Always at bottom */}
         <div className="mt-auto">
-          <Link
-            href={`/${locale}/services/${serviceSlug}`}
+          <a
+            href={getLocalizedServicesUrl(locale, `/${serviceSlug}`)}
             className={`inline-flex items-center justify-center w-full px-4 py-3 ${config.buttonBg} text-white rounded-lg font-medium transition-colors`}
           >
             {config.buttonText}
-          </Link>
+          </a>
         </div>
       </div>
     </div>
