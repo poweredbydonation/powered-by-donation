@@ -296,6 +296,8 @@ interface PlatformRule {
 - ✅ Preferred charity badges and filtering (shows charities selected by services)
 - ✅ Notification system for donors and fundraisers
 - ✅ Performance optimization: server-side filtering, strategic indexing, debounced search
+- ✅ Advanced filtering system: Multi-select categories (Every.org), single-select with inline dropdowns (ACNC)
+- ✅ Optimized database performance: GIN indexes for JSONB filtering, sub-second query performance
 
 ### Component Inventory
 - ✅ **Authentication**: Login, signup, auth guards

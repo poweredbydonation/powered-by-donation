@@ -25,11 +25,12 @@ export async function GET(request: NextRequest) {
     const purpose = searchParams.get('purpose') || '';
     const beneficiary = searchParams.get('beneficiary') || '';
     
-    // Parse multiple values (comma-separated)
-    const categories = category ? category.split(',').filter(Boolean) : [];
-    const cities = city ? city.split(',').filter(Boolean) : [];
-    const states = state ? state.split(',').filter(Boolean) : [];
-    const purposes = purpose ? purpose.split(',').filter(Boolean) : [];
+    // Parse multiple values (comma-separated) and trim whitespace
+    const categories = category ? category.split(',').map(s => s.trim()).filter(Boolean) : [];
+    // For cities, don't split by comma as addresses may contain commas - treat as single value
+    const cities = city ? [city.trim()].filter(Boolean) : [];
+    const states = state ? state.split(',').map(s => s.trim()).filter(Boolean) : [];
+    const purposes = purpose ? purpose.split(',').map(s => s.trim()).filter(Boolean) : [];
     
     // Validate environment variables
     if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
@@ -96,13 +97,14 @@ export async function GET(request: NextRequest) {
     
     // Skip complex JSONB filtering on initial load - only apply when filters are actually used
     if (purposes.length > 0) {
-      // Use simpler approach - check if any purpose exists
-      query = query.not('acnc_purposes', 'is', null);
+      // Filter by specific purposes in JSONB object
+      const purposeConditions = purposes.map(p => `acnc_purposes.cs.{"${p}": true}`);
+      query = query.or(purposeConditions.join(','));
     }
 
     if (beneficiary && beneficiary.trim()) {
-      // Use simpler approach - check if any beneficiary exists  
-      query = query.not('acnc_beneficiaries', 'is', null);
+      // Filter by specific beneficiary key in JSONB object
+      query = query.filter('acnc_beneficiaries', 'cs', `{"${beneficiary}": true}`);
     }
 
     // Get total count - use cached stats only when no filters are applied
@@ -168,11 +170,14 @@ export async function GET(request: NextRequest) {
       }
       
       if (purposes.length > 0) {
-        countQuery = countQuery.not('acnc_purposes', 'is', null);
+        // Filter by specific purposes in JSONB object
+        const purposeConditions = purposes.map(p => `acnc_purposes.cs.{"${p}": true}`);
+        countQuery = countQuery.or(purposeConditions.join(','));
       }
 
       if (beneficiary && beneficiary.trim()) {
-        countQuery = countQuery.not('acnc_beneficiaries', 'is', null);
+        // Filter by specific beneficiary key in JSONB object
+        countQuery = countQuery.filter('acnc_beneficiaries', 'cs', `{"${beneficiary}": true}`);
       }
       
       const { count } = await countQuery;

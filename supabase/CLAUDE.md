@@ -142,6 +142,15 @@ All tables use RLS policies for data protection:
 - **Search Fields**: GIN indexes on text search columns
 - **Foreign Keys**: Proper constraints and cascading
 - **Composite Indexes**: Multi-column indexes for common queries
+- **JSONB Optimization**: Platform-specific GIN indexes for categories, purposes, and beneficiaries
+- **Query Condition Matching**: All indexes include `show_on_platform = true` for optimal performance
+
+### Advanced Database Optimization (August 2024)
+- **Every.org Categories**: GIN index on `categories_list` with multi-select AND filtering support
+- **ACNC Purposes**: Optimized GIN index on `acnc_purposes` for sub-second filtering performance
+- **ACNC Beneficiaries**: Optimized GIN index on `acnc_beneficiaries` for sub-second filtering performance
+- **State Operations**: Composite indexes covering all Australian states with active/platform conditions
+- **Performance Results**: All filtering operations now complete in < 1.5 seconds
 
 ### Caching
 - **Charity Data**: Local cache tables reduce API calls

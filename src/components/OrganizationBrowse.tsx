@@ -69,6 +69,8 @@ export default function OrganizationBrowse({
   const [showMobileFooter, setShowMobileFooter] = useState(false)
   const searchQuery = searchParams.search || ''
   const categoryFilter = searchParams.category || ''
+  // Parse multiple categories for Every.org (comma-separated)
+  const selectedCategories = categoryFilter ? categoryFilter.split(',').filter(Boolean) : []
   const cityFilter = searchParams.city || ''
   const stateFilter = searchParams.state || ''
   const featuredOnly = searchParams.featured === 'true'
@@ -380,18 +382,38 @@ export default function OrganizationBrowse({
   // Handle category selection
   const handleCategorySelect = (category: string) => {
     const url = new URL(window.location.href)
-    if (category === categoryFilter) {
-      url.searchParams.delete('category')
-    } else {
-      url.searchParams.set('category', category)
+    
+    if (platform === 'everyorg') {
+      // Multi-select for Every.org
+      let newCategories = [...selectedCategories]
+      
+      if (newCategories.includes(category)) {
+        // Remove if already selected
+        newCategories = newCategories.filter(c => c !== category)
+      } else {
+        // Add if not selected
+        newCategories.push(category)
+      }
+      
+      if (newCategories.length === 0) {
+        url.searchParams.delete('category')
+      } else {
+        url.searchParams.set('category', newCategories.join(','))
+      }
       
       // Add category to dynamic categories if it's not already in default categories and not already added
-      if (platform === 'everyorg' && 
-          !everyOrgCategories.includes(category) && 
-          !dynamicCategories.includes(category)) {
+      if (!everyOrgCategories.includes(category) && !dynamicCategories.includes(category)) {
         setDynamicCategories(prev => [...prev, category])
       }
+    } else {
+      // Single-select for ACNC and other platforms
+      if (category === categoryFilter) {
+        url.searchParams.delete('category')
+      } else {
+        url.searchParams.set('category', category)
+      }
     }
+    
     url.searchParams.delete('page')
     window.location.href = url.toString()
   }
@@ -875,7 +897,7 @@ export default function OrganizationBrowse({
             /* ACNC Search and Filters Row - Hidden on mobile */
             <div className="hidden md:flex mt-4 flex-col xl:flex-row gap-3 items-start xl:items-end">
               {/* Search Bar */}
-              <div className="flex-1 max-w-48">
+              <div className="flex-1 max-w-64">
                 <div className="relative">
                   <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                   <input
@@ -895,9 +917,9 @@ export default function OrganizationBrowse({
                 </div>
               </div>
               
-              {/* Inline Category Filter - Mobile only */}
+              {/* Inline Category Filter */}
               {acncCategories.length > 0 && (
-                <div className="w-full xl:w-48 md:hidden">
+                <div className="w-full xl:w-48">
                   <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
                   <div className="relative">
                     <button
@@ -943,9 +965,9 @@ export default function OrganizationBrowse({
                 </div>
               )}
               
-              {/* Inline State Filter - Mobile only */}
+              {/* Inline State Filter */}
               {acncStates.length > 0 && (
-                <div className="w-full xl:w-32 md:hidden">
+                <div className="w-full xl:w-32">
                   <label className="block text-sm font-medium text-gray-700 mb-1">State</label>
                   <div className="relative">
                     <button
@@ -991,9 +1013,9 @@ export default function OrganizationBrowse({
                 </div>
               )}
               
-              {/* Inline Purpose Filter - Mobile only */}
+              {/* Inline Purpose Filter */}
               {acncPurposes.length > 0 && (
-                <div className="w-full xl:w-48 md:hidden">
+                <div className="w-full xl:w-48">
                   <label className="block text-sm font-medium text-gray-700 mb-1">Purpose</label>
                   <div className="relative">
                     <button
@@ -1039,9 +1061,9 @@ export default function OrganizationBrowse({
                 </div>
               )}
               
-              {/* Inline Location Filter - Mobile only */}
+              {/* Inline Location Filter */}
               {acncCities.length > 0 && (
-                <div className="w-full xl:w-48 md:hidden">
+                <div className="w-full xl:w-48">
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Location{stateFilter && stateFilter !== 'all' ? ` (${stateFilter})` : ''}
                   </label>
@@ -1127,9 +1149,9 @@ export default function OrganizationBrowse({
                 </div>
               )}
               
-              {/* Inline Beneficiaries Filter - Mobile only */}
+              {/* Inline Beneficiaries Filter */}
               {acncBeneficiaries.length > 0 && (
-                <div className="w-full xl:w-48 md:hidden">
+                <div className="w-full xl:w-48">
                   <label className="block text-sm font-medium text-gray-700 mb-1">Beneficiaries</label>
                   <div className="relative">
                     <button
@@ -1200,32 +1222,39 @@ export default function OrganizationBrowse({
                 </div>
               </div>
 
-              {/* Category Filter - Mobile only */}
+              {/* Category Filter */}
               {allCategories.length > 0 && (
-                <div className="w-full lg:w-48 md:hidden">
+                <div className="w-full lg:w-48">
                   <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
                   <div className="relative">
                     <button
                       onClick={() => setCategoryDropdownOpen(!categoryDropdownOpen)}
                       className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-left text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 flex items-center justify-between"
                     >
-                      <span className={categoryFilter ? 'text-gray-900' : 'text-gray-500'}>
-                        {categoryFilter ? formatCategoryName(categoryFilter) : 'Category...'}
+                      <span className={selectedCategories.length > 0 ? 'text-gray-900' : 'text-gray-500'}>
+                        {selectedCategories.length === 0 
+                          ? 'Categories...' 
+                          : selectedCategories.length === 1 
+                            ? formatCategoryName(selectedCategories[0])
+                            : `${selectedCategories.length} categories selected`
+                        }
                       </span>
                       <ChevronDown className="h-4 w-4 text-gray-400" />
                     </button>
                     
                     {categoryDropdownOpen && (
                       <div className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
-                        {categoryFilter && (
+                        {selectedCategories.length > 0 && (
                           <button
                             onClick={() => {
-                              handleCategorySelect('')
-                              setCategoryDropdownOpen(false)
+                              const url = new URL(window.location.href)
+                              url.searchParams.delete('category')
+                              url.searchParams.delete('page')
+                              window.location.href = url.toString()
                             }}
                             className="w-full px-3 py-2 text-left text-sm text-gray-500 hover:bg-gray-50 border-b"
                           >
-                            Clear selection
+                            Clear all selections
                           </button>
                         )}
                         {allCategories.map((category) => {
@@ -1235,13 +1264,19 @@ export default function OrganizationBrowse({
                               key={category}
                               onClick={() => {
                                 handleCategorySelect(category)
-                                setCategoryDropdownOpen(false)
+                                // Don't close dropdown for multi-select
                               }}
-                              className={`w-full px-3 py-2 text-left text-sm hover:bg-green-50 ${
-                                categoryFilter === category ? 'bg-green-100 text-green-800 font-medium' : 'text-gray-700'
+                              className={`w-full px-3 py-2 text-left text-sm hover:bg-green-50 flex items-center ${
+                                selectedCategories.includes(category) ? 'bg-green-100 text-green-800' : 'text-gray-700'
                               }`}
                               title={isDynamic ? 'Discovered from nonprofit tags' : 'Category'}
                             >
+                              <input
+                                type="checkbox"
+                                checked={selectedCategories.includes(category)}
+                                onChange={() => {}} // Handled by parent button
+                                className="mr-2 h-3 w-3 text-green-600 rounded focus:ring-green-500"
+                              />
                               {formatCategoryName(category)}
                               {isDynamic && <span className="ml-1 text-xs">🆕</span>}
                             </button>
@@ -1304,7 +1339,7 @@ export default function OrganizationBrowse({
           {/* Results Content */}
         <div className="mt-8">
           {/* Filter Summary */}
-          {(categoryFilter || cityFilter || stateFilter || searchQuery || purposeFilter || featuredOnly || preferredOnly) && (
+          {(categoryFilter || cityFilter || stateFilter || searchQuery || purposeFilter || beneficiaryFilter || featuredOnly || preferredOnly) && (
             <div className="mb-6 p-4 bg-gray-50 rounded-lg border">
               <div className="flex items-center justify-between mb-2">
                 <h3 className="text-sm font-medium text-gray-700">Active Filters:</h3>
@@ -1326,36 +1361,147 @@ export default function OrganizationBrowse({
                 {searchQuery && (
                   <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-purple-100 text-purple-800">
                     Search: "{searchQuery}"
+                    <button
+                      onClick={() => {
+                        const url = new URL(window.location.href)
+                        url.searchParams.delete('search')
+                        url.searchParams.delete('page')
+                        window.location.href = url.toString()
+                      }}
+                      className="ml-1 hover:bg-purple-200 rounded-full p-0.5"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
                   </span>
                 )}
-                {categoryFilter && (
-                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-amber-100 text-amber-800">
-                    Category: {categoryFilter}
-                  </span>
+                {selectedCategories.length > 0 && (
+                  platform === 'everyorg' ? (
+                    // Multi-category display for Every.org
+                    selectedCategories.map((category) => (
+                      <span key={category} className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-green-100 text-green-800">
+                        Category: {formatCategoryName(category)}
+                        <button
+                          onClick={() => {
+                            handleCategorySelect(category)
+                          }}
+                          className="ml-1 hover:bg-green-200 rounded-full p-0.5"
+                        >
+                          <X className="h-3 w-3" />
+                        </button>
+                      </span>
+                    ))
+                  ) : (
+                    // Single category display for ACNC
+                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-amber-100 text-amber-800">
+                      Category: {categoryFilter}
+                      <button
+                        onClick={() => {
+                          const url = new URL(window.location.href)
+                          url.searchParams.delete('category')
+                          url.searchParams.delete('page')
+                          window.location.href = url.toString()
+                        }}
+                        className="ml-1 hover:bg-amber-200 rounded-full p-0.5"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </span>
+                  )
                 )}
                 {stateFilter && (
                   <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-purple-100 text-purple-800">
                     State: {stateFilter}
+                    <button
+                      onClick={() => {
+                        const url = new URL(window.location.href)
+                        url.searchParams.delete('state')
+                        url.searchParams.delete('page')
+                        window.location.href = url.toString()
+                      }}
+                      className="ml-1 hover:bg-purple-200 rounded-full p-0.5"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
                   </span>
                 )}
                 {purposeFilter && (
                   <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-orange-100 text-orange-800">
                     Purpose: {purposeFilter.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                    <button
+                      onClick={() => {
+                        const url = new URL(window.location.href)
+                        url.searchParams.delete('purpose')
+                        url.searchParams.delete('page')
+                        window.location.href = url.toString()
+                      }}
+                      className="ml-1 hover:bg-orange-200 rounded-full p-0.5"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
                   </span>
                 )}
                 {cityFilter && (
                   <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-sky-100 text-sky-800">
                     Location: {cityFilter}
+                    <button
+                      onClick={() => {
+                        const url = new URL(window.location.href)
+                        url.searchParams.delete('city')
+                        url.searchParams.delete('page')
+                        window.location.href = url.toString()
+                      }}
+                      className="ml-1 hover:bg-sky-200 rounded-full p-0.5"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </span>
+                )}
+                {beneficiaryFilter && (
+                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-indigo-100 text-indigo-800">
+                    Beneficiaries: {beneficiaryFilter.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                    <button
+                      onClick={() => {
+                        const url = new URL(window.location.href)
+                        url.searchParams.delete('beneficiary')
+                        url.searchParams.delete('page')
+                        window.location.href = url.toString()
+                      }}
+                      className="ml-1 hover:bg-indigo-200 rounded-full p-0.5"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
                   </span>
                 )}
                 {featuredOnly && (
                   <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-yellow-100 text-yellow-800">
                     Featured Only
+                    <button
+                      onClick={() => {
+                        const url = new URL(window.location.href)
+                        url.searchParams.delete('featured')
+                        url.searchParams.delete('page')
+                        window.location.href = url.toString()
+                      }}
+                      className="ml-1 hover:bg-yellow-200 rounded-full p-0.5"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
                   </span>
                 )}
                 {preferredOnly && (
                   <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-pink-100 text-pink-800">
                     Preferred by Services
+                    <button
+                      onClick={() => {
+                        const url = new URL(window.location.href)
+                        url.searchParams.delete('preferred')
+                        url.searchParams.delete('page')
+                        window.location.href = url.toString()
+                      }}
+                      className="ml-1 hover:bg-pink-200 rounded-full p-0.5"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
                   </span>
                 )}
               </div>
@@ -1396,7 +1542,7 @@ export default function OrganizationBrowse({
             )}
 
             {/* No Results - Only show when filters are applied */}
-            {!state.loading && !state.error && state.totalCount === 0 && (categoryFilter || cityFilter || stateFilter || searchQuery || purposeFilter || featuredOnly || preferredOnly) && (
+            {!state.loading && !state.error && state.organizations.length === 0 && (categoryFilter || cityFilter || stateFilter || searchQuery || purposeFilter || beneficiaryFilter || featuredOnly || preferredOnly) && (
               <div className="text-center py-12">
                 <p className="text-gray-600 mb-4">
                   No organizations found matching your criteria.
