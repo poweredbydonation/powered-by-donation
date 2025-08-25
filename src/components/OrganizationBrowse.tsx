@@ -93,16 +93,19 @@ export default function OrganizationBrowse({
     justgiving: {
       name: 'JustGiving',
       entityName: 'Charities',
+      entityNameLower: 'charities',
       color: 'purple'
     },
     everyorg: {
       name: 'Every.org',
-      entityName: 'Nonprofits', 
+      entityName: 'Nonprofits',
+      entityNameLower: 'nonprofits',
       color: 'green'
     },
     acnc: {
       name: 'ACNC',
-      entityName: 'Charities',
+      entityName: 'Charities & Nonprofits',
+      entityNameLower: 'charities and nonprofits',
       color: 'orange'
     }
   }
@@ -727,12 +730,24 @@ export default function OrganizationBrowse({
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Element
-      if (!target.closest('.relative')) {
+      
+      // Check each dropdown individually to avoid closing all when clicking on one
+      if (!target.closest('[data-dropdown="category"]')) {
         setCategoryDropdownOpen(false)
+      }
+      if (!target.closest('[data-dropdown="state"]')) {
         setStateDropdownOpen(false)
+      }
+      if (!target.closest('[data-dropdown="purpose"]')) {
         setPurposeDropdownOpen(false)
+      }
+      if (!target.closest('[data-dropdown="location"]')) {
         setLocationDropdownOpen(false)
+      }
+      if (!target.closest('[data-dropdown="beneficiary"]')) {
         setBeneficiaryDropdownOpen(false)
+      }
+      if (!target.closest('[data-dropdown="justgiving-city"]')) {
         setJustgivingCityDropdownOpen(false)
       }
     }
@@ -781,6 +796,22 @@ export default function OrganizationBrowse({
                 )}
               </p>
             </div>
+            
+            {/* Results Counter - Right Aligned */}
+            {!state.loading && state.totalCount > 0 && (
+              <div className="text-right">
+                <div className={`inline-flex items-center px-4 py-2 rounded-lg font-medium text-base ${
+                  platform === 'justgiving' 
+                    ? 'bg-purple-50 text-purple-700 border border-purple-200' 
+                    : platform === 'everyorg'
+                    ? 'bg-green-50 text-green-700 border border-green-200'
+                    : 'bg-orange-50 text-orange-700 border border-orange-200'
+                }`}>
+                  <span className="mr-2">🎯</span>
+                  Showing {state.totalCount.toLocaleString()} {config.entityNameLower}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Search Bar and Platform Filters Row - Hidden when using modal filters */}
@@ -814,7 +845,7 @@ export default function OrganizationBrowse({
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Location
                   </label>
-                  <div className="relative">
+                  <div className="relative" data-dropdown="justgiving-city">
                     <button
                       onClick={() => setJustgivingCityDropdownOpen(!justgivingCityDropdownOpen)}
                       className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-left text-sm focus:ring-2 focus:ring-[#7A04DD] focus:border-[#7A04DD] flex items-center justify-between"
@@ -921,7 +952,7 @@ export default function OrganizationBrowse({
               {acncCategories.length > 0 && (
                 <div className="w-full xl:w-48">
                   <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
-                  <div className="relative">
+                  <div className="relative" data-dropdown="category">
                     <button
                       onClick={() => setCategoryDropdownOpen(!categoryDropdownOpen)}
                       className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-left text-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500 flex items-center justify-between"
@@ -969,7 +1000,7 @@ export default function OrganizationBrowse({
               {acncStates.length > 0 && (
                 <div className="w-full xl:w-32">
                   <label className="block text-sm font-medium text-gray-700 mb-1">State</label>
-                  <div className="relative">
+                  <div className="relative" data-dropdown="state">
                     <button
                       onClick={() => setStateDropdownOpen(!stateDropdownOpen)}
                       className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-left text-sm focus:ring-2 focus:ring-[#7A04DD] focus:border-[#7A04DD] flex items-center justify-between"
@@ -1017,7 +1048,7 @@ export default function OrganizationBrowse({
               {acncPurposes.length > 0 && (
                 <div className="w-full xl:w-48">
                   <label className="block text-sm font-medium text-gray-700 mb-1">Purpose</label>
-                  <div className="relative">
+                  <div className="relative" data-dropdown="purpose">
                     <button
                       onClick={() => setPurposeDropdownOpen(!purposeDropdownOpen)}
                       className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-left text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 flex items-center justify-between"
@@ -1067,7 +1098,7 @@ export default function OrganizationBrowse({
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Location{stateFilter && stateFilter !== 'all' ? ` (${stateFilter})` : ''}
                   </label>
-                  <div className="relative">
+                  <div className="relative" data-dropdown="location">
                     <button
                       onClick={() => setLocationDropdownOpen(!locationDropdownOpen)}
                       className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-left text-sm focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 flex items-center justify-between"
@@ -1153,7 +1184,7 @@ export default function OrganizationBrowse({
               {acncBeneficiaries.length > 0 && (
                 <div className="w-full xl:w-48">
                   <label className="block text-sm font-medium text-gray-700 mb-1">Beneficiaries</label>
-                  <div className="relative">
+                  <div className="relative" data-dropdown="beneficiary">
                     <button
                       onClick={() => setBeneficiaryDropdownOpen(!beneficiaryDropdownOpen)}
                       className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-left text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500 flex items-center justify-between"
@@ -1226,7 +1257,7 @@ export default function OrganizationBrowse({
               {allCategories.length > 0 && (
                 <div className="w-full lg:w-48">
                   <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
-                  <div className="relative">
+                  <div className="relative" data-dropdown="category">
                     <button
                       onClick={() => setCategoryDropdownOpen(!categoryDropdownOpen)}
                       className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-left text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 flex items-center justify-between"

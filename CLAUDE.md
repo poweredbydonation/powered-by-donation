@@ -26,6 +26,7 @@ This CLAUDE.md file provides a high-level overview. For detailed information, se
 - **Branding Guidelines**: `branding/CLAUDE.md` - Platform-specific branding, visual guidelines, and implementation standards
 - **Database**: `supabase/CLAUDE.md` - Schema, migrations, and Supabase-specific guidelines
 - **Frontend**: `src/CLAUDE.md` - Component patterns, internationalization, and UI development
+- **Chat System**: `chat-system/CLAUDE.md` - Real-time messaging implementation, language compatibility, and donation integration
 
 ## Quick Reference
 
