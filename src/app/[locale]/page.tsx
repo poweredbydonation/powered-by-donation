@@ -18,35 +18,16 @@ export default async function HomePage({ params }: HomePageProps) {
   const tNav = await getTranslations({ locale, namespace: 'nav' })
   const messages = await getMessages({ locale })
 
-  // Load platform statistics for homepage
+  // Load platform statistics from cached stats table (same as navbar)
   const supabase = createClient()
-  const [justgivingStats, everyorgStats, acncStats, servicesStats, featuredOrgs] = await Promise.all([
-    // Get JustGiving count
+  const [statsData, featuredOrgs] = await Promise.all([
+    // Get platform stats from lookup table
     supabase
-      .from('organization_cache')
-      .select('id', { count: 'exact', head: true })
-      .eq('platform', 'justgiving')
-      .eq('is_active', true),
-    
-    // Get Every.org count
-    supabase
-      .from('organization_cache')
-      .select('id', { count: 'exact', head: true })
-      .eq('platform', 'everyorg')
-      .eq('is_active', true),
-    
-    // Get ACNC count
-    supabase
-      .from('organization_cache')
-      .select('id', { count: 'exact', head: true })
-      .eq('platform', 'acnc')
-      .eq('is_active', true),
-    
-    // Get Services count
-    supabase
-      .from('services')
-      .select('id', { count: 'exact', head: true })
-      .eq('is_active', true),
+      .from('platform_stats')
+      .select('services_count, justgiving_count, everyorg_count, acnc_count')
+      .order('last_updated', { ascending: false })
+      .limit(1)
+      .single(),
     
     // Get featured organizations from all platforms
     supabase
@@ -58,10 +39,10 @@ export default async function HomePage({ params }: HomePageProps) {
       .limit(6)
   ])
 
-  const justgivingCount = justgivingStats.count || 0
-  const everyorgCount = everyorgStats.count || 0
-  const acncCount = acncStats.count || 0
-  const servicesCount = servicesStats.count || 0
+  const justgivingCount = statsData.data?.justgiving_count || 0
+  const everyorgCount = statsData.data?.everyorg_count || 0
+  const acncCount = statsData.data?.acnc_count || 0
+  const servicesCount = statsData.data?.services_count || 0
   const totalOrganizations = justgivingCount + everyorgCount + acncCount
 
   return (

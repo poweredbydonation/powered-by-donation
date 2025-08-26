@@ -26,7 +26,7 @@ This CLAUDE.md file provides a high-level overview. For detailed information, se
 - **Branding Guidelines**: `branding/CLAUDE.md` - Platform-specific branding, visual guidelines, and implementation standards
 - **Database**: `supabase/CLAUDE.md` - Schema, migrations, and Supabase-specific guidelines
 - **Frontend**: `src/CLAUDE.md` - Component patterns, internationalization, and UI development
-- **Chat System**: `chat-system/CLAUDE.md` - Real-time messaging implementation, language compatibility, and donation integration
+- **Service Workflow**: `workflow/CLAUDE.md` - Service request workflow system, state management, and donor-fundraiser interactions
 
 ## Quick Reference
 
@@ -59,6 +59,9 @@ Internationalization: next-intl with 17 language support
 **Performance Optimization**: Complete - Eliminated expensive queries, implemented caching system  
 **Multi-Platform Integration**: Complete - JustGiving, Every.org, and ACNC fully integrated
 **Branding Systems**: Complete - Platform-specific theming and official brand guidelines implemented
+**Service Workflow System**: Complete - Full service request workflow with automated state management, real-time notifications, and comprehensive feedback system
+**Personal Services Management**: Complete - Full-width mobile-responsive personal services dashboard with management controls
+**Workflow Dashboard**: Complete - Dedicated workflow page for tracking service requests and donation status across all roles
 
 For detailed status information, progress tracking, and implementation history, see `project-status/CLAUDE.md`.
 

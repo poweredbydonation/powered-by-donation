@@ -121,14 +121,15 @@ export default function ServiceDonationFlow({
         throw new Error('Please select a charity to continue')
       }
 
-      // Use new platform-specific API endpoint for JustGiving
+      // Use new platform-specific API endpoint for JustGiving (with workflow integration)
       const apiUrl = `/api/just-giving/charity/${targetCharityId}`
       const requestBody = {
         serviceId: service.id,
         donorId: user?.id,
         fundraiserId: service.fundraiser.id,
         donationAmount: service.donation_amount,
-        locale: 'en' // TODO: Get from user preferences
+        locale: 'en', // TODO: Get from user preferences
+        workflowEnabled: true // Enable new workflow system
       }
       
       console.log('🚀 Making API request:', { apiUrl, requestBody })

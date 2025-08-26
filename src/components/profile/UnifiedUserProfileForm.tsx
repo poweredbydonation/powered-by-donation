@@ -9,9 +9,10 @@ interface UnifiedUserProfileFormProps {
   user: any // Supabase Auth User
   existingProfile?: User | null
   onProfileCreated?: () => void
+  locale?: string
 }
 
-export default function UnifiedUserProfileForm({ user, existingProfile, onProfileCreated }: UnifiedUserProfileFormProps) {
+export default function UnifiedUserProfileForm({ user, existingProfile, onProfileCreated, locale = 'en' }: UnifiedUserProfileFormProps) {
   // Form state
   const [name, setName] = useState(existingProfile?.name || '')
   const [username, setUsername] = useState(existingProfile?.username || '')
@@ -89,7 +90,7 @@ export default function UnifiedUserProfileForm({ user, existingProfile, onProfil
       } else if (!existingProfile) {
         // If creating a new profile and no callback provided, redirect to dashboard
         setTimeout(() => {
-          router.push('/dashboard')
+          router.push(`/${locale}/my/profile`)
         }, 1500)
       } else {
         // If updating existing profile and no callback provided, refresh the page

@@ -472,7 +472,7 @@ export default function ServiceCreationForm({
       if (onSuccess) {
         onSuccess()
       } else {
-        router.push('/dashboard/services')
+        router.push(`/${locale}/my/services`)
       }
     } catch (err) {
       console.error(`Service ${mode} error:`, err)

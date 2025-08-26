@@ -7,11 +7,13 @@ Single `users` table supporting both fundraiser and donor roles with happiness-b
 
 ### Service Management & Quality System
 
-#### Mutual Happiness Feedback
-Both fundraisers and donors rate each service interaction with simple happy/unhappy ratings. This creates:
-- **Quality control** through happiness metrics and filtering
-- **Service access requirements** based on reputation scores  
-- **Balanced feedback** maintaining donor-centric approach
+#### Experience-Based Feedback System
+Service requests follow a workflow-driven feedback collection system:
+- **Donor rates service**: "Great", "Could be better", "Service not delivered"
+- **Fundraiser rates donor**: "Great", "Could be better", "No response"  
+- **Quality control** through experience metrics and filtering
+- **Service access requirements** based on reputation scores
+- **Auto-completion**: No feedback after 3 days defaults to "Great"
 
 #### Service Features
 - **Fixed donation amounts** (e.g., exactly $50, not minimum or variable)

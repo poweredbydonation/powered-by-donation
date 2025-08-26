@@ -1,7 +1,8 @@
 import Link from 'next/link'
-import { Service, ServiceLocation, DonationPlatform } from '@/types/database'
+import { Service, ServiceLocation, DonationPlatform, ServiceRequest, ServiceWorkflowStatus } from '@/types/database'
 import { formatCurrency } from '@/lib/currency'
 import { getLocalizedServicesUrl } from '@/lib/utils/localized-urls'
+import { WorkflowStatusBadge, WorkflowActionButtons } from '@/components/workflow'
 
 interface ServiceCardProps {
   service: Service & {
@@ -13,13 +14,51 @@ interface ServiceCardProps {
   }
   locale?: string
   platform?: DonationPlatform
+  // Workflow-specific props (optional)
+  serviceRequest?: ServiceRequest & {
+    services?: {
+      title: string
+      donation_amount: number
+    }
+    donor?: {
+      display_name?: string
+      full_name?: string
+    }
+    fundraiser?: {
+      display_name?: string
+      full_name?: string
+    }
+  }
+  currentUserId?: string
+  onWorkflowUpdate?: (updatedRequest: ServiceRequest) => void
+  showWorkflowState?: boolean
+  showManageButton?: boolean
 }
 
-export default function ServiceCard({ service, locale = 'en', platform }: ServiceCardProps) {  
+export default function ServiceCard({ 
+  service, 
+  locale = 'en', 
+  platform,
+  serviceRequest,
+  currentUserId,
+  onWorkflowUpdate,
+  showWorkflowState = false,
+  showManageButton = false
+}: ServiceCardProps) {  
   // Safety check - if no user data, don't render the card
   if (!service.user) {
     return null
   }
+
+  // Determine user role in workflow context
+  const getUserRole = () => {
+    if (!serviceRequest || !currentUserId) return null
+    if (serviceRequest.donor_id === currentUserId) return 'donor'
+    if (serviceRequest.fundraiser_id === currentUserId) return 'fundraiser'
+    return null
+  }
+
+  const userRole = getUserRole()
 
   // Parse service locations from JSONB
   const locations = Array.isArray(service.service_locations) 
@@ -214,15 +253,52 @@ export default function ServiceCard({ service, locale = 'en', platform }: Servic
           )}
         </div>
 
-        {/* Platform-Specific Donate Button - Always at bottom */}
-        <div className="mt-auto">
-          <a
-            href={getLocalizedServicesUrl(locale, `/${serviceSlug}`)}
-            className={`inline-flex items-center justify-center w-full px-4 py-3 ${config.buttonBg} text-white rounded-lg font-medium transition-colors`}
-          >
-            {config.buttonText}
-          </a>
-        </div>
+        {/* Workflow Status and Actions */}
+        {showWorkflowState && serviceRequest && serviceRequest.workflow_status && (
+          <div className="mt-4 space-y-3">
+            <WorkflowStatusBadge 
+              status={serviceRequest.workflow_status} 
+              className="w-fit"
+            />
+            
+            {userRole && onWorkflowUpdate && (
+              <WorkflowActionButtons
+                request={serviceRequest}
+                userRole={userRole}
+                onStateChange={onWorkflowUpdate}
+              />
+            )}
+          </div>
+        )}
+
+        {/* Platform-Specific Donate Button or Manage Button - Always at bottom */}
+        {!showWorkflowState && (
+          <div className="mt-auto">
+            {showManageButton ? (
+              <div className="grid grid-cols-2 gap-2">
+                <a
+                  href={getLocalizedServicesUrl(locale, `/${serviceSlug}`)}
+                  className="inline-flex items-center justify-center px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm font-medium transition-colors"
+                >
+                  View
+                </a>
+                <a
+                  href={getLocalizedServicesUrl(locale, `/${serviceSlug}/edit`)}
+                  className="inline-flex items-center justify-center px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors"
+                >
+                  Edit
+                </a>
+              </div>
+            ) : (
+              <a
+                href={getLocalizedServicesUrl(locale, `/${serviceSlug}`)}
+                className={`inline-flex items-center justify-center w-full px-4 py-3 ${config.buttonBg} text-white rounded-lg font-medium transition-colors`}
+              >
+                {config.buttonText}
+              </a>
+            )}
+          </div>
+        )}
       </div>
     </div>
   )

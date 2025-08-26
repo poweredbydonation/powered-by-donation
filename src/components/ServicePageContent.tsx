@@ -134,12 +134,41 @@ export default function ServicePageContent({ params }: ServicePageProps) {
     }
   }
 
-  const handleDonateClick = () => {
-    if (!service) return
-    
-    const servicesSlug = locale === 'tr' ? 'hizmetler' : 'services'
-    const donateUrl = `/${locale}/PoweredByDonation/${servicesSlug}/${slug}/donate`
-    window.location.href = donateUrl
+  const handleRequestService = async () => {
+    if (!service || !user) {
+      // Redirect to login if not authenticated
+      const servicesSlug = locale === 'tr' ? 'hizmetler' : 'services'
+      window.location.href = `/${locale}/system/login?redirect=/${locale}/PoweredByDonation/${servicesSlug}/${slug}`
+      return
+    }
+
+    try {
+      const response = await fetch('/api/service-requests', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          service_id: service.id,
+          donation_amount: service.donation_amount,
+          platform: service.platform
+        }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to create service request')
+      }
+
+      // Show success message and redirect to workflow dashboard
+      alert('Service request sent successfully! You will be notified when the fundraiser responds.')
+      window.location.href = `/${locale}/my/services`
+
+    } catch (error) {
+      console.error('Error creating service request:', error)
+      alert(error instanceof Error ? error.message : 'Something went wrong. Please try again.')
+    }
   }
 
   if (loading) {
@@ -207,10 +236,10 @@ export default function ServicePageContent({ params }: ServicePageProps) {
                 />
               </div>
               <button
-                onClick={handleDonateClick}
-                className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+                onClick={handleRequestService}
+                className="bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors"
               >
-                {messages.services?.donate?.button || 'Make Donation'}
+                {messages.services?.request?.button || 'Request Service'}
               </button>
             </div>
           </div>
@@ -293,13 +322,13 @@ export default function ServicePageContent({ params }: ServicePageProps) {
             {messages.services?.detail?.ready || 'Ready to get started?'}
           </h3>
           <p className="text-gray-600 mb-4">
-            {messages.services?.detail?.readyDescription || 'Make a donation to support this service and a charity of your choice.'}
+            {messages.services?.detail?.readyDescription || 'Request this service and make a donation to support a charity of your choice.'}
           </p>
           <button
-            onClick={handleDonateClick}
-            className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+            onClick={handleRequestService}
+            className="bg-green-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors"
           >
-            {messages.services?.donate?.button || 'Make Donation'}
+            {messages.services?.request?.button || 'Request Service'}
           </button>
         </div>
 

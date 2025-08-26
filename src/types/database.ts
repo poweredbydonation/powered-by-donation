@@ -44,6 +44,20 @@ export type FeedbackResponse = 'will_improve' | 'disagree' | 'timeout';
 
 export type HappinessRating = 'happy' | 'unhappy';
 
+// New workflow-specific types
+export type ServiceWorkflowStatus = 
+  | 'service_requested'
+  | 'service_request_accepted'
+  | 'service_donation_received'
+  | 'service_feedback_recorded'
+  | 'service_request_timeout'
+  | 'service_donation_timeout'
+  | 'service_feedback_timeout';
+
+export type ServiceRating = 'Great' | 'Could be better' | 'Service not delivered';
+
+export type DonorRating = 'Great' | 'Could be better' | 'No response';
+
 // Core Database Interfaces
 
 export interface User {
@@ -292,6 +306,14 @@ export interface ServiceRequest {
   donation_url?: string; // Generated donation URL
   external_donation_id?: string; // Platform's donation ID after completion
   timeout_at?: Date; // When to timeout pending donations
+  
+  // New workflow system fields
+  workflow_status?: ServiceWorkflowStatus;
+  accepted_at?: Date;
+  feedback_deadline?: Date;
+  donor_service_rating?: ServiceRating;
+  fundraiser_donor_rating?: DonorRating;
+  
   // Legacy fields for backward compatibility
   justgiving_charity_id: string;
   donation_amount: number;

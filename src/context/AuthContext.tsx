@@ -91,7 +91,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       options: {
         redirectTo,
         queryParams: {
-          next: `/${locale}/dashboard`
+          next: `/${locale}/my/profile`
         }
       }
     })
@@ -114,7 +114,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         redirectTo,
         scopes: 'openid profile email',
         queryParams: {
-          next: `/${locale}/dashboard`
+          next: `/${locale}/my/profile`
         }
       }
     })
@@ -136,7 +136,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       options: {
         redirectTo,
         queryParams: {
-          next: `/${locale}/dashboard`
+          next: `/${locale}/my/profile`
         }
       }
     })
@@ -158,7 +158,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       options: {
         redirectTo,
         queryParams: {
-          next: `/${locale}/dashboard`
+          next: `/${locale}/my/profile`
         }
       }
     })

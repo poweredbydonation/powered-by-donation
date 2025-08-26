@@ -26,6 +26,7 @@ interface ServiceRequestBody {
   fundraiserId: string
   donationAmount: number
   locale?: string
+  workflowEnabled?: boolean
 }
 
 export async function POST(request: NextRequest, { params }: RouteParams) {
@@ -40,7 +41,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
     }
 
     const body: ServiceRequestBody = await request.json()
-    const { serviceId, donorId, fundraiserId, donationAmount, locale = 'en' } = body
+    const { serviceId, donorId, fundraiserId, donationAmount, locale = 'en', workflowEnabled = false } = body
     
     // Validate required fields
     if (!serviceId || !donorId || !fundraiserId || !donationAmount) {
@@ -104,25 +105,32 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
     const timeoutAt = new Date()
     timeoutAt.setMinutes(timeoutAt.getMinutes() + 30)
 
-    // Create service request record
+    // Create service request record with workflow support
+    const insertData: any = {
+      donor_id: donorId,
+      fundraiser_id: fundraiserId,
+      service_id: serviceId,
+      platform: 'justgiving' as DonationPlatform,
+      reference_id: referenceId,
+      organization_id: charityId.toString(),
+      organization_name: charityData.name,
+      donation_url: donationUrl,
+      donation_amount: donationAmount,
+      timeout_at: timeoutAt.toISOString(),
+      status: 'pending',
+      // Legacy fields for backward compatibility
+      justgiving_charity_id: charityId.toString(),
+      charity_name: charityData.name
+    }
+
+    // Add workflow fields if enabled
+    if (workflowEnabled) {
+      insertData.workflow_status = 'service_requested'
+    }
+
     const { data: serviceRequest, error: insertError } = await supabase
       .from('service_requests')
-      .insert({
-        donor_id: donorId,
-        fundraiser_id: fundraiserId,
-        service_id: serviceId,
-        platform: 'justgiving' as DonationPlatform,
-        reference_id: referenceId,
-        organization_id: charityId.toString(),
-        organization_name: charityData.name,
-        donation_url: donationUrl,
-        donation_amount: donationAmount,
-        timeout_at: timeoutAt.toISOString(),
-        status: 'pending',
-        // Legacy fields for backward compatibility
-        justgiving_charity_id: charityId.toString(),
-        charity_name: charityData.name
-      })
+      .insert(insertData)
       .select()
       .single()
 
@@ -147,7 +155,9 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
         donationAmount,
         platform: 'justgiving',
         timeoutAt: timeoutAt.toISOString(),
-        status: 'pending'
+        status: 'pending',
+        workflowStatus: workflowEnabled ? 'service_requested' : undefined,
+        workflowEnabled
       }
     })
 

@@ -4,11 +4,12 @@ import Link from 'next/link'
 import DeleteUserProfile from '@/components/profile/DeleteUserProfile'
 import UnifiedUserProfileForm from '@/components/profile/UnifiedUserProfileForm'
 import ServiceCreationForm from '@/components/services/ServiceCreationForm'
-import { getMessages, getTranslations } from 'next-intl/server'
+import { getMessages } from 'next-intl/server'
 import { NextIntlClientProvider } from 'next-intl'
 import { buildPersonalUrl } from '@/lib/utils/entity-urls'
 import { getLocalizedServicesUrl } from '@/lib/utils/localized-urls'
 import { EntityType } from '@/lib/utils/entity-urls'
+import { WorkflowDashboard } from '@/components/workflow/WorkflowDashboard'
 
 // Disable caching for this page so it always shows fresh data
 export const dynamic = 'force-dynamic'
@@ -23,7 +24,6 @@ interface PersonalDashboardProps {
 export default async function PersonalDashboard({ params, activeSection }: PersonalDashboardProps) {
   const { locale } = params
   const messages = await getMessages({ locale })
-  const t = await getTranslations({ locale, namespace: 'dashboard' })
   const supabase = createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
@@ -41,6 +41,16 @@ export default async function PersonalDashboard({ params, activeSection }: Perso
         return (
           <div className="space-y-6">
             <h1 className="text-3xl font-bold text-gray-900">My Services</h1>
+            
+            {/* Service Workflow Dashboard */}
+            {userProfile && (
+              <div className="bg-white border border-gray-200 rounded-lg p-6">
+                <h2 className="text-xl font-semibold text-gray-900 mb-4">Service Requests Workflow</h2>
+                <NextIntlClientProvider messages={messages}>
+                  <WorkflowDashboard userId={userProfile.id} />
+                </NextIntlClientProvider>
+              </div>
+            )}
             
             {/* Service Creation Form */}
             <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -84,7 +94,7 @@ export default async function PersonalDashboard({ params, activeSection }: Perso
               <h2 className="text-xl font-semibold text-gray-900 mb-4">
                 {userProfile ? 'Edit Profile' : 'Create Profile'}
               </h2>
-              <UnifiedUserProfileForm user={user} existingProfile={userProfile} />
+              <UnifiedUserProfileForm user={user} existingProfile={userProfile} locale={locale} />
             </div>
 
             {/* Delete Profile Section - only show if user has profile */}
@@ -115,19 +125,19 @@ export default async function PersonalDashboard({ params, activeSection }: Perso
       default:
         return (
           <div className="space-y-6">
-            <h1 className="text-3xl font-bold text-gray-900">{t('title') || 'Dashboard'}</h1>
+            <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
             
             <div className="bg-blue-50 border border-blue-200 rounded-md p-4 mb-6">
               <h2 className="text-lg font-semibold text-blue-900 mb-2">
-                {t('welcome')}{userProfile?.name ? `, ${userProfile.name}` : ''}!
+                Welcome{userProfile?.name ? `, ${userProfile.name}` : ''}!
               </h2>
               <p className="text-blue-800">
-                {userProfile ? t('profileReady') : t('completeProfile')}
+                {userProfile ? 'Your profile is set up and ready to use.' : 'Please complete your profile to get started.'}
               </p>
               {userProfile && (
                 <div className="mt-2 text-sm text-blue-600">
-                  {userProfile.is_fundraiser && <span className="mr-4">✓ {t('serviceFundraiser')}</span>}
-                  {userProfile.is_donor && <span>✓ {t('donor')}</span>}
+                  {userProfile.is_fundraiser && <span className="mr-4">✓ Service Fundraiser</span>}
+                  {userProfile.is_donor && <span>✓ Donor</span>}
                 </div>
               )}
             </div>
@@ -135,13 +145,13 @@ export default async function PersonalDashboard({ params, activeSection }: Perso
             {/* Profile Setup Section */}
             {!userProfile && (
               <div className="bg-yellow-50 border border-yellow-200 rounded-md p-4 mb-6">
-                <h3 className="text-lg font-semibold text-yellow-900 mb-2">{t('getStarted')}</h3>
-                <p className="text-yellow-800 mb-4">{t('setupPrompt')}</p>
+                <h3 className="text-lg font-semibold text-yellow-900 mb-2">Get Started</h3>
+                <p className="text-yellow-800 mb-4">Set up your profile to start offering services or making donations.</p>
                 <Link 
                   href={buildPersonalUrl(locale, 'profile')}
                   className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors inline-block"
                 >
-                  {t('createProfile')}
+                  Create Profile
                 </Link>
               </div>
             )}
@@ -150,32 +160,32 @@ export default async function PersonalDashboard({ params, activeSection }: Perso
               {/* Fundraiser Section */}
               {userProfile?.is_fundraiser ? (
                 <div className="bg-blue-50 rounded-lg p-4">
-                  <h3 className="font-semibold text-blue-900 mb-2">{t('fundraiserDashboard')}</h3>
-                  <p className="text-blue-700 text-sm mb-3">{t('fundraiserDescription')}</p>
+                  <h3 className="font-semibold text-blue-900 mb-2">Fundraiser Dashboard</h3>
+                  <p className="text-blue-700 text-sm mb-3">Manage your services and view requests.</p>
                   <div className="space-y-2">
                     <Link 
                       href={buildPersonalUrl(locale, 'services')}
                       className="block text-blue-600 hover:text-blue-800 text-sm"
                     >
-                      → {t('manageServices')}
+                      → Manage Services
                     </Link>
                     <Link 
                       href={buildPersonalUrl(locale, 'services')}
                       className="block text-blue-600 hover:text-blue-800 text-sm"
                     >
-                      → {t('createNewService')}
+                      → Create New Service
                     </Link>
                   </div>
                 </div>
               ) : (
                 <div className="bg-gray-50 rounded-lg p-4">
-                  <h3 className="font-semibold text-gray-900 mb-2">{t('becomeFundraiser')}</h3>
-                  <p className="text-gray-600 text-sm mb-3">{t('fundraiserOffer')}</p>
+                  <h3 className="font-semibold text-gray-900 mb-2">Become a Fundraiser</h3>
+                  <p className="text-gray-600 text-sm mb-3">Offer your skills and services to help charities.</p>
                   <Link 
                     href={buildPersonalUrl(locale, 'profile')}
                     className="text-blue-600 hover:text-blue-800 text-sm"
                   >
-                    → {t('enableFundraiserRole')}
+                    → Enable Fundraiser Role
                   </Link>
                 </div>
               )}
@@ -183,52 +193,52 @@ export default async function PersonalDashboard({ params, activeSection }: Perso
               {/* Donor Section */}
               {userProfile?.is_donor ? (
                 <div className="bg-green-50 rounded-lg p-4">
-                  <h3 className="font-semibold text-green-900 mb-2">{t('donorDashboard')}</h3>
-                  <p className="text-green-700 text-sm mb-3">{t('donorDescription')}</p>
+                  <h3 className="font-semibold text-green-900 mb-2">Donor Dashboard</h3>
+                  <p className="text-green-700 text-sm mb-3">Track your donations and impact.</p>
                   <div className="space-y-2">
                     <Link 
                       href={buildPersonalUrl(locale, 'donations')}
                       className="block text-green-600 hover:text-green-800 text-sm"
                     >
-                      → {t('myDonations')}
+                      → My Donations
                     </Link>
                     <Link 
                       href={getLocalizedServicesUrl(locale)}
                       className="block text-green-600 hover:text-green-800 text-sm"
                     >
-                      → {t('browseServices')}
+                      → Browse Services
                     </Link>
                   </div>
                 </div>
               ) : (
                 <div className="bg-gray-50 rounded-lg p-4">
-                  <h3 className="font-semibold text-gray-900 mb-2">{t('becomeDonor')}</h3>
-                  <p className="text-gray-600 text-sm mb-3">{t('donorOffer')}</p>
+                  <h3 className="font-semibold text-gray-900 mb-2">Become a Donor</h3>
+                  <p className="text-gray-600 text-sm mb-3">Support charities through skill-based donations.</p>
                   <Link 
                     href={buildPersonalUrl(locale, 'profile')}
                     className="text-blue-600 hover:text-blue-800 text-sm"
                   >
-                    → {t('enableDonorRole')}
+                    → Enable Donor Role
                   </Link>
                 </div>
               )}
 
               {/* General Settings */}
               <div className="bg-gray-50 rounded-lg p-4">
-                <h3 className="font-semibold text-gray-900 mb-2">{t('accountSettings')}</h3>
-                <p className="text-gray-600 text-sm mb-3">{t('accountDescription')}</p>
+                <h3 className="font-semibold text-gray-900 mb-2">Account Settings</h3>
+                <p className="text-gray-600 text-sm mb-3">Manage your account and privacy settings.</p>
                 <div className="space-y-2">
                   <Link 
                     href={buildPersonalUrl(locale, 'profile')}
                     className="block text-gray-600 hover:text-gray-800 text-sm"
                   >
-                    → {t('editProfile')}
+                    → Edit Profile
                   </Link>
                   <Link 
                     href={buildPersonalUrl(locale, 'settings')}
                     className="block text-gray-600 hover:text-gray-800 text-sm"
                   >
-                    → {t('privacySettings')}
+                    → Privacy Settings
                   </Link>
                 </div>
               </div>
@@ -237,17 +247,17 @@ export default async function PersonalDashboard({ params, activeSection }: Perso
             {/* Profile Management Section */}
             {userProfile && (
               <div className="mt-8 pt-8 border-t border-gray-200">
-                <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('profileManagement')}</h2>
+                <h2 className="text-xl font-semibold text-gray-900 mb-6">Profile Management</h2>
                 <div className="bg-white border border-gray-200 rounded-lg p-6">
-                  <h3 className="font-medium text-gray-900 mb-2">{t('yourProfile')}</h3>
+                  <h3 className="font-medium text-gray-900 mb-2">Your Profile</h3>
                   <div className="text-gray-600 text-sm mb-4">
-                    <p><strong>{t('name')}:</strong> {userProfile.name}</p>
-                    {userProfile.username && <p><strong>{t('username')}:</strong> {userProfile.username}</p>}
-                    {userProfile.location && <p><strong>{t('location')}:</strong> {userProfile.location}</p>}
-                    <p><strong>{t('roles')}:</strong> 
-                      {userProfile.is_fundraiser && userProfile.is_donor ? ` ${t('fundraiserAndDonor')}` :
-                       userProfile.is_fundraiser ? ` ${t('fundraiserRole')}` :
-                       userProfile.is_donor ? ` ${t('donorRole')}` : ` ${t('noRoles')}`}
+                    <p><strong>Name:</strong> {userProfile.name}</p>
+                    {userProfile.username && <p><strong>Username:</strong> {userProfile.username}</p>}
+                    {userProfile.location && <p><strong>Location:</strong> {userProfile.location}</p>}
+                    <p><strong>Roles:</strong> 
+                      {userProfile.is_fundraiser && userProfile.is_donor ? ` Fundraiser and Donor` :
+                       userProfile.is_fundraiser ? ` Fundraiser` :
+                       userProfile.is_donor ? ` Donor` : ` No roles assigned`}
                     </p>
                   </div>
                   <div className="flex gap-4">
@@ -255,7 +265,7 @@ export default async function PersonalDashboard({ params, activeSection }: Perso
                       href={buildPersonalUrl(locale, 'profile')}
                       className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors text-sm"
                     >
-                      {t('editProfile')}
+                      Edit Profile
                     </Link>
                     <NextIntlClientProvider messages={{ deleteProfile: messages.deleteProfile }}>
                       <DeleteUserProfile user={userProfile} />
