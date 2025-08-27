@@ -41,7 +41,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
     }
 
     const body: ServiceRequestBody = await request.json()
-    const { serviceId, donorId, fundraiserId, donationAmount, locale = 'en', workflowEnabled = false } = body
+    const { serviceId, donorId, fundraiserId, donationAmount, workflowEnabled = false } = body
     
     // Validate required fields
     if (!serviceId || !donorId || !fundraiserId || !donationAmount) {
@@ -106,7 +106,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
     timeoutAt.setMinutes(timeoutAt.getMinutes() + 30)
 
     // Create service request record with workflow support
-    const insertData: any = {
+    const insertData = {
       donor_id: donorId,
       fundraiser_id: fundraiserId,
       service_id: serviceId,
@@ -125,7 +125,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
 
     // Add workflow fields if enabled
     if (workflowEnabled) {
-      insertData.workflow_status = 'service_requested'
+      (insertData as any).workflow_status = 'service_requested'
     }
 
     const { data: serviceRequest, error: insertError } = await supabase

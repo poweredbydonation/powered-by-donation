@@ -301,11 +301,25 @@ interface PlatformRule {
 
 ### Component Inventory
 - ✅ **Authentication**: Login, signup, auth guards
-- ✅ **Services**: Creation, browsing, donation flow
+- ✅ **Services**: Creation, browsing, donation flow, read-only platform requirements display
 - ✅ **Users**: Unified profile management
-- ✅ **Platform**: Cross-platform access control
-- ✅ **Charity**: Browse and discovery system
+- ✅ **Platform**: Cross-platform access control, read-only platform requirements selector
+- ✅ **Charity**: Browse and discovery system with search functionality
 - ✅ **Notifications**: Pending donations and confirmations
+
+### Recent UI/UX Improvements (Latest Session)
+- ✅ **Service Page Enhancement**: Fixed charity display issue where selected charities weren't showing in view mode
+- ✅ **Platform Requirements Display**: Implemented read-only mode for PlatformRequirementsSelector component
+- ✅ **Clean Read-Only Interface**: 
+  - Shows only selected/allowed charities in view mode
+  - Hides internal management statistics and excluded organizations 
+  - Maintains search functionality for filtering allowed charities
+  - Removes "Load More" pagination in read-only contexts
+- ✅ **Edit Mode Improvements**: 
+  - Fixed Cancel button navigation (now returns to view mode instead of navigating away)
+  - Added onCancel prop support to ServiceCreationForm
+- ✅ **Data Integration Fix**: Resolved charity data loading from platform_requirements vs legacy preferred_charities field
+- ✅ **TypeScript Compliance**: Fixed date handling for undefined created_at fields
 
 ### M12 Every.org Integration (Phase 2 - In Progress)
 - ✅ Every.org API client (`src/lib/everyorg/client.ts`)

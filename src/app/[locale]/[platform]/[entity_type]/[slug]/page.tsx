@@ -8,11 +8,10 @@ import { notFound } from 'next/navigation'
 import { getMessages } from 'next-intl/server'
 import { createClient } from '@/lib/supabase/server'
 import { createClient as createAnonClient } from '@/lib/supabase/client'
-import { DonationPlatform, OrganizationCache } from '@/types/database'
+import { DonationPlatform } from '@/types/database'
 import { 
   getEntityTypeFromSlug, 
   getPlatformEntityType,
-  EntityType
 } from '@/lib/utils/entity-urls'
 import OrganizationPage from '@/components/OrganizationPage'
 import { Suspense } from 'react'
@@ -71,7 +70,7 @@ export default async function EntityDetailPage({ params }: EntityPageProps) {
       }
 
       const messages = await getMessages({ locale })
-      
+          
       // Import the service page content dynamically
       const ServicePageContent = await ServicePage()
       
@@ -113,7 +112,7 @@ export default async function EntityDetailPage({ params }: EntityPageProps) {
     }
 
     const messages = await getMessages({ locale })
-
+  
     return (
       <OrganizationPage 
         locale={locale}
@@ -130,7 +129,7 @@ export default async function EntityDetailPage({ params }: EntityPageProps) {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-4">Organization not found</h1>
-          <p className="text-gray-600 mb-4">We couldn't find the organization you're looking for.</p>
+          <p className="text-gray-600 mb-4">We couldn&apos;t find the organization you&apos;re looking for.</p>
           <a href="/" className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700">
             Go Home
           </a>
@@ -145,7 +144,7 @@ export const dynamic = 'force-dynamic'
 
 // Generate metadata
 export async function generateMetadata({ params }: EntityPageProps) {
-  const { locale, platform: platformStr, entity_type: entitySlug, slug } = params
+  const { platform: platformStr, entity_type: entitySlug, slug } = params
   
   if (!isValidPlatformSlug(platformStr)) {
     return {

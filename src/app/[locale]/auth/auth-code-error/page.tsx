@@ -11,8 +11,7 @@ interface AuthCodeErrorProps {
   }
 }
 
-export default async function AuthCodeError({ params, searchParams }: AuthCodeErrorProps) {
-  const { locale } = params
+export default async function AuthCodeError({ searchParams }: AuthCodeErrorProps) {
   const { error, error_description, code } = searchParams
   
   return (
@@ -40,7 +39,7 @@ export default async function AuthCodeError({ params, searchParams }: AuthCodeEr
               Authentication Error
             </h2>
             <p className="mt-2 text-sm text-gray-600">
-              Sorry, we couldn't process your authentication request. The link may have expired or been used already.
+              Sorry, we couldn&apos;t process your authentication request. The link may have expired or been used already.
             </p>
             
             {/* Debug information */}

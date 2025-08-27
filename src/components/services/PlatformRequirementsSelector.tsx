@@ -23,6 +23,7 @@ interface PlatformRequirementsSelectorProps {
   value: PlatformRequirements | null
   onChange: (requirements: PlatformRequirements) => void
   locale: string
+  readOnly?: boolean
 }
 
 interface OrganizationOption {
@@ -41,7 +42,8 @@ interface PaginationState {
 export default function PlatformRequirementsSelector({
   value,
   onChange,
-  locale
+  locale,
+  readOnly = false
 }: PlatformRequirementsSelectorProps) {
   const t = useTranslations('service-creation')
   const [expandedPlatforms, setExpandedPlatforms] = useState<Record<DonationPlatform, boolean>>({
@@ -146,23 +148,28 @@ export default function PlatformRequirementsSelector({
     
     if (!error && data) {
       const newOrgs = loadMore ? [...currentOrgs, ...data] : data
+      
       setOrganizations(prev => ({
         ...prev,
         [platform]: newOrgs
       }))
+      
+      // Fix: hasMore should be true only if there are more items beyond what we've loaded
+      const totalLoaded = newOrgs.length
+      const hasMore = (count || 0) > totalLoaded
       
       setPagination(prev => ({
         ...prev,
         [platform]: {
           page: currentPage,
           totalCount: count || 0,
-          hasMore: (count || 0) > currentPage * ITEMS_PER_PAGE
+          hasMore: hasMore
         }
       }))
     }
     
     setLoadingOrganizations(prev => ({ ...prev, [platform]: false }))
-  }, [])
+  }, [pagination, organizations])
 
   // Auto-expand platforms that have selected organizations and load their data  
   useEffect(() => {
@@ -515,24 +522,26 @@ export default function PlatformRequirementsSelector({
               <div className="h-2 w-2 bg-[#7A04DD] rounded-full"></div>
               <span className="text-sm font-medium text-gray-700">Select Platform:</span>
             </div>
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-y-0 sm:space-x-2">
-              <button
-                type="button"
-                onClick={handleSelectAllPlatforms}
-                className="px-3 py-2 text-sm bg-purple-100 hover:bg-purple-200 text-purple-800 border border-purple-300 rounded-md transition-colors"
-              >
-                Select All Platforms
-              </button>
-              {value?.allowed_platforms.length > 0 && (
+            {!readOnly && (
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-y-0 sm:space-x-2">
                 <button
                   type="button"
-                  onClick={handleClearAllPlatforms}
-                  className="px-3 py-2 text-sm bg-gray-100 hover:bg-gray-200 text-gray-800 border border-gray-300 rounded-md transition-colors"
+                  onClick={handleSelectAllPlatforms}
+                  className="px-3 py-2 text-sm bg-purple-100 hover:bg-purple-200 text-purple-800 border border-purple-300 rounded-md transition-colors"
                 >
-                  Clear All
+                  Select All Platforms
                 </button>
-              )}
-            </div>
+                {value?.allowed_platforms.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={handleClearAllPlatforms}
+                    className="px-3 py-2 text-sm bg-gray-100 hover:bg-gray-200 text-gray-800 border border-gray-300 rounded-md transition-colors"
+                  >
+                    Clear All
+                  </button>
+                )}
+              </div>
+            )}
           </div>
           
           {/* Mobile: Remove outer border, use full width sections */}
@@ -551,8 +560,9 @@ export default function PlatformRequirementsSelector({
                       <input
                         type="checkbox"
                         checked={isSelected}
-                        onChange={() => handlePlatformToggle(platform)}
-                        className="h-5 w-5 md:h-4 md:w-4 text-[#7A04DD] border-gray-300 rounded focus:ring-[#7A04DD]"
+                        onChange={() => !readOnly && handlePlatformToggle(platform)}
+                        disabled={readOnly}
+                        className="h-5 w-5 md:h-4 md:w-4 text-[#7A04DD] border-gray-300 rounded focus:ring-[#7A04DD] disabled:opacity-50 disabled:cursor-not-allowed"
                       />
                       <div className="flex flex-col md:flex-row md:items-center md:space-x-2">
                         <span className="font-medium text-gray-900 text-base md:text-sm">{config.name}</span>
@@ -588,7 +598,7 @@ export default function PlatformRequirementsSelector({
                         {/* Mobile: Remove extra container padding, use full width */}
                         <div className="bg-gray-50 rounded border -mx-4 md:mx-0 md:mt-3 md:p-3">
                           <div className="p-3 md:p-0">
-                            {/* Search and Select All - Mobile optimized */}
+                            {/* Search and Select All - Search always shown, buttons hidden in read-only mode */}
                             <div className="space-y-3 md:space-y-0 md:flex md:items-center md:space-x-2 mb-4 md:mb-3">
                               <div className="relative flex-1">
                                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -616,29 +626,31 @@ export default function PlatformRequirementsSelector({
                                   </button>
                                 )}
                               </div>
-                              <div className="flex space-x-2">
-                                <button
-                                  type="button"
-                                  onClick={() => handleSelectAll(platform)}
-                                  className="flex-1 md:flex-none px-4 py-3 md:px-3 md:py-2 text-sm md:text-xs bg-purple-100 hover:bg-purple-200 text-purple-800 border border-purple-300 rounded-md transition-colors"
-                                >
-                                  Select All
-                                </button>
-                                {(rule.specific_organizations.length > 0 || isSelectingAll[platform]) && (
+                              {!readOnly && (
+                                <div className="flex space-x-2">
                                   <button
                                     type="button"
-                                    onClick={() => handleClearAll(platform)}
-                                    className="flex-1 md:flex-none px-4 py-3 md:px-3 md:py-2 text-sm md:text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 border border-gray-300 rounded-md transition-colors"
+                                    onClick={() => handleSelectAll(platform)}
+                                    className="flex-1 md:flex-none px-4 py-3 md:px-3 md:py-2 text-sm md:text-xs bg-purple-100 hover:bg-purple-200 text-purple-800 border border-purple-300 rounded-md transition-colors"
                                   >
-                                    Clear All
+                                    Select All
                                   </button>
-                                )}
-                              </div>
+                                  {(rule.specific_organizations.length > 0 || isSelectingAll[platform]) && (
+                                    <button
+                                      type="button"
+                                      onClick={() => handleClearAll(platform)}
+                                      className="flex-1 md:flex-none px-4 py-3 md:px-3 md:py-2 text-sm md:text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 border border-gray-300 rounded-md transition-colors"
+                                    >
+                                      Clear All
+                                    </button>
+                                  )}
+                                </div>
+                              )}
                             </div>
                           </div>
 
-                          {/* Select All Status Banner */}
-                          {isSelectingAll[platform] && (
+                          {/* Select All Status Banner - Hidden in read-only mode */}
+                          {!readOnly && isSelectingAll[platform] && (
                             <div className="mx-3 md:mx-0 mb-3 p-3 md:p-2 bg-purple-50 border border-purple-200 rounded text-sm md:text-xs text-purple-800">
                               {(rule.excluded_organizations || []).length > 0 ? (
                                 <>✓ {pagination[platform].totalCount - (rule.excluded_organizations || []).length} of {pagination[platform].totalCount.toLocaleString()} organizations selected ({(rule.excluded_organizations || []).length} excluded)</>
@@ -656,29 +668,28 @@ export default function PlatformRequirementsSelector({
                               <div className="text-xs text-gray-500 p-2">No organizations found</div>
                             ) : (
                               <>
-                                {filteredOrganizations[platform].map((org, index) => {
-                                  // Determine selection state based on mode
-                                  const isSelected = rule.select_all_organizations 
-                                    ? !(rule.excluded_organizations || []).includes(org.id) // Selected if not excluded
-                                    : rule.specific_organizations.includes(org.id) // Selected if specifically included
+                                {filteredOrganizations[platform]
+                                  .filter(org => {
+                                    // In read-only mode, only show selected organizations
+                                    if (readOnly) {
+                                      const isSelected = rule.select_all_organizations 
+                                        ? !(rule.excluded_organizations || []).includes(org.id) // Selected if not excluded
+                                        : rule.specific_organizations.includes(org.id) // Selected if specifically included
+                                      return isSelected
+                                    }
+                                    return true // In edit mode, show all organizations
+                                  })
+                                  .map((org, index) => {
+                                    // Determine selection state based on mode
+                                    const isSelected = rule.select_all_organizations 
+                                      ? !(rule.excluded_organizations || []).includes(org.id) // Selected if not excluded
+                                      : rule.specific_organizations.includes(org.id) // Selected if specifically included
+                                    
+                                    // Determine if organization is excluded (only relevant in select all mode and edit mode)
+                                    const isExcluded = !readOnly && rule.select_all_organizations && (rule.excluded_organizations || []).includes(org.id)
                                   
-                                  // Determine if organization is excluded (only relevant in select all mode)
-                                  const isExcluded = rule.select_all_organizations && (rule.excluded_organizations || []).includes(org.id)
-                                  
-                                  const filtered = filteredOrganizations[platform]
-                                  
-                                  // Calculate separator position based on mode
-                                  let separatorIndex = 0
-                                  if (rule.select_all_organizations) {
-                                    // In select all mode: separator after excluded organizations
-                                    separatorIndex = (rule.excluded_organizations || []).length
-                                  } else {
-                                    // In individual mode: separator after selected organizations  
-                                    separatorIndex = filtered.filter(o => rule.specific_organizations.includes(o.id)).length
-                                  }
-                                  
-                                  // Show separator between excluded/included or selected/unselected
-                                  const showSeparator = index === separatorIndex && separatorIndex > 0 && separatorIndex < filtered.length
+                                  // No separator in read-only mode since we only show selected organizations
+                                  const showSeparator = false
                                   
                                   return (
                                     <div key={org.id}>
@@ -701,8 +712,9 @@ export default function PlatformRequirementsSelector({
                                         <input
                                           type="checkbox"
                                           checked={isSelected}
-                                          onChange={() => handleOrganizationToggle(platform, org.id)}
-                                          className="h-4 w-4 md:h-3 md:w-3 text-[#7A04DD] border-gray-300 rounded focus:ring-[#7A04DD]"
+                                          onChange={() => !readOnly && handleOrganizationToggle(platform, org.id)}
+                                          disabled={readOnly}
+                                          className="h-4 w-4 md:h-3 md:w-3 text-[#7A04DD] border-gray-300 rounded focus:ring-[#7A04DD] disabled:opacity-50 disabled:cursor-not-allowed"
                                         />
                                         <div className="ml-3 md:ml-2 flex items-center space-x-2 md:space-x-2 flex-1 min-w-0">
                                           {org.logo_url && (
@@ -731,8 +743,8 @@ export default function PlatformRequirementsSelector({
                                   )
                                 })}
 
-                                {/* Load More Button */}
-                                {pagination[platform].hasMore && !loadingOrganizations[platform] && (
+                                {/* Load More Button - Hidden in read-only mode */}
+                                {!readOnly && pagination[platform].hasMore && !loadingOrganizations[platform] && (
                                   <button
                                     type="button"
                                     onClick={() => loadOrganizations(platform, true, organizationSearch[platform])}
@@ -746,26 +758,29 @@ export default function PlatformRequirementsSelector({
                           </div>
 
                           {/* Selection Status - Mobile optimized */}
-                          <div className="mt-3 md:mt-2 px-3 md:px-0 flex flex-col md:flex-row md:items-center md:justify-between space-y-2 md:space-y-0 text-sm md:text-xs text-gray-600">
-                            <div>
-                              {isSelectingAll[platform] ? (
-                                (rule.excluded_organizations || []).length > 0 ? (
-                                  <span>Selected: {pagination[platform].totalCount - (rule.excluded_organizations || []).length} organizations ({(rule.excluded_organizations || []).length} excluded from all)</span>
+                          {/* Organization count and pagination - Hidden in read-only mode */}
+                          {!readOnly && (
+                            <div className="mt-3 md:mt-2 px-3 md:px-0 flex flex-col md:flex-row md:items-center md:justify-between space-y-2 md:space-y-0 text-sm md:text-xs text-gray-600">
+                              <div>
+                                {isSelectingAll[platform] ? (
+                                  (rule.excluded_organizations || []).length > 0 ? (
+                                    <span>Selected: {pagination[platform].totalCount - (rule.excluded_organizations || []).length} organizations ({(rule.excluded_organizations || []).length} excluded from all)</span>
+                                  ) : (
+                                    <span>All organizations selected ({pagination[platform].totalCount.toLocaleString()})</span>
+                                  )
+                                ) : rule.specific_organizations.length > 0 ? (
+                                  <span>Selected: {rule.specific_organizations.length} organizations</span>
                                 ) : (
-                                  <span>All organizations selected ({pagination[platform].totalCount.toLocaleString()})</span>
-                                )
-                              ) : rule.specific_organizations.length > 0 ? (
-                                <span>Selected: {rule.specific_organizations.length} organizations</span>
-                              ) : (
-                                <span>No organizations selected</span>
+                                  <span>No organizations selected</span>
+                                )}
+                              </div>
+                              {pagination[platform].totalCount > 0 && (
+                                <div className="text-gray-500">
+                                  Showing {filteredOrganizations[platform].length} of {pagination[platform].totalCount.toLocaleString()}
+                                </div>
                               )}
                             </div>
-                            {pagination[platform].totalCount > 0 && (
-                              <div className="text-gray-500">
-                                Showing {filteredOrganizations[platform].length} of {pagination[platform].totalCount.toLocaleString()}
-                              </div>
-                            )}
-                          </div>
+                          )}
                         </div>
                       </div>
                     </div>

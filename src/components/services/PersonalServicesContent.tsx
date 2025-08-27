@@ -4,9 +4,9 @@ import { useState, useEffect } from 'react'
 import { useTranslations } from 'next-intl'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
-import { Plus, RefreshCw } from 'lucide-react'
-import Link from 'next/link'
+import { Plus, RefreshCw, X } from 'lucide-react'
 import ServiceCard from './ServiceCard'
+import ServiceCreationForm from './ServiceCreationForm'
 import { Service } from '@/types/database'
 
 interface ServiceWithUser extends Service {
@@ -26,6 +26,7 @@ export default function PersonalServicesContent({ userId, locale }: PersonalServ
   const t = useTranslations('services')
   const [services, setServices] = useState<ServiceWithUser[]>([])
   const [loading, setLoading] = useState(true)
+  const [showCreateForm, setShowCreateForm] = useState(false)
   const supabase = createClient()
 
   const loadServices = async () => {
@@ -62,6 +63,11 @@ export default function PersonalServicesContent({ userId, locale }: PersonalServ
     loadServices()
   }, [userId])
 
+  const handleServiceCreated = () => {
+    setShowCreateForm(false)
+    loadServices() // Refresh the services list
+  }
+
   if (loading) {
     return (
       <div className="w-full px-4 py-8">
@@ -95,41 +101,67 @@ export default function PersonalServicesContent({ userId, locale }: PersonalServ
             <RefreshCw className="w-4 h-4 mr-2" />
             Refresh
           </Button>
-          <Link href={`/${locale}/services/create`}>
-            <Button className="w-full sm:w-auto">
+          {!showCreateForm ? (
+            <Button 
+              onClick={() => setShowCreateForm(true)}
+              className="w-full sm:w-auto"
+            >
               <Plus className="w-4 h-4 mr-2" />
               Create Service
             </Button>
-          </Link>
+          ) : (
+            <Button 
+              onClick={() => setShowCreateForm(false)}
+              variant="outline"
+              className="w-full sm:w-auto"
+            >
+              <X className="w-4 h-4 mr-2" />
+              Cancel
+            </Button>
+          )}
         </div>
       </div>
 
+      {/* Service Creation Form */}
+      {showCreateForm && (
+        <div className="mb-8 p-6 bg-white border border-gray-200 rounded-lg shadow-sm">
+          <div className="mb-4">
+            <h2 className="text-xl font-semibold text-gray-900">Create New Service</h2>
+            <p className="text-gray-600">Fill out the form below to create your service</p>
+          </div>
+          <ServiceCreationForm
+            onSuccess={handleServiceCreated}
+            mode="create"
+            locale={locale}
+          />
+        </div>
+      )}
+
       {/* Services Grid */}
-      {services.length === 0 ? (
+      {!showCreateForm && services.length === 0 ? (
         <div className="text-center py-12 bg-gray-50 rounded-lg mx-2 sm:mx-0">
           <div className="text-gray-500 mb-4">No services created yet</div>
           <p className="text-sm text-gray-400 mb-6">
             Create your first service to start receiving donations
           </p>
-          <Link href={`/${locale}/services/create`}>
-            <Button>
-              <Plus className="w-4 h-4 mr-2" />
-              Create Your First Service
-            </Button>
-          </Link>
+          <Button onClick={() => setShowCreateForm(true)}>
+            <Plus className="w-4 h-4 mr-2" />
+            Create Your First Service
+          </Button>
         </div>
-      ) : (
+      ) : !showCreateForm ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
           {services.map((service) => (
             <ServiceCard 
               key={service.id} 
               service={service} 
               locale={locale}
+              isPersonalView={true}
               showManageButton={true}
             />
           ))}
         </div>
-      )}
+      ) : null}
     </div>
   )
 }

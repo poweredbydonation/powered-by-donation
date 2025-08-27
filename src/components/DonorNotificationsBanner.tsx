@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import { useAuth } from '@/hooks/useAuth'
-import { ServiceRequest } from '@/types/database'
 import { useLocale } from 'next-intl'
 
 interface PendingDonation {

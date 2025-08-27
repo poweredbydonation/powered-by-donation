@@ -1358,7 +1358,7 @@ export default function OrganizationBrowse({
               </div>
               <p className="text-sm text-yellow-700">
                 Every.org organizations contain location information in their descriptions, but not in structured address fields. 
-                Use the search bar above to find organizations by location (e.g., "San Francisco", "Texas", "California").
+                Use the search bar above to find organizations by location (e.g., &quot;San Francisco&quot;, &quot;Texas&quot;, &quot;California&quot;).
               </p>
             </div>
           )}
@@ -1391,7 +1391,7 @@ export default function OrganizationBrowse({
               <div className="flex flex-wrap gap-2">
                 {searchQuery && (
                   <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-purple-100 text-purple-800">
-                    Search: "{searchQuery}"
+                    Search: &quot;{searchQuery}&quot;
                     <button
                       onClick={() => {
                         const url = new URL(window.location.href)
@@ -1916,7 +1916,7 @@ export default function OrganizationBrowse({
                   </div>
                   <p className="text-sm text-yellow-700">
                     Every.org organizations contain location information in their descriptions, but not in structured address fields. 
-                    Use the search bar above to find organizations by location (e.g., "San Francisco", "Texas", "California").
+                    Use the search bar above to find organizations by location (e.g., &quot;San Francisco&quot;, &quot;Texas&quot;, &quot;California&quot;).
                   </p>
                 </div>
               )}

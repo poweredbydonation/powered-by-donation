@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if there's already an active request for this service from this user
-    const { data: existingRequest, error: existingError } = await supabase
+    const { data: existingRequest } = await supabase
       .from('service_requests')
       .select('id, workflow_status')
       .eq('service_id', service_id)

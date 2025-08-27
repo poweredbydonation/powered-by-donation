@@ -80,7 +80,7 @@ export function generateStaticParams() {
 
 // Generate metadata
 export async function generateMetadata({ params }: PlatformPageProps) {
-  const { locale, platform: platformStr } = params
+  const { platform: platformStr } = params
   
   if (!isValidPlatformSlug(platformStr)) {
     return {

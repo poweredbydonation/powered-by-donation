@@ -65,8 +65,13 @@ export interface User {
   email: string;
   name: string;
   username?: string;
-  is_fundraiser?: boolean;
-  is_donor?: boolean;
+  // New timestamp-based terms acceptance
+  fundraiser_service_terms_accepted_time?: string; // ISO timestamp
+  donor_service_terms_accepted_time?: string; // ISO timestamp  
+  donor_organization_terms_accepted_time?: string; // ISO timestamp
+  // Computed role properties (derived from timestamps)
+  is_fundraiser?: boolean; // Computed: !!fundraiser_service_terms_accepted_time
+  is_donor?: boolean; // Computed: !!(donor_service_terms_accepted_time || donor_organization_terms_accepted_time)
   bio?: string;
   location?: string;
   phone?: string;

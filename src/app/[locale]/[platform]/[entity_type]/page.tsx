@@ -10,9 +10,6 @@ import { DonationPlatform } from '@/types/database'
 import { 
   getEntityTypeFromSlug, 
   getPlatformEntityType,
-  getAllEntitySlugs,
-  EntityType,
-  POWERED_BY_DONATION_ENTITY_TYPE,
   PERSONAL_PLATFORM_SLUGS,
   isPersonalPlatform,
   PERSONAL_ENTITY_TYPES,
@@ -97,7 +94,6 @@ export default async function EntityBrowsePage({
         notFound()
       }
 
-      const messages = await getMessages({ locale })
       
       // Import the services page content dynamically
       const ServicesPageContent = await ServicesPage()
@@ -195,7 +191,7 @@ export default async function EntityBrowsePage({
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-4">Something went wrong</h1>
-          <p className="text-gray-600 mb-4">We're having trouble loading this page. Please try again later.</p>
+          <p className="text-gray-600 mb-4">We&apos;re having trouble loading this page. Please try again later.</p>
           <a href="/" className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
             Go Home
           </a>
@@ -210,7 +206,7 @@ export const dynamic = 'force-dynamic'
 
 // Generate metadata
 export async function generateMetadata({ params }: EntityBrowsePageProps) {
-  const { locale, platform: platformStr, entity_type: entitySlug } = params
+  const { platform: platformStr, entity_type: entitySlug } = params
   
   if (!isValidPlatformSlug(platformStr)) {
     return {

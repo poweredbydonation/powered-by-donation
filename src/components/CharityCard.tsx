@@ -1,5 +1,5 @@
 import { JustGivingCharityCache } from '@/types/database'
-import { Heart, ExternalLink, TrendingUp, Calendar, MapPin, Globe, Shield, Star, Sparkles } from 'lucide-react'
+import { Heart, ExternalLink, TrendingUp, MapPin, Globe, Shield, Star, Sparkles } from 'lucide-react'
 
 interface CharityCardProps {
   charity: JustGivingCharityCache

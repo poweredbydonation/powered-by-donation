@@ -6,7 +6,9 @@ import { createClient } from '@/lib/supabase/client'
 import { Service, ServiceLocation, CurrencyCode } from '@/types/database'
 import { useAuth } from '@/hooks/useAuth'
 import ServicePrice from '@/components/services/ServicePrice'
-import { MapPin, Heart, Clock, User, Globe, ArrowLeft } from 'lucide-react'
+import ServiceCreationForm from '@/components/services/ServiceCreationForm'
+import PlatformRequirementsSelector from '@/components/services/PlatformRequirementsSelector'
+import { MapPin, Heart, Clock, User, Globe, ArrowLeft, Edit } from 'lucide-react'
 
 interface ServicePageProps {
   params: {
@@ -30,6 +32,7 @@ export default function ServicePageContent({ params }: ServicePageProps) {
   const [loading, setLoading] = useState(true)
   const [messages, setMessages] = useState<any>({})
   const [userCurrency, setUserCurrency] = useState<CurrencyCode>('AUD')
+  const [isEditing, setIsEditing] = useState(false)
 
   useEffect(() => {
     // Load messages
@@ -68,52 +71,52 @@ export default function ServicePageContent({ params }: ServicePageProps) {
     fetchUserPreferences()
   }, [locale, user])
 
-  useEffect(() => {
-    const fetchService = async () => {
-      setLoading(true)
-      const supabase = createClient()
-      
-      // Generate slug from title for comparison
-      const generateSlug = (title: string): string => {
-        return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
-      }
-
-      // First, get all services and find by slug
-      const { data: services, error } = await supabase
-        .from('services')
-        .select(`
-          *,
-          users (
-            id,
-            name,
-            bio
-          )
-        `)
-        .eq('is_active', true)
-        .eq('show_in_directory', true)
-
-      if (error) {
-        console.error('Error fetching services:', error)
-        setService(null)
-        setLoading(false)
-        return
-      }
-
-      // Find service by matching slug
-      const matchedService = services?.find(s => generateSlug(s.title) === slug)
-      
-      if (!matchedService) {
-        setService(null)
-        setLoading(false)
-        return
-      }
-
-      setService(matchedService)
-      setLoading(false)
-    }
+  // Extract fetchService function so it can be called from edit form
+  const fetchService = async () => {
+    setLoading(true)
+    const supabase = createClient()
     
+    // Generate slug from title for comparison
+    const generateSlug = (title: string): string => {
+      return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
+    }
+
+    // First, get all services and find by slug
+    const { data: services, error } = await supabase
+      .from('services')
+      .select(`
+        *,
+        users (
+          id,
+          name,
+          bio
+        )
+      `)
+      .eq('is_active', true)
+      .eq('show_in_directory', true)
+
+    if (error) {
+      console.error('Error fetching services:', error)
+      setService(null)
+      setLoading(false)
+      return
+    }
+
+    // Find service by slug
+    const foundService = services?.find(s => generateSlug(s.title) === slug)
+    
+    if (foundService) {
+      setService(foundService)
+    } else {
+      setService(null)
+    }
+    setLoading(false)
+  }
+
+  useEffect(() => {
     fetchService()
   }, [slug])
+
 
   // Helper function to get location display
   const getLocationDisplay = (locations: any) => {
@@ -184,6 +187,43 @@ export default function ServicePageContent({ params }: ServicePageProps) {
   }
 
   const servicesSlug = locale === 'tr' ? 'hizmetler' : 'services'
+  
+  // Check if current user owns this service
+  const isOwner = user && service && service.user_id === user.id
+
+  // If in edit mode and user owns the service, show edit form
+  if (isEditing && isOwner) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <div className="max-w-4xl mx-auto px-4 py-8">
+          <div className="mb-6">
+            <button 
+              onClick={() => setIsEditing(false)}
+              className="flex items-center text-blue-600 hover:text-blue-700 mb-4"
+            >
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Service
+            </button>
+            <h1 className="text-3xl font-bold text-gray-900">Edit Service</h1>
+            <p className="text-gray-600 mt-2">Update your service details</p>
+          </div>
+          
+          <ServiceCreationForm 
+            initialData={service}
+            mode="edit"
+            onSuccess={() => {
+              setIsEditing(false)
+              // Refresh service data
+              fetchService()
+            }}
+            onCancel={() => {
+              setIsEditing(false)
+            }}
+          />
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -235,12 +275,22 @@ export default function ServicePageContent({ params }: ServicePageProps) {
                   className="text-3xl font-bold text-blue-600"
                 />
               </div>
-              <button
-                onClick={handleRequestService}
-                className="bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors"
-              >
-                {messages.services?.request?.button || 'Request Service'}
-              </button>
+              {isOwner ? (
+                <button
+                  onClick={() => setIsEditing(true)}
+                  className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors flex items-center"
+                >
+                  <Edit className="h-4 w-4 mr-2" />
+                  Edit Service
+                </button>
+              ) : (
+                <button
+                  onClick={handleRequestService}
+                  className="bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors"
+                >
+                  {messages.services?.request?.button || 'Request Service'}
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -259,8 +309,8 @@ export default function ServicePageContent({ params }: ServicePageProps) {
           </div>
         </div>
 
-        {/* Service Details */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        {/* Comprehensive Service Details */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
           {/* Fundraiser Info */}
           <div className="bg-white rounded-lg shadow-sm p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">
@@ -277,19 +327,28 @@ export default function ServicePageContent({ params }: ServicePageProps) {
                   <p className="mt-1 text-gray-600">{service.users.bio}</p>
                 </div>
               )}
+              <div>
+                <span className="font-medium text-gray-700">Service Created:</span>
+                <span className="ml-2 text-gray-600">
+                  {service.created_at ? new Date(service.created_at).toLocaleDateString() : 'N/A'}
+                </span>
+              </div>
             </div>
           </div>
 
           {/* Service Details */}
           <div className="bg-white rounded-lg shadow-sm p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">
-              {messages.services?.detail?.details || 'Service Details'}
+              Service Details
             </h3>
             <div className="space-y-3">
               <div>
-                <span className="font-medium text-gray-700">Platform:</span>
-                <span className="ml-2 text-gray-600">
-                  {service.platform === 'justgiving' ? 'JustGiving' : 'Every.org'}
+                <span className="font-medium text-gray-700">Donation Amount:</span>
+                <span className="ml-2 text-green-600 font-semibold">
+                  <ServicePrice
+                    pricingTierId={service.pricing_tier_id}
+                    userCurrency={userCurrency}
+                  />
                 </span>
               </div>
               <div>
@@ -297,24 +356,115 @@ export default function ServicePageContent({ params }: ServicePageProps) {
                 <span className="ml-2 text-gray-600">{getLocationDisplay(service.service_locations)}</span>
               </div>
               <div>
-                <span className="font-medium text-gray-700">Charity Requirements:</span>
-                <span className="ml-2 text-gray-600">
-                  {service.charity_requirement_type === 'any_charity' ? 'Any registered charity' : 'Specific charities only'}
+                <span className="font-medium text-gray-700">Status:</span>
+                <span className={`ml-2 px-2 py-1 rounded-full text-xs font-medium ${
+                  service.is_active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                }`}>
+                  {service.is_active ? 'Active' : 'Inactive'}
                 </span>
               </div>
               <div>
-                <span className="font-medium text-gray-700">Price:</span>
-                <span className="ml-2 text-gray-600">
-                  <ServicePrice
-                    pricingTierId={service.pricing_tier_id}
-                    userCurrency={userCurrency}
-                    className="font-semibold"
-                  />
+                <span className="font-medium text-gray-700">Directory Visible:</span>
+                <span className={`ml-2 px-2 py-1 rounded-full text-xs font-medium ${
+                  service.show_in_directory ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'
+                }`}>
+                  {service.show_in_directory ? 'Public' : 'Private'}
                 </span>
               </div>
             </div>
           </div>
         </div>
+
+        {/* Availability & Capacity */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          <div className="bg-white rounded-lg shadow-sm p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Availability
+            </h3>
+            <div className="space-y-3">
+              {service.available_from && (
+                <div>
+                  <span className="font-medium text-gray-700">Available From:</span>
+                  <span className="ml-2 text-gray-600">
+                    {new Date(service.available_from).toLocaleDateString()}
+                  </span>
+                </div>
+              )}
+              {service.available_until && (
+                <div>
+                  <span className="font-medium text-gray-700">Available Until:</span>
+                  <span className="ml-2 text-gray-600">
+                    {new Date(service.available_until).toLocaleDateString()}
+                  </span>
+                </div>
+              )}
+              {service.max_donors && (
+                <div>
+                  <span className="font-medium text-gray-700">Max Donors:</span>
+                  <span className="ml-2 text-gray-600">{service.max_donors}</span>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Platform Requirements */}
+          <div className="bg-white rounded-lg shadow-sm p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Platform Requirements
+            </h3>
+            {service.platform_requirements ? (
+              <PlatformRequirementsSelector
+                value={service.platform_requirements}
+                onChange={() => {}} // No-op for read-only mode
+                locale={locale}
+                readOnly={true}
+              />
+            ) : (
+              <div className="text-gray-500 italic">
+                No platform requirements configured
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Service Locations (if multiple) */}
+        {service.service_locations && Array.isArray(service.service_locations) && service.service_locations.length > 0 && (
+          <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Service Locations
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {service.service_locations.map((location: any, index: number) => (
+                <div key={index} className="border rounded-lg p-4">
+                  <div className="space-y-2">
+                    <div>
+                      <span className="font-medium text-gray-700">Type:</span>
+                      <span className="ml-2 text-gray-600 capitalize">{location.type || 'Remote'}</span>
+                    </div>
+                    {location.address && (
+                      <div>
+                        <span className="font-medium text-gray-700">Address:</span>
+                        <span className="ml-2 text-gray-600">{location.address}</span>
+                      </div>
+                    )}
+                    {location.area && (
+                      <div>
+                        <span className="font-medium text-gray-700">Area:</span>
+                        <span className="ml-2 text-gray-600">{location.area}</span>
+                      </div>
+                    )}
+                    {location.radius && (
+                      <div>
+                        <span className="font-medium text-gray-700">Radius:</span>
+                        <span className="ml-2 text-gray-600">{location.radius} miles</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Call to Action */}
         <div className="bg-blue-50 rounded-lg p-6 text-center">

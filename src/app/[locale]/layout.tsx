@@ -1,7 +1,6 @@
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { AuthProvider } from '@/context/AuthContext'
-import Footer from '@/components/Footer'
 import MinimalFooter from '@/components/MinimalFooter'
 import DonorNotificationsBanner from '@/components/DonorNotificationsBanner'
 import FundraiserNotificationsBanner from '@/components/FundraiserNotificationsBanner'

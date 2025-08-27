@@ -6,7 +6,6 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
-import orgCache from '@/lib/cache/organization-cache';
 
 export const dynamic = 'force-dynamic';
 
@@ -21,9 +20,7 @@ export async function GET(request: NextRequest) {
     const featured = searchParams.get('featured') === 'true';
     const preferred = searchParams.get('preferred') === 'true';
     
-    // Generate cache key for this request
-    const filters = { search, category, city, featured, preferred };
-    const cacheKey = orgCache.generateKey({ platform: 'justgiving', page, limit, filters });
+    // const cacheKey = orgCache.generateKey({ platform: 'justgiving', page, limit, filters });
     
     // Check cache first (only for non-user-specific queries)
     // Temporarily disabled to test fresh queries

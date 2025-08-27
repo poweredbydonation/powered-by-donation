@@ -66,7 +66,7 @@ export async function POST(
     )
 
     // Update service request with donation URL and charity info
-    const { data: updatedRequest, error: updateError } = await supabase
+    const { error: updateError } = await supabase
       .from('service_requests')
       .update({
         justgiving_charity_id: charity_id,

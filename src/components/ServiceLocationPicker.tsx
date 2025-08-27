@@ -115,7 +115,7 @@ export default function ServiceLocationPicker({
       <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
         <h3 className="font-medium text-blue-900 mb-2">Set Your Service Location</h3>
         <p className="text-sm text-blue-700">
-          Click anywhere on the map to set where you're based. Then adjust the radius to show how far you'll travel for services.
+          Click anywhere on the map to set where you&apos;re based. Then adjust the radius to show how far you&apos;ll travel for services.
         </p>
       </div>
 
@@ -222,7 +222,7 @@ export default function ServiceLocationPicker({
         </div>
 
         <p className="text-sm text-gray-600">
-          You'll provide services within <strong>{radius}km</strong> of your marked location
+          You&apos;ll provide services within <strong>{radius}km</strong> of your marked location
           {address && (
             <span className="block mt-1 text-gray-500">
               Located in: <strong>{address}</strong>

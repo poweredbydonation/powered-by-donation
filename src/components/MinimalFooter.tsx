@@ -1,12 +1,10 @@
 'use client';
 
-import { useTranslations, useLocale } from 'next-intl';
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 const MinimalFooter = () => {
-  const t = useTranslations('footer');
-  const hookLocale = useLocale();
   const pathname = usePathname();
   
   // Extract locale from pathname as fallback

@@ -5,10 +5,10 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { useAuth } from '@/hooks/useAuth'
 import { createClient } from '@/lib/supabase/client'
 import { CharityRequirementType, ServiceLocation, Service, PricingTier, CurrencyCode, PlatformRequirements } from '@/types/database'
-import CharitySelector from './CharitySelector'
 import PlatformRequirementsSelector from './PlatformRequirementsSelector'
 import ServiceLocationPicker from '@/components/ServiceLocationPicker'
 import PricingTierSlider from '@/components/forms/PricingTierSlider'
+import TermsModal from '@/components/auth/TermsModal'
 
 interface SelectedCharity {
   justgiving_charity_id: string
@@ -20,6 +20,7 @@ interface SelectedCharity {
 interface ServiceCreationFormProps {
   initialData?: Service
   onSuccess?: () => void
+  onCancel?: () => void
   mode?: 'create' | 'edit'
   locale?: string
 }
@@ -27,6 +28,7 @@ interface ServiceCreationFormProps {
 export default function ServiceCreationForm({ 
   initialData, 
   onSuccess, 
+  onCancel,
   mode = 'create',
   locale = 'en'
 }: ServiceCreationFormProps) {
@@ -65,6 +67,8 @@ export default function ServiceCreationForm({
   
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [showTermsModal, setShowTermsModal] = useState(false)
+  const [userAcceptedTerms, setUserAcceptedTerms] = useState(false)
   
   const { user } = useAuth()
   const router = useRouter()
@@ -83,7 +87,7 @@ export default function ServiceCreationForm({
     }
   }
 
-  // Fetch user's preferred currency and platform
+  // Fetch user's preferred currency and check terms acceptance
   useEffect(() => {
     const fetchUserPreferences = async () => {
       if (!user) return
@@ -91,12 +95,17 @@ export default function ServiceCreationForm({
       try {
         const { data: userProfile } = await supabase
           .from('users')
-          .select('preferred_currency')
+          .select('preferred_currency, fundraiser_service_terms_accepted_time')
           .eq('id', user.id)
           .single()
         
         if (userProfile?.preferred_currency) {
           setUserCurrency(userProfile.preferred_currency)
+        }
+        
+        // Check if user has already accepted fundraiser terms
+        if (userProfile?.fundraiser_service_terms_accepted_time) {
+          setUserAcceptedTerms(true)
         }
       } catch (err) {
         console.error('Error fetching user preferences:', err)
@@ -196,8 +205,20 @@ export default function ServiceCreationForm({
       
       // Set selected tier if available
       if (initialData.pricing_tier_id) {
-        // The tier will be set when pricing tiers are loaded in PricingTierSlider
-        // We'll need to enhance PricingTierSlider to handle initial selection
+        // Load the full tier object from database
+        const loadInitialTier = async () => {
+          const supabase = createClient()
+          const { data: tierData } = await supabase
+            .from('pricing_tiers')
+            .select('*')
+            .eq('id', initialData.pricing_tier_id)
+            .single()
+          
+          if (tierData) {
+            setSelectedTier(tierData)
+          }
+        }
+        loadInitialTier()
       }
       
       // Handle dates
@@ -229,6 +250,11 @@ export default function ServiceCreationForm({
           if (firstLocation.longitude) setLongitude(firstLocation.longitude)
         }
       }
+
+      // Handle platform requirements
+      if (initialData.platform_requirements) {
+        setPlatformRequirements(initialData.platform_requirements as PlatformRequirements)
+      }
     }
   }, [initialData, mode])
 
@@ -240,6 +266,17 @@ export default function ServiceCreationForm({
     if (newAddress) {
       setAddress(newAddress)
       setArea(newAddress) // Use address as area for now
+    }
+  }
+
+  const handleTermsAccepted = () => {
+    setUserAcceptedTerms(true)
+    setShowTermsModal(false)
+    // Continue with service creation by re-triggering the submit
+    // The form data is still preserved, just re-run the handleSubmit logic
+    const form = document.querySelector('form') as HTMLFormElement
+    if (form) {
+      form.requestSubmit()
     }
   }
 
@@ -284,19 +321,10 @@ export default function ServiceCreationForm({
         }
       }
 
-      // Check if user has fundraiser role
-      const { data: userData, error: userError } = await supabase
-        .from('users')
-        .select('id, is_fundraiser')
-        .eq('id', user.id)
-        .single()
-
-      if (userError || !userData) {
-        throw new Error('User profile not found. Please complete your profile setup first.')
-      }
-
-      if (!userData.is_fundraiser) {
-        throw new Error('You need to enable your fundraiser role to create services. Please update your profile first.')
+      // Check if user has accepted terms, if not, show terms modal
+      if (!userAcceptedTerms) {
+        setShowTermsModal(true)
+        return
       }
 
       // Build service location object
@@ -325,7 +353,7 @@ export default function ServiceCreationForm({
 
         const specificOrgs: string[] = []
         const platforms = Object.keys(platformRequirements.platform_rules)
-        let orgNames: string[] = []
+        const orgNames: string[] = []
 
         // Collect specific organizations from all platforms
         for (const platform of platforms) {
@@ -483,12 +511,21 @@ export default function ServiceCreationForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      {error && (
-        <div className="bg-red-50 border border-red-200 rounded-md p-4">
-          <p className="text-red-600">{error}</p>
-        </div>
-      )}
+    <>
+      <TermsModal
+        isOpen={showTermsModal}
+        onClose={() => setShowTermsModal(false)}
+        onAccept={handleTermsAccepted}
+        termsType="fundraiser_service"
+        userId={user?.id || ''}
+      />
+      
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {error && (
+          <div className="bg-red-50 border border-red-200 rounded-md p-4">
+            <p className="text-red-600">{error}</p>
+          </div>
+        )}
 
       {/* Basic Service Information */}
       <div className="space-y-4">
@@ -666,7 +703,13 @@ export default function ServiceCreationForm({
       <div className="flex justify-end space-x-4 pt-6 border-t">
         <button
           type="button"
-          onClick={() => router.back()}
+          onClick={() => {
+            if (mode === 'edit' && onCancel) {
+              onCancel()
+            } else {
+              router.back()
+            }
+          }}
           className="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
         >
           Cancel
@@ -683,5 +726,6 @@ export default function ServiceCreationForm({
         </button>
       </div>
     </form>
+    </>
   )
 }

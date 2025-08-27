@@ -1,6 +1,5 @@
-import PlatformSelector from '@/components/PlatformSelector'
-import { Monitor, TrendingUp, Camera, ExternalLink, Users } from 'lucide-react'
-import { getTranslations, getMessages } from 'next-intl/server'
+import { Monitor, TrendingUp, Camera, ExternalLink } from 'lucide-react'
+import { getTranslations } from 'next-intl/server'
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
 import { getLocalizedServicesUrl } from '@/lib/utils/localized-urls'
@@ -15,8 +14,6 @@ interface HomePageProps {
 export default async function HomePage({ params }: HomePageProps) {
   const { locale } = params
   const t = await getTranslations({ locale, namespace: 'home' })
-  const tNav = await getTranslations({ locale, namespace: 'nav' })
-  const messages = await getMessages({ locale })
 
   // Load platform statistics from cached stats table (same as navbar)
   const supabase = createClient()
@@ -43,7 +40,6 @@ export default async function HomePage({ params }: HomePageProps) {
   const everyorgCount = statsData.data?.everyorg_count || 0
   const acncCount = statsData.data?.acnc_count || 0
   const servicesCount = statsData.data?.services_count || 0
-  const totalOrganizations = justgivingCount + everyorgCount + acncCount
 
   return (
     <div className="min-h-screen bg-white">
@@ -86,6 +82,7 @@ export default async function HomePage({ params }: HomePageProps) {
               >
                 <div className="text-center">
                   <div className="flex items-center justify-center mb-3">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src="/flags/1x1/gb.svg"
                       alt="United Kingdom"
@@ -100,7 +97,7 @@ export default async function HomePage({ params }: HomePageProps) {
                     Charities
                   </div>
                   <p className="text-blue-700 mb-4 text-xs">
-                    UK's leading charity fundraising platform with extensive charity database
+                    UK&apos;s leading charity fundraising platform with extensive charity database
                   </p>
                   <div className="flex items-center justify-center text-blue-600 group-hover:text-blue-800 text-xs">
                     <span className="mr-2">Browse Charities</span>
@@ -116,6 +113,7 @@ export default async function HomePage({ params }: HomePageProps) {
               >
                 <div className="text-center">
                   <div className="flex items-center justify-center mb-3">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src="/flags/1x1/us.svg"
                       alt="United States"
@@ -146,6 +144,7 @@ export default async function HomePage({ params }: HomePageProps) {
               >
                 <div className="text-center">
                   <div className="flex items-center justify-center mb-3">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src="/flags/1x1/au.svg"
                       alt="Australia"
@@ -327,6 +326,7 @@ export default async function HomePage({ params }: HomePageProps) {
                 >
                   <div className="flex items-start space-x-4">
                     {org.logo_url && (
+                      // eslint-disable-next-line @next/next/no-img-element
                       <img
                         src={org.logo_absolute_url || org.logo_url}
                         alt={org.name}

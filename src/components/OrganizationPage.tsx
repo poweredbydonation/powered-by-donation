@@ -541,7 +541,7 @@ export default function OrganizationPage({
               <h3 className="text-xl font-semibold text-gray-900 mb-4">Donate on {config.name}</h3>
               
               <p className="text-sm text-gray-600 mb-6 text-center">
-                Donate directly to {organization.display_name || organization.name} through {config.name}'s secure platform.
+                Donate directly to {organization.display_name || organization.name} through {config.name}&apos;s secure platform.
               </p>
               <Link
                 href={organization.profile_page_url || '#'}
@@ -724,7 +724,7 @@ export default function OrganizationPage({
                       <span className="font-medium">John Doe</span> donated <span className="font-semibold text-blue-600">$559</span> and got this service
                     </p>
                     <p className="text-xs text-gray-500 mt-1">
-                      "I love you"
+                      &quot;I love you&quot;
                     </p>
                   </div>
                   <span className="text-xs text-gray-400">2 days ago</span>
@@ -738,7 +738,7 @@ export default function OrganizationPage({
                       <span className="font-medium">Sarah Smith</span> donated <span className="font-semibold text-green-600">$320</span> and got web design service
                     </p>
                     <p className="text-xs text-gray-500 mt-1">
-                      "Excellent work, very satisfied!"
+                      &quot;Excellent work, very satisfied!&quot;
                     </p>
                   </div>
                   <span className="text-xs text-gray-400">5 days ago</span>
@@ -752,7 +752,7 @@ export default function OrganizationPage({
                       <span className="font-medium">Mike Johnson</span> donated <span className="font-semibold text-purple-600">$125</span> and got consulting service
                     </p>
                     <p className="text-xs text-gray-500 mt-1">
-                      "Great advice, will recommend!"
+                      &quot;Great advice, will recommend!&quot;
                     </p>
                   </div>
                   <span className="text-xs text-gray-400">1 week ago</span>
@@ -774,7 +774,7 @@ export default function OrganizationPage({
                       <span className="font-medium">George Wilson</span> donated <span className="font-semibold text-orange-600">$40</span>
                     </p>
                     <p className="text-xs text-gray-500 mt-1">
-                      "Keep up the great work!"
+                      &quot;Keep up the great work!&quot;
                     </p>
                   </div>
                   <span className="text-xs text-gray-400">1 day ago</span>
@@ -788,7 +788,7 @@ export default function OrganizationPage({
                       <span className="font-medium">Emma Davis</span> donated <span className="font-semibold text-red-600">$75</span>
                     </p>
                     <p className="text-xs text-gray-500 mt-1">
-                      "Supporting a great cause"
+                      &quot;Supporting a great cause&quot;
                     </p>
                   </div>
                   <span className="text-xs text-gray-400">3 days ago</span>
@@ -802,7 +802,7 @@ export default function OrganizationPage({
                       <span className="font-medium">Alex Brown</span> donated <span className="font-semibold text-indigo-600">$100</span>
                     </p>
                     <p className="text-xs text-gray-500 mt-1">
-                      "Happy to contribute to education"
+                      &quot;Happy to contribute to education&quot;
                     </p>
                   </div>
                   <span className="text-xs text-gray-400">1 week ago</span>

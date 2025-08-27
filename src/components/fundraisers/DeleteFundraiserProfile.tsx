@@ -83,7 +83,7 @@ export default function DeleteFundraiserProfile({ fundraiserId, fundraiserName }
     <div className="bg-red-50 border border-red-200 rounded-md p-4">
       <h4 className="text-lg font-medium text-red-900 mb-2">Remove Fundraiser Role</h4>
       <p className="text-red-700 mb-4">
-        Are you sure you want to remove your fundraiser role for "{fundraiserName}"? 
+        Are you sure you want to remove your fundraiser role for &quot;{fundraiserName}&quot;? 
         You can re-enable your fundraiser role later if needed.
       </p>
       

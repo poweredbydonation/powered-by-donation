@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
-import { useRouter, usePathname } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { useParams } from 'next/navigation'
 import { useAuth } from '@/hooks/useAuth'
 
@@ -13,8 +13,7 @@ interface AuthGuardProps {
 
 export default function AuthGuard({ 
   children, 
-  requireAuth = true, 
-  redirectTo = '/system/login' 
+  requireAuth = true 
 }: AuthGuardProps) {
   const { user, loading } = useAuth()
   const router = useRouter()
