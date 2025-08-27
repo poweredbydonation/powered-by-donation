@@ -45,34 +45,58 @@ export async function GET(request: NextRequest) {
     // Decode URL parameters properly
     const decodedCity = city ? decodeURIComponent(city.replace(/\+/g, ' ')) : '';
     
-    // Build count query with same filters as main query
-    let countQuery = supabase
-      .from('organization_cache')
-      .select('*', { count: 'exact' })
-      .eq('platform', 'justgiving')
-      .eq('is_active', true)
-      .eq('show_on_platform', true);
+    // Use pre-calculated count from platform_stats for base count (massive performance boost)
+    let totalCount = 0;
     
-    // Apply the same filters to count query
-    if (search) {
-      countQuery = countQuery.or(`name.ilike.%${search}%,description.ilike.%${search}%,registration_number.ilike.%${search}%,keywords.ilike.%${search}%`);
-    }
-    
-    if (category) {
-      countQuery = countQuery.eq('category', category);
-    }
-    
-    if (decodedCity && decodedCity !== 'all') {
-      if (decodedCity === 'online') {
-        // No additional filter needed for online - already filtered by is_active
-      } else {
-        // Filter by specific city
-        countQuery = countQuery.eq('address_city', decodedCity);
+    // If no filters are applied, use the fast pre-calculated count
+    if (!search && !category && !decodedCity && !featured && !preferred) {
+      const { data: statsData } = await supabase
+        .from('platform_stats')
+        .select('justgiving_count')
+        .order('last_updated', { ascending: false })
+        .limit(1);
+      
+      totalCount = statsData?.[0]?.justgiving_count || 0;
+    } else {
+      // Only run expensive count query when filters are applied
+      let countQuery = supabase
+        .from('organization_cache')
+        .select('*', { count: 'exact' })
+        .eq('platform', 'justgiving')
+        .eq('is_active', true)
+        .eq('show_on_platform', true);
+      
+      // Apply the same filters to count query
+      if (search) {
+        countQuery = countQuery.or(`name.ilike.%${search}%,description.ilike.%${search}%,registration_number.ilike.%${search}%,keywords.ilike.%${search}%`);
       }
-    }
-    
-    if (featured) {
-      countQuery = countQuery.eq('is_featured', true);
+      
+      if (category) {
+        countQuery = countQuery.eq('category', category);
+      }
+      
+      if (decodedCity && decodedCity !== 'all') {
+        if (decodedCity === 'online') {
+          // No additional filter needed for online - already filtered by is_active
+        } else {
+          // Filter by specific city
+          countQuery = countQuery.eq('address_city', decodedCity);
+        }
+      }
+      
+      if (featured) {
+        countQuery = countQuery.eq('is_featured', true);
+      }
+      
+      // Execute count query only when needed
+      const { count, error: countError } = await countQuery;
+      
+      if (countError) {
+        console.error('JustGiving count query error:', countError);
+        return NextResponse.json({ error: 'Failed to get count' }, { status: 500 });
+      }
+      
+      totalCount = count || 0;
     }
 
     let query = supabase
@@ -104,14 +128,6 @@ export async function GET(request: NextRequest) {
       query = query.eq('is_featured', true);
     }
     
-    // Execute count query first (without pagination to get total filtered count)
-    const { count: totalCount, error: countError } = await countQuery;
-    
-    if (countError) {
-      console.error('JustGiving count query error:', countError);
-      return NextResponse.json({ error: 'Failed to get count' }, { status: 500 });
-    }
-    
     // Apply pagination to the main query
     const offset = (page - 1) * limit;
     query = query
@@ -129,7 +145,7 @@ export async function GET(request: NextRequest) {
     
     // If preferred filter requested, we need to check which orgs are selected by services
     let filteredOrganizations = organizations || [];
-    let finalCount = totalCount || 0;
+    let finalCount = totalCount;
     
     if (preferred) {
       const { data: services } = await supabase
