@@ -4,6 +4,7 @@ import Link from 'next/link'
 import DeleteUserProfile from '@/components/profile/DeleteUserProfile'
 import UnifiedUserProfileForm from '@/components/profile/UnifiedUserProfileForm'
 import ServiceCreationForm from '@/components/services/ServiceCreationForm'
+import PersonalServicesContent from '@/components/services/PersonalServicesContent'
 import { getMessages } from 'next-intl/server'
 import { NextIntlClientProvider } from 'next-intl'
 import { buildPersonalUrl } from '@/lib/utils/entity-urls'
@@ -39,31 +40,15 @@ export default async function PersonalDashboard({ params, activeSection }: Perso
     switch (activeSection) {
       case 'services':
         return (
-          <div className="space-y-6">
-            <h1 className="text-3xl font-bold text-gray-900">My Services</h1>
-            
-            {/* Service Workflow Dashboard */}
+          <div className="min-h-screen bg-gray-50">
             {userProfile && (
-              <div className="bg-white border border-gray-200 rounded-lg p-6">
-                <h2 className="text-xl font-semibold text-gray-900 mb-4">Service Requests Workflow</h2>
-                <NextIntlClientProvider messages={messages}>
-                  <WorkflowDashboard userId={userProfile.id} />
-                </NextIntlClientProvider>
-              </div>
+              <NextIntlClientProvider messages={messages}>
+                <PersonalServicesContent 
+                  userId={userProfile.id} 
+                  locale={locale} 
+                />
+              </NextIntlClientProvider>
             )}
-            
-            {/* Service Creation Form */}
-            <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">Create New Service</h2>
-              <ServiceCreationForm />
-            </div>
-            
-            {/* Existing Services List */}
-            <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">Your Services</h2>
-              <p className="text-gray-600 text-sm">Your existing services will appear here.</p>
-              {/* TODO: Add services list component here */}
-            </div>
           </div>
         )
       
@@ -72,15 +57,25 @@ export default async function PersonalDashboard({ params, activeSection }: Perso
           <div className="space-y-6">
             <h1 className="text-3xl font-bold text-gray-900">My Donations</h1>
             <div className="bg-green-50 border border-green-200 rounded-md p-4">
-              <p className="text-green-800 mb-4">Track your donation history and impact.</p>
-              <Link 
-                href={getLocalizedServicesUrl(locale)}
-                className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition-colors inline-block"
-              >
-                Browse Services
-              </Link>
+              <p className="text-green-800">Track your donation history and impact.</p>
             </div>
             {/* TODO: Add donations list component here */}
+          </div>
+        )
+      
+      case 'service_requests':
+        return (
+          <div className="space-y-6">
+            <h1 className="text-3xl font-bold text-gray-900">My Service Requests</h1>
+            
+            {/* Service Requests Workflow Dashboard */}
+            {userProfile && (
+              <div className="bg-white border border-gray-200 rounded-lg p-6">
+                <NextIntlClientProvider messages={messages}>
+                  <WorkflowDashboard userId={userProfile.id} />
+                </NextIntlClientProvider>
+              </div>
+            )}
           </div>
         )
       
@@ -134,12 +129,6 @@ export default async function PersonalDashboard({ params, activeSection }: Perso
               <p className="text-blue-800">
                 {userProfile ? 'Your profile is set up and ready to use.' : 'Please complete your profile to get started.'}
               </p>
-              {userProfile && (
-                <div className="mt-2 text-sm text-blue-600">
-                  {userProfile.is_fundraiser && <span className="mr-4">✓ Service Fundraiser</span>}
-                  {userProfile.is_donor && <span>✓ Donor</span>}
-                </div>
-              )}
             </div>
 
             {/* Profile Setup Section */}
@@ -157,71 +146,45 @@ export default async function PersonalDashboard({ params, activeSection }: Perso
             )}
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {/* Fundraiser Section */}
-              {userProfile?.is_fundraiser ? (
-                <div className="bg-blue-50 rounded-lg p-4">
-                  <h3 className="font-semibold text-blue-900 mb-2">Fundraiser Dashboard</h3>
-                  <p className="text-blue-700 text-sm mb-3">Manage your services and view requests.</p>
-                  <div className="space-y-2">
-                    <Link 
-                      href={buildPersonalUrl(locale, 'services')}
-                      className="block text-blue-600 hover:text-blue-800 text-sm"
-                    >
-                      → Manage Services
-                    </Link>
-                    <Link 
-                      href={buildPersonalUrl(locale, 'services')}
-                      className="block text-blue-600 hover:text-blue-800 text-sm"
-                    >
-                      → Create New Service
-                    </Link>
-                  </div>
-                </div>
-              ) : (
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <h3 className="font-semibold text-gray-900 mb-2">Become a Fundraiser</h3>
-                  <p className="text-gray-600 text-sm mb-3">Offer your skills and services to help charities.</p>
+              {/* Services Dashboard */}
+              <div className="bg-blue-50 rounded-lg p-4">
+                <h3 className="font-semibold text-blue-900 mb-2">Services Dashboard</h3>
+                <p className="text-blue-700 text-sm mb-3">Manage your services and view requests.</p>
+                <div className="space-y-2">
                   <Link 
-                    href={buildPersonalUrl(locale, 'profile')}
-                    className="text-blue-600 hover:text-blue-800 text-sm"
+                    href={buildPersonalUrl(locale, 'services')}
+                    className="block text-blue-600 hover:text-blue-800 text-sm"
                   >
-                    → Enable Fundraiser Role
+                    → Manage Services
+                  </Link>
+                  <Link 
+                    href={buildPersonalUrl(locale, 'services')}
+                    className="block text-blue-600 hover:text-blue-800 text-sm"
+                  >
+                    → Create New Service
                   </Link>
                 </div>
-              )}
+              </div>
 
-              {/* Donor Section */}
-              {userProfile?.is_donor ? (
-                <div className="bg-green-50 rounded-lg p-4">
-                  <h3 className="font-semibold text-green-900 mb-2">Donor Dashboard</h3>
-                  <p className="text-green-700 text-sm mb-3">Track your donations and impact.</p>
-                  <div className="space-y-2">
-                    <Link 
-                      href={buildPersonalUrl(locale, 'donations')}
-                      className="block text-green-600 hover:text-green-800 text-sm"
-                    >
-                      → My Donations
-                    </Link>
-                    <Link 
-                      href={getLocalizedServicesUrl(locale)}
-                      className="block text-green-600 hover:text-green-800 text-sm"
-                    >
-                      → Browse Services
-                    </Link>
-                  </div>
-                </div>
-              ) : (
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <h3 className="font-semibold text-gray-900 mb-2">Become a Donor</h3>
-                  <p className="text-gray-600 text-sm mb-3">Support charities through skill-based donations.</p>
+              {/* Donations Dashboard */}
+              <div className="bg-green-50 rounded-lg p-4">
+                <h3 className="font-semibold text-green-900 mb-2">Donations Dashboard</h3>
+                <p className="text-green-700 text-sm mb-3">Track your donations and impact.</p>
+                <div className="space-y-2">
                   <Link 
-                    href={buildPersonalUrl(locale, 'profile')}
-                    className="text-blue-600 hover:text-blue-800 text-sm"
+                    href={buildPersonalUrl(locale, 'donations')}
+                    className="block text-green-600 hover:text-green-800 text-sm"
                   >
-                    → Enable Donor Role
+                    → My Donations
+                  </Link>
+                  <Link 
+                    href={getLocalizedServicesUrl(locale)}
+                    className="block text-green-600 hover:text-green-800 text-sm"
+                  >
+                    → Browse Services
                   </Link>
                 </div>
-              )}
+              </div>
 
               {/* General Settings */}
               <div className="bg-gray-50 rounded-lg p-4">
@@ -254,11 +217,6 @@ export default async function PersonalDashboard({ params, activeSection }: Perso
                     <p><strong>Name:</strong> {userProfile.name}</p>
                     {userProfile.username && <p><strong>Username:</strong> {userProfile.username}</p>}
                     {userProfile.location && <p><strong>Location:</strong> {userProfile.location}</p>}
-                    <p><strong>Roles:</strong> 
-                      {userProfile.is_fundraiser && userProfile.is_donor ? ` Fundraiser and Donor` :
-                       userProfile.is_fundraiser ? ` Fundraiser` :
-                       userProfile.is_donor ? ` Donor` : ` No roles assigned`}
-                    </p>
                   </div>
                   <div className="flex gap-4">
                     <Link

@@ -259,9 +259,6 @@ export default function MultilingualNavbar({ locale, messages, platformStats }: 
                   
                   {isProfileOpen && (
                     <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg border z-50">
-                      <div className="px-4 py-3 border-b border-gray-100">
-                        <p className="text-sm text-gray-600">{user.email}</p>
-                      </div>
                       <div className="p-2 space-y-1">
                         {/* Pending Donations Notification */}
                         {pendingCount > 0 && (
@@ -288,6 +285,13 @@ export default function MultilingualNavbar({ locale, messages, platformStats }: 
                           onClick={() => setIsProfileOpen(false)}
                         >
                           My Services
+                        </a>
+                        <a
+                          href={buildPersonalUrl(locale, 'service_requests')}
+                          className="block w-full text-gray-700 hover:bg-gray-50 px-3 py-2 rounded text-sm font-medium transition-colors text-left"
+                          onClick={() => setIsProfileOpen(false)}
+                        >
+                          My Service Requests
                         </a>
                         <a
                           href={buildPersonalUrl(locale, 'donations')}
@@ -476,6 +480,17 @@ export default function MultilingualNavbar({ locale, messages, platformStats }: 
                         <span className="flex items-center space-x-2">
                           <span>🛠️</span>
                           <span>My Services</span>
+                        </span>
+                      </a>
+                      
+                      <a
+                        href={buildPersonalUrl(locale, 'service_requests')}
+                        className="block w-full bg-gradient-to-r from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700 text-white px-4 py-3 rounded-xl transition-all duration-200 font-semibold text-left shadow-lg hover:shadow-xl transform hover:scale-105"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        <span className="flex items-center space-x-2">
+                          <span>📋</span>
+                          <span>My Service Requests</span>
                         </span>
                       </a>
                       

@@ -293,70 +293,74 @@ export default function ServicesPageContent({ params }: ServicesPageProps) {
           </div>
 
           {/* Search and Filters - Hidden on mobile */}
-          <div className="hidden md:block bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8 space-y-6">
+          <div className="hidden md:block bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
 
-            {/* Search Bar */}
-            <div className="relative">
-              <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder={messages.common?.search || 'Search services, fundraisers, or descriptions...'}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-            </div>
-
-            {/* Platform Filter */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Platform
-              </label>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <button
-                  onClick={() => setPlatformFilter('all')}
-                  className={`px-4 py-2 rounded-lg border font-medium transition-colors ${
-                    platformFilter === 'all'
-                      ? 'bg-gray-900 text-white border-gray-900'
-                      : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
-                  }`}
-                >
-                  All Platforms ({services.length})
-                </button>
-                <button
-                  onClick={() => setPlatformFilter('justgiving')}
-                  className={`px-4 py-2 rounded-lg border font-medium transition-colors ${
-                    platformFilter === 'justgiving'
-                      ? 'bg-blue-600 text-white border-blue-600'
-                      : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
-                  }`}
-                >
-                  JustGiving ({services.filter(s => s.platform === 'justgiving').length})
-                </button>
-                <button
-                  onClick={() => setPlatformFilter('everyorg')}
-                  className={`px-4 py-2 rounded-lg border font-medium transition-colors ${
-                    platformFilter === 'everyorg'
-                      ? 'bg-green-600 text-white border-green-600'
-                      : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
-                  }`}
-                >
-                  Every.org ({services.filter(s => s.platform === 'everyorg').length})
-                </button>
+            {/* Search Bar - Top Row */}
+            <div className="mb-6">
+              <div className="relative w-80">
+                <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder={messages.common?.search || 'Search services...'}
+                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
               </div>
             </div>
-            
-            {/* Location Filter */}
-            <ServiceLocationFilter 
-              onFilterChange={setLocationFilter}
-              services={services.map(service => ({
-                id: service.id,
-                title: service.title,
-                service_locations: Array.isArray(service.service_locations) 
-                  ? service.service_locations as ServiceLocation[]
-                  : []
-              }))}
-            />
+
+            {/* Platform Filter - Second Row */}
+            <div className="mb-6">
+              <div className="space-y-3">
+                <h3 className="text-lg font-medium text-gray-900">Platform</h3>
+                <div className="grid grid-cols-3 gap-3">
+                  <button
+                    onClick={() => setPlatformFilter('all')}
+                    className={`flex items-center justify-center p-3 min-h-16 rounded-lg border transition-colors ${
+                      platformFilter === 'all'
+                        ? 'bg-blue-50 border-blue-200 text-blue-700'
+                        : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'
+                    }`}
+                  >
+                    <span className="text-sm font-medium">All ({services.length})</span>
+                  </button>
+                  <button
+                    onClick={() => setPlatformFilter('justgiving')}
+                    className={`flex items-center justify-center p-3 min-h-16 rounded-lg border transition-colors ${
+                      platformFilter === 'justgiving'
+                        ? 'bg-blue-50 border-blue-200 text-blue-700'
+                        : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'
+                    }`}
+                  >
+                    <span className="text-sm font-medium">JustGiving ({services.filter(s => s.platform === 'justgiving').length})</span>
+                  </button>
+                  <button
+                    onClick={() => setPlatformFilter('everyorg')}
+                    className={`flex items-center justify-center p-3 min-h-16 rounded-lg border transition-colors ${
+                      platformFilter === 'everyorg'
+                        ? 'bg-green-50 border-green-200 text-green-700'
+                        : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'
+                    }`}
+                  >
+                    <span className="text-sm font-medium">Every.org ({services.filter(s => s.platform === 'everyorg').length})</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+              
+            {/* Location Filter - Third Row */}
+            <div>
+              <ServiceLocationFilter 
+                onFilterChange={setLocationFilter}
+                services={services.map(service => ({
+                  id: service.id,
+                  title: service.title,
+                  service_locations: Array.isArray(service.service_locations) 
+                    ? service.service_locations as ServiceLocation[]
+                    : []
+                }))}
+              />
+            </div>
           </div>
 
           {/* Filter Summary */}

@@ -8,7 +8,7 @@
 import { DonationPlatform } from '@/types/database'
 
 // Entity types (canonical values)
-export type EntityType = 'charities' | 'nonprofits' | 'services' | 'donations' | 'profile' | 'settings' | 'donation-success' | 'login' | 'signup'
+export type EntityType = 'charities' | 'nonprofits' | 'services' | 'donations' | 'profile' | 'settings' | 'service_requests' | 'donation-success' | 'login' | 'signup'
 
 // Platform to entity type mapping
 export const PLATFORM_ENTITY_TYPES: Record<DonationPlatform, EntityType> = {
@@ -42,7 +42,7 @@ export const PERSONAL_PLATFORM_SLUGS: Record<string, string> = {
 }
 
 // Personal platform entity types (for dashboard sections)
-export const PERSONAL_ENTITY_TYPES: EntityType[] = ['services', 'donations', 'profile', 'settings']
+export const PERSONAL_ENTITY_TYPES: EntityType[] = ['services', 'donations', 'profile', 'settings', 'service_requests']
 
 // System entity types (for general app pages)
 export const SYSTEM_ENTITY_TYPES: EntityType[] = ['donation-success', 'login', 'signup']
@@ -240,6 +240,25 @@ export const ENTITY_URL_SLUGS: Record<EntityType, Record<string, string>> = {
     yue: 'ji-chaak',
     pa: 'signup',
     vi: 'dang-ky'
+  },
+  service_requests: {
+    en: 'service-requests',
+    de: 'service-anfragen',
+    es: 'solicitudes-de-servicio',
+    fr: 'demandes-de-service',
+    it: 'richieste-di-servizio',
+    pt: 'solicitacoes-de-servico',
+    ja: 'sabisu-rikuesuto',
+    ko: 'seobiseu-yocheong',
+    zh: 'fuwu-qingqiu',
+    ar: 'talabat-alkhadamat',
+    hi: 'seva-anuroth',
+    tr: 'hizmet-talepleri',
+    tl: 'mga-request-sa-serbisyo',
+    el: 'aitiseis-ypiresion',
+    yue: 'fuk-mou-cing-kau',
+    pa: 'sewa-benti',
+    vi: 'yeu-cau-dich-vu'
   }
 }
 

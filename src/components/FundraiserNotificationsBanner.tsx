@@ -126,7 +126,7 @@ export default function FundraiserNotificationsBanner() {
                 
                 <br className="sm:hidden" />
                 <Link 
-                  href={`/${locale}/dashboard/services`} 
+                  href={`/${locale}/my/service-requests`} 
                   className="text-green-800 underline hover:text-green-900 font-medium text-sm"
                 >
                   <span className="hidden sm:inline">View your services</span>

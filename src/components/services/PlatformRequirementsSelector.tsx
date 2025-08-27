@@ -507,6 +507,7 @@ export default function PlatformRequirementsSelector({
     acnc: { name: 'ACNC', color: 'orange', entityName: 'Charities' }
   }
 
+
   return (
     <div className="space-y-6">
       <div>
@@ -516,13 +517,13 @@ export default function PlatformRequirementsSelector({
         
         {/* Platform-Specific Configuration */}
         <div className="mb-6">
-          {/* Mobile-first header */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 space-y-2 sm:space-y-0">
-            <div className="flex items-center space-x-2">
-              <div className="h-2 w-2 bg-[#7A04DD] rounded-full"></div>
-              <span className="text-sm font-medium text-gray-700">Select Platform:</span>
-            </div>
-            {!readOnly && (
+          {/* Mobile-first header - Hidden in read-only mode */}
+          {!readOnly && (
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 space-y-2 sm:space-y-0">
+              <div className="flex items-center space-x-2">
+                <div className="h-2 w-2 bg-[#7A04DD] rounded-full"></div>
+                <span className="text-sm font-medium text-gray-700">Select Platform:</span>
+              </div>
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-y-0 sm:space-x-2">
                 <button
                   type="button"
@@ -541,12 +542,35 @@ export default function PlatformRequirementsSelector({
                   </button>
                 )}
               </div>
-            )}
-          </div>
+            </div>
+          )}
           
           {/* Mobile: Remove outer border, use full width sections */}
           <div className="space-y-4 md:border md:rounded-lg md:p-4">
-            {(['justgiving', 'everyorg', 'acnc'] as DonationPlatform[]).map(platform => {
+            {(['justgiving', 'everyorg', 'acnc'] as DonationPlatform[])
+              .filter(platform => {
+                // In read-only mode, only show platforms with selected organizations
+                if (readOnly && value?.platform_rules) {
+                  const rule = value.platform_rules[platform]
+                  if (!rule) return false
+                  
+                  // Show if platform has specific organizations selected
+                  if (rule.organizations === 'specific_organizations') {
+                    return rule.specific_organizations && rule.specific_organizations.length > 0
+                  }
+                  
+                  // Show if platform has select_all_organizations mode (always has organizations)
+                  if (rule.select_all_organizations) {
+                    return true
+                  }
+                  
+                  return false
+                }
+                
+                // In edit mode, show all platforms
+                return true
+              })
+              .map(platform => {
               const config = platformConfig[platform]
               const isSelected = value.allowed_platforms.includes(platform)
               const isExpanded = expandedPlatforms[platform]

@@ -61,7 +61,16 @@ Internationalization: next-intl with 17 language support
 **Branding Systems**: Complete - Platform-specific theming and official brand guidelines implemented
 **Service Workflow System**: Complete - Full service request workflow with automated state management, real-time notifications, and comprehensive feedback system
 **Personal Services Management**: Complete - Full-width mobile-responsive personal services dashboard with management controls
-**Workflow Dashboard**: Complete - Dedicated workflow page for tracking service requests and donation status across all roles
+**Dynamic Routing System**: Complete - Unified `/[locale]/[platform]/[entity_type]` routing with personal platform support
+**User Role System**: Simplified - Removed role selection, all users have both fundraiser and donor capabilities
+**Navigation System**: Enhanced - Added service requests menu item, updated profile dropdown
+
+Recent Updates:
+- Converted static routes to dynamic platform system (`/my/services` → `/[locale]/[platform]/[entity_type]`)
+- Added `service_requests` entity type with localized URL slugs
+- Removed user role selection - all users are both fundraisers and donors
+- Enhanced navigation with service requests menu item
+- Unified services page with proper card display and creation flow
 
 For detailed status information, progress tracking, and implementation history, see `project-status/CLAUDE.md`.
 

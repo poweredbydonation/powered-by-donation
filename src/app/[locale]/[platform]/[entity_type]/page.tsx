@@ -250,7 +250,8 @@ export async function generateMetadata({ params }: EntityBrowsePageProps) {
       services: 'My Services',
       donations: 'My Donations',
       profile: 'My Profile',
-      settings: 'My Settings'
+      settings: 'My Settings',
+      service_requests: 'My Service Requests'
     }
 
     return {

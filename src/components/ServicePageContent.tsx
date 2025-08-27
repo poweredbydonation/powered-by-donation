@@ -409,9 +409,6 @@ export default function ServicePageContent({ params }: ServicePageProps) {
 
           {/* Platform Requirements */}
           <div className="bg-white rounded-lg shadow-sm p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">
-              Platform Requirements
-            </h3>
             {service.platform_requirements ? (
               <PlatformRequirementsSelector
                 value={service.platform_requirements}
@@ -420,8 +417,13 @@ export default function ServicePageContent({ params }: ServicePageProps) {
                 readOnly={true}
               />
             ) : (
-              <div className="text-gray-500 italic">
-                No platform requirements configured
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                  Platform Requirements
+                </h3>
+                <div className="text-gray-500 italic">
+                  No platform requirements configured
+                </div>
               </div>
             )}
           </div>

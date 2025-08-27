@@ -12,6 +12,10 @@ import { DonationPlatform } from '@/types/database'
 import { 
   getEntityTypeFromSlug, 
   getPlatformEntityType,
+  isPersonalPlatform,
+  PERSONAL_ENTITY_TYPES,
+  PERSONAL_PLATFORM_SLUGS,
+  SYSTEM_PLATFORM_SLUGS
 } from '@/lib/utils/entity-urls'
 import OrganizationPage from '@/components/OrganizationPage'
 import { Suspense } from 'react'
@@ -31,7 +35,12 @@ function isValidPlatform(platform: string): platform is DonationPlatform {
 }
 
 function isValidPlatformSlug(platform: string): boolean {
-  return ['justgiving', 'everyorg', 'acnc', 'poweredbydonation'].includes(platform.toLowerCase())
+  const normalizedPlatforms = ['justgiving', 'everyorg', 'acnc', 'poweredbydonation']
+  const personalPlatforms = Object.values(PERSONAL_PLATFORM_SLUGS)
+  const systemPlatforms = Object.values(SYSTEM_PLATFORM_SLUGS)
+  return normalizedPlatforms.includes(platform.toLowerCase()) || 
+         personalPlatforms.includes(platform) || 
+         systemPlatforms.includes(platform)
 }
 
 function normalizePlatformSlug(platform: string): string {
@@ -81,6 +90,32 @@ export default async function EntityDetailPage({ params }: EntityPageProps) {
           />
         </Suspense>
       )
+    }
+
+    // Handle personal platform entities with slugs
+    if (isPersonalPlatform(normalizedPlatform)) {
+      if (!PERSONAL_ENTITY_TYPES.includes(entityType)) {
+        notFound()
+      }
+
+      // For personal platform services, the slug represents a service ID or slug
+      if (entityType === 'services') {
+        // Handle individual service editing/viewing
+        const messages = await getMessages({ locale })
+        const ServicePageContent = await ServicePage()
+        
+        return (
+          <Suspense fallback={<div>Loading service...</div>}>
+            <ServicePageContent 
+              params={{ locale, slug }}
+            />
+          </Suspense>
+        )
+      }
+
+      // For other personal entities, redirect to the main entity page
+      // since they don't have individual slug pages
+      notFound()
     }
 
     // Handle donation platforms
@@ -191,6 +226,43 @@ export async function generateMetadata({ params }: EntityPageProps) {
     return {
       title: `${service.title} - Services - Powered by Donation`,
       description: service.description || `Professional service: ${service.title}. Support charities through skill-based donations.`,
+    }
+  }
+
+  // Handle personal platform services
+  if (isPersonalPlatform(normalizedPlatform)) {
+    if (!PERSONAL_ENTITY_TYPES.includes(entityType)) {
+      return {
+        title: 'Page Not Found',
+      }
+    }
+
+    if (entityType === 'services') {
+      // Fetch personal service for metadata
+      const supabase = createAnonClient()
+      const { data: services } = await supabase
+        .from('services')
+        .select('title, description')
+        .eq('is_active', true)
+
+      // Find service by slug
+      const generateSlug = (title: string) => title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
+      const service = services?.find(s => generateSlug(s.title) === slug)
+
+      if (!service) {
+        return {
+          title: 'Service Not Found - My Services',
+        }
+      }
+
+      return {
+        title: `${service.title} - My Services - Powered by Donation`,
+        description: service.description || `Manage your service: ${service.title}.`,
+      }
+    }
+
+    return {
+      title: 'Personal Page Not Found',
     }
   }
 

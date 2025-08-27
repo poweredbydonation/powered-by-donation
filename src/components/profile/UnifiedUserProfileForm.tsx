@@ -22,9 +22,6 @@ export default function UnifiedUserProfileForm({ user, existingProfile, onProfil
   const [avatarUrl, setAvatarUrl] = useState(existingProfile?.avatar_url || '')
   const [preferredCurrency, setPreferredCurrency] = useState<CurrencyCode>(existingProfile?.preferred_currency || 'GBP')
   
-  // Role toggles
-  const [isFundraiser, setIsFundraiser] = useState(existingProfile?.is_fundraiser || false)
-  const [isDonor, setIsDonor] = useState(existingProfile?.is_donor ?? true)
   
   // Form state
   const [loading, setLoading] = useState(false)
@@ -46,10 +43,6 @@ export default function UnifiedUserProfileForm({ user, existingProfile, onProfil
         throw new Error('Name is required')
       }
 
-      // Ensure user has at least one role
-      if (!isFundraiser && !isDonor) {
-        throw new Error('You must be either a fundraiser, donor, or both')
-      }
 
       const profileData = {
         id: user.id,
@@ -61,8 +54,8 @@ export default function UnifiedUserProfileForm({ user, existingProfile, onProfil
         phone: phone.trim() || null,
         avatar_url: avatarUrl.trim() || null,
         preferred_currency: preferredCurrency,
-        is_fundraiser: isFundraiser,
-        is_donor: isDonor
+        is_fundraiser: true,
+        is_donor: true
       }
 
       let result
@@ -126,37 +119,6 @@ export default function UnifiedUserProfileForm({ user, existingProfile, onProfil
       )}
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Role Selection */}
-        <div className="bg-blue-50 border border-blue-200 rounded-md p-4">
-          <h3 className="text-lg font-semibold text-blue-900 mb-3">Your Role(s)</h3>
-          <div className="space-y-3">
-            <label className="flex items-center">
-              <input
-                type="checkbox"
-                checked={isFundraiser}
-                onChange={(e) => setIsFundraiser(e.target.checked)}
-                className="mr-3 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-              />
-              <div>
-                <span className="font-medium text-gray-900">Service Fundraiser</span>
-                <p className="text-sm text-gray-600">Offer services and help charities</p>
-              </div>
-            </label>
-            
-            <label className="flex items-center">
-              <input
-                type="checkbox"
-                checked={isDonor}
-                onChange={(e) => setIsDonor(e.target.checked)}
-                className="mr-3 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-              />
-              <div>
-                <span className="font-medium text-gray-900">Donor</span>
-                <p className="text-sm text-gray-600">Find services and make charitable donations</p>
-              </div>
-            </label>
-          </div>
-        </div>
 
         {/* Basic Information */}
         <div>

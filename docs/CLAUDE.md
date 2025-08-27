@@ -16,11 +16,18 @@ Internationalization: next-intl with 17 language support
 ### URL Structure
 ```
 /{locale}/                                    # Site welcome
-/{locale}/services/                           # Browse all services (location + platform + category filtered)
-/{locale}/services/[slug]/                    # Individual service + donation flow
+/{locale}/PoweredByDonation/services/        # Browse all services (location + platform + category filtered)
 /{locale}/[platform]/                         # Platform home (justgiving/everyorg)  
-/{locale}/[platform]/[entity_type]/          # Browse organizations (charities/nonprofits)
-/{locale}/[platform]/[entity_type]/[slug]/   # Individual organization + context actions
+/{locale}/[platform]/[entity_type]/          # Browse entities (charities/nonprofits/services/donations/profile/service_requests)
+/{locale}/[platform]/[entity_type]/[slug]/   # Individual entity + context actions
+
+Examples:
+/{locale}/justgiving/charities/               # Browse JustGiving charities
+/{locale}/everyorg/nonprofits/                # Browse Every.org nonprofits
+/{locale}/my/services/                        # Personal services management
+/{locale}/my/service-requests/                # Personal service requests (workflow)
+/{locale}/my/donations/                       # Personal donations tracking
+/{locale}/my/profile/                         # Personal profile management
 ```
 
 ### Uniform Platform Naming Convention

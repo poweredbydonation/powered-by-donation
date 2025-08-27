@@ -244,7 +244,7 @@ export default function ServiceLocationFilter({
               }`}
             >
               <Globe className="h-4 w-4 mr-2" />
-              <span className="text-sm font-medium">All Services</span>
+              <span className="text-sm font-medium">All</span>
             </button>
             
             <button
