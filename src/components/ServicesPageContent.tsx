@@ -243,8 +243,9 @@ export default function ServicesPageContent({ params }: ServicesPageProps) {
 
   const handleMobileLocationTypeChange = (type: LocationFilter['type']) => {
     if (type === 'physical' || type === 'hybrid') {
-      // For physical/hybrid services, show location map modal
-      // The ServiceLocationFilter component will handle the map interface
+      // First update the location type in the state
+      setMobileFilters(prev => ({ ...prev, location: { type } }))
+      // Then show location map modal for location/radius selection
       setShowMobileLocationMap(true)
     } else {
       // Direct selection for all/remote
@@ -592,17 +593,16 @@ export default function ServicesPageContent({ params }: ServicesPageProps) {
             </div>
 
             {/* Modal Content */}
-            <div className="p-4 space-y-6">
+            <div className="p-4 space-y-4">
               {/* Search Bar */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Search</label>
                 <div className="relative">
                   <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                   <input
                     type="text"
                     value={mobileFilters.search}
                     onChange={(e) => setMobileFilters(prev => ({ ...prev, search: e.target.value }))}
-                    placeholder="Search services, fundraisers..."
+                    placeholder="🔍 Search services, fundraisers..."
                     className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
@@ -610,95 +610,38 @@ export default function ServicesPageContent({ params }: ServicesPageProps) {
 
               {/* Platform Filter */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Platform</label>
-                <div className="space-y-2">
-                  <label className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="platform"
-                      checked={mobileFilters.platform === 'all'}
-                      onChange={() => setMobileFilters(prev => ({ ...prev, platform: 'all' }))}
-                      className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
-                    />
-                    <span className="text-sm text-gray-700">All Platforms</span>
-                  </label>
-                  <label className="flex items-center space-x-3 p-2 rounded-lg hover:bg-blue-50 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="platform"
-                      checked={mobileFilters.platform === 'justgiving'}
-                      onChange={() => setMobileFilters(prev => ({ ...prev, platform: 'justgiving' }))}
-                      className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
-                    />
-                    <span className="text-sm text-gray-700">JustGiving</span>
-                  </label>
-                  <label className="flex items-center space-x-3 p-2 rounded-lg hover:bg-green-50 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="platform"
-                      checked={mobileFilters.platform === 'everyorg'}
-                      onChange={() => setMobileFilters(prev => ({ ...prev, platform: 'everyorg' }))}
-                      className="w-4 h-4 text-green-600 border-gray-300 focus:ring-green-500"
-                    />
-                    <span className="text-sm text-gray-700">Every.org</span>
-                  </label>
+                <div className="relative">
+                  <select
+                    value={mobileFilters.platform}
+                    onChange={(e) => setMobileFilters(prev => ({ ...prev, platform: e.target.value as PlatformFilter }))}
+                    className="w-full p-3 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none bg-white"
+                  >
+                    <option value="all">💼 All Platforms</option>
+                    <option value="justgiving">🟣 JustGiving</option>
+                    <option value="everyorg">🟢 Every.org</option>
+                  </select>
+                  <svg className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
                 </div>
               </div>
 
               {/* Location Filter */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Location</label>
-                <div className="space-y-2">
-                  <label className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="location"
-                      checked={mobileFilters.location.type === 'all'}
-                      onChange={() => handleMobileLocationTypeChange('all')}
-                      className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
-                    />
-                    <span className="text-sm text-gray-700">All Locations</span>
-                  </label>
-                  <label className="flex items-center space-x-3 p-2 rounded-lg hover:bg-blue-50 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="location"
-                      checked={mobileFilters.location.type === 'remote'}
-                      onChange={() => handleMobileLocationTypeChange('remote')}
-                      className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
-                    />
-                    <span className="text-sm text-gray-700">Remote</span>
-                  </label>
-                  <label className="flex items-center space-x-3 p-2 rounded-lg hover:bg-blue-50 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="location"
-                      checked={mobileFilters.location.type === 'physical'}
-                      onChange={() => handleMobileLocationTypeChange('physical')}
-                      className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
-                    />
-                    <span className="text-sm text-gray-700">
-                      In-Person
-                      {mobileFilters.location.type === 'physical' && mobileFilters.location.location && 
-                        ` (${mobileFilters.location.radius}km radius)`
-                      }
-                    </span>
-                  </label>
-                  <label className="flex items-center space-x-3 p-2 rounded-lg hover:bg-blue-50 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="location"
-                      checked={mobileFilters.location.type === 'hybrid'}
-                      onChange={() => handleMobileLocationTypeChange('hybrid')}
-                      className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
-                    />
-                    <span className="text-sm text-gray-700">
-                      Hybrid
-                      {mobileFilters.location.type === 'hybrid' && mobileFilters.location.location && 
-                        ` (${mobileFilters.location.radius}km radius)`
-                      }
-                    </span>
-                  </label>
+                <div className="relative">
+                  <select
+                    value={mobileFilters.location.type}
+                    onChange={(e) => handleMobileLocationTypeChange(e.target.value as LocationFilter['type'])}
+                    className="w-full p-3 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none bg-white"
+                  >
+                    <option value="all">🌏 All Locations</option>
+                    <option value="remote">💻 Remote</option>
+                    <option value="physical">📍 In-Person{mobileFilters.location.type === 'physical' && mobileFilters.location.location && ` (${mobileFilters.location.radius}km)`}</option>
+                    <option value="hybrid">🔄 Hybrid{mobileFilters.location.type === 'hybrid' && mobileFilters.location.location && ` (${mobileFilters.location.radius}km)`}</option>
+                  </select>
+                  <svg className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
                 </div>
               </div>
             </div>
@@ -746,14 +689,14 @@ export default function ServicesPageContent({ params }: ServicesPageProps) {
             {/* Mobile Location Map Interface */}
             <div className="flex-1 overflow-y-auto">
               {/* Instructions */}
-              <div className="p-4 bg-blue-50 border-b">
-                <p className="text-sm text-blue-800">
-                  Tap on the map to set your location, then adjust the radius to find {mobileFilters.location.type} services near you.
+              <div className="p-2 bg-blue-50 border-b">
+                <p className="text-xs text-blue-800">
+                  📍 Tap map & set radius to find nearby services
                 </p>
               </div>
 
               {/* Real Map Component for Mobile */}
-              <div className="p-4">
+              <div className="p-2">
                 <ServiceLocationFilter 
                   onFilterChange={handleMobileLocationMapChange}
                   services={services.map(service => ({
@@ -763,7 +706,7 @@ export default function ServicesPageContent({ params }: ServicesPageProps) {
                       ? service.service_locations as ServiceLocation[]
                       : []
                   }))}
-                  className="min-h-[500px]"
+                  className="h-full min-h-[300px]"
                   forceShowMap={true}
                   initialType={mobileFilters.location.type === 'hybrid' || mobileFilters.location.type === 'physical' ? mobileFilters.location.type : 'physical'}
                   hideTypeSelector={true}

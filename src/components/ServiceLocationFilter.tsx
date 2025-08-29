@@ -297,12 +297,7 @@ export default function ServiceLocationFilter({
       {/* Map Section for Physical/Hybrid */}
       {showMap && (
         <div className="space-y-4">
-          <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-            <h4 className="font-medium text-blue-900 mb-2">Find Services Near You</h4>
-            <p className="text-sm text-blue-700 mb-3">
-              Click on the map to set your location and adjust the radius to find nearby services.
-            </p>
-            
+          <div className="bg-blue-50 p-2 rounded-lg border border-blue-200">
             {/* Map Legend */}
             <div className="flex flex-wrap gap-4 text-xs">
               <div className="flex items-center">
@@ -318,7 +313,7 @@ export default function ServiceLocationFilter({
 
           {/* Map Container */}
           <div className="relative">
-            <div className="h-80 w-full rounded-lg overflow-hidden border border-gray-300 shadow-sm">
+            <div className="h-[calc(100vh-360px)] md:h-96 w-full rounded-lg overflow-hidden border border-gray-300 shadow-sm">
               <APIProvider 
                 apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!}
                 onLoad={() => console.log('Google Maps loaded')}
@@ -361,10 +356,6 @@ export default function ServiceLocationFilter({
 
           {/* Radius Selection */}
           <div className="space-y-3">
-            <label className="block text-sm font-medium text-gray-700">
-              Search radius: <span className="font-semibold text-blue-600">{radius}km</span>
-            </label>
-            
             {/* Desktop: Slider */}
             <div className="hidden sm:block">
               <input

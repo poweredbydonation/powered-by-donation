@@ -1011,7 +1011,7 @@ export default function OrganizationBrowse({
               
               {/* Inline City Filter */}
               {justgivingCities.length > 0 && (
-                <div className="w-full lg:w-64">
+                <div className="w-full lg:w-64 hidden md:block">
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Location
                   </label>
@@ -1901,14 +1901,16 @@ export default function OrganizationBrowse({
       </div>
 
       {/* Filter Button - All platforms, all screen sizes */}
-      {(platform === 'acnc' || platform === 'everyorg') && (
-        <div className="fixed bottom-20 md:bottom-6 right-6 z-50">
+      {(platform === 'acnc' || platform === 'everyorg' || platform === 'justgiving') && (
+        <div className="fixed bottom-32 md:bottom-6 right-4 md:right-6 z-50">
           <button
             onClick={openMobileFilters}
             className={`${
               platform === 'acnc' 
                 ? 'bg-orange-600 hover:bg-orange-700' 
-                : 'bg-green-600 hover:bg-green-700'
+                : platform === 'everyorg'
+                ? 'bg-green-600 hover:bg-green-700'
+                : 'bg-purple-600 hover:bg-purple-700'
             } text-white p-4 rounded-full shadow-lg transition-all duration-200 transform hover:scale-105`}
           >
             <Filter className="h-6 w-6" />
@@ -1916,8 +1918,8 @@ export default function OrganizationBrowse({
         </div>
       )}
 
-      {/* Filter Modal - ACNC and Every.org */}
-      {(platform === 'acnc' || platform === 'everyorg') && showMobileFilters && (
+      {/* Filter Modal - All platforms */}
+      {(platform === 'acnc' || platform === 'everyorg' || platform === 'justgiving') && showMobileFilters && (
         <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-end md:items-center md:justify-end md:pr-6 md:pb-20">
           <div className="bg-white rounded-t-2xl md:rounded-2xl w-full md:w-96 max-h-[80vh] md:max-h-[70vh] overflow-y-auto md:shadow-2xl">
             {/* Modal Header */}
@@ -1944,17 +1946,16 @@ export default function OrganizationBrowse({
             </div>
 
             {/* Modal Content */}
-            <div className="p-4 space-y-6">
+            <div className="p-4 space-y-4">
               {/* Search Bar */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Search</label>
                 <div className="relative">
                   <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                   <input
                     type="text"
                     value={mobileFilters.search}
                     onChange={(e) => setMobileFilters(prev => ({ ...prev, search: e.target.value }))}
-                    placeholder="Search organizations..."
+                    placeholder="🔍 Search organizations..."
                     className={`w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent ${
                       platform === 'acnc' ? 'focus:ring-orange-500' : 'focus:ring-green-500'
                     }`}
@@ -1965,7 +1966,6 @@ export default function OrganizationBrowse({
               {/* Category Filter - Platform-aware */}
               {((platform === 'acnc' && acncCategories.length > 0) || (platform === 'everyorg' && allCategories.length > 0)) && (
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
                   <div className="relative">
                     <select
                       value={mobileFilters.category}
@@ -1976,7 +1976,7 @@ export default function OrganizationBrowse({
                           : 'focus:ring-green-500'
                       }`}
                     >
-                      <option value="">All Categories</option>
+                      <option value="">🏷️ All Categories</option>
                       {(platform === 'acnc' ? acncCategories : allCategories).map((category) => (
                         <option key={category} value={category}>
                           {platform === 'everyorg' ? formatCategoryName(category) : category}
@@ -1991,14 +1991,13 @@ export default function OrganizationBrowse({
               {/* State Filter - ACNC only */}
               {platform === 'acnc' && acncStates.length > 0 && (
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">State</label>
                   <div className="relative">
                     <select
                       value={mobileFilters.state}
                       onChange={(e) => setMobileFilters(prev => ({ ...prev, state: e.target.value }))}
                       className="w-full p-3 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#7A04DD] focus:border-transparent appearance-none bg-white"
                     >
-                      <option value="">All States</option>
+                      <option value="">📍 All States</option>
                       {acncStates.map((state) => (
                         <option key={state} value={state}>
                           {state}
@@ -2013,14 +2012,13 @@ export default function OrganizationBrowse({
               {/* Purpose Filter - ACNC only */}
               {platform === 'acnc' && acncPurposes.length > 0 && (
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Purpose</label>
                   <div className="relative">
                     <select
                       value={mobileFilters.purpose}
                       onChange={(e) => setMobileFilters(prev => ({ ...prev, purpose: e.target.value }))}
                       className="w-full p-3 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent appearance-none bg-white"
                     >
-                      <option value="">All Purposes</option>
+                      <option value="">🎯 All Purposes</option>
                       {acncPurposes.map((purpose) => (
                         <option key={purpose} value={purpose}>
                           {purpose.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
@@ -2035,14 +2033,13 @@ export default function OrganizationBrowse({
               {/* Location Filter - ACNC only */}
               {platform === 'acnc' && acncCities.length > 0 && (
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Location</label>
                   <div className="relative">
                     <select
                       value={mobileFilters.city}
                       onChange={(e) => setMobileFilters(prev => ({ ...prev, city: e.target.value }))}
                       className="w-full p-3 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent appearance-none bg-white"
                     >
-                      <option value="">All Locations</option>
+                      <option value="">🌏 All Locations</option>
                       {(stateFilter && stateFilter !== 'all' ? stateCities : acncCities).map((city) => (
                         <option key={city} value={city}>
                           {city}
@@ -2057,14 +2054,13 @@ export default function OrganizationBrowse({
               {/* Beneficiaries Filter - ACNC only */}
               {platform === 'acnc' && acncBeneficiaries.length > 0 && (
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Beneficiaries</label>
                   <div className="relative">
                     <select
                       value={mobileFilters.beneficiary}
                       onChange={(e) => setMobileFilters(prev => ({ ...prev, beneficiary: e.target.value }))}
                       className="w-full p-3 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent appearance-none bg-white"
                     >
-                      <option value="">All Beneficiaries</option>
+                      <option value="">👥 All Beneficiaries</option>
                       {acncBeneficiaries.map((beneficiary) => (
                         <option key={beneficiary} value={beneficiary}>
                           {beneficiary.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
@@ -2076,6 +2072,26 @@ export default function OrganizationBrowse({
                 </div>
               )}
 
+              {/* JustGiving Location Filter */}
+              {platform === 'justgiving' && justgivingCities.length > 0 && (
+                <div>
+                  <div className="relative">
+                    <select
+                      value={mobileFilters.city}
+                      onChange={(e) => setMobileFilters(prev => ({ ...prev, city: e.target.value }))}
+                      className="w-full p-3 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent appearance-none bg-white"
+                    >
+                      <option value="">🌏 All Locations</option>
+                      {justgivingCities.map((city) => (
+                        <option key={city} value={city}>
+                          {city}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+                  </div>
+                </div>
+              )}
 
               {/* Every.org Location Filtering Note - Mobile only */}
               {platform === 'everyorg' && (
@@ -2106,7 +2122,9 @@ export default function OrganizationBrowse({
                   className={`flex-1 px-4 py-3 text-white rounded-lg transition-colors font-medium ${
                     platform === 'acnc' 
                       ? 'bg-orange-600 hover:bg-orange-700' 
-                      : 'bg-green-600 hover:bg-green-700'
+                      : platform === 'everyorg'
+                      ? 'bg-green-600 hover:bg-green-700'
+                      : 'bg-purple-600 hover:bg-purple-700'
                   }`}
                 >
                   Apply Filters
