@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Background Preloading</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #ddd; }
+        button { margin: 5px; padding: 10px; }
+        .results { margin-top: 10px; }
+        .timing { color: green; font-weight: bold; }
+        .error { color: red; }
+        .cache-hit { color: blue; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>Background Preloading Test</h1>
+    
+    <div class="test-section">
+        <h2>Test Steps:</h2>
+        <ol>
+            <li>Load Page 1 (will be slow, no cache)</li>
+            <li>Wait 2 seconds for background preload of Page 2</li>
+            <li>Load Page 2 (should be instant from cache)</li>
+            <li>Load Page 3 (will be slow, not cached yet)</li>
+        </ol>
+    </div>
+    
+    <div class="test-section">
+        <h2>API Tests:</h2>
+        <button onclick="loadPage(1)">Load Page 1</button>
+        <button onclick="loadPage(2)">Load Page 2</button>
+        <button onclick="loadPage(3)">Load Page 3</button>
+        <button onclick="clearCache()">Clear Cache</button>
+        
+        <div class="results" id="results"></div>
+    </div>
+
+    <script>
+        const cache = new Map();
+        const CACHE_EXPIRY_MS = 5 * 60 * 1000; // 5 minutes
+
+        function log(message, type = 'info') {
+            const results = document.getElementById('results');
+            const div = document.createElement('div');
+            div.className = type;
+            div.innerHTML = `[${new Date().toLocaleTimeString()}] ${message}`;
+            results.appendChild(div);
+            results.scrollTop = results.scrollHeight;
+        }
+
+        function getCachedData(page) {
+            const cached = cache.get(page);
+            if (cached && (Date.now() - cached.timestamp < CACHE_EXPIRY_MS)) {
+                return cached.data;
+            }
+            return null;
+        }
+
+        function setCachedData(page, data) {
+            cache.set(page, {
+                data,
+                timestamp: Date.now()
+            });
+        }
+
+        async function preloadPage(page) {
+            if (getCachedData(page)) {
+                return; // Already cached
+            }
+
+            try {
+                const start = Date.now();
+                const response = await fetch(`http://localhost:3001/api/justgiving/organizations?page=${page}&limit=6`);
+                const data = await response.json();
+                const time = Date.now() - start;
+                
+                setCachedData(page, data);
+                log(`📦 Preloaded page ${page} in background (${time}ms)`, 'info');
+            } catch (error) {
+                log(`⚠️ Background preload failed for page ${page}: ${error.message}`, 'error');
+            }
+        }
+
+        async function loadPage(page) {
+            const cachedData = getCachedData(page);
+            
+            if (cachedData) {
+                log(`⚡ Loading page ${page} from cache (INSTANT!)`, 'cache-hit');
+                log(`Organizations: ${cachedData.organizations?.length || 0}`, 'info');
+                
+                // Trigger background preloading of adjacent pages
+                setTimeout(() => {
+                    if (page > 1) preloadPage(page - 1);
+                    preloadPage(page + 1);
+                }, 100);
+                
+                return;
+            }
+
+            // Not in cache, fetch from API
+            log(`🌐 Loading page ${page} from API...`, 'info');
+            const start = Date.now();
+            
+            try {
+                const response = await fetch(`http://localhost:3001/api/justgiving/organizations?page=${page}&limit=6`);
+                const data = await response.json();
+                const time = Date.now() - start;
+                
+                setCachedData(page, data);
+                log(`✅ Loaded page ${page} from API (${time}ms)`, 'timing');
+                log(`Organizations: ${data.organizations?.length || 0}`, 'info');
+                
+                // Trigger background preloading of adjacent pages
+                setTimeout(() => {
+                    if (page > 1) preloadPage(page - 1);
+                    preloadPage(page + 1);
+                }, 500);
+                
+            } catch (error) {
+                log(`❌ Failed to load page ${page}: ${error.message}`, 'error');
+            }
+        }
+
+        function clearCache() {
+            cache.clear();
+            log('🧹 Cache cleared', 'info');
+        }
+
+        // Auto-test sequence
+        async function runAutoTest() {
+            log('🚀 Starting auto-test sequence...', 'info');
+            
+            // Load page 1 (will cache and preload page 2)
+            await loadPage(1);
+            
+            // Wait for background preload
+            log('⏳ Waiting 2 seconds for background preload...', 'info');
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            
+            // Load page 2 (should be instant)
+            await loadPage(2);
+            
+            log('✨ Auto-test complete! Page 2 should have loaded instantly.', 'info');
+        }
+
+        // Run auto test when page loads
+        setTimeout(runAutoTest, 1000);
+    </script>
+</body>
+</html>

@@ -174,6 +174,24 @@ const { user, signOut, loading } = useAuth();
 
 ## Performance Optimization
 
+### Background Preloading System
+- **BackgroundPreloader Component**: Intelligently preloads popular pages from homepage
+- **localStorage Persistence**: Cache survives page navigations and browser refreshes
+- **Client-side Navigation**: Instant page transitions using preloaded data
+- **Strategic Timing**: Staggered API calls (2s delay, 300ms apart) to avoid server overload
+- **Cache Integration**: Seamless integration between global preload cache and component-level caching
+
+### Implementation
+```typescript
+// BackgroundPreloader usage on homepage
+<BackgroundPreloader locale={locale} />
+
+// Automatic preloading of:
+- JustGiving organizations (pages 1-2)
+- Every.org nonprofits (page 1) 
+- Popular route prefetching (/[locale]/justgiving/charities, etc.)
+```
+
 ### Core Web Vitals Focus
 - **System fonts only**: No external font dependencies
 - **Image optimization**: Next.js Image component with proper sizing

@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
 import { getLocalizedServicesUrl } from '@/lib/utils/localized-urls'
 import { buildPersonalUrl } from '@/lib/utils/entity-urls'
+import BackgroundPreloader from '@/components/BackgroundPreloader'
 
 interface HomePageProps {
   params: {
@@ -43,6 +44,8 @@ export default async function HomePage({ params }: HomePageProps) {
 
   return (
     <div className="min-h-screen bg-white">
+      {/* Background preloader - loads popular pages silently */}
+      <BackgroundPreloader locale={locale} />
       {/* Hero Section */}
       <div className="bg-gradient-to-br from-blue-50 to-indigo-100">
         <div className="max-w-4xl mx-auto px-6 text-center">

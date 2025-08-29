@@ -44,7 +44,15 @@ interface BrowseState {
   currentPage: number
 }
 
-const ITEMS_PER_PAGE = 12
+// Background preload cache
+interface PreloadCache {
+  [key: string]: {
+    data: any
+    timestamp: number
+  }
+}
+
+const ITEMS_PER_PAGE = 6
 
 export default function OrganizationBrowse({
   locale,
@@ -67,6 +75,10 @@ export default function OrganizationBrowse({
   const [showFilters, setShowFilters] = useState(false)
   const [showMobileFilters, setShowMobileFilters] = useState(false)
   const [showMobileFooter, setShowMobileFooter] = useState(false)
+  
+  // Background preload cache (5 minute expiry)
+  const preloadCacheRef = useRef<PreloadCache>({})
+  const CACHE_EXPIRY_MS = 5 * 60 * 1000 // 5 minutes
   const searchQuery = searchParams.search || ''
   const categoryFilter = searchParams.category || ''
   // Parse multiple categories for Every.org (comma-separated)
@@ -623,51 +635,163 @@ export default function OrganizationBrowse({
     return []
   }, [platform, acncCities, stateCities, stateFilter, justgivingCities, locationSearch, showAllLocations, cityFilter])
 
-  // Load organizations function for pagination
-  const loadOrganizations = useCallback(async (page: number) => {
-    setState(prev => ({ ...prev, loading: true, error: null, currentPage: page, organizations: [] }))
+  // Generate cache key for a page request
+  const generateCacheKey = useCallback((page: number) => {
+    const key = `${platform}-${page}-${searchQuery}-${categoryFilter}-${cityFilter}-${stateFilter}-${featuredOnly}-${preferredOnly}-${purposeFilter}-${beneficiaryFilter}`
+    console.log(`🔑 Generated cache key: ${key}`)
+    return key
+  }, [platform, searchQuery, categoryFilter, cityFilter, stateFilter, featuredOnly, preferredOnly, purposeFilter, beneficiaryFilter])
+
+  // Check if cached data is still valid (including global preload cache)
+  const getCachedData = useCallback((cacheKey: string) => {
+    console.log(`🔍 Cache lookup for key: ${cacheKey}`)
     
+    // Check component cache first
+    const cached = preloadCacheRef.current[cacheKey]
+    if (cached && (Date.now() - cached.timestamp < CACHE_EXPIRY_MS)) {
+      console.log(`💾 Found in component cache: ${cacheKey}`)
+      return cached.data
+    }
+    
+    // Check global preload cache from BackgroundPreloader
+    if (typeof window !== 'undefined') {
+      const globalCache = (window as any).__preloadCache
+      console.log(`🌍 Global cache available:`, !!globalCache, globalCache?.size || 0, 'items')
+      console.log(`🌍 Global cache keys:`, globalCache ? Array.from(globalCache.keys()) : 'none')
+      
+      if (globalCache?.has && globalCache.has(cacheKey)) {
+        const globalCached = globalCache.get(cacheKey)
+        if (globalCached && (Date.now() - globalCached.timestamp < CACHE_EXPIRY_MS)) {
+          console.log(`🎯 Using preloaded data for ${cacheKey}`)
+          // Copy to component cache for future use
+          preloadCacheRef.current[cacheKey] = globalCached
+          return globalCached.data
+        } else {
+          console.log(`⚠️ Global cache entry expired for ${cacheKey}`)
+        }
+      } else {
+        console.log(`❌ Key not found in global cache: ${cacheKey}`)
+      }
+      
+      // Fallback: check localStorage
+      try {
+        const localStorageCache = localStorage.getItem('__preloadCache')
+        if (localStorageCache) {
+          const parsedCache = JSON.parse(localStorageCache)
+          const localCached = parsedCache[cacheKey]
+          if (localCached && (Date.now() - localCached.timestamp < CACHE_EXPIRY_MS)) {
+            console.log(`🎯 Using localStorage preloaded data for ${cacheKey}`)
+            // Copy to component cache for future use
+            preloadCacheRef.current[cacheKey] = localCached
+            return localCached.data
+          } else if (localCached) {
+            console.log(`⚠️ localStorage cache entry expired for ${cacheKey}`)
+          } else {
+            console.log(`❌ Key not found in localStorage: ${cacheKey}`)
+          }
+        } else {
+          console.log(`❌ No localStorage cache found`)
+        }
+      } catch (error) {
+        console.log(`⚠️ localStorage read failed:`, error)
+      }
+    }
+    
+    console.log(`🚫 No cache hit for: ${cacheKey}`)
+    return null
+  }, [CACHE_EXPIRY_MS])
+
+  // Store data in cache
+  const setCachedData = useCallback((cacheKey: string, data: any) => {
+    preloadCacheRef.current[cacheKey] = {
+      data,
+      timestamp: Date.now()
+    }
+  }, [])
+
+  // Background preload function (silent, no UI updates)
+  const preloadPage = useCallback(async (page: number) => {
+    const cacheKey = generateCacheKey(page)
+    
+    // Skip if already cached
+    if (getCachedData(cacheKey)) {
+      return
+    }
+
     try {
-      // Use our new platform-specific API endpoint instead of direct Supabase queries
       const params = new URLSearchParams({
         page: page.toString(),
         limit: ITEMS_PER_PAGE.toString()
       })
       
       // Apply filters
-      if (searchQuery) {
-        params.set('search', searchQuery)
-      }
-      
-      if (categoryFilter) {
-        params.set('category', categoryFilter)
-      }
-      
-      if (cityFilter && cityFilter !== 'all') {
-        params.set('city', cityFilter)
-      }
-      
-      
-      if (stateFilter && stateFilter !== 'all') {
-        params.set('state', stateFilter)
-      }
-      
-      if (featuredOnly) {
-        params.set('featured', 'true')
-      }
-      
-      if (preferredOnly) {
-        params.set('preferred', 'true')
-      }
-      
-      if (purposeFilter) {
-        params.set('purpose', purposeFilter)
-      }
+      if (searchQuery) params.set('search', searchQuery)
+      if (categoryFilter) params.set('category', categoryFilter)
+      if (cityFilter && cityFilter !== 'all') params.set('city', cityFilter)
+      if (stateFilter && stateFilter !== 'all') params.set('state', stateFilter)
+      if (featuredOnly) params.set('featured', 'true')
+      if (preferredOnly) params.set('preferred', 'true')
+      if (purposeFilter) params.set('purpose', purposeFilter)
+      if (beneficiaryFilter) params.set('beneficiary', beneficiaryFilter)
 
-      if (beneficiaryFilter) {
-        params.set('beneficiary', beneficiaryFilter)
+      const response = await fetch(`/api/${platform}/organizations?${params.toString()}`)
+      
+      if (response.ok) {
+        const data = await response.json()
+        setCachedData(cacheKey, data)
+        console.log(`📦 Preloaded page ${page} in background`)
       }
+    } catch (error) {
+      // Silent failure for background preload
+      console.log(`⚠️ Background preload failed for page ${page}:`, error)
+    }
+  }, [platform, searchQuery, categoryFilter, cityFilter, stateFilter, featuredOnly, preferredOnly, purposeFilter, beneficiaryFilter, generateCacheKey, getCachedData, setCachedData])
 
+  // Load organizations function for pagination
+  const loadOrganizations = useCallback(async (page: number) => {
+    const cacheKey = generateCacheKey(page)
+    
+    // Check cache first for instant loading
+    const cachedData = getCachedData(cacheKey)
+    if (cachedData) {
+      console.log(`⚡ Loading page ${page} from cache (instant!)`)
+      setState(prev => ({
+        ...prev,
+        loading: false,
+        organizations: cachedData.organizations || [],
+        totalCount: cachedData.pagination?.total_results || 0,
+        currentPage: page,
+        error: null
+      }))
+      
+      // Trigger background preloading of adjacent pages
+      const totalPages = Math.ceil((cachedData.pagination?.total_results || 0) / ITEMS_PER_PAGE)
+      setTimeout(() => {
+        if (page > 1) preloadPage(page - 1) // Preload previous
+        if (page < totalPages) preloadPage(page + 1) // Preload next
+      }, 100)
+      
+      return
+    }
+
+    // If not in cache, show loading and fetch
+    setState(prev => ({ ...prev, loading: true, error: null, currentPage: page, organizations: [] }))
+    
+    try {
+      const params = new URLSearchParams({
+        page: page.toString(),
+        limit: ITEMS_PER_PAGE.toString()
+      })
+      
+      // Apply filters
+      if (searchQuery) params.set('search', searchQuery)
+      if (categoryFilter) params.set('category', categoryFilter)
+      if (cityFilter && cityFilter !== 'all') params.set('city', cityFilter)
+      if (stateFilter && stateFilter !== 'all') params.set('state', stateFilter)
+      if (featuredOnly) params.set('featured', 'true')
+      if (preferredOnly) params.set('preferred', 'true')
+      if (purposeFilter) params.set('purpose', purposeFilter)
+      if (beneficiaryFilter) params.set('beneficiary', beneficiaryFilter)
 
       const response = await fetch(`/api/${platform}/organizations?${params.toString()}`)
       
@@ -677,6 +801,8 @@ export default function OrganizationBrowse({
       
       const data = await response.json()
       
+      // Cache the result
+      setCachedData(cacheKey, data)
       
       setState(prev => ({
         ...prev,
@@ -687,6 +813,13 @@ export default function OrganizationBrowse({
         error: null
       }))
 
+      // Trigger background preloading of adjacent pages
+      const totalPages = Math.ceil((data.pagination?.total_results || 0) / ITEMS_PER_PAGE)
+      setTimeout(() => {
+        if (page > 1) preloadPage(page - 1) // Preload previous
+        if (page < totalPages) preloadPage(page + 1) // Preload next
+      }, 500) // Small delay to let main content settle
+
     } catch (error) {
       console.error('Error loading organizations:', error)
       setState(prev => ({
@@ -695,7 +828,21 @@ export default function OrganizationBrowse({
         error: error instanceof Error ? error.message : 'Failed to load organizations'
       }))
     }
-  }, [platform, searchQuery, categoryFilter, cityFilter, stateFilter, featuredOnly, preferredOnly, purposeFilter, beneficiaryFilter])
+  }, [platform, searchQuery, categoryFilter, cityFilter, stateFilter, featuredOnly, preferredOnly, purposeFilter, beneficiaryFilter, generateCacheKey, getCachedData, setCachedData, preloadPage])
+
+  // Clear local cache when filters change (but preserve current page cache and global cache)
+  useEffect(() => {
+    const currentCacheKey = generateCacheKey(currentPage)
+    const newCache: PreloadCache = {}
+    
+    // Keep current page cache to avoid unnecessary reload
+    if (preloadCacheRef.current[currentCacheKey]) {
+      newCache[currentCacheKey] = preloadCacheRef.current[currentCacheKey]
+    }
+    
+    preloadCacheRef.current = newCache
+    console.log(`🧹 Cleared local preload cache due to filter change (global cache preserved)`)
+  }, [searchQuery, categoryFilter, cityFilter, stateFilter, featuredOnly, preferredOnly, purposeFilter, beneficiaryFilter, generateCacheKey, currentPage])
 
   // Prevent duplicate API calls with a ref
   const loadingRef = useRef(false)
@@ -713,17 +860,24 @@ export default function OrganizationBrowse({
 
   // Pagination helper functions
   const goToPage = (page: number) => {
-    if (page >= 1 && page <= totalPages && page !== currentPage) {
+    if (page >= 1 && page <= totalPages && page !== state.currentPage) {
+      // Update URL without page reload
       const url = new URL(window.location.href)
       url.searchParams.set('page', page.toString())
-      window.location.href = url.toString() // Use navigation instead of pushState
+      window.history.pushState({}, '', url.toString())
+      
+      // Load the new page data (will use cache if available)
+      loadOrganizations(page)
+      
+      // Scroll to top smoothly
+      window.scrollTo({ top: 0, behavior: 'smooth' })
     }
   }
 
   // Calculate pagination info
   const totalPages = Math.ceil(state.totalCount / ITEMS_PER_PAGE)
-  const startItem = (currentPage - 1) * ITEMS_PER_PAGE + 1
-  const endItem = Math.min(currentPage * ITEMS_PER_PAGE, state.totalCount)
+  const startItem = (state.currentPage - 1) * ITEMS_PER_PAGE + 1
+  const endItem = Math.min(state.currentPage * ITEMS_PER_PAGE, state.totalCount)
   
 
   // Close dropdowns when clicking outside
@@ -755,6 +909,22 @@ export default function OrganizationBrowse({
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
+
+  // Handle browser back/forward buttons
+  useEffect(() => {
+    const handlePopState = () => {
+      const urlParams = new URLSearchParams(window.location.search)
+      const newPage = parseInt(urlParams.get('page') || '1', 10)
+      
+      // Only reload if page actually changed
+      if (newPage !== state.currentPage) {
+        loadOrganizations(newPage)
+      }
+    }
+    
+    window.addEventListener('popstate', handlePopState)
+    return () => window.removeEventListener('popstate', handlePopState)
+  }, [state.currentPage, loadOrganizations])
 
   // Reset show all locations when search changes
   useEffect(() => {
@@ -1620,10 +1790,10 @@ export default function OrganizationBrowse({
                 </div>
                 <div className="flex flex-1 justify-between sm:justify-end">
                   <button
-                    onClick={() => goToPage(currentPage - 1)}
-                    disabled={currentPage === 1}
+                    onClick={() => goToPage(state.currentPage - 1)}
+                    disabled={state.currentPage === 1}
                     className={`relative inline-flex items-center rounded-md px-3 py-2 text-sm font-semibold ring-1 ring-inset ${
-                      currentPage === 1
+                      state.currentPage === 1
                         ? 'text-gray-300 ring-gray-300 cursor-not-allowed'
                         : `text-gray-900 ring-gray-300 hover:bg-${platform === 'acnc' ? 'orange' : platform === 'everyorg' ? 'green' : 'blue'}-50`
                     }`}
@@ -1639,13 +1809,13 @@ export default function OrganizationBrowse({
                       const range = []
                       const rangeWithDots = []
                       
-                      for (let i = Math.max(2, currentPage - delta); 
-                           i <= Math.min(totalPages - 1, currentPage + delta); 
+                      for (let i = Math.max(2, state.currentPage - delta); 
+                           i <= Math.min(totalPages - 1, state.currentPage + delta); 
                            i++) {
                         range.push(i)
                       }
                       
-                      if (currentPage - delta > 2) {
+                      if (state.currentPage - delta > 2) {
                         rangeWithDots.push(1, '...')
                       } else {
                         rangeWithDots.push(1)
@@ -1653,7 +1823,7 @@ export default function OrganizationBrowse({
                       
                       rangeWithDots.push(...range)
                       
-                      if (currentPage + delta < totalPages - 1) {
+                      if (state.currentPage + delta < totalPages - 1) {
                         rangeWithDots.push('...', totalPages)
                       } else if (totalPages > 1) {
                         rangeWithDots.push(totalPages)
@@ -1673,9 +1843,9 @@ export default function OrganizationBrowse({
                           <button
                             key={pageNum}
                             onClick={() => goToPage(pageNum)}
-                            aria-current={pageNum === currentPage ? 'page' : undefined}
+                            aria-current={pageNum === state.currentPage ? 'page' : undefined}
                             className={`relative inline-flex items-center px-4 py-2 text-sm font-semibold ${
-                              pageNum === currentPage
+                              pageNum === state.currentPage
                                 ? `z-10 bg-${platform === 'acnc' ? 'orange' : platform === 'everyorg' ? 'green' : 'blue'}-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-${platform === 'acnc' ? 'orange' : platform === 'everyorg' ? 'green' : 'blue'}-600`
                                 : `text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-${platform === 'acnc' ? 'orange' : platform === 'everyorg' ? 'green' : 'blue'}-50 focus:z-20 focus:outline-offset-0`
                             }`}
@@ -1688,10 +1858,10 @@ export default function OrganizationBrowse({
                   </div>
                   
                   <button
-                    onClick={() => goToPage(currentPage + 1)}
-                    disabled={currentPage === totalPages}
+                    onClick={() => goToPage(state.currentPage + 1)}
+                    disabled={state.currentPage === totalPages}
                     className={`relative ml-3 inline-flex items-center rounded-md px-3 py-2 text-sm font-semibold ring-1 ring-inset ${
-                      currentPage === totalPages
+                      state.currentPage === totalPages
                         ? 'text-gray-300 ring-gray-300 cursor-not-allowed'
                         : `text-gray-900 ring-gray-300 hover:bg-${platform === 'acnc' ? 'orange' : platform === 'everyorg' ? 'green' : 'blue'}-50`
                     }`}

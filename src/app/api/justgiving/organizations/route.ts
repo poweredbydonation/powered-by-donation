@@ -101,7 +101,7 @@ export async function GET(request: NextRequest) {
 
     let query = supabase
       .from('organization_cache')
-      .select('*')
+      .select('id, name, display_name, description, slug, external_id, category, is_featured, address_city, address_country, profile_page_url, total_donations_count, this_month_count')
       .eq('platform', 'justgiving')
       .eq('is_active', true)
       .eq('show_on_platform', true);
