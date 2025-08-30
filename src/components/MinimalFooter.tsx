@@ -36,14 +36,17 @@ const MinimalFooter = () => {
               Contact
             </Link>
             <span>•</span>
-            <a 
-              href="https://www.justgiving.com" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="hover:text-gray-900"
-            >
+            <Link href={`/${locale}/justgiving/charities`} className="hover:text-gray-900">
               JustGiving
-            </a>
+            </Link>
+            <span>•</span>
+            <Link href={`/${locale}/everyorg/nonprofits`} className="hover:text-gray-900">
+              Every.org
+            </Link>
+            <span>•</span>
+            <Link href={`/${locale}/acnc/charities`} className="hover:text-gray-900">
+              ACNC
+            </Link>
           </div>
         </div>
       </div>

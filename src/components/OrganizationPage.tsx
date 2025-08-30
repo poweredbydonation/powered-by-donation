@@ -158,12 +158,14 @@ export default function OrganizationPage({
   return (
     <>
       {/* Mobile Back Button Overlay */}
-      <div className="md:hidden fixed top-4 left-4 z-50">
+      {/* Mobile Back Button - Bottom Left Position */}
+      <div className="md:hidden fixed bottom-24 left-6 z-50">
         <button
           onClick={() => router.back()}
-          className="bg-white hover:bg-gray-50 p-3 rounded-full shadow-lg border border-gray-200 transition-colors duration-200"
+          className="bg-gray-600 hover:bg-gray-700 focus:ring-gray-500 text-white p-3 rounded-full shadow-lg transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-opacity-50"
+          aria-label="Go back"
         >
-          <ArrowLeft className="h-5 w-5 text-gray-700" />
+          <ArrowLeft className="h-5 w-5" />
         </button>
       </div>
 
@@ -535,8 +537,8 @@ export default function OrganizationPage({
 
           </div>
 
-          {/* Donate to Organization Section */}
-          <div className="space-y-6">
+          {/* Donate to Organization Section - Hidden on mobile */}
+          <div className="hidden md:block space-y-6">
             <div className="bg-white rounded-lg border p-6">
               <h3 className="text-xl font-semibold text-gray-900 mb-4">Donate on {config.name}</h3>
               
@@ -813,6 +815,33 @@ export default function OrganizationPage({
         </div>
       </div>
 
+    </div>
+
+    {/* WhatsApp-style Mobile Bottom Navigation */}
+    <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-40">
+      <div className="flex items-center p-4">
+        {/* Organization Name - Left */}
+        <div className="flex-1 min-w-0">
+          <div className="text-sm font-semibold text-gray-900 truncate">
+            {organization.display_name || organization.name}
+          </div>
+          <div className="text-xs text-gray-500 truncate">
+            {platform === 'justgiving' ? 'JustGiving' : 
+             platform === 'everyorg' ? 'Every.org' : 
+             platform === 'acnc' ? 'ACNC' : platform} Charity
+          </div>
+        </div>
+        
+        {/* Donate CTA Button - Right */}
+        <Link
+          href={organization.profile_page_url || '#'}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={`px-6 py-3 ${config.buttonClass} text-white rounded-lg font-medium transition-colors`}
+        >
+          Donate on {config.name}
+        </Link>
+      </div>
     </div>
     </>
   )

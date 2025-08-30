@@ -7,6 +7,7 @@
 
 import { useState, useEffect, useMemo, useRef, useCallback } from 'react'
 import { useSearchParams } from 'next/navigation'
+import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import { DonationPlatform, OrganizationCache } from '@/types/database'
 import { EntityType } from '@/lib/utils/entity-urls'
@@ -74,7 +75,76 @@ export default function OrganizationBrowse({
 
   const [showFilters, setShowFilters] = useState(false)
   const [showMobileFilters, setShowMobileFilters] = useState(false)
-  const [showMobileFooter, setShowMobileFooter] = useState(false)
+  const [showSwipeHint, setShowSwipeHint] = useState(true)
+  
+  // Touch gesture handling
+  const [touchStart, setTouchStart] = useState<number | null>(null)
+  const [touchEnd, setTouchEnd] = useState<number | null>(null)
+  
+  // Platform navigation sequence
+  const platformSequence = ['PoweredByDonation', 'justgiving', 'everyorg', 'acnc']
+  const platformRoutes = {
+    PoweredByDonation: `/${locale}/PoweredByDonation/services`,
+    justgiving: `/${locale}/justgiving/charities`,
+    everyorg: `/${locale}/everyorg/nonprofits`,
+    acnc: `/${locale}/acnc/charities`
+  }
+  
+  // Minimum distance for swipe detection (in pixels)
+  const minSwipeDistance = 50
+  
+  // Handle touch start
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null) // Reset touch end
+    setTouchStart(e.targetTouches[0].clientX)
+  }
+  
+  // Handle touch move
+  const onTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX)
+  }
+  
+  // Handle touch end and detect swipe
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return
+    
+    // Hide swipe hint on first touch
+    if (showSwipeHint) {
+      setShowSwipeHint(false)
+    }
+    
+    const distance = touchStart - touchEnd
+    const isLeftSwipe = distance > minSwipeDistance
+    const isRightSwipe = distance < -minSwipeDistance
+    
+    if (isLeftSwipe || isRightSwipe) {
+      handlePlatformSwipe(isLeftSwipe ? 'left' : 'right')
+    }
+  }
+  
+  // Handle platform navigation via swipe
+  const handlePlatformSwipe = (direction: 'left' | 'right') => {
+    const currentPlatformKey = platform === 'justgiving' ? 'justgiving' : 
+                              platform === 'everyorg' ? 'everyorg' : 
+                              platform === 'acnc' ? 'acnc' : 'PoweredByDonation'
+    
+    const currentIndex = platformSequence.indexOf(currentPlatformKey)
+    let nextIndex
+    
+    if (direction === 'left') {
+      // Swipe left = next platform
+      nextIndex = (currentIndex + 1) % platformSequence.length
+    } else {
+      // Swipe right = previous platform
+      nextIndex = (currentIndex - 1 + platformSequence.length) % platformSequence.length
+    }
+    
+    const nextPlatform = platformSequence[nextIndex]
+    const nextRoute = platformRoutes[nextPlatform as keyof typeof platformRoutes]
+    
+    // Navigate to next platform
+    window.location.href = nextRoute
+  }
   
   // Background preload cache (5 minute expiry)
   const preloadCacheRef = useRef<PreloadCache>({})
@@ -931,57 +1001,54 @@ export default function OrganizationBrowse({
     setShowAllLocations(false)
   }, [locationSearch])
 
+  // Auto-hide swipe hint after 3 seconds
+  useEffect(() => {
+    if (showSwipeHint) {
+      const timer = setTimeout(() => {
+        setShowSwipeHint(false)
+      }, 3000)
+      return () => clearTimeout(timer)
+    }
+  }, [showSwipeHint])
+
   return (
-    <div className="bg-gray-50">
+    <div 
+      className="bg-gray-50"
+      onTouchStart={onTouchStart}
+      onTouchMove={onTouchMove}
+      onTouchEnd={onTouchEnd}
+    >
       {/* Header */}
       <div className="bg-white border-b">
-        <div className="max-w-7xl mx-auto px-4 py-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="flex items-center gap-3 mb-1">
-                {platform === 'justgiving' && (
-                  <img
-                    src="/justgiving-logo.svg"
-                    alt="JustGiving"
-                    className="h-8 w-auto"
-                  />
-                )}
-                {platform === 'everyorg' && (
-                  <img
-                    src="/Logo_Green.svg"
-                    alt="Every.org"
-                    className="h-8 w-auto"
-                  />
-                )}
-                <h1 className="text-2xl font-bold text-gray-900">
-                  {platform === 'justgiving' ? config.entityName : `${config.name} ${config.entityName}`}
-                </h1>
+        <div className="max-w-7xl mx-auto px-4 py-4">
+          {/* Results Counter - Prominent at top */}
+          {!state.loading && state.totalCount > 0 && (
+            <div className="mb-4">
+              <div className="text-2xl font-bold text-gray-900">
+                Showing {state.totalCount.toLocaleString()} {config.entityNameLower}
               </div>
-              <p className="text-gray-600 mt-1">
-                {state.loading ? 'Loading...' : 'Browse and discover organizations'}
-                {(platform === 'acnc' || platform === 'everyorg') && (
-                  <span className="hidden md:inline ml-2 text-sm text-gray-500">
-                    • Use the filter button to search and filter
-                  </span>
-                )}
-              </p>
             </div>
-            
-            {/* Results Counter - Right Aligned */}
-            {!state.loading && state.totalCount > 0 && (
-              <div className="text-right">
-                <div className={`inline-flex items-center px-4 py-2 rounded-lg font-medium text-base ${
-                  platform === 'justgiving' 
-                    ? 'bg-purple-50 text-purple-700 border border-purple-200' 
-                    : platform === 'everyorg'
-                    ? 'bg-green-50 text-green-700 border border-green-200'
-                    : 'bg-orange-50 text-orange-700 border border-orange-200'
-                }`}>
-                  <span className="mr-2">🎯</span>
-                  Showing {state.totalCount.toLocaleString()} {config.entityNameLower}
-                </div>
-              </div>
+          )}
+          
+          {/* Platform Logo and Title - Smaller, secondary */}
+          <div className="flex items-center gap-3">
+            {platform === 'justgiving' && (
+              <img
+                src="/justgiving-logo.svg"
+                alt="JustGiving"
+                className="h-6 w-auto"
+              />
             )}
+            {platform === 'everyorg' && (
+              <img
+                src="/Logo_Green.svg"
+                alt="Every.org"
+                className="h-6 w-auto"
+              />
+            )}
+            <h2 className="text-lg font-semibold text-gray-700">
+              {platform === 'justgiving' ? config.entityName : `${config.name} ${config.entityName}`}
+            </h2>
           </div>
 
           {/* Search Bar and Platform Filters Row - Hidden when using modal filters */}
@@ -1900,21 +1967,32 @@ export default function OrganizationBrowse({
         )}
       </div>
 
+
       {/* Filter Button - All platforms, all screen sizes */}
       {(platform === 'acnc' || platform === 'everyorg' || platform === 'justgiving') && (
-        <div className="fixed bottom-32 md:bottom-6 right-4 md:right-6 z-50">
+        <div className="fixed bottom-24 md:bottom-6 right-6 md:right-6 z-50">
           <button
             onClick={openMobileFilters}
             className={`${
               platform === 'acnc' 
-                ? 'bg-orange-600 hover:bg-orange-700' 
+                ? 'bg-orange-600 hover:bg-orange-700 focus:ring-orange-500' 
                 : platform === 'everyorg'
-                ? 'bg-green-600 hover:bg-green-700'
-                : 'bg-purple-600 hover:bg-purple-700'
-            } text-white p-4 rounded-full shadow-lg transition-all duration-200 transform hover:scale-105`}
+                ? 'bg-green-600 hover:bg-green-700 focus:ring-green-500'
+                : 'bg-purple-600 hover:bg-purple-700 focus:ring-purple-500'
+            } text-white p-3 md:p-4 rounded-full shadow-lg transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-opacity-50`}
+            aria-label="Open filters"
           >
-            <Filter className="h-6 w-6" />
+            <Filter className="h-5 w-5 md:h-6 md:w-6" />
           </button>
+        </div>
+      )}
+
+      {/* Swipe Hint - Shows briefly on mobile */}
+      {showSwipeHint && (
+        <div className="md:hidden fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-40 pointer-events-none">
+          <div className="bg-black bg-opacity-75 text-white px-4 py-2 rounded-lg text-sm animate-pulse">
+            ← Swipe to switch platforms →
+          </div>
         </div>
       )}
 
@@ -2135,105 +2213,98 @@ export default function OrganizationBrowse({
         </div>
       )}
 
-      {/* Mobile Footer Access Button */}
-      <div className="md:hidden fixed bottom-6 left-6 z-40">
-        <button
-          onClick={() => setShowMobileFooter(true)}
-          className="bg-gray-800 hover:bg-gray-900 text-white p-3 rounded-full shadow-lg transition-all duration-200 transform hover:scale-105"
-          aria-label="View footer information"
-        >
-          <Info className="h-5 w-5" />
-        </button>
-      </div>
-
-      {/* Mobile Footer Modal */}
-      {showMobileFooter && (
-        <div className="md:hidden fixed inset-0 z-50 bg-black bg-opacity-50 flex items-end">
-          <div className="bg-white rounded-t-2xl w-full max-h-[80vh] overflow-y-auto">
-            {/* Modal Header */}
-            <div className="sticky top-0 bg-white border-b border-gray-200 p-4 z-10">
-              <div className="flex items-center justify-between">
-                <h3 className="text-lg font-semibold text-gray-900">Site Information</h3>
-                <button
-                  onClick={() => setShowMobileFooter(false)}
-                  className="text-gray-400 hover:text-gray-600"
-                >
-                  <X className="w-6 h-6" />
-                </button>
-              </div>
+      {/* WhatsApp-style Mobile Bottom Navigation */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-40">
+        <div className="grid grid-cols-4 py-2">
+          {/* Services (PD) */}
+          <Link
+            href={`/${locale}/PoweredByDonation/services`}
+            className={`flex flex-col items-center py-2 px-1 ${
+              (!platform && window.location.pathname.includes('PoweredByDonation'))
+                ? 'text-purple-600 bg-purple-50' 
+                : 'text-gray-400'
+            }`}
+          >
+            <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold mb-1 ${
+              (!platform && window.location.pathname.includes('PoweredByDonation'))
+                ? 'bg-purple-600 text-white' 
+                : 'bg-gray-300 text-gray-600'
+            }`}>
+              PD
             </div>
+            <span className="text-xs font-medium">Services</span>
+          </Link>
 
-            {/* Modal Content - Footer Content */}
-            <div className="p-4 pb-8">
-              {/* Trust & Transparency Section */}
-              <div className="bg-gray-50 rounded-lg p-4 mb-6">
-                <h4 className="font-semibold text-gray-900 mb-3">Trust & Transparency</h4>
-                <div className="space-y-4">
-                  <div>
-                    <div className="flex items-center mb-2">
-                      <span className="text-green-600 mr-2">♥</span>
-                      <span className="font-medium text-sm">No Platform Fees</span>
-                    </div>
-                    <p className="text-xs text-gray-600 ml-6">
-                      100% of donations go directly to charities via JustGiving. We never take fees from donations.
-                    </p>
-                  </div>
-                  <div>
-                    <div className="flex items-center mb-2">
-                      <span className="text-gray-700 mr-2">⌨</span>
-                      <span className="font-medium text-sm">Open Source</span>
-                    </div>
-                    <p className="text-xs text-gray-600 ml-6">
-                      Our platform is transparent - view our source code on GitHub.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Quick Links */}
-              <div className="grid grid-cols-2 gap-4 mb-6">
-                <div>
-                  <h4 className="font-semibold text-gray-900 mb-3 text-sm">Platform</h4>
-                  <ul className="space-y-2 text-xs">
-                    <li><a href={getLocalizedServicesUrl(locale)} className="text-gray-600 hover:text-gray-900">Browse Services</a></li>
-                    <li><a href={`/${locale}/dashboard`} className="text-gray-600 hover:text-gray-900">For Fundraisers</a></li>
-                    <li><a href={`/${locale}/justgiving/charities`} className="text-gray-600 hover:text-gray-900">Featured Charities</a></li>
-                  </ul>
-                </div>
-                <div>
-                  <h4 className="font-semibold text-gray-900 mb-3 text-sm">Legal</h4>
-                  <ul className="space-y-2 text-xs">
-                    <li><a href={`/${locale}/privacy`} className="text-gray-600 hover:text-gray-900">Privacy Policy</a></li>
-                    <li><a href={`/${locale}/terms`} className="text-gray-600 hover:text-gray-900">Terms of Service</a></li>
-                    <li><a href={`/${locale}/about`} className="text-gray-600 hover:text-gray-900">About Us</a></li>
-                    <li><a href={`/${locale}/contact`} className="text-gray-600 hover:text-gray-900">Contact</a></li>
-                  </ul>
-                </div>
-              </div>
-
-              {/* Bottom Info */}
-              <div className="border-t border-gray-200 pt-4">
-                <div className="text-xs text-gray-500 space-y-2">
-                  <div>© 2025 Powered by Donation</div>
-                  <div>ABN: 17 927 784 658</div>
-                  <div>Made in Australia</div>
-                  <div className="flex items-center">
-                    <span>Powered by </span>
-                    <a 
-                      href="https://www.justgiving.com" 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="text-[#7A04DD] hover:text-[#540099] ml-1"
-                    >
-                      JustGiving
-                    </a>
-                  </div>
-                </div>
-              </div>
+          {/* JustGiving */}
+          <Link
+            href={`/${locale}/justgiving/charities`}
+            className={`flex flex-col items-center py-2 px-1 ${
+              platform === 'justgiving'
+                ? 'text-blue-600 bg-blue-50' 
+                : 'text-gray-400'
+            }`}
+          >
+            <div className={`w-6 h-6 rounded-full flex items-center justify-center mb-1 ${
+              platform === 'justgiving'
+                ? 'bg-blue-600' 
+                : 'bg-gray-300'
+            }`}>
+              <img
+                src="/flags/1x1/gb.svg"
+                alt="UK"
+                className="w-4 h-4 rounded-sm"
+              />
             </div>
-          </div>
+            <span className="text-xs font-medium">JustGiving</span>
+          </Link>
+
+          {/* Every.org */}
+          <Link
+            href={`/${locale}/everyorg/nonprofits`}
+            className={`flex flex-col items-center py-2 px-1 ${
+              platform === 'everyorg'
+                ? 'text-green-600 bg-green-50' 
+                : 'text-gray-400'
+            }`}
+          >
+            <div className={`w-6 h-6 rounded-full flex items-center justify-center mb-1 ${
+              platform === 'everyorg'
+                ? 'bg-green-600' 
+                : 'bg-gray-300'
+            }`}>
+              <img
+                src="/flags/1x1/us.svg"
+                alt="US"
+                className="w-4 h-4 rounded-sm"
+              />
+            </div>
+            <span className="text-xs font-medium">Every.org</span>
+          </Link>
+
+          {/* ACNC */}
+          <Link
+            href={`/${locale}/acnc/charities`}
+            className={`flex flex-col items-center py-2 px-1 ${
+              platform === 'acnc'
+                ? 'text-orange-600 bg-orange-50' 
+                : 'text-gray-400'
+            }`}
+          >
+            <div className={`w-6 h-6 rounded-full flex items-center justify-center mb-1 ${
+              platform === 'acnc'
+                ? 'bg-orange-600' 
+                : 'bg-gray-300'
+            }`}>
+              <img
+                src="/flags/1x1/au.svg"
+                alt="AU"
+                className="w-4 h-4 rounded-sm"
+              />
+            </div>
+            <span className="text-xs font-medium">ACNC</span>
+          </Link>
         </div>
-      )}
+      </div>
     </div>
   )
 }

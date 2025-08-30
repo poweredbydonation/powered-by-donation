@@ -54,7 +54,7 @@ export default async function HomePage({ params }: HomePageProps) {
           <div className="mb-16">
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 max-w-8xl mx-auto">
               {/* Powered by Donation Card */}
-              <a 
+              <Link 
                 href={getLocalizedServicesUrl(locale)}
                 className="group bg-purple-50 border-2 border-purple-200 rounded-xl p-5 hover:border-purple-300 hover:bg-purple-100 transition-all"
               >
@@ -76,11 +76,11 @@ export default async function HomePage({ params }: HomePageProps) {
                     <ExternalLink className="h-3 w-3" />
                   </div>
                 </div>
-              </a>
+              </Link>
 
               {/* JustGiving Card */}
               <Link 
-                href={`/${locale}/justgiving`}
+                href={`/${locale}/justgiving/charities`}
                 className="group bg-blue-50 border-2 border-blue-200 rounded-xl p-5 hover:border-blue-300 hover:bg-blue-100 transition-all"
               >
                 <div className="text-center">
@@ -111,7 +111,7 @@ export default async function HomePage({ params }: HomePageProps) {
 
               {/* Every.org Card */}
               <Link 
-                href={`/${locale}/everyorg`}
+                href={`/${locale}/everyorg/nonprofits`}
                 className="group bg-green-50 border-2 border-green-200 rounded-xl p-5 hover:border-green-300 hover:bg-green-100 transition-all"
               >
                 <div className="text-center">
@@ -230,13 +230,13 @@ export default async function HomePage({ params }: HomePageProps) {
 
               <div className="flex items-start space-x-4">
                 <div className="w-10"></div>
-                <a 
+                <Link 
                   href={getLocalizedServicesUrl(locale)}
                   className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors inline-block w-fit text-center"
                   style={{ minWidth: '280px' }}
                 >
                   {t('hero.donate_get_service')}
-                </a>
+                </Link>
               </div>
             </div>
             
@@ -293,13 +293,13 @@ export default async function HomePage({ params }: HomePageProps) {
 
               <div className="flex items-start space-x-4">
                 <div className="w-10"></div>
-                <a 
+                <Link 
                   href={buildPersonalUrl(locale, 'services')}
                   className="bg-green-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors inline-block w-fit text-center"
                   style={{ minWidth: '280px' }}
                 >
                   {t('hero.offer_service_fundraise')}
-                </a>
+                </Link>
               </div>
             </div>
           </div>

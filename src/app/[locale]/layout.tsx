@@ -39,13 +39,13 @@ export default async function LocaleLayout({
       <NextIntlClientProvider messages={messages} locale={locale}>
         <div className="min-h-screen">
           <MultilingualNavbar locale={locale} messages={messages} platformStats={platformStats} />
-          <div className="notification-banners">
+          <div className="notification-banners absolute top-20 md:top-14 left-0 right-0 z-30">
             <DonorNotificationsBanner />
             <FundraiserNotificationsBanner />
           </div>
-          <div className="pt-14 pb-12">
+          <main className="pt-28 md:pt-28 pb-20">
             {children}
-          </div>
+          </main>
           <MinimalFooter />
         </div>
       </NextIntlClientProvider>

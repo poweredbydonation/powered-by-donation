@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { usePathname } from 'next/navigation'
-import { Menu, X, ChevronDown, Heart, Building2, Users, Briefcase } from 'lucide-react'
+import Link from 'next/link'
+import { Menu, X, ChevronDown, Heart, Building2, Users, MoreVertical } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
 import { usePendingDonations } from '@/hooks/usePendingDonations'
 import { LANGUAGES, getOtherLanguages, getLanguageByCode } from '@/config/languages'
@@ -97,11 +98,12 @@ export default function MultilingualNavbar({ locale, messages, platformStats }: 
   }
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm border-b">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between md:justify-between py-2">
-          {/* Left Side - Logo (Desktop) / Empty space (Mobile) */}
-          <div className="flex items-center">
+          {/* Left Side - Logo (Desktop) / Contextual Text (Mobile) */}
+          <div className="flex items-center flex-1 md:flex-none">
+            {/* Desktop Logo */}
             <a href={`/${locale}`} className="text-lg font-bold text-blue-600 mr-3 hidden md:inline">
               <span>Powered by Donation</span>
             </a>
@@ -110,19 +112,46 @@ export default function MultilingualNavbar({ locale, messages, platformStats }: 
                 {messages.nav.tagline}
               </div>
             )}
-          </div>
-
-          {/* Center - Logo (Mobile only) */}
-          <div className="md:hidden absolute left-1/2 transform -translate-x-1/2">
-            <a href={`/${locale}`} className="text-lg font-bold text-blue-600">
-              Powered by Donation
-            </a>
+            
+            {/* Mobile Contextual Text */}
+            <div className="md:hidden">
+              <div className="text-lg font-bold text-gray-900">
+                {(() => {
+                  if (isServicesActive) {
+                    return 'Services'
+                  } else if (isJustGivingActive) {
+                    return 'JustGiving Charities'
+                  } else if (isEveryOrgActive) {
+                    return 'Every.org Nonprofits'
+                  } else if (isAcncActive) {
+                    return 'ACNC Charities & Nonprofits'
+                  } else {
+                    return 'Powered by Donation'
+                  }
+                })()}
+              </div>
+              <div className="text-xs text-gray-600 leading-tight">
+                {(() => {
+                  if (isServicesActive) {
+                    return 'Find professional services and support charities'
+                  } else if (isJustGivingActive) {
+                    return 'Browse and discover organizations • Use the filter button to search and filter'
+                  } else if (isEveryOrgActive) {
+                    return 'Browse and discover organizations • Use the filter button to search and filter'
+                  } else if (isAcncActive) {
+                    return 'Browse and discover organizations • Use the filter button to search and filter'
+                  } else {
+                    return 'Donation-powered services marketplace'
+                  }
+                })()}
+              </div>
+            </div>
           </div>
 
           {/* Center - Compact Platform Tiles */}
           <div className="hidden md:flex items-center space-x-2">
             {/* Services Tile */}
-            <a 
+            <Link 
               href={getLocalizedServicesUrl(locale)}
               className={`${
                 isServicesActive 
@@ -134,10 +163,10 @@ export default function MultilingualNavbar({ locale, messages, platformStats }: 
               <div className={`text-sm font-semibold ${isServicesActive ? 'text-purple-600' : 'text-gray-400'}`}>
                 {platformStats.services.toLocaleString()} Free Services
               </div>
-            </a>
+            </Link>
 
             {/* JustGiving Tile */}
-            <a 
+            <Link 
               href={`/${locale}/justgiving/charities`}
               className={`${
                 isJustGivingActive 
@@ -154,10 +183,10 @@ export default function MultilingualNavbar({ locale, messages, platformStats }: 
               <div className={`text-sm font-semibold ${isJustGivingActive ? 'text-blue-600' : 'text-gray-400'}`}>
                 {platformStats.justgiving.toLocaleString()} Charities
               </div>
-            </a>
+            </Link>
 
             {/* Every.org Tile */}
-            <a 
+            <Link 
               href={`/${locale}/everyorg/nonprofits`}
               className={`${
                 isEveryOrgActive 
@@ -174,10 +203,10 @@ export default function MultilingualNavbar({ locale, messages, platformStats }: 
               <div className={`text-sm font-semibold ${isEveryOrgActive ? 'text-green-600' : 'text-gray-400'}`}>
                 {platformStats.everyorg.toLocaleString()} Nonprofits
               </div>
-            </a>
+            </Link>
 
             {/* ACNC Tile */}
-            <a 
+            <Link 
               href={`/${locale}/acnc/charities`}
               className={`${
                 isAcncActive 
@@ -197,7 +226,7 @@ export default function MultilingualNavbar({ locale, messages, platformStats }: 
               <div className={`absolute -top-1 -right-1 ${isAcncActive ? 'bg-orange-500' : 'bg-gray-400'} text-white text-xs px-1 rounded-full`} style={{fontSize: '8px'}}>
                 B
               </div>
-            </a>
+            </Link>
           </div>
 
           {/* Right Side - Language Selector & Profile */}
@@ -346,84 +375,11 @@ export default function MultilingualNavbar({ locale, messages, platformStats }: 
             {isMenuOpen ? (
               <X className="h-6 w-6 animate-in spin-in-180 duration-200" />
             ) : (
-              <Menu className="h-6 w-6 animate-in fade-in duration-200" />
+              <MoreVertical className="h-6 w-6 animate-in fade-in duration-200" />
             )}
           </button>
         </div>
 
-        {/* Mobile Platform Tiles */}
-        <div className="md:hidden border-t border-gray-100 bg-gray-50">
-          <div className="px-4 py-2">
-            <div className="flex items-center justify-between space-x-1">
-              {/* Services Tile */}
-              <a 
-                href={getLocalizedServicesUrl(locale)}
-                className="flex-1 bg-purple-50 border border-purple-200 rounded px-2 py-1 hover:bg-purple-100 transition-all text-center"
-              >
-                <div className="flex items-center justify-center space-x-1">
-                  <Briefcase className="w-3 h-3 text-purple-600" />
-                  <div className="text-xs font-semibold text-purple-600">
-                    {platformStats.services}
-                  </div>
-                </div>
-              </a>
-
-              {/* JustGiving Tile */}
-              <a 
-                href={`/${locale}/justgiving/charities`}
-                className="flex-1 bg-blue-50 border border-blue-200 rounded px-2 py-1 hover:bg-blue-100 transition-all text-center"
-              >
-                <div className="flex items-center justify-center space-x-1">
-                  <img
-                    src="/flags/1x1/gb.svg"
-                    alt="UK"
-                    className="w-3 h-3 rounded"
-                  />
-                  <div className="text-xs font-semibold text-blue-600">
-                    {platformStats.justgiving}
-                  </div>
-                </div>
-              </a>
-
-              {/* Every.org Tile */}
-              <a 
-                href={`/${locale}/everyorg/nonprofits`}
-                className="flex-1 bg-green-50 border border-green-200 rounded px-2 py-1 hover:bg-green-100 transition-all text-center"
-              >
-                <div className="flex items-center justify-center space-x-1">
-                  <img
-                    src="/flags/1x1/us.svg"
-                    alt="US"
-                    className="w-3 h-3 rounded"
-                  />
-                  <div className="text-xs font-semibold text-green-600">
-                    {platformStats.everyorg}
-                  </div>
-                </div>
-              </a>
-
-              {/* ACNC Tile */}
-              <a 
-                href={`/${locale}/acnc/charities`}
-                className="flex-1 bg-orange-50 border border-orange-200 rounded px-2 py-1 hover:bg-orange-100 transition-all text-center relative"
-              >
-                <div className="flex items-center justify-center space-x-1">
-                  <img
-                    src="/flags/1x1/au.svg"
-                    alt="AU"
-                    className="w-3 h-3 rounded"
-                  />
-                  <div className="text-xs font-semibold text-orange-600">
-                    {platformStats.acnc}
-                  </div>
-                </div>
-                <div className="absolute -top-0.5 -right-0.5 bg-orange-500 text-white text-xs px-1 rounded-full" style={{fontSize: '7px'}}>
-                  B
-                </div>
-              </a>
-            </div>
-          </div>
-        </div>
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
@@ -573,6 +529,52 @@ export default function MultilingualNavbar({ locale, messages, platformStats }: 
                       )}
                     </a>
                   ))}
+                </div>
+              </div>
+
+              {/* Footer Links Section */}
+              <div className="bg-gradient-to-r from-gray-50 to-blue-50 rounded-xl p-4 border border-gray-200 shadow-sm">
+                <div className="flex items-center space-x-2 mb-4">
+                  <span className="text-lg">ℹ️</span>
+                  <div className="text-sm font-semibold text-gray-800">Site Information:</div>
+                </div>
+                
+                {/* Trust & Transparency */}
+                <div className="mb-4 space-y-2">
+                  <div className="flex items-start space-x-2">
+                    <span className="text-green-600 text-sm">♥</span>
+                    <div>
+                      <div className="text-xs font-medium text-gray-800">No Platform Fees</div>
+                      <div className="text-xs text-gray-600">100% donations go to charities</div>
+                    </div>
+                  </div>
+                  <div className="flex items-start space-x-2">
+                    <span className="text-gray-700 text-sm">⌨</span>
+                    <div>
+                      <div className="text-xs font-medium text-gray-800">Open Source</div>
+                      <div className="text-xs text-gray-600">Transparent platform code</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Quick Links */}
+                <div className="grid grid-cols-2 gap-3 mb-4">
+                  <div>
+                    <div className="text-xs font-semibold text-gray-800 mb-2">Platform</div>
+                    <div className="space-y-1">
+                      <a href={`/${locale}/privacy`} className="block text-xs text-gray-600 hover:text-gray-800">Privacy</a>
+                      <a href={`/${locale}/terms`} className="block text-xs text-gray-600 hover:text-gray-800">Terms</a>
+                      <a href={`/${locale}/contact`} className="block text-xs text-gray-600 hover:text-gray-800">Contact</a>
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-xs font-semibold text-gray-800 mb-2">Legal</div>
+                    <div className="space-y-1">
+                      <div className="text-xs text-gray-600">© 2025 PBD</div>
+                      <div className="text-xs text-gray-600">ABN: 17 927 784 658</div>
+                      <div className="text-xs text-gray-600">Made in Australia</div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

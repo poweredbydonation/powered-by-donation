@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import ServiceLocationFilter from '@/components/ServiceLocationFilter'
 import ServicePrice from '@/components/services/ServicePrice'
 import { Search, MapPin, Heart, Star, Filter } from 'lucide-react'
+import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import { Service, ServiceLocation, CurrencyCode } from '@/types/database'
 import { isServiceWithinRadius } from '@/lib/utils/distance'
@@ -53,6 +54,73 @@ export default function ServicesPageContent({ params }: ServicesPageProps) {
   const [platformFilter, setPlatformFilter] = useState<PlatformFilter>('all')
   const [userCurrency, setUserCurrency] = useState<CurrencyCode>('AUD')
   const [showMobileFilters, setShowMobileFilters] = useState(false)
+  const [showSwipeHint, setShowSwipeHint] = useState(true)
+  
+  // Touch gesture handling
+  const [touchStart, setTouchStart] = useState<number | null>(null)
+  const [touchEnd, setTouchEnd] = useState<number | null>(null)
+  
+  // Platform navigation sequence
+  const platformSequence = ['PoweredByDonation', 'justgiving', 'everyorg', 'acnc']
+  const platformRoutes = {
+    PoweredByDonation: `/${locale}/PoweredByDonation/services`,
+    justgiving: `/${locale}/justgiving/charities`,
+    everyorg: `/${locale}/everyorg/nonprofits`,
+    acnc: `/${locale}/acnc/charities`
+  }
+  
+  // Minimum distance for swipe detection (in pixels)
+  const minSwipeDistance = 50
+  
+  // Handle touch start
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null) // Reset touch end
+    setTouchStart(e.targetTouches[0].clientX)
+  }
+  
+  // Handle touch move
+  const onTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX)
+  }
+  
+  // Handle touch end and detect swipe
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return
+    
+    // Hide swipe hint on first touch
+    if (showSwipeHint) {
+      setShowSwipeHint(false)
+    }
+    
+    const distance = touchStart - touchEnd
+    const isLeftSwipe = distance > minSwipeDistance
+    const isRightSwipe = distance < -minSwipeDistance
+    
+    if (isLeftSwipe || isRightSwipe) {
+      handlePlatformSwipe(isLeftSwipe ? 'left' : 'right')
+    }
+  }
+  
+  // Handle platform navigation via swipe
+  const handlePlatformSwipe = (direction: 'left' | 'right') => {
+    const currentPlatformKey = 'PoweredByDonation' // We're on services page
+    const currentIndex = platformSequence.indexOf(currentPlatformKey)
+    let nextIndex
+    
+    if (direction === 'left') {
+      // Swipe left = next platform
+      nextIndex = (currentIndex + 1) % platformSequence.length
+    } else {
+      // Swipe right = previous platform
+      nextIndex = (currentIndex - 1 + platformSequence.length) % platformSequence.length
+    }
+    
+    const nextPlatform = platformSequence[nextIndex]
+    const nextRoute = platformRoutes[nextPlatform as keyof typeof platformRoutes]
+    
+    // Navigate to next platform
+    window.location.href = nextRoute
+  }
   const [showMobileLocationMap, setShowMobileLocationMap] = useState(false)
   
   // Mobile filter selections state
@@ -211,6 +279,16 @@ export default function ServicesPageContent({ params }: ServicesPageProps) {
     setFilteredServices(filtered)
   }, [services, searchQuery, platformFilter, locationFilter])
 
+  // Auto-hide swipe hint after 3 seconds
+  useEffect(() => {
+    if (showSwipeHint) {
+      const timer = setTimeout(() => {
+        setShowSwipeHint(false)
+      }, 3000)
+      return () => clearTimeout(timer)
+    }
+  }, [showSwipeHint])
+
   // Generate slug from title
   const generateSlug = (title: string): string => {
     return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
@@ -279,18 +357,23 @@ export default function ServicesPageContent({ params }: ServicesPageProps) {
 
 
   return (
-    <div className="min-h-screen bg-white">
+    <div 
+      className="min-h-screen bg-white"
+      onTouchStart={onTouchStart}
+      onTouchMove={onTouchMove}
+      onTouchEnd={onTouchEnd}
+    >
       
       <div className="bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 py-4">
           {/* Page Header */}
           <div className="mb-8">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">
+            <div className="text-2xl font-bold text-gray-900 mb-2">
+              Showing {filteredServices.length.toLocaleString()} services
+            </div>
+            <h2 className="text-lg font-semibold text-gray-700">
               {messages.services?.browse?.title || 'Browse Services'}
-            </h1>
-            <p className="text-lg text-gray-600 max-w-3xl">
-              {messages.services?.browse?.subtitle || 'Find professional services and support charities'}
-            </p>
+            </h2>
           </div>
 
           {/* Search and Filters - Hidden on mobile */}
@@ -556,14 +639,24 @@ export default function ServicesPageContent({ params }: ServicesPageProps) {
       </div>
 
       {/* Mobile Filter Button */}
-      <div className="md:hidden fixed bottom-6 right-6 z-50">
+      <div className="md:hidden fixed bottom-24 right-6 z-50">
         <button
           onClick={openMobileFilters}
-          className="bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-full shadow-lg transition-all duration-200 transform hover:scale-105"
+          className="bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 text-white p-3 rounded-full shadow-lg transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-opacity-50"
+          aria-label="Open service filters"
         >
-          <Filter className="h-6 w-6" />
+          <Filter className="h-5 w-5" />
         </button>
       </div>
+
+      {/* Swipe Hint - Shows briefly on mobile */}
+      {showSwipeHint && (
+        <div className="md:hidden fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-40 pointer-events-none">
+          <div className="bg-black bg-opacity-75 text-white px-4 py-2 rounded-lg text-sm animate-pulse">
+            ← Swipe to switch platforms →
+          </div>
+        </div>
+      )}
 
       {/* Mobile Filter Modal */}
       {showMobileFilters && (
@@ -737,6 +830,67 @@ export default function ServicesPageContent({ params }: ServicesPageProps) {
           </div>
         </div>
       )}
+
+      {/* WhatsApp-style Mobile Bottom Navigation */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-40">
+        <div className="grid grid-cols-4 py-2">
+          {/* Services (PD) - Active for this page */}
+          <Link
+            href={`/${locale}/PoweredByDonation/services`}
+            className="flex flex-col items-center py-2 px-1 text-purple-600 bg-purple-50"
+          >
+            <div className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold mb-1 bg-purple-600 text-white">
+              PD
+            </div>
+            <span className="text-xs font-medium">Services</span>
+          </Link>
+
+          {/* JustGiving */}
+          <Link
+            href={`/${locale}/justgiving/charities`}
+            className="flex flex-col items-center py-2 px-1 text-gray-400"
+          >
+            <div className="w-6 h-6 rounded-full flex items-center justify-center mb-1 bg-gray-300">
+              <img
+                src="/flags/1x1/gb.svg"
+                alt="UK"
+                className="w-4 h-4 rounded-sm"
+              />
+            </div>
+            <span className="text-xs font-medium">JustGiving</span>
+          </Link>
+
+          {/* Every.org */}
+          <Link
+            href={`/${locale}/everyorg/nonprofits`}
+            className="flex flex-col items-center py-2 px-1 text-gray-400"
+          >
+            <div className="w-6 h-6 rounded-full flex items-center justify-center mb-1 bg-gray-300">
+              <img
+                src="/flags/1x1/us.svg"
+                alt="US"
+                className="w-4 h-4 rounded-sm"
+              />
+            </div>
+            <span className="text-xs font-medium">Every.org</span>
+          </Link>
+
+          {/* ACNC */}
+          <Link
+            href={`/${locale}/acnc/charities`}
+            className="flex flex-col items-center py-2 px-1 text-gray-400"
+          >
+            <div className="w-6 h-6 rounded-full flex items-center justify-center mb-1 bg-gray-300">
+              <img
+                src="/flags/1x1/au.svg"
+                alt="AU"
+                className="w-4 h-4 rounded-sm"
+              />
+            </div>
+            <span className="text-xs font-medium">ACNC</span>
+          </Link>
+        </div>
+      </div>
     </div>
   )
 }

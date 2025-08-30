@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { notFound } from 'next/navigation'
+import { notFound, useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import { Service, ServiceLocation, CurrencyCode } from '@/types/database'
 import { useAuth } from '@/hooks/useAuth'
@@ -28,6 +29,7 @@ type ServiceWithFundraiser = Service & {
 export default function ServicePageContent({ params }: ServicePageProps) {
   const { locale, slug } = params
   const { user } = useAuth()
+  const router = useRouter()
   const [service, setService] = useState<ServiceWithFundraiser | null>(null)
   const [loading, setLoading] = useState(true)
   const [messages, setMessages] = useState<any>({})
@@ -227,6 +229,16 @@ export default function ServicePageContent({ params }: ServicePageProps) {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Mobile Back Button - Bottom Left Position */}
+      <div className="md:hidden fixed bottom-24 left-6 z-50">
+        <button
+          onClick={() => router.push(`/${locale}/PoweredByDonation/${servicesSlug}`)}
+          className="bg-gray-600 hover:bg-gray-700 focus:ring-gray-500 text-white p-3 rounded-full shadow-lg transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-opacity-50"
+          aria-label="Back to services"
+        >
+          <ArrowLeft className="h-5 w-5" />
+        </button>
+      </div>
       {/* Header */}
       <div className="bg-white shadow-sm">
         <div className="max-w-4xl mx-auto px-4 py-4">
@@ -275,29 +287,31 @@ export default function ServicePageContent({ params }: ServicePageProps) {
                   className="text-3xl font-bold text-blue-600"
                 />
               </div>
-              {isOwner ? (
-                <button
-                  onClick={() => setIsEditing(true)}
-                  className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors flex items-center"
-                >
-                  <Edit className="h-4 w-4 mr-2" />
-                  Edit Service
-                </button>
-              ) : (
-                <button
-                  onClick={handleRequestService}
-                  className="bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors"
-                >
-                  {messages.services?.request?.button || 'Request Service'}
-                </button>
-              )}
+              <div className="hidden md:block">
+                {isOwner ? (
+                  <button
+                    onClick={() => setIsEditing(true)}
+                    className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors flex items-center"
+                  >
+                    <Edit className="h-4 w-4 mr-2" />
+                    Edit Service
+                  </button>
+                ) : (
+                  <button
+                    onClick={handleRequestService}
+                    className="bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors"
+                  >
+                    {messages.services?.request?.button || 'Request Service'}
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         </div>
       </div>
 
       {/* Content */}
-      <div className="max-w-4xl mx-auto px-4 py-8">
+      <div className="max-w-4xl mx-auto px-4 py-8 pb-24 md:pb-8">
         <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
           <h2 className="text-xl font-semibold text-gray-900 mb-4">
             {messages.services?.detail?.description || 'Service Description'}
@@ -468,8 +482,8 @@ export default function ServicePageContent({ params }: ServicePageProps) {
           </div>
         )}
 
-        {/* Call to Action */}
-        <div className="bg-blue-50 rounded-lg p-6 text-center">
+        {/* Call to Action - Hidden on mobile */}
+        <div className="hidden md:block bg-blue-50 rounded-lg p-6 text-center">
           <h3 className="text-xl font-semibold text-gray-900 mb-2">
             {messages.services?.detail?.ready || 'Ready to get started?'}
           </h3>
@@ -484,15 +498,48 @@ export default function ServicePageContent({ params }: ServicePageProps) {
           </button>
         </div>
 
-        {/* Back to Services */}
-        <div className="mt-8">
-          <a
+        {/* Back to Services - Desktop only */}
+        <div className="hidden md:block mt-8">
+          <Link
             href={`/${locale}/PoweredByDonation/${servicesSlug}`}
             className="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium"
           >
             <ArrowLeft className="h-4 w-4 mr-1" />
             {messages.services?.detail?.backToServices || 'Back to Services'}
-          </a>
+          </Link>
+        </div>
+      </div>
+
+      {/* WhatsApp-style Mobile Bottom Navigation */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-40">
+        <div className="flex items-center p-4">
+          {/* Service Name - Left */}
+          <div className="flex-1 min-w-0">
+            <div className="text-sm font-semibold text-gray-900 truncate">
+              {service?.title || 'Service'}
+            </div>
+            <div className="text-xs text-gray-500 truncate">
+              Powered by Donation Service
+            </div>
+          </div>
+          
+          {/* Request Service CTA Button - Right */}
+          {isOwner ? (
+            <button
+              onClick={() => router.push(`/${locale}/PoweredByDonation/${servicesSlug}/${slug}/edit`)}
+              className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium transition-colors flex items-center"
+            >
+              <Edit className="h-4 w-4 mr-2" />
+              Edit Service
+            </button>
+          ) : (
+            <button
+              onClick={handleRequestService}
+              className="px-6 py-3 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors"
+            >
+              Request Service
+            </button>
+          )}
         </div>
       </div>
     </div>
