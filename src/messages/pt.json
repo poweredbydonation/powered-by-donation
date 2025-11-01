@@ -22,7 +22,7 @@
       "title": "Como Funciona",
       "step1": {
         "title": "Explorar Serviços",
-        "description": "Encontre serviços profissionais oferecidos por provedores da comunidade"
+        "description": "Encontre serviços profissionais oferecidos por captadores de recursos da comunidade"
       },
       "step2": {
         "title": "Escolha uma Instituição de Caridade",
@@ -47,25 +47,70 @@
     "welcome": "Bem-vindo de volta",
     "profileReady": "Seu perfil está configurado e pronto para usar.",
     "completeProfile": "Complete seu perfil para começar.",
-    "serviceProvider": "Provedor de Serviços",
-    "supporter": "Apoiador",
+    "fundraiser": "Captador de Recursos",
+    "donor": "Doador",
     "getStarted": "Começar",
     "setupPrompt": "Configure seu perfil para começar a usar o Powered by Donation:",
     "createProfile": "Criar Seu Perfil",
-    "providerDashboard": "Painel do Provedor",
-    "providerDescription": "Gerencie seus serviços e doações",
+    "fundraiserDashboard": "Painel do Captador de Recursos",
+    "fundraiserDescription": "Gerencie seus serviços e doações",
     "manageServices": "Gerenciar Serviços",
     "createNewService": "Criar Novo Serviço",
-    "becomeProvider": "Tornar-se Provedor",
-    "providerOffer": "Ofereça serviços e apoie instituições de caridade",
-    "enableProviderRole": "Ativar Função de Provedor",
-    "supporterDashboard": "Painel do Apoiador",
-    "supporterDescription": "Acompanhe suas doações e impacto",
+    "becomeFundraiser": "Tornar-se Captador de Recursos",
+    "fundraiserOffer": "Ofereça serviços e apoie instituições de caridade",
+    "enableFundraiserRole": "Ativar Função de Captador de Recursos",
+    "donorDashboard": "Painel do Doador",
+    "donorDescription": "Acompanhe suas doações e impacto",
     "myDonations": "Minhas Doações",
     "browseServices": "Explorar Serviços",
-    "becomeSupporter": "Tornar-se Apoiador",
-    "supporterOffer": "Apoie serviços e instituições de caridade",
-    "enableSupporterRole": "Ativar Função de Apoiador",
+    "becomeDonor": "Tornar-se Doador",
+    "donorOffer": "Apoie serviços e instituições de caridade",
+    "enableDonorRole": "Ativar Função de Doador",
+    "services": {
+      "title": "Meus Serviços",
+      "subtitle": "Gerencie suas ofertas de serviços e acompanhe o engajamento dos doadores",
+      "create_service": "Criar Novo Serviço",
+      "create_first_service": "Criar Seu Primeiro Serviço",
+      "edit": "Editar",
+      "view": "Visualizar",
+      "loading": {
+        "title": "Carregando serviços..."
+      },
+      "errors": {
+        "title": "Erro ao carregar serviços",
+        "load_failed": "Falha ao carregar seus serviços. Tente novamente mais tarde."
+      },
+      "empty": {
+        "title": "Ainda não há serviços",
+        "description": "Crie seu primeiro serviço para começar a se conectar com doadores e ajudar instituições de caridade."
+      },
+      "status": {
+        "active": "Ativo",
+        "inactive": "Inativo",
+        "upcoming": "Próximo",
+        "expired": "Expirado",
+        "full": "Lotado"
+      },
+      "fields": {
+        "donation": "Doação",
+        "location": "Localização",
+        "charity": "Instituição de Caridade",
+        "capacity": "Capacidade"
+      },
+      "location": {
+        "remote": "Remoto",
+        "hybrid": "Híbrido",
+        "physical": "Presencial",
+        "tbd": "Localização a definir"
+      },
+      "charity": {
+        "any_charity": "Qualquer instituição de caridade",
+        "specific_charities": "Instituições de caridade específicas"
+      },
+      "availability": {
+        "starts": "Inicia"
+      }
+    },
     "accountSettings": "Configurações da Conta",
     "accountDescription": "Gerencie suas preferências de conta",
     "editProfile": "Editar Perfil",
@@ -76,12 +121,12 @@
     "username": "Nome de usuário",
     "location": "Localização",
     "roles": "Funções",
-    "providerAndSupporter": "Provedor e Apoiador",
-    "providerRole": "Provedor",
-    "supporterRole": "Apoiador",
+    "fundraiserAndDonor": "Captador de Recursos e Doador",
+    "fundraiserRole": "Captador de Recursos",
+    "donorRole": "Doador",
     "noRoles": "Nenhuma",
-    "provider_section": {
-      "title": "Como Provedor",
+    "fundraiser_section": {
+      "title": "Como Captador de Recursos",
       "create_service": "Criar Serviço",
       "update_service": "Atualizar Serviço",
       "creating": "Criando...",
@@ -89,8 +134,8 @@
       "manage_services": "Gerenciar Serviços",
       "view_requests": "Ver Solicitações"
     },
-    "supporter_section": {
-      "title": "Como Apoiador",
+    "donor_section": {
+      "title": "Como Doador",
       "browse_services": "Explorar Serviços",
       "donation_history": "Histórico de Doações"
     },
@@ -103,17 +148,17 @@
   "profile": {
     "setup": {
       "title": "Configure Seu Perfil",
-      "subtitle": "Crie seu perfil para começar a usar o Powered by Donation como provedor de serviços, apoiador, ou ambos.",
+      "subtitle": "Crie seu perfil para começar a usar o Powered by Donation como captador de recursos, doador, ou ambos.",
       "create_profile": "Criar Seu Perfil",
       "update_profile": "Atualizar Seu Perfil",
       "roles": {
         "title": "Sua(s) Função(ões)",
-        "provider": {
-          "title": "Provedor de Serviços",
+        "fundraiser": {
+          "title": "Captador de Recursos",
           "description": "Ofereça serviços e ajude instituições de caridade"
         },
-        "supporter": {
-          "title": "Apoiador",
+        "donor": {
+          "title": "Doador",
           "description": "Encontre serviços e faça doações beneficentes"
         }
       },
@@ -135,7 +180,7 @@
         "success_created": "Perfil criado com sucesso!",
         "success_updated": "Perfil atualizado com sucesso!",
         "error_name_required": "Nome é obrigatório",
-        "error_role_required": "Você deve ser provedor, apoiador, ou ambos",
+        "error_role_required": "Você deve ser captador de recursos, doador, ou ambos",
         "error_save_failed": "Falha ao salvar perfil"
       }
     }
@@ -147,17 +192,17 @@
       "no_services": "Nenhum serviço encontrado",
       "load_more": "Carregar Mais",
       "allLocations": "Todas as Localizações",
-      "provider": "Provedor",
+      "fundraiser": "Captador de Recursos",
       "communityImpact": {
         "title": "Impacto Comunitário",
         "activeServices": "Serviços Ativos",
         "totalDonationPotential": "Potencial Total de Doações",
-        "activeProviders": "Provedores Ativos",
+        "activeFundraisers": "Captadores de Recursos Ativos",
         "donationsNote": "Todas as doações vão diretamente para instituições de caridade registradas via JustGiving"
       },
       "callToAction": {
         "title": "Quer oferecer seus serviços?",
-        "description": "Junte-se à nossa comunidade de provedores e ajude instituições de caridade enquanto mostra suas habilidades.",
+        "description": "Junte-se à nossa comunidade de captadores de recursos e ajude instituições de caridade enquanto mostra suas habilidades.",
         "button": "Começar"
       }
     },
@@ -263,7 +308,7 @@
       "platform": {
         "title": "Plataforma",
         "browse_services": "Explorar Serviços",
-        "service_providers": "Provedores de Serviços",
+        "fundraisers": "Captadores de Recursos",
         "featured_charities": "Instituições de Caridade em Destaque",
         "how_it_works": "Como Funciona"
       },
@@ -311,8 +356,8 @@
   "deleteProfile": {
     "title": "Excluir Perfil",
     "description": "Isso excluirá permanentemente seu perfil e todos os dados associados. Esta ação não pode ser desfeita.",
-    "providerWarning": "⚠️ Como provedor, isso também excluirá todos os seus serviços e histórico de serviços.",
-    "supporterWarning": "⚠️ Como apoiador, isso excluirá seu histórico de doações e solicitações de serviços.",
+    "fundraiserWarning": "⚠️ Como captador de recursos, isso também excluirá todos os seus serviços e histórico de serviços.",
+    "donorWarning": "⚠️ Como doador, isso excluirá seu histórico de doações e solicitações de serviços.",
     "deleteButton": "Excluir Perfil",
     "confirmTitle": "Confirmar Exclusão do Perfil",
     "confirmDescription": "Tem certeza de que deseja excluir seu perfil para \"{name}\"? Esta ação é permanente e irá:",

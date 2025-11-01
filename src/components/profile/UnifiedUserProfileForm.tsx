@@ -3,15 +3,16 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { User } from '@/types/database'
+import { User, CurrencyCode } from '@/types/database'
 
 interface UnifiedUserProfileFormProps {
   user: any // Supabase Auth User
   existingProfile?: User | null
   onProfileCreated?: () => void
+  locale?: string
 }
 
-export default function UnifiedUserProfileForm({ user, existingProfile, onProfileCreated }: UnifiedUserProfileFormProps) {
+export default function UnifiedUserProfileForm({ user, existingProfile, onProfileCreated, locale = 'en' }: UnifiedUserProfileFormProps) {
   // Form state
   const [name, setName] = useState(existingProfile?.name || '')
   const [username, setUsername] = useState(existingProfile?.username || '')
@@ -19,10 +20,8 @@ export default function UnifiedUserProfileForm({ user, existingProfile, onProfil
   const [location, setLocation] = useState(existingProfile?.location || '')
   const [phone, setPhone] = useState(existingProfile?.phone || '')
   const [avatarUrl, setAvatarUrl] = useState(existingProfile?.avatar_url || '')
+  const [preferredCurrency, setPreferredCurrency] = useState<CurrencyCode>(existingProfile?.preferred_currency || 'GBP')
   
-  // Role toggles
-  const [isProvider, setIsProvider] = useState(existingProfile?.is_provider || false)
-  const [isSupporter, setIsSupporter] = useState(existingProfile?.is_supporter ?? true)
   
   // Form state
   const [loading, setLoading] = useState(false)
@@ -44,10 +43,6 @@ export default function UnifiedUserProfileForm({ user, existingProfile, onProfil
         throw new Error('Name is required')
       }
 
-      // Ensure user has at least one role
-      if (!isProvider && !isSupporter) {
-        throw new Error('You must be either a provider, supporter, or both')
-      }
 
       const profileData = {
         id: user.id,
@@ -58,8 +53,9 @@ export default function UnifiedUserProfileForm({ user, existingProfile, onProfil
         location: location.trim() || null,
         phone: phone.trim() || null,
         avatar_url: avatarUrl.trim() || null,
-        is_provider: isProvider,
-        is_supporter: isSupporter
+        preferred_currency: preferredCurrency,
+        is_fundraiser: true,
+        is_donor: true
       }
 
       let result
@@ -87,7 +83,7 @@ export default function UnifiedUserProfileForm({ user, existingProfile, onProfil
       } else if (!existingProfile) {
         // If creating a new profile and no callback provided, redirect to dashboard
         setTimeout(() => {
-          router.push('/dashboard')
+          router.push(`/${locale}/my/profile`)
         }, 1500)
       } else {
         // If updating existing profile and no callback provided, refresh the page
@@ -123,37 +119,6 @@ export default function UnifiedUserProfileForm({ user, existingProfile, onProfil
       )}
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Role Selection */}
-        <div className="bg-blue-50 border border-blue-200 rounded-md p-4">
-          <h3 className="text-lg font-semibold text-blue-900 mb-3">Your Role(s)</h3>
-          <div className="space-y-3">
-            <label className="flex items-center">
-              <input
-                type="checkbox"
-                checked={isProvider}
-                onChange={(e) => setIsProvider(e.target.checked)}
-                className="mr-3 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-              />
-              <div>
-                <span className="font-medium text-gray-900">Service Provider</span>
-                <p className="text-sm text-gray-600">Offer services and help charities</p>
-              </div>
-            </label>
-            
-            <label className="flex items-center">
-              <input
-                type="checkbox"
-                checked={isSupporter}
-                onChange={(e) => setIsSupporter(e.target.checked)}
-                className="mr-3 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-              />
-              <div>
-                <span className="font-medium text-gray-900">Supporter</span>
-                <p className="text-sm text-gray-600">Find services and make charitable donations</p>
-              </div>
-            </label>
-          </div>
-        </div>
 
         {/* Basic Information */}
         <div>
@@ -227,6 +192,29 @@ export default function UnifiedUserProfileForm({ user, existingProfile, onProfil
             placeholder="Your phone number"
           />
         </div>
+
+        <div>
+          <label htmlFor="currency" className="block text-sm font-medium text-gray-700 mb-2">
+            Preferred Currency *
+          </label>
+          <select
+            id="currency"
+            value={preferredCurrency}
+            onChange={(e) => setPreferredCurrency(e.target.value as CurrencyCode)}
+            required
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="GBP">£ British Pounds</option>
+            <option value="USD">$ US Dollars</option>
+            <option value="CAD">C$ Canadian Dollars</option>
+            <option value="AUD">A$ Australian Dollars</option>
+            <option value="EUR">€ Euros</option>
+          </select>
+          <p className="text-sm text-gray-500 mt-1">
+            This will be used for displaying donation amounts and pricing
+          </p>
+        </div>
+
 
         {/* Submit Button */}
         <div className="pt-4">

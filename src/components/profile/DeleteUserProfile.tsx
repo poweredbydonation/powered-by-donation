@@ -24,7 +24,7 @@ export default function DeleteUserProfile({ user, onDeleted }: DeleteUserProfile
 
     try {
       // Check for dependencies that would prevent deletion
-      if (user.is_provider) {
+      if (user.is_fundraiser) {
         // Check if user has active services
         const { data: services } = await supabase
           .from('services')
@@ -38,12 +38,12 @@ export default function DeleteUserProfile({ user, onDeleted }: DeleteUserProfile
         }
       }
 
-      if (user.is_supporter) {
+      if (user.is_donor) {
         // Check if user has active service requests
         const { data: requests } = await supabase
           .from('service_requests')
           .select('id')
-          .eq('supporter_id', user.id)
+          .eq('donor_id', user.id)
           .neq('status', 'success')
 
         if (requests && requests.length > 0) {
@@ -84,15 +84,15 @@ export default function DeleteUserProfile({ user, onDeleted }: DeleteUserProfile
           {t('description')}
         </p>
         
-        {user.is_provider && (
+        {user.is_fundraiser && (
           <p className="text-red-600 text-sm mb-2">
-            {t('providerWarning')}
+            {t('fundraiserWarning')}
           </p>
         )}
         
-        {user.is_supporter && (
+        {user.is_donor && (
           <p className="text-red-600 text-sm mb-4">
-            {t('supporterWarning')}
+            {t('donorWarning')}
           </p>
         )}
 
@@ -122,8 +122,8 @@ export default function DeleteUserProfile({ user, onDeleted }: DeleteUserProfile
       
       <ul className="text-red-600 text-sm mb-6 space-y-1">
         <li>• {t('confirmList.deleteInfo')}</li>
-        {user.is_provider && <li>• {t('confirmList.removeServices')}</li>}
-        {user.is_supporter && <li>• {t('confirmList.deleteHistory')}</li>}
+        {user.is_fundraiser && <li>• {t('confirmList.removeServices')}</li>}
+        {user.is_donor && <li>• {t('confirmList.deleteHistory')}</li>}
         <li>• {t('confirmList.signOut')}</li>
         <li>• {t('confirmList.cannotUndo')}</li>
       </ul>

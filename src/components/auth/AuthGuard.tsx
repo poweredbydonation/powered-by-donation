@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
-import { useRouter, usePathname } from '@/i18n/routing'
+import { useRouter } from 'next/navigation'
 import { useParams } from 'next/navigation'
 import { useAuth } from '@/hooks/useAuth'
 
@@ -13,8 +13,7 @@ interface AuthGuardProps {
 
 export default function AuthGuard({ 
   children, 
-  requireAuth = true, 
-  redirectTo = '/login' 
+  requireAuth = true 
 }: AuthGuardProps) {
   const { user, loading } = useAuth()
   const router = useRouter()
@@ -26,9 +25,9 @@ export default function AuthGuard({
       if (requireAuth && !user) {
         // Explicitly redirect with locale to ensure it's preserved
         if (locale) {
-          window.location.href = `/${locale}/login`
+          window.location.href = `/${locale}/system/login`
         } else {
-          router.push('/login')
+          router.push('/system/login')
         }
       } else if (!requireAuth && user) {
         // Explicitly redirect with locale to ensure it's preserved

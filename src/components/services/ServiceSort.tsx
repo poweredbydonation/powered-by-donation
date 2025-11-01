@@ -13,7 +13,7 @@ const SORT_OPTIONS: { value: SortOption; label: string; description: string }[] 
   { value: 'oldest', label: 'Oldest First', description: 'Longest available services' },
   { value: 'price_low', label: 'Donation: Low to High', description: 'Smallest donation amount first' },
   { value: 'price_high', label: 'Donation: High to Low', description: 'Largest donation amount first' },
-  { value: 'happiness_high', label: 'Highest Rated', description: 'Best provider ratings first' },
+  { value: 'happiness_high', label: 'Highest Rated', description: 'Best fundraiser ratings first' },
   { value: 'happiness_low', label: 'Lowest Rated', description: 'Needs improvement first' },
   { value: 'title_asc', label: 'Title: A to Z', description: 'Alphabetical order' },
   { value: 'title_desc', label: 'Title: Z to A', description: 'Reverse alphabetical order' }

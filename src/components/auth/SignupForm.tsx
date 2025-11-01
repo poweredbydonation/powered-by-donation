@@ -69,7 +69,7 @@ export default function SignupForm({ locale, messages }: SignupFormProps) {
             {t('success.instruction')}
           </p>
           <a 
-            href={`/${locale}/login`}
+            href={`/${locale}/system/login`}
             className="mt-4 inline-block text-blue-600 hover:text-blue-500"
           >
             {t('success.backToLogin')}

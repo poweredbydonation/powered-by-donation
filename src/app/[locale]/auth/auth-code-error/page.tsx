@@ -1,6 +1,4 @@
-import { Link } from '@/i18n/routing'
-import MultilingualNavbar from '@/components/MultilingualNavbar'
-import { getMessages } from 'next-intl/server'
+import Link from 'next/link'
 
 interface AuthCodeErrorProps {
   params: {
@@ -13,13 +11,11 @@ interface AuthCodeErrorProps {
   }
 }
 
-export default async function AuthCodeError({ params, searchParams }: AuthCodeErrorProps) {
-  const { locale } = params
+export default async function AuthCodeError({ searchParams }: AuthCodeErrorProps) {
   const { error, error_description, code } = searchParams
-  const messages = await getMessages({ locale })
+  
   return (
     <div className="min-h-screen bg-gray-50">
-      <MultilingualNavbar locale={locale} messages={messages} />
       <div className="flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
@@ -43,7 +39,7 @@ export default async function AuthCodeError({ params, searchParams }: AuthCodeEr
               Authentication Error
             </h2>
             <p className="mt-2 text-sm text-gray-600">
-              Sorry, we couldn't process your authentication request. The link may have expired or been used already.
+              Sorry, we couldn&apos;t process your authentication request. The link may have expired or been used already.
             </p>
             
             {/* Debug information */}

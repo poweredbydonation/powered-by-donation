@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-**Powered by Donation** is a donation-service marketplace where service providers offer skills in exchange for charitable donations. Service seekers browse services and make donations to JustGiving charities. We facilitate connections but don't handle payments directly.
+**Powered by Donation** is a donation-service marketplace where fundraisers offer skills in exchange for charitable donations. Donors browse services and make donations to JustGiving charities. We facilitate connections but don't handle payments directly.
 
 ### Core Values
 - **Australian Legal Compliance**: Privacy Act, Consumer Law, ACNC requirements
@@ -11,13 +11,26 @@
 - **Donor-Centric**: Focus on charitable giving experience over transactional service delivery
 
 ## Business Details
-
 - **Entity**: Individual/Sole Trader - MEHMET AKIF ALTUNDAL
 - **ABN**: 17 927 784 658 (Active from 22/07/2025)
 - **Email**: contact@poweredbydonation.com
 - **Location**: NSW, Australia
 
-## Technical Stack (ALWAYS USE THESE)
+## Documentation Structure
+
+This CLAUDE.md file provides a high-level overview. For detailed information, see the specialized documentation:
+
+- **Architecture & Infrastructure**: `docs/CLAUDE.md` - Technical stack, database architecture, component structure
+- **Development Guidelines**: `development/CLAUDE.md` - Development principles, workflows, and coding standards
+- **Project Status**: `project-status/CLAUDE.md` - Current status, completed features, and progress tracking
+- **Branding Guidelines**: `branding/CLAUDE.md` - Platform-specific branding, visual guidelines, and implementation standards
+- **Database**: `supabase/CLAUDE.md` - Schema, migrations, and Supabase-specific guidelines
+- **Frontend**: `src/CLAUDE.md` - Component patterns, internationalization, and UI development
+- **Service Workflow**: `workflow/CLAUDE.md` - Service request workflow system, state management, and donor-fundraiser interactions
+
+## Quick Reference
+
+### Technical Stack
 ```
 Frontend: Next.js 14+ (App Router) + TypeScript + Tailwind CSS + next-intl
 Backend: Supabase (database, auth, edge functions)
@@ -26,109 +39,46 @@ Package Manager: pnpm (NEVER use npm)
 Internationalization: next-intl with 17 language support
 ```
 
-## Core Architecture Principles
-
-### Privacy Model: Anonymous + Aggregate + Optional Sharing
-- **Always Anonymous**: No public donor names or persistent identities
-- **Aggregate Statistics**: Platform activity shown in totals only
-- **Optional Recognition**: Users choose when to get personal credit
-- **Private Connections**: Donor names shared with providers & charities only
-
-### Component Architecture
-**Split by pain, not by rules.** Create new components when existing ones become difficult to work with, not because they hit arbitrary line limits.
-
-#### Component Size Targets:
-- **Pages**: 100-200 lines (orchestration)
-- **Sections**: 50-100 lines (major UI areas)
-- **Features**: 20-50 lines (business logic)
-- **UI Components**: 10-30 lines (generic elements)
-
-### Database: Unified User System
-Single `users` table supporting both provider and supporter roles with happiness-based reputation metrics. See [README-database.md](./README-database.md) for complete schema details.
-
-## Service Management & Quality System
-
-### Mutual Happiness Feedback
-Both providers and supporters rate each service interaction with simple happy/unhappy ratings. This creates:
-- **Quality control** through happiness metrics and filtering
-- **Service access requirements** based on reputation scores  
-- **Balanced feedback** maintaining donor-centric approach
-
-### Service Features
-- **Fixed donation amounts** (e.g., exactly $50, not minimum or variable)
-- **Charity requirements** ("any charity" or "specific charities")
-- **Availability management** (date ranges and capacity limits)
-- **Location flexibility** (physical, remote, or hybrid delivery)
-
-## Charity & SEO System
-
-### Charity Pages: Anonymous Impact Display
-Charity pages at `/charity/[slug]` showcase service-driven donations with complete anonymity:
-- **Anonymous activity**: "Someone donated $50 via Web Design service"
-- **Aggregate statistics**: Total donations, monthly activity, service categories  
-- **JustGiving integration**: Real charity data with SEO optimization
-
-See [README-seo.md](./README-seo.md) for complete SEO strategy and implementation details.
-
-## User Experience & Internationalization
-
-### Design Philosophy
-- **Fixed layouts** - Consistent page structures for all entity types
-- **Mobile-first** - Responsive design with accessibility focus
-- **Simple privacy controls** - Basic show/hide toggles only
-- **No customization** - Identical, optimized layouts for all users
-
-### User Journeys
-#### Anonymous Browsing
-Browse services freely without signup - view pricing, charity requirements, provider info, and anonymous donation activity.
-
-#### Provider Journey  
-Sign up → Create services → Set fixed pricing → Choose charity requirements → Receive donations → Give/receive feedback
-
-#### Supporter Journey
-Browse services → View fixed pricing → Choose charity → Sign up → Donate via JustGiving → Give feedback → Build reputation
-
-### Internationalization: 17 Language Support
-Complete translation coverage using next-intl with centralized language configuration in `src/config/languages.ts`.
-
-See [README-internationalization.md](./README-internationalization.md) for complete i18n implementation details.
-
-## Development Information
-
-### Brand Guidelines
-- **Logo**: "PD" (text-based) or "Powered by Donation" (full name)
-- **Typography**: System fonts only (no external dependencies)
-- **Design**: Clean, fast-loading, accessibility-first, charitable aesthetic
-
-### Development Environment
-See [README-development.md](./README-development.md) for complete development setup, deployment workflows, and environment details.
-
-## Essential Claude Guidelines
-
-### Core Principles
+### Essential Principles
 1. **pnpm only** - Never suggest npm commands
 2. **Anonymous always** - No public donor names, identities, or tracking  
 3. **Fixed pricing** - Services have exact donation amounts (never minimum/variable)
-4. **Unified user system** - Single users table for both provider and supporter roles
-5. **Donor-centric language** - Focus on charitable giving, not transactions
-6. **JustGiving only** - Only registered charities allowed
-7. **Component splitting** - Split by pain, not by arbitrary rules
-8. **Translation keys** - Use next-intl for all user-facing text
-9. **Australian compliance** - Privacy Act, Consumer Law considerations
-10. **GitHub deployment** - All changes via Git push, not manual commands
+4. **Platform-first architecture** - Multi-platform with context-driven actions
+5. **Component splitting** - Split by pain, not by arbitrary rules
+6. **Performance first** - Server-side filtering, pagination, strategic indexing
 
-### Key Patterns
-- **Anonymous displays**: "Someone donated $50 via Web Design service"
-- **Aggregate statistics**: "47 donations this month" 
-- **Fixed layouts**: Consistent page structures, no user customization
-- **Quality feedback**: "Happy with provider?" not "Did you receive service?"
-- **Charity requirements**: Either "any charity" or "specific charities"
+### Development Workflow
+- **Quality Assurance**: Always run lint and typecheck commands after implementation
+- **Security First**: Never expose/log secrets, never commit secrets to repository
+- **GitHub Deployment**: All changes via Git push, not manual commands
+- **Documentation**: Refer to specialized CLAUDE.md files in subdirectories
 
-### Technical Requirements
-- **SEO first**: Meta tags and structured data for all pages
-- **Static generation**: Pre-render service/charity pages  
-- **Performance**: System fonts only, Core Web Vitals optimization
-- **Accessibility**: WCAG 2.1 compliance, mobile-first design
+## Current Status Summary
+
+**Platform-First Restructuring**: Complete - Core architecture fully implemented with unified data system
+**Performance Optimization**: Complete - Eliminated expensive queries, implemented caching system  
+**Multi-Platform Integration**: Complete - JustGiving, Every.org, and ACNC fully integrated
+**Branding Systems**: Complete - Platform-specific theming and official brand guidelines implemented
+**Service Workflow System**: Complete - Full service request workflow with automated state management, real-time notifications, and comprehensive feedback system
+**Personal Services Management**: Complete - Full-width mobile-responsive personal services dashboard with management controls
+**Dynamic Routing System**: Complete - Unified `/[locale]/[platform]/[entity_type]` routing with personal platform support
+**User Role System**: Simplified - Removed role selection, all users have both fundraiser and donor capabilities
+**Navigation System**: Enhanced - Added service requests menu item, updated profile dropdown
+
+Recent Updates:
+- Converted static routes to dynamic platform system (`/my/services` → `/[locale]/[platform]/[entity_type]`)
+- Added `service_requests` entity type with localized URL slugs
+- Removed user role selection - all users are both fundraisers and donors
+- Enhanced navigation with service requests menu item
+- Unified services page with proper card display and creation flow
+- **Analytics Integration**: Added Vercel Analytics for comprehensive user behavior tracking
+- **ESLint Configuration**: Updated to allow unescaped entities in JSX (safe React practice)
+- **Background Preloading System**: Complete - Implemented intelligent background preloading for instant page navigation from homepage to popular pages, with localStorage persistence across page navigations
+- **Mobile Filter UX Enhancement**: Optimized all platform mobile filter modals with label-free dropdowns, responsive map sizing, and duplicate content removal for cleaner mobile experience
+- **Mobile Navigation Overhaul**: Complete WhatsApp-style mobile navigation system with contextual headers, bottom platform tabs, floating action buttons, and optimized detail page footers
+- **Performance Enhancement**: Converted all mobile navigation from window.location.href to Next.js Link components for background loading and instant client-side routing
+
+For detailed status information, progress tracking, and implementation history, see `project-status/CLAUDE.md`.
 
 ---
 

@@ -7,7 +7,7 @@
     "login": "Đăng nhập",
     "logout": "Đăng xuất",
     "profile": "Hồ sơ",
-    "tagline": "Nền tảng dịch vụ quyên góp"
+    "tagline": ""
   },
   "home": {
     "title": "Powered by Donation",
@@ -22,7 +22,7 @@
       "title": "Cách thức hoạt động",
       "step1": {
         "title": "Duyệt dịch vụ",
-        "description": "Tìm các dịch vụ chuyên nghiệp được cung cấp bởi các nhà cung cấp cộng đồng"
+        "description": "Tìm các dịch vụ chuyên nghiệp được cung cấp bởi các nhà gây quỹ cộng đồng"
       },
       "step2": {
         "title": "Chọn tổ chức từ thiện",
@@ -47,25 +47,70 @@
     "welcome": "Chào mừng trở lại",
     "profileReady": "Hồ sơ của bạn đã được thiết lập và sẵn sàng.",
     "completeProfile": "Hoàn thành hồ sơ của bạn để bắt đầu.",
-    "serviceProvider": "Nhà cung cấp dịch vụ",
-    "supporter": "Người ủng hộ",
+    "serviceProvider": "Nhà gây quỹ",
+    "supporter": "Nhà tài trợ",
     "getStarted": "Bắt đầu",
     "setupPrompt": "Thiết lập hồ sơ của bạn để bắt đầu sử dụng Powered by Donation:",
     "createProfile": "Tạo hồ sơ của bạn",
-    "providerDashboard": "Bảng điều khiển nhà cung cấp",
+    "providerDashboard": "Bảng điều khiển nhà gây quỹ",
     "providerDescription": "Quản lý dịch vụ và quyên góp của bạn",
     "manageServices": "Quản lý dịch vụ",
     "createNewService": "Tạo dịch vụ mới",
-    "becomeProvider": "Trở thành nhà cung cấp",
+    "becomeProvider": "Trở thành nhà gây quỹ",
     "providerOffer": "Cung cấp dịch vụ và hỗ trợ tổ chức từ thiện",
-    "enableProviderRole": "Kích hoạt vai trò nhà cung cấp",
-    "supporterDashboard": "Bảng điều khiển người ủng hộ",
+    "enableProviderRole": "Kích hoạt vai trò nhà gây quỹ",
+    "supporterDashboard": "Bảng điều khiển nhà tài trợ",
     "supporterDescription": "Theo dõi quyên góp và tác động của bạn",
     "myDonations": "Quyên góp của tôi",
     "browseServices": "Duyệt dịch vụ",
-    "becomeSupporter": "Trở thành người ủng hộ",
+    "becomeSupporter": "Trở thành nhà tài trợ",
     "supporterOffer": "Hỗ trợ dịch vụ và tổ chức từ thiện",
-    "enableSupporterRole": "Kích hoạt vai trò người ủng hộ",
+    "enableSupporterRole": "Kích hoạt vai trò nhà tài trợ",
+    "services": {
+      "title": "Dịch vụ của tôi",
+      "subtitle": "Quản lý các dịch vụ bạn cung cấp và theo dõi sự tương tác của nhà tài trợ",
+      "create_service": "Tạo dịch vụ mới",
+      "create_first_service": "Tạo dịch vụ đầu tiên của bạn",
+      "edit": "Chỉnh sửa",
+      "view": "Xem",
+      "loading": {
+        "title": "Đang tải dịch vụ..."
+      },
+      "errors": {
+        "title": "Lỗi khi tải dịch vụ",
+        "load_failed": "Không thể tải dịch vụ của bạn. Vui lòng thử lại sau."
+      },
+      "empty": {
+        "title": "Chưa có dịch vụ nào",
+        "description": "Tạo dịch vụ đầu tiên để bắt đầu kết nối với nhà tài trợ và giúp đỡ các tổ chức từ thiện."
+      },
+      "status": {
+        "active": "Hoạt động",
+        "inactive": "Không hoạt động",
+        "upcoming": "Sắp tới",
+        "expired": "Đã hết hạn",
+        "full": "Đã đầy"
+      },
+      "fields": {
+        "donation": "Quyên góp",
+        "location": "Vị trí",
+        "charity": "Tổ chức từ thiện",
+        "capacity": "Sức chứa"
+      },
+      "location": {
+        "remote": "Từ xa",
+        "hybrid": "Kết hợp",
+        "physical": "Trực tiếp",
+        "tbd": "Vị trí sẽ được xác định"
+      },
+      "charity": {
+        "any_charity": "Bất kỳ tổ chức từ thiện nào",
+        "specific_charities": "Các tổ chức từ thiện cụ thể"
+      },
+      "availability": {
+        "starts": "Bắt đầu"
+      }
+    },
     "accountSettings": "Cài đặt tài khoản",
     "accountDescription": "Quản lý tùy chọn tài khoản của bạn",
     "editProfile": "Chỉnh sửa hồ sơ",
@@ -76,12 +121,12 @@
     "username": "Tên người dùng",
     "location": "Vị trí",
     "roles": "Vai trò",
-    "providerAndSupporter": "Nhà cung cấp và người ủng hộ",
-    "providerRole": "Nhà cung cấp",
-    "supporterRole": "Người ủng hộ",
+    "providerAndSupporter": "Nhà gây quỹ và nhà tài trợ",
+    "providerRole": "Nhà gây quỹ",
+    "supporterRole": "Nhà tài trợ",
     "noRoles": "Không có",
     "provider_section": {
-      "title": "Với tư cách nhà cung cấp",
+      "title": "Với tư cách nhà gây quỹ",
       "create_service": "Tạo dịch vụ",
       "update_service": "Cập nhật dịch vụ",
       "creating": "Đang tạo...",
@@ -90,7 +135,7 @@
       "view_requests": "Xem yêu cầu"
     },
     "supporter_section": {
-      "title": "Với tư cách người ủng hộ",
+      "title": "Với tư cách nhà tài trợ",
       "browse_services": "Duyệt dịch vụ",
       "donation_history": "Lịch sử quyên góp"
     },
@@ -103,17 +148,17 @@
   "profile": {
     "setup": {
       "title": "Thiết lập hồ sơ của bạn",
-      "subtitle": "Tạo hồ sơ để bắt đầu sử dụng Powered by Donation với tư cách nhà cung cấp dịch vụ, người ủng hộ, hoặc cả hai.",
+      "subtitle": "Tạo hồ sơ để bắt đầu sử dụng Powered by Donation với tư cách nhà gây quỹ dịch vụ, nhà tài trợ, hoặc cả hai.",
       "create_profile": "Tạo hồ sơ của bạn",
       "update_profile": "Cập nhật hồ sơ của bạn",
       "roles": {
         "title": "Vai trò của bạn",
         "provider": {
-          "title": "Nhà cung cấp dịch vụ",
+          "title": "Nhà gây quỹ dịch vụ",
           "description": "Cung cấp dịch vụ và giúp đỡ các tổ chức từ thiện"
         },
         "supporter": {
-          "title": "Người ủng hộ",
+          "title": "Nhà tài trợ",
           "description": "Tìm dịch vụ và thực hiện quyên góp từ thiện"
         }
       },
@@ -135,7 +180,7 @@
         "success_created": "Hồ sơ đã được tạo thành công!",
         "success_updated": "Hồ sơ đã được cập nhật thành công!",
         "error_name_required": "Tên là bắt buộc",
-        "error_role_required": "Bạn phải là nhà cung cấp, người ủng hộ, hoặc cả hai",
+        "error_role_required": "Bạn phải là nhà gây quỹ, nhà tài trợ, hoặc cả hai",
         "error_save_failed": "Không thể lưu hồ sơ"
       }
     }
@@ -147,17 +192,17 @@
       "no_services": "Không tìm thấy dịch vụ nào",
       "load_more": "Tải thêm",
       "allLocations": "Tất Cả Địa Điểm",
-      "provider": "Nhà Cung Cấp",
+      "provider": "Nhà Gây Quỹ",
       "communityImpact": {
         "title": "Tác Động Cộng Đồng",
         "activeServices": "Dịch Vụ Hoạt Động",
         "totalDonationPotential": "Tổng Tiềm Năng Quyên Góp",
-        "activeProviders": "Nhà Cung Cấp Hoạt Động",
+        "activeProviders": "Nhà Gây Quỹ Hoạt Động",
         "donationsNote": "Tất cả quyên góp được chuyển trực tiếp đến các tổ chức từ thiện đã đăng ký qua JustGiving"
       },
       "callToAction": {
         "title": "Bạn muốn cung cấp dịch vụ của mình?",
-        "description": "Tham gia cộng đồng nhà cung cấp của chúng tôi và giúp đỡ các tổ chức từ thiện đồng thời thể hiện kỹ năng của bạn.",
+        "description": "Tham gia cộng đồng nhà gây quỹ của chúng tôi và giúp đỡ các tổ chức từ thiện đồng thời thể hiện kỹ năng của bạn.",
         "button": "Bắt Đầu"
       }
     },
@@ -263,7 +308,7 @@
       "platform": {
         "title": "Nền Tảng",
         "browse_services": "Duyệt Dịch Vụ",
-        "service_providers": "Nhà Cung Cấp Dịch Vụ",
+        "service_providers": "Nhà Gây Quỹ Dịch Vụ",
         "featured_charities": "Tổ Chức Từ Thiện Nổi Bật",
         "how_it_works": "Cách Hoạt Động"
       },
@@ -311,8 +356,8 @@
   "deleteProfile": {
     "title": "Xóa hồ sơ",
     "description": "Điều này sẽ xóa vĩnh viễn hồ sơ của bạn và tất cả dữ liệu liên quan. Hành động này không thể hoàn tác.",
-    "providerWarning": "⚠️ Với tư cách nhà cung cấp, điều này cũng sẽ xóa tất cả dịch vụ và lịch sử dịch vụ của bạn.",
-    "supporterWarning": "⚠️ Với tư cách người ủng hộ, điều này sẽ xóa lịch sử quyên góp và yêu cầu dịch vụ của bạn.",
+    "providerWarning": "⚠️ Với tư cách nhà gây quỹ, điều này cũng sẽ xóa tất cả dịch vụ và lịch sử dịch vụ của bạn.",
+    "supporterWarning": "⚠️ Với tư cách nhà tài trợ, điều này sẽ xóa lịch sử quyên góp và yêu cầu dịch vụ của bạn.",
     "deleteButton": "Xóa hồ sơ",
     "confirmTitle": "Xác nhận xóa hồ sơ",
     "confirmDescription": "Bạn có chắc chắn muốn xóa hồ sơ của \"{name}\"? Hành động này là vĩnh viễn và sẽ:",

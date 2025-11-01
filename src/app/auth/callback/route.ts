@@ -12,7 +12,7 @@ async function handleAuthCallback(request: NextRequest) {
   const localeMatch = referrer?.match(/\/([a-z]{2})\//)
   const locale = localeMatch?.[1] ?? 'en'
   
-  const next = searchParams.get('next') ?? `/${locale}/dashboard`
+  const next = searchParams.get('next') ?? `/${locale}/my/profile`
 
   console.log('Auth callback received:', {
     method: request.method,

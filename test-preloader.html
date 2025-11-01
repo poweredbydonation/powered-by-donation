@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Background Preloader</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .instructions { background: #f0f8ff; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+        .test { background: #f9f9f9; padding: 15px; border-radius: 8px; margin: 10px 0; }
+        .correct { color: green; font-weight: bold; }
+        .incorrect { color: red; font-weight: bold; }
+        button { padding: 10px 15px; margin: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>🚀 Background Preloader Test</h1>
+    
+    <div class="instructions">
+        <h2>📋 Test Instructions</h2>
+        <ol>
+            <li>Make sure dev server is running: <code>pnpm run dev</code></li>
+            <li>Visit <strong class="correct">http://localhost:3001/en</strong> (NOT port 3000!)</li>
+            <li>Open browser DevTools (F12) → Console tab</li>
+            <li>Wait 3-4 seconds for background preloading</li>
+            <li>Look for these console messages:</li>
+        </ol>
+    </div>
+
+    <div class="test">
+        <h3>✅ Expected Console Messages (Good):</h3>
+        <pre>📦 Background preloading API: /api/justgiving/organizations?page=1&limit=6
+✅ Preloaded & cached API /api/justgiving/organizations?page=1&limit=6 in XXXms (key: justgiving-1---------false-false--)
+🚀 Background preloading Next.js route: /en/justgiving/charities</pre>
+    </div>
+
+    <div class="test">
+        <h3>❌ Possible Issues:</h3>
+        <ul>
+            <li><strong class="incorrect">No messages at all</strong> → BackgroundPreloader not loading</li>
+            <li><strong class="incorrect">404 errors</strong> → API endpoints not available</li>
+            <li><strong class="incorrect">CORS errors</strong> → Cross-origin issues</li>
+        </ul>
+    </div>
+
+    <div class="test">
+        <h3>🧪 Manual Test</h3>
+        <p>Click these buttons to test API endpoints directly:</p>
+        
+        <button onclick="testAPI()">Test API Endpoint</button>
+        <button onclick="testCharitiesPage()">Test Charities Page</button>
+        <button onclick="clearCache()">Clear Test Cache</button>
+        
+        <div id="testResults" style="margin-top: 20px; padding: 10px; background: #f5f5f5; border-radius: 5px;">
+            <h4>Test Results:</h4>
+            <div id="results"></div>
+        </div>
+    </div>
+
+    <script>
+        const testCache = new Map();
+        
+        function log(message, type = 'info') {
+            const results = document.getElementById('results');
+            const div = document.createElement('div');
+            div.style.margin = '5px 0';
+            div.style.color = type === 'error' ? 'red' : type === 'success' ? 'green' : 'black';
+            div.innerHTML = `[${new Date().toLocaleTimeString()}] ${message}`;
+            results.appendChild(div);
+            results.scrollTop = results.scrollHeight;
+        }
+
+        async function testAPI() {
+            log('🧪 Testing API endpoint...', 'info');
+            const start = Date.now();
+            
+            try {
+                const response = await fetch('http://localhost:3001/api/justgiving/organizations?page=1&limit=6');
+                const time = Date.now() - start;
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                log(`✅ API works! Got ${data.organizations?.length || 0} organizations in ${time}ms`, 'success');
+                
+                // Test caching
+                const cacheKey = 'justgiving-1---------false-false--';
+                testCache.set(cacheKey, { data, timestamp: Date.now() });
+                log(`📦 Cached data with key: ${cacheKey}`, 'info');
+                
+            } catch (error) {
+                log(`❌ API test failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function testCharitiesPage() {
+            log('🧪 Testing charities page...', 'info');
+            const start = Date.now();
+            
+            try {
+                const response = await fetch('http://localhost:3001/en/justgiving/charities');
+                const time = Date.now() - start;
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const html = await response.text();
+                const size = (html.length / 1024).toFixed(2);
+                log(`✅ Charities page works! Loaded ${size}KB HTML in ${time}ms`, 'success');
+                
+            } catch (error) {
+                log(`❌ Charities page test failed: ${error.message}`, 'error');
+            }
+        }
+
+        function clearCache() {
+            testCache.clear();
+            document.getElementById('results').innerHTML = '';
+            log('🧹 Test cache cleared', 'info');
+        }
+
+        // Check if we can access the correct port
+        log('🔍 Checking server accessibility...', 'info');
+        setTimeout(testAPI, 500);
+    </script>
+</body>
+</html>

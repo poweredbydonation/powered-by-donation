@@ -12,6 +12,7 @@ interface ServiceListProps {
   loading?: boolean
   error?: string | null
   emptyMessage?: string
+  locale?: string
 }
 
 function ServiceCardSkeleton() {
@@ -116,7 +117,8 @@ export default function ServiceList({
   services, 
   loading = false, 
   error = null,
-  emptyMessage = "No services are currently available. Check back soon for new opportunities to support charities!"
+  emptyMessage = "No services are currently available. Check back soon for new opportunities to support charities!",
+  locale = 'en'
 }: ServiceListProps) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -143,7 +145,7 @@ export default function ServiceList({
       {!loading && !error && services.length > 0 && (
         <>
           {services.map((service) => (
-            <ServiceCard key={service.id} service={service} />
+            <ServiceCard key={service.id} service={service} locale={locale} />
           ))}
         </>
       )}

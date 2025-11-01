@@ -1,0 +1,1 @@
+-- Temporary file to capture remote schema

@@ -198,7 +198,7 @@ export default function CharitySearchModal({
           ) : displayCharities.length === 0 && searchTerm.trim().length >= 2 ? (
             <div className="text-center py-8">
               <p className="text-gray-500 mb-4">
-                No charities found for "{searchTerm}". Try different keywords.
+                No charities found for &quot;{searchTerm}&quot;. Try different keywords.
               </p>
               <p className="text-sm text-gray-400">
                 Or browse all charities on{' '}

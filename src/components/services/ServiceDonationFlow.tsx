@@ -5,12 +5,15 @@ import { useAuth } from '@/hooks/useAuth'
 import { ExternalLink, Heart, Shield, CheckCircle } from 'lucide-react'
 import Link from 'next/link'
 import CharitySearchModal from './CharitySearchModal'
+import ServicePrice from './ServicePrice'
+import { CurrencyCode, DonationPlatform } from '@/types/database'
 
 interface ServiceDonationFlowProps {
   service: {
     id: string
     title: string
     donation_amount: number
+    pricing_tier_id?: number
     charity_requirement_type: 'any_charity' | 'specific_charities'
     preferred_charities: Array<{
       charity_id: string
@@ -18,11 +21,15 @@ interface ServiceDonationFlowProps {
       description?: string
       logo_url?: string
     }> | null
-    provider: {
+    platform?: DonationPlatform
+    organization_id?: string
+    organization_name?: string
+    fundraiser: {
       id: string
       name: string
     }
   }
+  userCurrency: CurrencyCode
   isAvailable: boolean
   isFull: boolean
 }
@@ -36,6 +43,7 @@ interface SelectedCharityOption {
 
 export default function ServiceDonationFlow({ 
   service, 
+  userCurrency,
   isAvailable, 
   isFull 
 }: ServiceDonationFlowProps) {
@@ -64,26 +72,32 @@ export default function ServiceDonationFlow({
   }
 
   const handleSupportService = async () => {
+    console.log('🖱️ Mobile button clicked!', { user: !!user, isAvailable, isFull, isGeneratingUrl })
+    
     if (!user) {
       // Redirect to login with return URL
       const returnUrl = encodeURIComponent(window.location.pathname)
+      console.log('🚀 Redirecting to login:', `/login?returnUrl=${returnUrl}`)
       window.location.href = `/login?returnUrl=${returnUrl}`
       return
     }
 
     // Show charity search/selection if needed
     if (service.charity_requirement_type === 'any_charity') {
+      console.log('🔍 Opening charity search modal...')
       setShowCharitySearch(true)
       return
     }
 
     // For specific charities, either show selection or proceed
     if (service.preferred_charities && service.preferred_charities.length > 1 && !selectedCharity) {
+      console.log('🎯 Opening charity selection modal...', { preferredCharities: service.preferred_charities.length })
       setShowCharitySelection(true)
       return
     }
 
     // Proceed with donation
+    console.log('💰 Proceeding directly to donation generation...', { selectedCharity })
     await generateDonationUrl()
   }
 
@@ -107,11 +121,15 @@ export default function ServiceDonationFlow({
         throw new Error('Please select a charity to continue')
       }
 
-      const apiUrl = `/api/charities/${targetCharityId}`
+      // Use new platform-specific API endpoint for JustGiving (with workflow integration)
+      const apiUrl = `/api/just-giving/charity/${targetCharityId}`
       const requestBody = {
-        action: 'donation-url',
-        amount: service.donation_amount,
-        reference: `PoweredByDonation-${service.id}-${user?.id}`
+        serviceId: service.id,
+        donorId: user?.id,
+        fundraiserId: service.fundraiser.id,
+        donationAmount: service.donation_amount,
+        locale: 'en', // TODO: Get from user preferences
+        workflowEnabled: true // Enable new workflow system
       }
       
       console.log('🚀 Making API request:', { apiUrl, requestBody })
@@ -129,11 +147,12 @@ export default function ServiceDonationFlow({
       console.log('📄 API response data:', data)
 
       if (data.success) {
+        console.log('✅ Service request created:', data.data.referenceId)
         console.log('✅ Redirecting to:', data.data.donationUrl)
         // Open JustGiving donation page in same window
         window.location.href = data.data.donationUrl
       } else {
-        throw new Error(data.error || 'Failed to generate donation URL')
+        throw new Error(data.error || 'Failed to create service request')
       }
     } catch (err) {
       console.error('❌ Donation URL generation error:', err)
@@ -200,12 +219,73 @@ export default function ServiceDonationFlow({
   const isButtonDisabled = !isAvailable || isFull || isGeneratingUrl
 
   return (
-    <div className="bg-gradient-to-br from-green-50 to-blue-50 rounded-lg border border-green-200 p-6 sticky top-8">
+    <>
+      {/* Mobile Overlay Button - Fixed at bottom */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 shadow-lg">
+        <div className="px-4 py-3">
+          {/* Mobile Support Button */}
+          <button 
+            onClick={() => {
+              console.log('🎯 Mobile overlay clicked!')
+              handleSupportService()
+            }}
+            className={`w-full py-4 px-4 rounded-xl font-bold text-white text-lg shadow-lg ${
+              isButtonDisabled
+                ? 'bg-gray-400 cursor-not-allowed' 
+                : 'bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700'
+            } transition-colors duration-200`}
+            disabled={isButtonDisabled}
+          >
+            {isGeneratingUrl ? (
+              <div className="flex items-center justify-center space-x-2">
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                <span>Redirecting to JustGiving...</span>
+              </div>
+            ) : !user ? (
+              <div className="flex items-center justify-center space-x-2">
+                <span>🚀</span>
+                <span>Login to Support This Service</span>
+              </div>
+            ) : !isAvailable ? (
+              <div className="flex items-center justify-center space-x-2">
+                <span>⏰</span>
+                <span>Not Yet Available</span>
+              </div>
+            ) : isFull ? (
+              <div className="flex items-center justify-center space-x-2">
+                <span>🚫</span>
+                <span>Currently Full</span>
+              </div>
+            ) : (
+              <div className="flex items-center justify-center space-x-2">
+                <span>💝</span>
+                <span>Support This Service</span>
+              </div>
+            )}
+          </button>
+          
+          {/* Price indicator */}
+          <div className="text-center mt-2">
+            <ServicePrice
+              pricingTierId={service.pricing_tier_id}
+              userCurrency={userCurrency}
+              className="text-lg font-bold text-green-600"
+              showTierName={false}
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Desktop Component - Hidden on mobile */}
+      <div className="hidden md:block bg-gradient-to-br from-green-50 to-blue-50 rounded-lg border border-green-200 p-6 sticky top-8">
       {/* Donation Amount Header */}
       <div className="text-center mb-6">
-        <div className="text-3xl font-bold text-green-600 mb-2">
-          {formatCurrency(service.donation_amount)}
-        </div>
+        <ServicePrice
+          pricingTierId={service.pricing_tier_id}
+          userCurrency={userCurrency}
+          className="text-3xl font-bold text-green-600 mb-2 block"
+          showTierName={false}
+        />
         <div className="text-sm text-gray-600">
           Fixed donation amount
         </div>
@@ -216,7 +296,7 @@ export default function ServiceDonationFlow({
         <div className="flex items-center justify-between text-sm">
           <span className="text-gray-600">Charity choice:</span>
           <span className="font-medium">
-            {service.charity_requirement_type === 'any_charity' ? 'Your choice' : 'Provider selected'}
+            {service.charity_requirement_type === 'any_charity' ? 'Your choice' : 'Fundraiser selected'}
           </span>
         </div>
         <div className="flex items-center justify-between text-sm">
@@ -282,7 +362,7 @@ export default function ServiceDonationFlow({
               
               <div className="space-y-3">
                 <p className="text-sm text-gray-600">
-                  This provider has selected these preferred charities:
+                  This fundraiser has selected these preferred charities:
                 </p>
                 
                 {service.preferred_charities?.map((charity) => (
@@ -380,10 +460,11 @@ export default function ServiceDonationFlow({
             </Link> or{' '}
             <Link href="/login" className="font-medium hover:underline">
               login
-            </Link> to connect with the provider after your donation
+            </Link> to connect with the fundraiser after your donation
           </p>
         </div>
       )}
-    </div>
+      </div>
+    </>
   )
 }

@@ -58,7 +58,7 @@ export async function syncCharityData(charityId: number): Promise<CharityCacheDa
 
     // Check if charity already exists
     const { data: existingCharity } = await supabase
-      .from('charity_cache')
+      .from('justgiving_charity_cache')
       .select('*')
       .eq('justgiving_charity_id', charityId.toString())
       .single()
@@ -67,7 +67,7 @@ export async function syncCharityData(charityId: number): Promise<CharityCacheDa
     if (existingCharity) {
       // Update existing charity (preserve stats)
       const { data, error } = await supabase
-        .from('charity_cache')
+        .from('justgiving_charity_cache')
         .update({
           name: charityRecord.name,
           description: charityRecord.description,
@@ -89,7 +89,7 @@ export async function syncCharityData(charityId: number): Promise<CharityCacheDa
     } else {
       // Insert new charity
       const { data, error } = await supabase
-        .from('charity_cache')
+        .from('justgiving_charity_cache')
         .insert({
           ...charityRecord,
           total_donations_count: 0,
@@ -205,7 +205,7 @@ export async function getOrSyncCharity(charityId: number): Promise<CharityCacheD
     
     // First, try to get from cache
     const { data: cachedCharity } = await supabase
-      .from('charity_cache')
+      .from('justgiving_charity_cache')
       .select('*')
       .eq('justgiving_charity_id', charityId.toString())
       .single()

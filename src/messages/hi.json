@@ -22,7 +22,7 @@
       "title": "यह कैसे काम करता है",
       "step1": {
         "title": "सेवाएं ब्राउज़ करें",
-        "description": "समुदायिक प्रदाताओं द्वारा प्रदान की जाने वाली पेशेवर सेवाएं खोजें"
+        "description": "समुदायिक फंडरेज़र द्वारा प्रदान की जाने वाली पेशेवर सेवाएं खोजें"
       },
       "step2": {
         "title": "एक चैरिटी चुनें",
@@ -47,25 +47,70 @@
     "welcome": "वापस स्वागत है",
     "profileReady": "आपकी प्रोफ़ाइल सेट अप है और तैयार है।",
     "completeProfile": "शुरू करने के लिए अपनी प्रोफ़ाइल पूरी करें।",
-    "serviceProvider": "सेवा प्रदाता",
-    "supporter": "समर्थक",
+    "serviceProvider": "सेवा फंडरेज़र",
+    "supporter": "दाता",
     "getStarted": "शुरू करें",
     "setupPrompt": "Powered by Donation का उपयोग शुरू करने के लिए अपनी प्रोफ़ाइल सेट करें:",
     "createProfile": "अपनी प्रोफ़ाइल बनाएं",
-    "providerDashboard": "प्रदाता डैशबोर्ड",
+    "providerDashboard": "फंडरेज़र डैशबोर्ड",
     "providerDescription": "अपनी सेवाओं और दान का प्रबंधन करें",
     "manageServices": "सेवाओं का प्रबंधन करें",
     "createNewService": "नई सेवा बनाएं",
-    "becomeProvider": "प्रदाता बनें",
+    "becomeProvider": "फंडरेज़र बनें",
     "providerOffer": "सेवाएं प्रदान करें और चैरिटी का समर्थन करें",
-    "enableProviderRole": "प्रदाता भूमिका सक्षम करें",
-    "supporterDashboard": "समर्थक डैशबोर्ड",
+    "enableProviderRole": "फंडरेज़र भूमिका सक्षम करें",
+    "supporterDashboard": "दाता डैशबोर्ड",
     "supporterDescription": "अपने दान और प्रभाव को ट्रैक करें",
     "myDonations": "मेरे दान",
     "browseServices": "सेवाएं ब्राउज़ करें",
-    "becomeSupporter": "समर्थक बनें",
+    "becomeSupporter": "दाता बनें",
     "supporterOffer": "सेवाओं और चैरिटी का समर्थन करें",
-    "enableSupporterRole": "समर्थक भूमिका सक्षम करें",
+    "enableSupporterRole": "दाता भूमिका सक्षम करें",
+    "services": {
+      "title": "मेरी सेवाएं",
+      "subtitle": "अपनी सेवा पेशकशों का प्रबंधन करें और दाता जुड़ाव को ट्रैक करें",
+      "create_service": "नई सेवा बनाएं",
+      "create_first_service": "अपनी पहली सेवा बनाएं",
+      "edit": "संपादित करें",
+      "view": "देखें",
+      "loading": {
+        "title": "सेवाएं लोड हो रही हैं..."
+      },
+      "errors": {
+        "title": "सेवाएं लोड करने में त्रुटि",
+        "load_failed": "आपकी सेवाएं लोड करने में विफल। कृपया बाद में पुनः प्रयास करें।"
+      },
+      "empty": {
+        "title": "अभी तक कोई सेवा नहीं",
+        "description": "दाताओं के साथ जुड़ना शुरू करने और चैरिटी की मदद करने के लिए अपनी पहली सेवा बनाएं।"
+      },
+      "status": {
+        "active": "सक्रिय",
+        "inactive": "निष्क्रिय",
+        "upcoming": "आगामी",
+        "expired": "समाप्त",
+        "full": "भरा हुआ"
+      },
+      "fields": {
+        "donation": "दान",
+        "location": "स्थान",
+        "charity": "चैरिटी",
+        "capacity": "क्षमता"
+      },
+      "location": {
+        "remote": "दूरस्थ",
+        "hybrid": "हाइब्रिड",
+        "physical": "भौतिक",
+        "tbd": "स्थान तय होना है"
+      },
+      "charity": {
+        "any_charity": "कोई भी चैरिटी",
+        "specific_charities": "विशिष्ट चैरिटी"
+      },
+      "availability": {
+        "starts": "शुरू होता है"
+      }
+    },
     "accountSettings": "खाता सेटिंग्स",
     "accountDescription": "अपनी खाता प्राथमिकताएं प्रबंधित करें",
     "editProfile": "प्रोफ़ाइल संपादित करें",
@@ -76,12 +121,12 @@
     "username": "उपयोगकर्ता नाम",
     "location": "स्थान",
     "roles": "भूमिकाएं",
-    "providerAndSupporter": "प्रदाता और समर्थक",
-    "providerRole": "प्रदाता",
-    "supporterRole": "समर्थक",
+    "providerAndSupporter": "फंडरेज़र और दाता",
+    "providerRole": "फंडरेज़र",
+    "supporterRole": "दाता",
     "noRoles": "कोई नहीं",
-    "provider_section": {
-      "title": "प्रदाता के रूप में",
+    "fundraiser_section": {
+      "title": "फंडरेज़र के रूप में",
       "create_service": "सेवा बनाएं",
       "update_service": "सेवा अपडेट करें",
       "creating": "बनाई जा रही है...",
@@ -89,8 +134,8 @@
       "manage_services": "सेवाओं का प्रबंधन करें",
       "view_requests": "अनुरोध देखें"
     },
-    "supporter_section": {
-      "title": "समर्थक के रूप में",
+    "donor_section": {
+      "title": "दाता के रूप में",
       "browse_services": "सेवाएं ब्राउज़ करें",
       "donation_history": "दान इतिहास"
     },
@@ -103,17 +148,17 @@
   "profile": {
     "setup": {
       "title": "अपनी प्रोफ़ाइल सेट करें",
-      "subtitle": "सेवा प्रदाता, समर्थक या दोनों के रूप में Powered by Donation का उपयोग शुरू करने के लिए अपनी प्रोफ़ाइल बनाएं।",
+      "subtitle": "सेवा फंडरेज़र, दाता या दोनों के रूप में Powered by Donation का उपयोग शुरू करने के लिए अपनी प्रोफ़ाइल बनाएं।",
       "create_profile": "अपनी प्रोफ़ाइल बनाएं",
       "update_profile": "अपनी प्रोफ़ाइल अपडेट करें",
       "roles": {
         "title": "आपकी भूमिका(एं)",
-        "provider": {
-          "title": "सेवा प्रदाता",
+        "fundraiser": {
+          "title": "सेवा फंडरेज़र",
           "description": "सेवाएं प्रदान करें और चैरिटी की मदद करें"
         },
-        "supporter": {
-          "title": "समर्थक",
+        "donor": {
+          "title": "दाता",
           "description": "सेवाएं खोजें और चैरिटेबल दान करें"
         }
       },
@@ -135,7 +180,7 @@
         "success_created": "प्रोफ़ाइल सफलतापूर्वक बनाई गई!",
         "success_updated": "प्रोफ़ाइल सफलतापूर्वक अपडेट की गई!",
         "error_name_required": "नाम आवश्यक है",
-        "error_role_required": "आपको प्रदाता, समर्थक या दोनों होना चाहिए",
+        "error_role_required": "आपको फंडरेज़र, दाता या दोनों होना चाहिए",
         "error_save_failed": "प्रोफ़ाइल सेव करने में विफल"
       }
     }
@@ -147,17 +192,17 @@
       "no_services": "कोई सेवा नहीं मिली",
       "load_more": "और लोड करें",
       "allLocations": "सभी स्थान",
-      "provider": "प्रदाता",
+      "provider": "फंडरेज़र",
       "communityImpact": {
         "title": "सामुदायिक प्रभाव",
         "activeServices": "सक्रिय सेवाएं",
         "totalDonationPotential": "कुल दान संभावना",
-        "activeProviders": "सक्रिय प्रदाता",
+        "activeProviders": "सक्रिय फंडरेज़र",
         "donationsNote": "सभी दान JustGiving के माध्यम से सीधे पंजीकृत चैरिटी को जाते हैं"
       },
       "callToAction": {
         "title": "क्या आप अपनी सेवाएं प्रदान करना चाहते हैं?",
-        "description": "हमारे प्रदाता समुदाय में शामिल हों और अपने कौशल प्रदर्शित करते हुए चैरिटी की मदद करें।",
+        "description": "हमारे फंडरेज़र समुदाय में शामिल हों और अपने कौशल प्रदर्शित करते हुए चैरिटी की मदद करें।",
         "button": "शुरू करें"
       }
     },
@@ -263,7 +308,7 @@
       "platform": {
         "title": "प्लेटफॉर्म",
         "browse_services": "सेवाएं ब्राउज़ करें",
-        "service_providers": "सेवा प्रदाता",
+        "service_providers": "सेवा फंडरेज़र",
         "featured_charities": "फीचर्ड चैरिटी",
         "how_it_works": "यह कैसे काम करता है"
       },
@@ -311,8 +356,8 @@
   "deleteProfile": {
     "title": "प्रोफ़ाइल हटाएं",
     "description": "यह आपकी प्रोफ़ाइल और सभी संबंधित डेटा को स्थायी रूप से हटा देगा। यह क्रिया पूर्ववत नहीं की जा सकती।",
-    "providerWarning": "⚠️ प्रदाता के रूप में, यह आपकी सभी सेवाओं और सेवा इतिहास को भी हटा देगा।",
-    "supporterWarning": "⚠️ समर्थक के रूप में, यह आपके दान इतिहास और सेवा अनुरोधों को हटा देगा।",
+    "providerWarning": "⚠️ फंडरेज़र के रूप में, यह आपकी सभी सेवाओं और सेवा इतिहास को भी हटा देगा।",
+    "supporterWarning": "⚠️ दाता के रूप में, यह आपके दान इतिहास और सेवा अनुरोधों को हटा देगा।",
     "deleteButton": "प्रोफ़ाइल हटाएं",
     "confirmTitle": "प्रोफ़ाइल हटाने की पुष्टि करें",
     "confirmDescription": "क्या आप वाकई \"{name}\" की प्रोफ़ाइल हटाना चाहते हैं? यह क्रिया स्थायी है और यह:",

@@ -40,6 +40,22 @@ export interface FundraiserSearchResponse {
   totalItemsCount: number
 }
 
+export interface JustGivingDonation {
+  donationId: string
+  donationRef: string
+  donorName: string
+  donationAmount: number
+  currencyCode: string
+  donationDate: string
+  charityId: number
+  donationStatus: 'Accepted' | 'Pending' | 'Rejected'
+}
+
+export interface DonationByReferenceResponse {
+  donation: JustGivingDonation | null
+  found: boolean
+}
+
 class JustGivingAPI {
   private apiKey: string
   private baseUrl: string
@@ -158,25 +174,57 @@ class JustGivingAPI {
   }
 
   /**
+   * Get donation status by reference ID
+   * Used by server-side polling to check if pending donations are completed
+   */
+  async getDonationByReference(reference: string): Promise<DonationByReferenceResponse> {
+    // JustGiving staging API requires appId: /{appId}/v1/donation/ref/{reference}
+    const endpoint = `/${this.apiKey}/v1/donation/ref/${encodeURIComponent(reference)}`
+    
+    try {
+      const donation = await this.makeRequest<JustGivingDonation>(endpoint)
+      return {
+        donation,
+        found: true
+      }
+    } catch (error: any) {
+      // JustGiving returns 404 if donation not found yet (still pending)
+      if (error.message?.includes('status: 404')) {
+        console.log(`Donation with reference ${reference} not found yet (likely still pending)`)
+        return {
+          donation: null,
+          found: false
+        }
+      }
+      
+      // Re-throw other errors (network issues, auth problems, etc.)
+      console.error(`Error checking donation status for reference ${reference}:`, error)
+      throw error
+    }
+  }
+
+  /**
    * Get the donation URL for a charity
    */
   getCharityDonationUrl(charityId: number, amount?: number, reference?: string): string {
-    const baseUrl = process.env.NEXT_PUBLIC_JUSTGIVING_CHARITY_CHECKOUT_URL || 'https://www.justgiving.com'
+    const baseUrl = process.env.NEXT_PUBLIC_JUSTGIVING_CHARITY_CHECKOUT_URL || 'https://link.staging.justgiving.com'
+    const returnUrl = process.env.NEXT_PUBLIC_JUSTGIVING_RETURN_URL || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
     
-    // JustGiving URL format: https://www.justgiving.com/donation/direct/charity/{charityId}?amount={amount}&reference={reference}
-    let url = `${baseUrl}/donation/direct/charity/${charityId}`
+    // JustGiving staging URL format: https://link.staging.justgiving.com/v1/charity/donate/charityId/{charityId}
+    let url = `${baseUrl}/v1/charity/donate/charityId/${charityId}`
     
     const params = new URLSearchParams()
     if (amount) {
-      params.append('amount', amount.toString())
+      params.append('donationValue', amount.toString())
     }
+    params.append('currency', 'GBP') // JustGiving requires currency
+    params.append('exiturl', `${returnUrl}/en/system/donation-success?jgDonationId=JUSTGIVING-DONATION-ID`)
     if (reference) {
       params.append('reference', reference)
     }
+    params.append('skipGiftAid', 'true') // For international donors
     
-    if (params.toString()) {
-      url += `?${params.toString()}`
-    }
+    url += `?${params.toString()}`
     
     console.log('🔗 Generated JustGiving URL:', url)
     return url

@@ -30,7 +30,7 @@ console.log(`${targetLang.toUpperCase()} total keys:`, countKeys(target));
 const targetString = JSON.stringify(target);
 const englishPatterns = [
   'Browse Services', 'Loading...', 'Create Service', 'Dashboard', 
-  'Profile', 'Login', 'Logout', 'Welcome', 'Provider', 'Service Provider',
+  'Profile', 'Login', 'Logout', 'Welcome', 'Fundraiser', 'Service Fundraiser',
   'Home', 'Search', 'Error', 'Success', 'Cancel', 'Save', 'Delete'
 ];
 
